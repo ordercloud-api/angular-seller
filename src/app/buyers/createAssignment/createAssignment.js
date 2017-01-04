@@ -24,14 +24,35 @@ function CreateAssignmentConfig($stateProvider) {
     })
 }
 
-function CreateAssignmentController(SelectedUser, Parameters, UserGroupsList) {
+function CreateAssignmentController($q, $state, OrderCloud, toastr, Parameters, SelectedUser, UserGroupsList) {
     var vm = this;
 
     vm.selectedUser = SelectedUser;
-    vm.parameters = Parameters;
     vm.userGroupsList = UserGroupsList;
+    vm.saveAssignments = SaveAssignments;
 
-    //console.log('user', vm.selectedUser);
-    console.log('params', vm.parameters);
-    console.log('grouplist', vm.userGroupsList);
+    function SaveAssignments() {
+        var userGroupQueue = [];
+        var df = $q.defer();
+
+        angular.forEach(vm.selectedUserGroup, function(group) {
+            userGroupQueue.push(OrderCloud.UserGroups.SaveUserAssignment(
+                {
+                    userGroupAssignment: group.ID
+                }
+            ))
+        });
+        $q.all(userGroupQueue)
+            .then(function() {
+                df.resolve();
+                toastr.success('All UserGroup Assignments Save', 'Success');
+            })
+            .catch(function(error) {
+                toastr.error(error);
+            })
+            .finally(function() {
+                //$state.go('buyers.details', {buyerid: Parameters.buyerid}, {reload:true})
+            })
+    }
+
 }
