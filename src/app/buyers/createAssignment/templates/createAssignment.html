@@ -1,4 +1,17 @@
 <!--Once a user is created (from the template users/templates/userCreate.tpl.html),-->
 <!--They will be brought to this page to assign that user to a user group-->
 <!--Here, they will also be able to create a new user group and assign a user to it-->
-<!--UI-SELECT-->
+
+<div>
+    <h3 class="page-header">Assign to a usergroup</h3>
+    <ui-select ng-model="createAssignment.selectedUserGroup"
+               close-on-select="true">
+        <ui-select-match>
+            <span ng-bind="$select.selected.Name"></span>
+        </ui-select-match>
+        <ui-select-choices repeat="userGroup in (createAssignment.userGroupsList.Items | filter: $select.search) track by $index">
+            <span ng-bind="userGroup.Name"></span>
+        </ui-select-choices>
+    </ui-select>
+</div>
+

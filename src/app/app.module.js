@@ -6,7 +6,7 @@ angular.module('orderCloud', [
         'ui.tree',
         'ui.router',
         'ui.bootstrap',
-        'ui-select',
+        'ui.select',
         'orderCloud.sdk',
         'LocalForageModule',
         'toastr',

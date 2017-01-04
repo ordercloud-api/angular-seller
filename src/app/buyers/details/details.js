@@ -27,7 +27,7 @@ function BuyerDetailsConfig($stateProvider) {
             })
 }
 
-function BuyerDetailsController(Parameters, OrderCloudParameters, OrderCloud, $ocMedia, $state, SelectedBuyer, UserList, UserGroupList){
+function BuyerDetailsController($rootScope, Parameters, OrderCloudParameters, OrderCloud, $ocMedia, $state, RouteManagement, SelectedBuyer, UserList, UserGroupList){
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.userList = UserList;
@@ -100,4 +100,12 @@ function BuyerDetailsController(Parameters, OrderCloudParameters, OrderCloud, $o
                 vm.list.Meta = data.Meta;
             });
     };
+
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
+        if (fromState.name === "buyers.details" && toState.name === "users.create") setUserFrom(true)
+    });
+
+    function setUserFrom(boolean) {
+        RouteManagement.SetUserFrom(boolean);
+    }
 }

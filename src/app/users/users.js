@@ -46,13 +46,16 @@ function UsersConfig($stateProvider) {
             resolve: {
                 Parameters: function ($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
+                },
+                UsersFrom: function(RouteManagement){
+                    return RouteManagement.GetUserFrom();
                 }
             }
         })
     ;
 }
 
-function UsersController($state, $ocMedia, OrderCloud, OrderCloudParameters, UserList, Parameters) {
+function UsersController($state, $ocMedia, $rootScope, RouteManagement, OrderCloud, OrderCloudParameters, UserList, Parameters) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
@@ -125,6 +128,14 @@ function UsersController($state, $ocMedia, OrderCloud, OrderCloudParameters, Use
                 vm.list.Meta = data.Meta;
             });
     };
+
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
+        if (fromState.name === "users" && toState.name === "users.create") setUserFrom(false)
+    });
+
+    function setUserFrom(boolean) {
+        RouteManagement.SetUserFrom(boolean);
+    }
 }
 
 function UserEditController($exceptionHandler, $state, toastr, OrderCloud, SelectedUser) {
@@ -161,16 +172,18 @@ function UserEditController($exceptionHandler, $state, toastr, OrderCloud, Selec
     };
 }
 
-function UserCreateController($exceptionHandler, $state, toastr, OrderCloud, Parameters) {
+function UserCreateController($exceptionHandler, $state, toastr, UsersFrom, OrderCloud) {
     var vm = this;
+
+    console.log('usersfrom', UsersFrom);
     vm.user = {Email: '', Password: ''};
     vm.user.Active = false;
     vm.Submit = function() {
         vm.user.TermsAccepted = new Date();
         OrderCloud.Users.Create(vm.user)
-            .then(function() {
-                if(Parameters.fromRoute == "buyerDetails") {
-                    $state.go('buyers.details', {buyerid: Parameters.buyerid}, {reload: true});
+            .then(function(user) {
+                if(UsersFrom.value) {
+                    $state.go('buyers.createAssignment', {userID: user.ID}, {reload: true});
                     toastr.success('User Created', 'Success');
                 } else {
                     $state.go('users', {}, {reload: true});
@@ -180,6 +193,5 @@ function UserCreateController($exceptionHandler, $state, toastr, OrderCloud, Par
             .catch(function(ex) {
                 $exceptionHandler(ex)
             });
-
     };
 }
