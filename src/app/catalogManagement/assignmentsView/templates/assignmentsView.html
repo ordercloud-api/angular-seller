@@ -1,13 +1,13 @@
-<uib-tabset ng-if="categoryTree.tree.length">
+<uib-tabset ng-if="catalogAssignments.tree.length">
     <uib-tab>
         <br>
         <uib-tab-heading>Products</uib-tab-heading>
-        <div ng-show="!catalogAssignments.categoryid" class="well text-center">
+        <div ng-show="!catalogAssignments.category" class="well text-center">
             Select a category to view details
         </div>
-        <div class="row" ng-show="catalogAssignments.categoryid">
+        <div class="row" ng-show="catalogAssignments.category">
             <div class="col-xs-12">
-                <label>Select Product(s) to Add to Category {{categoryTree.selectedCategory}}</label>
+                <label>Select Product(s) to Add to Category {{catalogAssignments.category.Name}}</label>
                 <ui-select multiple ng-model="catalogAssignments.selectedProducts" close-on-select="false">
                     <ui-select-match>
                         {{$item.Name}}
@@ -28,12 +28,13 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
-            <div ng-show="catalogAssignments.selectedProducts" class="col-xs-12">
-                <button class="btn btn-info form-control" ng-click="catalogAssignments.saveAssignment()"><i class="fa fa-plus-circle"></i> Add Product</button>
+            <div class="col-xs-12">
+                <button class="btn btn-success btn-block" ng-disabled="!catalogAssignments.selectedProducts.length" ng-click="catalogAssignments.saveAssignment()"><i class="fa fa-plus-circle"></i> Add Products</button>
             </div>
         </div>
-        <div ng-if="catalogAssignments.products">
+        <div ng-if="catalogAssignments.products.Items">
             <hr>
+             <b class="pull-right">{{catalogAssignments.products.Meta.ItemRange[1] + ' of ' + catalogAssignments.products.Meta.TotalCount + ' results'}}</b>
             <table class="table table-hover oc-table-responsive">
                 <thead>
                     <tr>
@@ -45,7 +46,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="product in catalogAssignments.products">
+                    <tr ng-repeat="product in catalogAssignments.products.Items">
                         <th scope="row">{{product.ID}}</th>
                         <td data-title="Name">{{product.Name}}</td>
                         <td data-title="Description">{{product.Description}}</td>
@@ -55,28 +56,14 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="text-center" ng-if="catalogAssignments.products.Meta.TotalPages > 1">
+            <uib-pagination boundary-links="catalogAssignments.products.Meta.TotalPages > 5"
+                    max-size="5" total-items="catalogAssignments.products.Meta.TotalCount"
+                    items-per-page="catalogAssignments.products.Meta.PageSize"
+                    ng-model="catalogAssignments.products.Meta.Page"
+                    ng-change="catalogAssignments.pageChanged()">
+            </uib-pagination>
         </div>
-
+        </div>
     </uib-tab>
-    <!--<uib-tab>-->
-    <!--<uib-tab-heading>Availability Summary</uib-tab-heading>-->
-    <!--<table>-->
-    <!--<thead>-->
-    <!--<tr>-->
-    <!--<th> Total Assignments:</th>-->
-    <!--</tr>-->
-    <!--</thead>-->
-    <!--<tbody>-->
-    <!--<tr>-->
-    <!--<td>{{catalogAssignments.assignments.Meta.TotalCount}}</td>-->
-    <!--</tr>-->
-    <!--</tbody>-->
-    <!--</table>-->
-    <!--<div ng-if="!catalogAssignments.categoryid" class="well text-center">-->
-    <!--Select a category to view details-->
-    <!--</div>-->
-    <!--<div ng-if="!catalogAssignments.Meta.TotalCount && catalogAssignments.categoryid" class="well text-center">-->
-    <!--This category has no parties assigned to it-->
-    <!--</div>-->
-    <!--</uib-tab>-->
 </uib-tabset>

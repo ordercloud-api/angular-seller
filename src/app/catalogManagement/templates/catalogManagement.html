@@ -1,0 +1,8 @@
+<div class="row">
+    <div class="page-header">
+        <h3 class="pull-right" ng-if="catalogManagement.selectedCategory">Category {{catalogManagement.selectedCategory.Name}}</h3>
+        <h3>Category Management</h3>
+    </div>
+    <div class="col-sm-6" ui-view="category-tree"></div>
+    <div class="col-sm-6" ui-view="assignments"></div>
+</div>
