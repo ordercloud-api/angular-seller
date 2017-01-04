@@ -52,13 +52,13 @@ function DetailsController($stateParams, $exceptionHandler, $state, toastr, Orde
     vm.DeleteAssignment = DeleteAssignment;
     vm.deleteProduct = deleteProduct;
     vm.editProduct = editProduct;
+    vm.newAssignment = newAssignment;
 
 
 
     function editProduct() {
          ProductManagementModal.EditProduct($stateParams.productid)
              .then(function(data){
-                 console.log("here is the product update", data);
                  vm.product = data;
              })
     };
@@ -87,6 +87,11 @@ function DetailsController($stateParams, $exceptionHandler, $state, toastr, Orde
                     });
             });
     };
+
+    function newAssignment(){
+        ProductManagementModal.CreateAssignment()
+
+    }
 }
 
 

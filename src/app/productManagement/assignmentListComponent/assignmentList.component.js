@@ -10,22 +10,19 @@ angular.module('orderCloud')
     })
 ;
 
+// when the component first loads, it takes into account whether there is a buyer id or not.
+// If there is no buyerid, a productid value should be present in order to make the buyer assignments call
+// when the buyerid or productid is changed it will make an api call to filter based on buyer ID and product ID
 function ocAssignmentListCtrl($q, $resource, OrderCloud){
     var vm = this;
 
-    //Gets all product assignments for all buyers
-    vm.$onInit = onInit;
-    // when the buyer is changed it will make an api call to filter based on buyer ID and product ID
     vm.$onChanges = onChanges;
     vm.getBuyers = getBuyers;
 
-    function onInit(){
-       vm.getBuyers();
-    };
 
     function onChanges(change){
-        console.log("here is whats happening", change);
-        if( change.buyerid.currentValue){
+        if( change && change.buyerid && change.buyerid.currentValue){
+            // console.log("here is whats happening a", change);
              OrderCloud.Products.ListAssignments(vm.productid, null, null, null, null, null, null, change.buyerid.currentValue.ID)
                  .then(function(data){
                      vm.listAssignments = data;
@@ -34,13 +31,19 @@ function ocAssignmentListCtrl($q, $resource, OrderCloud){
                      console.warn(ex)
                  })
         }
-        if(change.productid.currentValue){
+        if( change && change.productid &&change.productid.currentValue){
+            // console.log("here is whats happening b", change);
             vm.getBuyers();
         }
 
     }
     function getBuyers(){
-        var df = $q.defer();
+        //loading indicator promise
+        var df =  $q.defer();
+        df.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
+        df.message = 'Loading Assignments';
+        vm.loading = df;
+
         var apiUrl = 'https://api.ordercloud.io/v1/products/assignments';
         var parameters = { 'productID': vm.productid, 'buyerID': null };
         $resource(apiUrl, parameters, {
@@ -50,7 +53,9 @@ function ocAssignmentListCtrl($q, $resource, OrderCloud){
             }
         }).callApi(null).$promise
             .then(function(data) {
+                df.resolve(data);
                 vm.listAssignments = data;
+
             })
             .catch(function(ex) {
                 console.warn(ex)
