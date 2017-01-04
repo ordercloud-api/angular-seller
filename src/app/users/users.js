@@ -47,6 +47,9 @@ function UsersConfig($stateProvider) {
                 Parameters: function ($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
                 },
+                SelectedBuyer: function($stateParams, OrderCloud) {
+                    return OrderCloud.Buyers.Get($stateParams.buyerid);
+                },
                 UsersFrom: function(RouteManagement){
                     return RouteManagement.GetUserFrom();
                 }
@@ -172,10 +175,10 @@ function UserEditController($exceptionHandler, $state, toastr, OrderCloud, Selec
     };
 }
 
-function UserCreateController($exceptionHandler, $state, toastr, UsersFrom, OrderCloud) {
+function UserCreateController($exceptionHandler, $state, toastr, UsersFrom, OrderCloud, SelectedBuyer) {
     var vm = this;
 
-    console.log('usersfrom', UsersFrom);
+    vm.selectedBuyer = SelectedBuyer;
     vm.user = {Email: '', Password: ''};
     vm.user.Active = false;
     vm.Submit = function() {
@@ -183,7 +186,7 @@ function UserCreateController($exceptionHandler, $state, toastr, UsersFrom, Orde
         OrderCloud.Users.Create(vm.user)
             .then(function(user) {
                 if(UsersFrom.value) {
-                    $state.go('buyers.createAssignment', {userID: user.ID}, {reload: true});
+                    $state.go('buyers.createAssignment', {userID: user.ID, buyerID: vm.selectedBuyer.ID}, {reload: true});
                     toastr.success('User Created', 'Success');
                 } else {
                     $state.go('users', {}, {reload: true});

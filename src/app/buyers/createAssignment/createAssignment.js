@@ -17,6 +17,9 @@ function CreateAssignmentConfig($stateProvider) {
                 SelectedUser: function($stateParams, OrderCloud) {
                     return OrderCloud.Users.Get($stateParams.userID);
                 },
+                SelectedBuyer: function($stateParams, OrderCloud) {
+                    return OrderCloud.Buyers.Get($stateParams.buyerid);
+                },
                 UserGroupsList: function(OrderCloud) {
                     return OrderCloud.UserGroups.List()
                 }
@@ -24,11 +27,13 @@ function CreateAssignmentConfig($stateProvider) {
     })
 }
 
-function CreateAssignmentController($q, $state, OrderCloud, toastr, Parameters, SelectedUser, UserGroupsList) {
+function CreateAssignmentController($q, $state, OrderCloud, toastr, Parameters, SelectedUser, SelectedBuyer, UserGroupsList) {
     var vm = this;
 
+    vm.selectedBuyer = SelectedBuyer;
     vm.selectedUser = SelectedUser;
     vm.userGroupsList = UserGroupsList;
+
     vm.saveAssignments = SaveAssignments;
 
     function SaveAssignments() {
@@ -38,7 +43,8 @@ function CreateAssignmentController($q, $state, OrderCloud, toastr, Parameters, 
         angular.forEach(vm.selectedUserGroup, function(group) {
             userGroupQueue.push(OrderCloud.UserGroups.SaveUserAssignment(
                 {
-                    userGroupAssignment: group.ID
+                    userGroupAssignment: group.ID,
+                    BuyerID: vm.selectedBuyer.ID
                 }
             ))
         });
