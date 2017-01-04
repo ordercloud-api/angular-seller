@@ -1,7 +1,7 @@
 <h3>
     <b>Create Buyer</b>
 </h3>
-<form ng-submit="buyer.Submit()" name="BuyerEditForm" novalidate>
+<form ng-submit="buyerCreate.submit()" name="BuyerEditForm" novalidate>
     <div class="row">
         <div class="form-group col-md-6">
             <label for="buyer_id">ID</label>
@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="form-group">
-        <button class="btn btn-primary" ng-click="buyerCreate.Submit();" type="button" ng-disabled="BuyerEditForm.$invalid">Save</button>
+        <button class="btn btn-primary" ng-click="buyerCreate.submit();" type="button" ng-disabled="BuyerEditForm.$invalid">Save</button>
         <button class="btn btn-default" ui-sref="^" type="button">Cancel</button>
     </div>
 </form>

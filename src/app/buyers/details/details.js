@@ -1,32 +1,37 @@
 angular.module('orderCloud')
-    .config(BuyerConfig)
-    .controller('BuyerCtrl', BuyerController);
+    .config(BuyerDetailsConfig)
+    .controller('BuyerDetailsCtrl', BuyerDetailsController)
+;
 
-function BuyerConfig($stateProvider) {
+function BuyerDetailsConfig($stateProvider) {
     $stateProvider
-        .state('buyers', {
-            parent: 'base',
-            templateUrl: 'buyers/templates/buyers.tpl.html',
-            controller: 'BuyerCtrl',
-            controllerAs: 'buyers',
-            url: '/buyers?search&page&pageSize&searchOn&sortBy',
-            resolve : {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
-                },
-                BuyerList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Buyers.List(Parameters.search, Parameters.page, Parameters.pageSize || 12/*, Parameters.searchOn, Parameters.sortBy, Parameters.filters*/);
-                    //Commenting out params that don't exist yet in the API
+        .state('buyers.details', {
+                url: '/:buyerid/details',
+                templateUrl: 'buyers/details/templates/details.html',
+                controller: 'BuyerDetailsCtrl',
+                controllerAs: 'buyerDetails',
+                resolve: {
+                    Parameters: function($stateParams, OrderCloudParameters) {
+                        return OrderCloudParameters.Get($stateParams);
+                    },
+                    SelectedBuyer: function ($stateParams, OrderCloud) {
+                        return OrderCloud.Buyers.Get($stateParams.buyerid);
+                    },
+                    UserList: function(OrderCloud, Parameters, $stateParams) {
+                        return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, $stateParams.buyerid);
+                    },
+                    UserGroupList: function(OrderCloud, Parameters, $stateParams) {
+                        return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, $stateParams.buyerid);
+                    }
                 }
-            }
-        })
-
-
+            })
 }
 
-function BuyerController($state, $ocMedia, OrderCloud, OrderCloudParameters, Parameters, BuyerList) {
+function BuyerDetailsController(Parameters, OrderCloudParameters, OrderCloud, $ocMedia, $state, SelectedBuyer, UserList, UserGroupList){
     var vm = this;
-    vm.list = BuyerList;
+    vm.selectedBuyer = SelectedBuyer;
+    vm.userList = UserList;
+    vm.userGroupList = UserGroupList;
     vm.parameters = Parameters;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
 
@@ -89,13 +94,10 @@ function BuyerController($state, $ocMedia, OrderCloud, OrderCloudParameters, Par
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Buyers.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        return OrderCloud.Users.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
             });
     };
 }
-
-
-
