@@ -1,0 +1,185 @@
+<form name="PriceScheduleCreateForm" ng-submit="createPriceScheduleModal.submit()" novalidate
+      cg-busy="createPriceScheduleModal.loading">
+    <div class="modal-header">
+        <h3>
+            <b>New Price Schedule</b>
+        </h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="priceScheduleIDInput">Price Schedule ID</label>
+            <input id="priceScheduleIDInput" type="text" pattern="([A-Za-z0-9\-\_]+)"
+                   pattern-err-type="ID_Name" class="form-control"
+                   ng-model="createPriceScheduleModal.priceSchedule.ID"/>
+        </div>
+        <div class="form-group">
+            <label for="priceScheduleNameInput">Price Schedule Name</label>
+            <input id="priceScheduleNameInput" type="text" class="form-control"
+                   ng-model="createPriceScheduleModal.priceSchedule.Name" ng-required="true"/>
+        </div>
+        <fieldset>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="priceScheduleMinQInput">Minimum Quantity</label>
+                        <input id="priceScheduleMinQInput"
+                               ng-class="{'input-disabled': priceScheduleCreate.priceSchedule.RestrictedQuantity}"
+                               pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger"
+                               ng-disabled="createPriceScheduleModal.priceSchedule.RestrictedQuantity" type="number"
+                               class="form-control" ng-model="createPriceScheduleModal.priceSchedule.MinQuantity"/>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="priceScheduleMaxQInput">Maximum Quantity</label>
+                        <input id="priceScheduleMaxQInput"
+                               ng-class="{'input-disabled': priceScheduleCreate.priceSchedule.RestrictedQuantity}"
+                               pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger"
+                               ng-disabled="createPriceScheduleModal.priceSchedule.RestrictedQuantity" type="number"
+                               class="form-control" ng-model="createPriceScheduleModal.priceSchedule.MaxQuantity"/>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Apply:</legend>
+            <div class="form-group">
+                <label for="priceScheduleApplyShippingInput">
+                    <input id="priceScheduleApplyShippingInput" type="checkbox"
+                           ng-model="createPriceScheduleModal.priceSchedule.ApplyShipping"/>
+                    Shipping
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="priceScheduleApplyTaxInput">
+                    <input id="priceScheduleApplyTaxInput" type="checkbox"
+                           ng-model="createPriceScheduleModal.priceSchedule.ApplyTax"/>
+                    Tax
+                </label>
+            </div>
+        </fieldset>
+        <!--below: another approach to grouping controls according to WCAP-->
+        <!--<div role="group" aria-labelledby="apply">-->
+        <!--<div id="apply">Apply:</div>-->
+        <!--<div>-->
+        <!--<label for="priceScheduleApplyShippingInput">-->
+        <!--<input id="priceScheduleApplyShippingInput" type="checkbox"-->
+        <!--ng-model="createPriceScheduleModal.priceSchedule.ApplyShipping"/>-->
+        <!--Shipping-->
+        <!--</label>-->
+        <!--<div>-->
+        <!--<label for="priceScheduleApplyTaxInput">-->
+        <!--<input id="priceScheduleApplyTaxInput" type="checkbox"-->
+        <!--ng-model="createPriceScheduleModal.priceSchedule.ApplyTax"/>-->
+        <!--Tax-->
+        <!--</label>-->
+        <!--</div>-->
+        <!--</div>-->
+        <br>
+        <fieldset>
+            <div>
+                <legend>Quantity Selection:</legend>
+                <div class="form-group">
+                    <label for="priceScheduleCumlative">
+                        <input id="priceScheduleCumlative" type="radio" name="selection" ng-value="false"
+                               ng-model="createPriceScheduleModal.priceSchedule.RestrictedQuantity"/>
+                        Open
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="priceScheduleRestricted">
+                        <input id="priceScheduleRestricted" type="radio" name="selection" ng-value="true"
+                               ng-model="createPriceScheduleModal.priceSchedule.RestrictedQuantity"/>
+                        Restricted
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+        <br>
+        <fieldset>
+            <legend>Price Breaks</legend>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="priceSchedulePBQInput">Quantity</label>
+                        <input id="priceSchedulePBQInput" type="number" pattern="^[0-9]*[1-9][0-9]*$"
+                               pattern-err-type="positiveInteger" class="form-control"
+                               ng-model="createPriceScheduleModal.quantity"/>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="priceSchedulePBPInput">Price (each)</label>
+                        <input id="priceSchedulePBPInput" type="number" step="any" class="form-control"
+                               ng-model="createPriceScheduleModal.price"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default form-control addps"
+                        ng-disabled="!createPriceScheduleModal.price || !createPriceScheduleModal.quantity"
+                        ng-click="createPriceScheduleModal.addPriceBreak()">Add
+                </button>
+            </div>
+        </fieldset>
+        <div class="form-group" ng-if="createPriceScheduleModal.priceSchedule.PriceBreaks.length">
+            <div class="table-responsive">
+                <section class="table-fixed-header">
+                    <div class="table-header-bg"></div>
+                    <div class="table-container">
+
+                        <table class="table table-hover">
+                            <colgroup>
+                                <col class="action-column"/>
+                            </colgroup>
+                            <thead>
+                            <tr>
+
+                                <th>
+                                    <div>Quantity</div>
+                                </th>
+                                <th>
+                                    <div>Price</div>
+                                </th>
+                                <th>
+                                    <div></div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="pricebreak in createPriceScheduleModal.priceSchedule.PriceBreaks | orderBy: 'Quantity' track by $index">
+
+                                <td ng-if="createPriceScheduleModal.priceSchedule.RestrictedQuantity">
+                                    {{pricebreak.Quantity}}
+                                </td>
+                                <td ng-if="!createPriceScheduleModal.priceSchedule.RestrictedQuantity">
+                                    {{pricebreak.displayQuantity}}
+                                </td>
+
+                                <td ng-if="createPriceScheduleModal.priceSchedule.RestrictedQuantity">{{pricebreak.Price
+                                    * pricebreak.Quantity | currency}}
+                                </td>
+                                <td ng-if="!createPriceScheduleModal.priceSchedule.RestrictedQuantity">
+                                    {{pricebreak.Price | currency}}
+                                </td>
+                                <td class="text-center">
+                                    <a class="fa fa-trash text-danger"
+                                       ng-click="createPriceScheduleModal.deletePriceBreak(createPriceScheduleModal.priceSchedule, $index)"></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary"
+                    ng-disabled="PriceScheduleCreateForm.$invalid || !createPriceScheduleModal.priceSchedule.PriceBreaks.length">
+                Save
+            </button>
+            <button type="button" class="btn btn-default" ng-click="createPriceScheduleModal.cancel()">Cancel</button>
+        </div>
+    </div>
+</form>

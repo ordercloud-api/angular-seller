@@ -1,0 +1,49 @@
+<div class="page-header">
+    <h3>
+        Existing Facets for {{facetedCatManage.category.Name}}
+        <span class="pull-right">
+            <button type="button" class="btn btn-success" ng-click="facetedCatManage.createFacetModal()"><i class="fa fa-plus-circle"></i> Create Facet</button>
+            <button type="button" class="btn btn-default" ui-sref="^"><i class="fa fa-arrow-left"></i> Back</button>
+        </span>
+    </h3>
+</div>
+<div class="well well-lg text-center" ng-if="!facetedCatManage.category.xp.OC_Facets">
+    <b>The selected category does not have any existing facets.</b>
+</div>
+<div class="panel panel-default text-capitalize" ng-if="facetedCatManage.category.xp.OC_Facets"  ng-repeat="(facetName, facet) in facetedCatManage.list">
+    <div class="panel-heading">
+        <div class="panel-header-btn-group">
+              <button class="btn btn-default" ng-model="facetedCatManage.category.xp.OC_Facets[facetName].isRequired" ng-click="facetedCatManage.toggleFacetRequired(facetName)">
+                  <i class="fa" ng-class="{'fa-check-square-o': facetedCatManage.category.xp.OC_Facets[facetName].isRequired, 'fa-square-o text-muted': !facetedCatManage.category.xp.OC_Facets[facetName].isRequired}"></i> Required
+              </button>
+              <button class="btn btn-default" ng-click="facetedCatManage.deleteFacet(facetName)"><i class="fa fa-trash text-danger"></i><span class="hidden-xs"> Delete Facet</span></button>
+        </div>
+         <h4 class="panel-title">
+             {{facetName}}
+         </h4>
+    </div>
+    <table class="table">
+        <colgroup>
+            <col/>
+            <col class="action-column"/>
+        </colgroup>
+        <tbody>
+        <tr ng-repeat="facetValue in facet.Values track by $index">
+            <td>{{facetValue}}</td>
+            <td><button class="btn btn-default btn-block" ng-click="facetedCatManage.removeValueExisting(facetName, $index)"><i class="fa fa-trash text-danger"></i></button></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="panel-body">
+        <form name="{{'newValInput' + $index}}" ng-submit="facetedCatManage.addValueExisting(facetName, $index)">
+            <div class="form-group">
+                <div class="input-group">
+                    <input id="{{'newFacetValue' + $index}}" type="text" class="form-control" ng-model="facetedCatManage[facetName].newFacetValue" placeholder="Add new value">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit"><i class="fa fa-plus-circle"></i></button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

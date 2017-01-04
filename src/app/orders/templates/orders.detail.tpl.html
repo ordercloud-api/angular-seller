@@ -1,0 +1,157 @@
+<ui-view>
+    <h3 class="page-header">
+        <b>{{ordersDetail.order.Type}} Order - {{ordersDetail.order.ID}}</b>
+    </h3>
+    <form name="OrderHistoryDetailForm" class="form-horizontal">
+        <div class="group-input">
+            <div class="toggle-favorites-button">
+                <button class="btn btn-info" ng-click="ordersDetail.removeFromFavorites()" ng-if="ordersDetail.order.xp.favorite">
+                    <i class="fa fa-star"> </i> Remove from Favorites
+                </button>
+                <button class="btn btn-primary" ng-click="ordersDetail.addToFavorites()" ng-if="!(ordersDetail.order.xp.favorite)">
+                    <i class="fa fa-star"> </i> Add To Favorites
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1">Order ID:</label>
+            <div class="col-sm-11">
+                {{ordersDetail.order.ID}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1">Date {{ordersDetail.order.DateSubmitted ? 'Submitted' : 'Created'}}:</label>
+            <div class="col-sm-11">
+                {{(ordersDetail.order.DateSubmitted || ordersDetail.order.DateCreated) | date:'medium'}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1">Created By:</label>
+            <div class="col-sm-11">
+                {{ordersDetail.order.FromUserFirstName + ' ' + ordersDetail.order.FromUserLastName}}
+            </div>
+        </div>
+        <div class="form-group" ng-if="ordersDetail.order.PaymentMethod">
+            <label class="col-sm-1">Payment Method:</label>
+            <div class="col-sm-11">
+                {{ordersDetail.order.PaymentMethod | paymentmethods}}
+            </div>
+        </div>
+        <div class="form-group" ng-if="['CreditCard', 'SpendingAccount'].indexOf(ordersDetail.order.PaymentMethod) > -1">
+            <label class="col-sm-1">{{ordersDetail.order.PaymentMethod == 'CreditCard' ? 'Credit Card' : 'Spending Account'}}:</label>
+            <div class="col-sm-11">
+                {{ordersDetail.order.PaymentMethod == 'CreditCard' ? (ordersDetail.order.CreditCard.CardType + ' ' + ordersDetail.order.CreditCard.PartialAccountNumber) : ordersDetail.order.SpendingAccount.Name}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1">Status:</label>
+            <div class="col-sm-11">
+                {{ordersDetail.order.Status}}
+            </div>
+        </div>
+        <div class="form-group" ng-if="ordersDetail.order.BillingAddress">
+            <label class="col-sm-1">Bill To:</label>
+            <div class="col-sm-11">
+                <span ng-if="ordersDetail.order.BillingAddress.CompanyName">{{ordersDetail.order.BillingAddress.CompanyName}}<br /></span>
+                <span ng-if="ordersDetail.order.BillingAddress.FirstName || ordersDetail.order.BillingAddress.LastName">{{ordersDetail.order.BillingAddress.FirstName + ' ' + ordersDetail.order.BillingAddress.LastName}}<br /></span>
+                <span>{{ordersDetail.order.BillingAddress.Street1}}<br /></span>
+                <span ng-if="ordersDetail.order.BillingAddress.Street2">{{ordersDetail.order.BillingAddress.Street2}}<br /></span>
+                <span>{{ordersDetail.order.BillingAddress.City + ', ' + ordersDetail.order.BillingAddress.State + ' ' + ordersDetail.order.BillingAddress.Zip}}<br /></span>
+            </div>
+        </div>
+        <div class="form-group" ng-if="ordersDetail.order.ShippingAddress">
+            <label class="col-sm-1">Ship To:</label>
+            <div class="col-sm-11">
+                <span ng-if="ordersDetail.order.ShippingAddress.CompanyName">{{ordersDetail.order.ShippingAddress.CompanyName}}<br /></span>
+                <span ng-if="ordersDetail.order.ShippingAddress.FirstName || ordersDetail.order.ShippingAddress.LastName">{{ordersDetail.order.ShippingAddress.FirstName + ' ' + ordersDetail.order.ShippingAddress.LastName}}<br /></span>
+                <span>{{ordersDetail.order.ShippingAddress.Street1}}<br /></span>
+                <span ng-if="ordersDetail.order.ShippingAddress.Street2">{{ordersDetail.order.ShippingAddress.Street2}}<br /></span>
+                <span>{{ordersDetail.order.ShippingAddress.City + ', ' + ordersDetail.order.ShippingAddress.State + ' ' + ordersDetail.order.ShippingAddress.Zip}}<br /></span>
+            </div>
+        </div>
+        <div class="form-group" ng-if="ordersDetail.order.CostCenter">
+            <label class="col-sm-1">Cost Center:</label>
+            <div class="col-sm-11">
+                {{ordersDetail.order.CostCenter}}
+            </div>
+        </div>
+        <div class="form-group" ng-if="ordersDetail.order.Comments">
+            <label class="col-sm-1">Comments:</label>
+            <div class="col-sm-11">
+                {{ordersDetail.order.Comments}}
+            </div>
+        </div>
+        <div ng-if="ordersDetail.order.LineItems.length">
+            <section class="table-fixed-header">
+                <div class="table-header-bg"></div>
+                <div class="table-container" ordercloud-infinite-scroll controlleras="orderEdit">
+                    <table class="table table-hover">
+                        <colgroup>
+                            <col class="action-column"/>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>
+                                <div>ID</div>
+                            </th>
+                            <th>
+                                <div>Product</div>
+                            </th>
+                            <th>
+                                <div>Unit Price</div>
+                            </th>
+                            <th>
+                                <div>Quantity</div>
+                            </th>
+                            <th>
+                                <div>Price</div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="li in ordersDetail.order.LineItems track by $index">
+                            <td>
+                                <a ui-sref="orders.detail.lineItem({lineitemid: li.ID})">{{li.ID}}</a>
+                            </td>
+                            <td>
+                                {{li.Product.Name}}
+                            </td>
+                            <td>{{li.UnitPrice | currency}}</td>
+                            <td>{{li.Quantity}}</td>
+                            <td>{{li.LineTotal | currency}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="well well-lg text-center" ng-if="!ordersDetail.order.LineItems.length">
+            <b>This order does not have any line items</b>
+        </div>
+        <div class="form-group">
+            <span class="col-sm-2">Subtotal:</span>
+            <div class="col-sm-10">
+                {{ordersDetail.order.Subtotal | currency}}
+            </div>
+        </div>
+        <div class="form-group">
+            <span class="col-sm-2">Estimated Shipping & Handling:</span>
+            <div class="col-sm-10">
+                {{ordersDetail.order.ShippingCost | currency}}
+            </div>
+        </div>
+        <div class="form-group">
+            <span class="col-sm-2">Tax:</span>
+            <div class="col-sm-10">
+                {{ordersDetail.order.TaxCost | currency}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2">Total:</label>
+            <div class="col-sm-10">
+                {{ordersDetail.order.Total | currency}}
+            </div>
+        </div>
+        <button type="button" class="btn btn-default" ui-sref="orders">Back to List</button>
+    </form>
+</ui-view>

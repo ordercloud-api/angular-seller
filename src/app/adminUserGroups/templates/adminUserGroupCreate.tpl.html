@@ -1,0 +1,23 @@
+<h3 class="page-header">
+    <b>New Admin User Group</b>
+</h3>
+<form name="AdminUserGroupCreateForm" ng-submit="adminUserGroupCreate.Submit()" novalidate>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="AdminUserGroupIDInput">Admin User Group ID</label>
+            <input id="AdminUserGroupIDInput" ordercloud-auto-id type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="adminUserGroupCreate.adminUserGroup.ID"/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="AdminUserGroupNameInput">Admin User Group Name</label>
+            <input id="AdminUserGroupNameInput" type="text" class="form-control" ng-model="adminUserGroupCreate.adminUserGroup.Name" required="true"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="AdminUserGroupDescriptionInput">Description</label>
+        <textarea id="AdminUserGroupDescriptionInput" type="text" class="form-control" ng-model="adminUserGroupCreate.adminUserGroup.Description"></textarea>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-disabled="AdminUserGroupCreateForm.$invalid">Save</button>
+        <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+    </div>
+</form>

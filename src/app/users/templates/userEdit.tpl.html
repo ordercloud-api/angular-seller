@@ -1,0 +1,65 @@
+<h3 class="page-header">
+    <b>Edit User:</b> {{userEdit.userName}}
+</h3>
+<form name="UserEditForm" ng-submit="userEdit.Submit()" novalidate>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="userIDInput">User ID</label>
+            <input id="userIDInput" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="userEdit.user.ID"/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="userNameInput">User Name</label>
+            <input id="userNameInput" type="text" class="form-control" ng-model="userEdit.user.Username" ng-required="true"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="userFirstNameInput">First Name</label>
+            <input id="userFirstNameInput" type="text" class="form-control" ng-model="userEdit.user.FirstName" ng-required="true"/>
+        </div>
+        <div class="col-sm-6 form-group">
+            <label for="userLastNameInput">Last Name</label>
+            <input id="userLastNameInput" type="text" class="form-control" ng-model="userEdit.user.LastName" ng-required="true"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <!-- TODO: make phonefield -->
+            <label for="userPhoneNumberInput">Phone Number</label>
+            <input id="userPhoneNumberInput" type="text" class="form-control" ng-model="userEdit.user.Phone" />
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="userEmailAddressInput">Email Address</label>
+            <input id="userEmailAddressInput" type="email" class="form-control" ng-model="userEdit.user.Email" require="true"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="userPasswordInput">Password</label>
+            <input id="userPasswordInput" type="password" pattern='^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$' pattern-err-type="customPassword" class="form-control" ng-model="userEdit.user.Password" confirmpassword="{{userEdit.PasswordConfirm}}"/>
+        </div>
+        <div class="col-sm-6 form-group">
+            <label for="userPasswordConfirmInput">Confirm Password</label>
+            <input id="userPasswordConfirmInput" type="password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$" pattern-err-type="customPassword" class="form-control" ng-model="userEdit.PasswordConfirm" confirmpassword="{{userEdit.user.Password}}"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="userActiveCheckbox">
+            <input id="userActiveCheckbox" type="checkbox" ng-model="userEdit.user.Active"/>
+            Active</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="userTermsAcceptedCheckbox">
+            <input id="userTermsAcceptedCheckbox" type="checkbox" ng-model="userEdit.TermsAccepted" ng-required="true"/>
+            Terms & Conditions</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-disabled="UserEditForm.$invalid">Save</button>
+        <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="userEdit.Delete()"><i class="fa fa-trash text-danger"></i></button>
+    </div>
+</form>

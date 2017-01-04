@@ -1,0 +1,41 @@
+<h3 class="page-header">Assignments for {{giftCardAssignUser.giftCard.Name}}</h3>
+<div class="well well-lg text-center" ng-if="!giftCardAssignUser.list.Items.length">
+    <b>There are no User Groups under the active Buyer company</b>
+</div>
+<ordercloud-search servicename="Users" controlleras="giftCardAssignUser"></ordercloud-search>
+<section class="table-fixed-header" ng-if="giftCardAssignUser.list.Items.length">
+    <div class="table-header-bg"></div>
+    <div class="table-container" ordercloud-infinite-scroll servicename="Users" controlleras="giftCardAssignUser" idname="UserID">
+        <table class="table table-hover">
+            <colgroup>
+                <col class="action-column">
+            </colgroup>
+            <thead>
+            <tr>
+                <th></th>
+                <th>
+                    <div>ID</div>
+                </th>
+                <th>
+                    <div>Name</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="group in giftCardAssignUser.list.Items track by $index">
+                <td class="text-center">
+                    <input name="{{'assignCheckbox' + $index}}" type="checkbox" ng-model="group.selected">
+                </td>
+                <td><p>{{group.ID}}</p></td>
+                <td><p>{{group.Username}}</p></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="form-group">
+    <button type="button" class="btn btn-default" ui-sref="^"><i class="fa fa-arrow-left"></i> Back</button>
+    <button type="button" class="btn btn-primary" ng-click="giftCardAssignUser.saveAssignments()">Update User Assignments</button>
+    <button type="button" class="btn btn-default" ui-sref="^.assignGroup({giftcardid: giftCardAssignUser.giftCard.ID})">Assign Groups</button>
+</div>

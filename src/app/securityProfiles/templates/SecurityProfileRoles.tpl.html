@@ -1,0 +1,47 @@
+<!--====== HEADINGS ======-->
+<div class="page-header">
+    <div class="btn-toolbar pull-right">
+        <button type="button" class="btn btn-default" ui-sref="^"><i class="fa fa-arrow-left"></i> Back</button>
+    </div>
+    <h3>Roles for {{securityProfileRoles.selectedProfile.ID}}</h3>
+    <div class="text-muted">
+	<p>Adding or removing roles assigned to a Security Profile can only be done from the DevCenter Dashboard.</p>
+</div>
+</div>
+<div ng-if="securityProfileRoles.availableRoles.length">
+	<table class="table table-hover oc-table-responsive">
+		<thead>
+			<tr>
+				<th scope="col">Assigned Roles</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="roles-list" data-title="Assigned Roles">
+				<div class="no-matches" ng-if="!securityProfileRoles.availableRoles.length">
+					<b>This Security Profile has no claims assigned</b>
+				</div>
+                    <div class="label label-default" ng-repeat="role in securityProfileRoles.availableRoles">{{role}}</div>         
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="table table-hover oc-table-responsive">
+		<thead>
+			<tr>
+				<th scope="col">Non-Assigned Roles</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="roles-list" data-title="Non-Assigned Roles">
+                    <div class="label label-default" ng-repeat="role in securityProfileRoles.unavailableRoles">{{role}}</div>
+                    <div class="no-matches" ng-if="!securityProfileRoles.unavailableRoles.length">
+						<b>This Security Profile has been assigned all possible claims</b>
+					</div>         
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+

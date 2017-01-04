@@ -1,0 +1,43 @@
+<h3 class="page-header">
+    <b>Edit Gift Card:</b> {{giftCardEdit.giftCard.Name}}
+</h3>
+<form name="GiftCardEditForm" ng-submit="giftCardEdit.Submit(giftCardEdit.giftCard)" novalidate>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="giftcardIDInput">Gift Card ID</label>
+            <input required id="giftcardIDInput" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="giftCardEdit.giftCard.ID">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="giftcardNameInput">Gift Card Name</label>
+            <input required id="giftcardNameInput" type="text"  class="form-control" ng-model="giftCardEdit.giftCard.Name">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="giftcardStartDate">Start Date</label>
+            <input class="form-control" ng-show="application.$ocMedia('max-width: 767px')" type="date" id="giftcardStartinput2" ng-model="giftCardEdit.giftCard.StartDate"/>
+            <input class="form-control" type="text" is-open="open1" uib-datepicker-popup="MM/dd/yyyy" ng-click="open1 = !open1" id="giftcardStartDate" datepicker-append-to-body="true" show-weeks="false"  ng-model="giftCardEdit.giftCard.StartDate">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="giftcardExpirationDate">End Date</label>
+            <input class="form-control" ng-show="application.$ocMedia('max-width: 767px')" type="date" id="giftcardStartinputvv2" ng-model="giftCardEdit.giftCard.EndDate"/>
+            <input class="form-control" ng-hide="application.$ocMedia('max-width: 767px')" type="text" is-open="open2" uib-datepicker-popup="MM/dd/yyyy" ng-click="open2 = !open2" id="giftcardExpirationDate" datepicker-append-to-body="true" show-weeks="false"  ng-model="giftCardEdit.giftCard.EndDate" min-date="giftCardEdit.giftCard.StartDate">
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="giftcardBalance">Balance</label>
+            <input required id="giftcardBalance" type="number" step="any" min="0" class="form-control" ng-model="giftCardEdit.giftCard.Balance">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="giftcardMaxPercentOfTotal">Redemption Code</label>
+            <input required id="giftcardMaxPercentOfTotal" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="giftCardEdit.giftCard.RedemptionCode">
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-disabled="GiftCardEditForm.$invalid">Save</button>
+        <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="giftCardEdit.Delete(giftCardEdit.giftCard)"><i class="fa fa-trash text-danger"></i></button>
+    </div>
+</form>

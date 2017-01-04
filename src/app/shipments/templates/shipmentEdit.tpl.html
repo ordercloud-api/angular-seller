@@ -1,0 +1,151 @@
+<h3 class="page-header">
+    <b>Edit Shipment:</b> {{shipmentEdit.ShipmentID}}
+</h3>
+<form name="ShipmentEditForm" ng-submit="shipmentEdit.Submit()" novalidate>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="shipmentIDInput">ID</label>
+            <input id="shipmentIDInput" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="shipmentEdit.shipment.ID" ng-disabled="shipmentEdit.autoGen" ng-required="!shipmentEdit.autoGen">
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="shipperInput">Shipper</label>
+            <input id="shipperInput" type="text" class="form-control" ng-model="shipmentEdit.shipment.Shipper"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="trackingNumberInput">Tracking Number</label>
+            <input id="trackingNumberInput" type="text" class="form-control" ng-model="shipmentEdit.shipment.TrackingNumber"/>
+        </div>
+        <div class="form-group col-sm-3">
+            <label for="shipDateInput">Ship Date</label>
+            <input class="form-control" ng-show="application.$ocMedia('max-width: 767px')" ng-required="application.$ocMedia('max-width: 767px')" type="date" id="shipmentDate" ng-model="shipmentEdit.shipment.DateShipped" />
+            <input id="shipDateInput" ng-hide="application.$ocMedia('max-width: 767px')"  class="form-control" type="text" is-open="open1" ng-required="!application.$ocMedia('max-width: 767px')"  uib-datepicker-popup="MM/dd/yyyy" ng-click="open1 = !open1"  datepicker-append-to-body="true" show-weeks="false" ng-model="shipmentEdit.shipment.DateShipped"/>
+        </div>
+        <div class="form-group col-sm-3">
+            <label for="costInput">Cost</label>
+            <input id="costInput" type="number" step="any" class="form-control" ng-model="shipmentEdit.shipment.Cost"/>
+        </div>
+    </div>
+    <div uib-collapse="shipmentEdit.OrderSelected" class="form-group">
+        <h4>
+            <b>Select Order</b>
+        </h4>
+        <ordercloud-search servicename="Orders" controlleras="shipmentEdit"></ordercloud-search>
+        <div class="well well-lg text-center" ng-if="!shipmentEdit.list.Items.length">
+            <b ng-if="!shipmentEdit.searching">The selected buyer does not have any orders.</b>
+            <b ng-if="shipmentEdit.searching"><i class="fa fa-search"></i> No orders match your search.</b>
+        </div>
+        <section class="table-fixed-header" ng-if="shipmentEdit.list.Items.length">
+            <div class="table-header-bg"></div>
+            <div class="table-container" ordercloud-infinite-scroll servicename="Orders" controlleras="shipmentEdit">
+                <table class="table table-hover">
+                    <colgroup>
+                        <col class="action-column"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>
+                            <div>Order ID</div>
+                        </th>
+                        <th>
+                            <div>Date Shipped</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="order in shipmentEdit.list.Items track by $index" ng-click="shipmentEdit.goToLineItems(order)">
+                        <td>{{order.ID}}</td>
+                        <td>{{order.DateCreated | date}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div uib-collapse="!shipmentEdit.OrderSelected" class="form-group">
+        <h4>
+            <b>Select Line Items</b>
+        </h4>
+        <div class="well well-lg text-center" ng-if="!shipmentEdit.lineitems.list.Items.length">
+            <b>The selected order does not have any line items.</b>
+        </div>
+        <section class="table-fixed-header" ng-if="shipmentEdit.lineitems.list.Items.length">
+            <div class="table-header-bg"></div>
+            <div class="table-container">
+                <table class="table table-hover">
+                    <colgroup>
+                        <col class="action-column"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            <div>Line Item ID</div>
+                        </th>
+                        <th>
+                            <div>Requested</div>
+                        </th>
+                        <th>
+                            <div>Shipped</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="li in shipmentEdit.lineitems.list.Items track by $index" ng-class="{'list-item-disabled': li.disabled}">
+                        <td class="text-center"><input type="checkbox" ng-model="li.addToShipment"></td>
+                        <td>{{li.ID}}</td>
+                        <td>{{li.Quantity}}</td>
+                        <td>
+                            <p ng-if="!li.addToShipment">{{li.QuantityShipped || 0}}</p>
+                            <input type="number" ng-disabled="li.disabled" class="form-control" ng-if="li.addToShipment" ng-model="li.QuantityShipped" min="1" max="{{li.Quantity}}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div class="well well-lg text-center" ng-show="!shipmentEdit.shipment.Items.length">
+        <b>The selected shipment does not currently have any line items.</b>
+    </div>
+    <div ng-hide="!shipmentEdit.shipment.Items.length" class="form-group">
+        <h4>
+            <b>Line Items on this Shipment</b>
+        </h4>
+        <section class="table-fixed-header">
+            <div class="table-header-bg"></div>
+            <div class="table-container" ordercloud-infinite-scroll servicename="Orders" controlleras="shipmentEdit">
+                <table class="table table-hover">
+                    <colgroup>
+                        <col class="action-column"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            <div>Line Item ID</div>
+                        </th>
+                        <th>
+                            <div>Shipped</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="li in shipmentEdit.shipment.Items track by $index">
+                        <td class="text-center"><a class="fa fa-trash text-danger" ng-click="shipmentEdit.deleteLineItem($index)"></a></td>
+                        <td>{{li.LineItemID}}</td>
+                        <td class="text-center"><input type="number" class="form-control" ng-model="li.QuantityShipped" min="1" max="{{li.Quantity}}"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-disabled="ShipmentEditForm.$invalid">Save</button>
+        <button type="button" class="btn btn-default" ng-click="shipmentEdit.unselectOrder()" ng-if="shipmentEdit.OrderSelected">Unselect Order</button>
+        <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="shipmentEdit.Delete()"><i class="fa fa-trash text-danger"></i></button>
+    </div>
+</form>

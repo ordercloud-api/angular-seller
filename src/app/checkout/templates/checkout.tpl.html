@@ -1,0 +1,29 @@
+<article id="COMPONENT_Checkout" class="container-fluid">
+	<h3 class="page-header">
+		Checkout
+	</h3>
+	<div class="row">
+		<div class="col-sm-8">
+			<nav id="checkout_nav">
+				<ul class="nav nav-pills">
+					<li role="presentation" ui-sref-active="active">
+						<a ui-sref=".shipping">Shipping</a>
+					</li>
+					<li role="presentation" ui-sref-active="active">
+						<a ui-sref=".billing">Billing</a>
+					</li>
+					<li role="presentation" ui-sref-active="active">
+						<a ui-sref=".payment">Payment</a>
+					</li>
+					<li role="presentation" ui-sref-active="active" ng-if="checkout.orderIsValid()">
+						<a ng-click="checkout.checkShippingAddresses()">Confirmation</a>
+					</li>
+				</ul>
+			</nav>
+			<ui-view></ui-view>
+		</div>
+		<div class="col-sm-4">
+            <ordercloud-checkout-lineitems addresses="checkout.shippingAddresses" order="checkout.currentOrder"></ordercloud-checkout-lineitems>
+		</div>
+	</div>
+</article>

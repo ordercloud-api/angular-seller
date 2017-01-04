@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><b>Line Items</b></div>
+    <div class="panel-body">
+        <div style="max-height:500px; overflow-y:auto;" ordercloud-infinite-scroll controlleras="orderConfirmation">
+            <table class="table table-hover">
+                <tbody>
+                    <colgroup>
+                        <col style="width:100px;">
+                        <col>
+                        <col style="width:75px;">
+                    </colgroup>
+                    <tr ng-repeat-start="lineItem in confirmationLI.lineItems.Items track by $index" class="item_info">
+                        <td>
+                            {{lineItem.Quantity}}
+                        </td>
+                        <td>
+                            <a href="#">{{lineItem.Product.Name}}</a><br>
+                            <small class="text-muted">{{lineItem.ProductID}}</small></br>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end class="shipping_info" ng-if="confirmationLI.isMultipleAddressShipping && lineItem.ShippingAddress && !order.ShippingAddressID">
+                        <div>
+                            <td colspan="3">
+                                <label>Shipping To:</label>
+                                <p>{{lineItem.ShippingAddress | address}}</p>
+                            </td>
+                        </div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

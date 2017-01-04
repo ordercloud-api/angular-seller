@@ -1,0 +1,39 @@
+<h3 class="page-header">
+    Assignments for {{userGroupAssign.UserGroup.Name}}
+</h3>
+<ordercloud-search servicename="Users" controlleras="userGroupAssign"></ordercloud-search>
+<section class="table-fixed-header">
+    <div class="table-header-bg"></div>
+    <div class="table-container" ordercloud-infinite-scroll servicename="Users" controlleras="userGroupAssign" idname="UserID" disable-dynamic-validation>
+        <table class="table table-hover">
+            <colgroup>
+                <col class="action-column"/>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    <div>ID</div>
+                </th>
+                <th>
+                    <div>Username</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="user in userGroupAssign.list.Items track by $index">
+                <td class="text-center">
+                    <input name="{{'userGroup_assign_' + $index}}"  type="checkbox" ng-model="user.selected">
+                </td>
+                <td>
+                    {{user.ID}}
+                </td>
+                <td>{{user.Username}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<button type="button" class="btn btn-default" ng-click="userGroupAssign.cancel()"><i class="fa fa-arrow-left"></i> Back</button>
+<button type="button" class="btn btn-primary" ng-click="userGroupAssign.saveAssignments()">Update Assignments</button>

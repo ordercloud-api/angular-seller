@@ -1,0 +1,39 @@
+<h3 class="page-header">
+    User Assignments for {{promotionAssignUser.promotion.Name}}
+</h3>
+<ordercloud-search servicename="Users" controlleras="promotionAssignUser"></ordercloud-search>
+<section class="table-fixed-header">
+    <div class="table-header-bg"></div>
+    <div class="table-container" ordercloud-infinite-scroll servicename="Users" controlleras="promotionAssignUser" idname="UserID" disable-dynamic-validation>
+        <table class="table table-hover">
+            <colgroup>
+                <col class="action-column">
+            </colgroup>
+            <thead>
+            <tr>
+                <th></th>
+                <th>
+                    <div>ID</div>
+                </th>
+                <th>
+                    <div>Username</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="user in promotionAssignUser.list.Items track by $index">
+                <td class="text-center">
+                    <input name="{{'assignCheckbox' + $index}}" type="checkbox" ng-model="user.selected">
+                </td>
+                <td>{{user.ID}}</td>
+                <td>{{user.Username}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="form-group">
+    <button type="button" class="btn btn-default" ui-sref="^"><i class="fa fa-arrow-left"></i> Back</button>
+    <button type="button" class="btn btn-primary" ng-click="promotionAssignUser.saveAssignments()">Update Party Assignments</button>
+    <button type="button" class="btn btn-default" ui-sref="^.assignGroup({promotionid: promotionAssignUser.promotion.ID})">Assign Groups</button>
+</div>

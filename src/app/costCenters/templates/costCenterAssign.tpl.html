@@ -1,0 +1,43 @@
+<h3 class="page-header">
+    Assignments for {{costCenterAssign.CostCenter.Name}}
+</h3>
+<div class="well well-lg text-center" ng-if="!costCenterAssign.list.Items.length">
+    <b>The selected buyer does not have any user groups, </b>
+    <a type="button" ui-sref="^.groupCreate">create one now</a>
+</div>
+<ordercloud-search servicename="UserGroups" controlleras="costCenterAssign"></ordercloud-search>
+<section class="table-fixed-header" ng-if="costCenterAssign.list.Items.length">
+    <div class="table-header-bg"></div>
+    <div class="table-container" ordercloud-infinite-scroll servicename="UserGroups" controlleras="costCenterAssign" idname="UserGroupID" disable-dynamic-validation>
+        <table class="table table-hover">
+            <colgroup>
+                <col class="action-column"/>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    <div>ID</div>
+                </th>
+                <th>
+                    <div>Name</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="group in costCenterAssign.list.Items track by $index">
+                <td class="text-center">
+                    <input name="{{'costCenter_assign_' + $index}}"  type="checkbox" ng-model="group.selected">
+                </td>
+                <td>
+                    {{group.ID}}
+                </td>
+                <td>{{group.Name}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<button type="button" class="btn btn-default" ui-sref="^"><i class="fa fa-arrow-left"></i> Back</button>
+<button type="button" class="btn btn-primary" ng-click="costCenterAssign.saveAssignments()">Update Assignments</button>

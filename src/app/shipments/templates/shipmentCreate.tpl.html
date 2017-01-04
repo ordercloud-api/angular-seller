@@ -1,0 +1,106 @@
+<h3 class="page-header">
+    <b>New Shipment</b>
+</h3>
+<form name="ShipmentCreateForm" ng-submit="shipmentCreate.Submit()" novalidate>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="productIDInput">Shipment ID</label>
+            <input id="productIDInput" ordercloud-auto-id type="text" class="form-control" ng-model="shipmentCreate.shipment.ID"/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="shipperInput">Shipper</label>
+            <input id="shipperInput" type="text" class="form-control" ng-model="shipmentCreate.shipment.Shipper" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="trackingNumberInput">Tracking Number</label>
+            <input id="trackingNumberInput" type="text" class="form-control" ng-model="shipmentCreate.shipment.TrackingNumber"/>
+        </div>
+        <div class="form-group col-sm-3">
+            <label for="shipDateInput">Ship Date</label>
+            <input class="form-control" ng-show="application.$ocMedia('max-width: 767px')" ng-required="application.$ocMedia('max-width: 767px')" type="date" id="shipmentDate" ng-model="shipmentCreate.shipment.DateShipped" />
+            <input id="shipDateInput" ng-hide="application.$ocMedia('max-width: 767px')" ng-required="!application.$ocMedia('max-width: 767px')" class="form-control" type="text" is-open="open1" uib-datepicker-popup="MM/dd/yyyy" ng-click="open1 = !open1"  datepicker-append-to-body="true" show-weeks="false" ng-model="shipmentCreate.shipment.DateShipped"/>
+        </div>
+        <div class="form-group col-sm-3">
+            <label for="costInput">Cost</label>
+            <input id="costInput" type="number" step="any" class="form-control" ng-model="shipmentCreate.shipment.Cost"/>
+        </div>
+    </div>
+    <div uib-collapse="shipmentCreate.OrderSelected" class="form-group">
+        <h4>
+            <b>Select Order</b>
+        </h4>
+        <section class="table-fixed-header" ng-if="shipmentCreate.list.Items.length">
+            <div class="table-header-bg"></div>
+            <div class="table-container" ordercloud-infinite-scroll servicename="Orders" controlleras="shipmentCreate">
+                <table class="table table-hover">
+                    <colgroup>
+                        <col class="action-column"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>
+                            <div>Order ID</div>
+                        </th>
+                        <th>
+                            <div>Date Shipped</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="order in shipmentCreate.list.Items track by $index" ng-click="shipmentCreate.goToLineItems(order)">
+                        <td>{{order.ID}}</td>
+                        <td>{{order.DateCreated | date}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div uib-collapse="!shipmentCreate.OrderSelected" class="form-group">
+        <h4>
+            <b>Select Line Items</b>
+        </h4>
+        <section class="table-fixed-header" ng-if="shipmentCreate.lineitems.list.Items.length">
+            <div class="table-header-bg"></div>
+            <div class="table-container" ordercloud-infinite-scroll servicename="LineItems" controlleras="shipmentCreate">
+                <table class="table table-hover">
+                    <colgroup>
+                        <col class="action-column"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            <div>Line Item ID</div>
+                        </th>
+                        <th>
+                            <div>Quantity Requested</div>
+                        </th>
+                        <th>
+                            <div>Quantity Shipped</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="li in shipmentCreate.lineitems.list.Items track by $index">
+                        <td class="text-center"><input type="checkbox" ng-model="li.addToShipment"></td>
+                        <td>{{li.ID}}</td>
+                        <td>{{li.Quantity}}</td>
+                        <td>
+                            <p ng-if="!li.addToShipment">{{li.QuantityShipped}}</p>
+                            <input type="number" class="form-control" ng-model="li.QuantityShipped" ng-if="li.addToShipment" min="1" max="{{li.Quantity}}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-disabled="ShipmentCreateForm.$invalid">Save</button>
+        <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="shipmentCreate.unselectOrder()" ng-if="shipmentCreate.OrderSelected">Unselect Order</button>
+    </div>
+</form>

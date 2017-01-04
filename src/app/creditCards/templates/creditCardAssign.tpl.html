@@ -1,0 +1,101 @@
+<h3 class="page-header">
+    Assignments for {{creditCardAssign.creditCard.ID}}
+</h3>
+
+<!--====== SEARCH/FILTERS ======-->
+<form name="CreditCardAssignSearchForm" class="form-inline" ng-submit="creditCardAssign.search()">
+    <fieldset class="form-group">
+        <input type="search" placeholder="Search User Groups..." ng-model="creditCardAssign.parameters.search" class="form-control">
+    </fieldset>
+    <fieldset class="form-group" ng-class="{'text-center':application.$ocMedia('max-width:767px')}">
+		<span ng-class="{'btn-group':creditCardAssign.searchResults}">
+			<button type="submit" class="btn btn-primary">Search</button>
+			<button ng-if="creditCardAssign.searchResults" ng-click="creditCardAssign.clearSearch()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
+		</span>
+		<span ng-class="{'btn-group':creditCardAssign.filtersApplied}">
+			<button type="button" class="btn btn-default" ng-if="application.$ocMedia('max-width:767px')" ng-click="creditCardAssign.showFilters = !creditCardAssign.showFilters"><i class="fa fa-filter"></i> Filters</button>
+			<button ng-if="creditCardAssign.filtersApplied" ng-click="creditCardAssign.clearFilters()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
+		</span>
+    </fieldset>
+</form>
+<div class="row" style="margin-top:15px;" uib-collapse="!creditCardAssign.showFilters">
+    <div class="col-md-6 col-lg-4">
+        <div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
+            <label>Sort By:</label>
+            <div ng-class="{'input-group':creditCardAssign.sortSelection}">
+                <select placeholder="Sort" class="form-control" ng-model="creditCardAssign.sortSelection" ng-change="creditCardAssign.updateSort()">
+                    <option value="">None</option>
+                    <option value="ID">ID</option>
+                    <option value="Name">User Group Name</option>
+                </select>
+                <div ng-if="creditCardAssign.sortSelection" class="input-group-btn">
+                    <button class="btn btn-default" ng-click="creditCardAssign.reverseSort()">
+                        <i class="fa fa-sort"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--====== LIST ======-->
+<div ng-if="creditCardAssign.list.Items.length">
+    <b class="pull-right">{{(application.$ocMedia('min-width:768px') ? creditCardAssign.list.Meta.ItemRange[0] : '1') + ' - '
+        + creditCardAssign.list.Meta.ItemRange[1] + ' of ' + creditCardAssign.list.Meta.TotalCount + ' results'}}</b>
+    <table class="table table-hover oc-table-responsive">
+        <thead>
+        <tr>
+            <th scope="col">
+            </th>
+
+            <th scope="col">
+                <a href="#" role="button" ng-click="creditCardAssign.updateSort('ID')">
+                    ID
+                    <i class="fa fa-caret-down" ng-show="creditCardAssign.parameters.sortBy == 'ID'"></i>
+                    <i class="fa fa-caret-up" ng-show="creditCardAssign.parameters.sortBy == '!ID'"></i>
+                </a>
+            </th>
+            <th scope="col">
+                <a href="#" role="button" ng-click="creditCardAssign.updateSort('Name')">
+                    User Group Name
+                    <i class="fa fa-caret-down" ng-show="creditCardAssign.parameters.sortBy == 'Name'"></i>
+                    <i class="fa fa-caret-up" ng-show="creditCardAssign.parameters.sortBy == '!Name'"></i>
+                </a>
+            </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="group in creditCardAssign.list.Items">
+            <th>
+                <input name="{{'assignCheckbox' + $index}}" type="checkbox" ng-model="group.selected">
+            </th>
+            <td data-title="ID">{{group.ID}}</td>
+            <td data-title="Name">{{group.Name}}</td>
+
+        </tr>
+        </tbody>
+    </table>
+    <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && creditCardAssign.list.Meta.TotalPages > 1">
+        <uib-pagination boundary-links="creditCardAssign.list.Meta.TotalPages > 5"
+                        max-size="5"
+                        total-items="creditCardAssign.list.Meta.TotalCount"
+                        items-per-page="creditCardAssign.list.Meta.PageSize"
+                        ng-model="creditCardAssign.list.Meta.Page"
+                        ng-change="creditCardAssign.pageChanged()"></uib-pagination>
+    </div>
+    <button type="button"
+            ng-if="application.$ocMedia('max-width:767px')"
+            class="btn btn-default btn-block btn-lg"
+            ng-show="creditCardAssign.list.Meta.Page < creditCardAssign.list.Meta.TotalPages"
+            ng-click="creditCardAssign.loadMore()">Load More
+    </button>
+</div>
+
+<button type="button" class="btn btn-default" ui-sref="^"><i class="fa fa-arrow-left"></i> Back</button>
+<button type="button" class="btn btn-primary" ng-click="creditCardAssign.saveAssignments()">Update Assignments</button>
+
+
+
+

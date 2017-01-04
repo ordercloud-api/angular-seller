@@ -1,0 +1,21 @@
+<div id="catalogSearchbar" class="form-group">
+    <form name="ProductCategorySearch" ng-submit="catalogSearch.onHardEnter(catalogSearch.searchTerm)">
+        <div class="input-group">
+            <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search"
+                    ng-model="catalogSearch.searchTerm"
+                    uib-typeahead="item as item.Name for item in catalogSearch.popupResults($viewValue)"
+                    typeahead-popup-template-url="catalogSearch/templates/catalogSearchDirective.popup.tpl.html"
+                    typeahead-on-select="catalogSearch.onSelect($item)"
+                    typeahead-focus-first="false"
+                    ng-model-options="{debounce:{'default':300,'blur':0}}"
+            />
+            <span class="input-group-btn">
+                <button ng-click="catalogSearch.onHardEnter(catalogSearch.searchTerm)" class="btn btn-primary"><i
+                        class="fa fa-search"></i></button>
+            </span>
+        </div>
+    </form>
+</div>

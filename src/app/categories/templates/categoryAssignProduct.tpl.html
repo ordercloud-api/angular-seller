@@ -1,0 +1,44 @@
+<h3 class="page-header">
+    Product Assignments for {{categoryAssignProd.Category.Name}}
+</h3>
+<ordercloud-search servicename="Products" controlleras="categoryAssignProd"></ordercloud-search>
+<div class="well well-lg text-center" ng-if="!categoryAssignProd.list.Items.length">
+    <b>The selected buyer does not have any products, </b>
+    <a type="button" ui-sref="^.productCreate">create one now</a>
+</div>
+<section class="table-fixed-header" ng-if="categoryAssignProd.list.Items.length">
+    <div class="table-header-bg"></div>
+    <div class="table-container" ordercloud-infinite-scroll servicename="Products" controlleras="categoryAssignProd" idname="ProductID" disable-dynamic-validation>
+        <table class="table table-hover">
+            <colgroup>
+                <col class="action-column"/>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    <div>ID</div>
+                </th>
+                <th>
+                    <div>Name</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="product in categoryAssignProd.list.Items track by $index">
+                <td class="text-center">
+                    <input name="{{'product_assign_' + $index}}"  type="checkbox" ng-model="product.selected">
+                </td>
+                <td>{{product.ID}}</td>
+                <td>{{product.Name}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="form-group">
+    <button type="button" class="btn btn-default" ui-sref="^"><i class="fa fa-arrow-left"></i> Back</button>
+    <button type="button" class="btn btn-primary" ng-click="categoryAssignProd.saveAssignments()">Update Product Assignments</button>
+    <button type="button" class="btn btn-default" ui-sref="^.assignParty({categoryid: categoryAssignProd.Category.ID})">Assign Parties</button>
+</div>

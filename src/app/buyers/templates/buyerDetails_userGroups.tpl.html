@@ -1,0 +1,79 @@
+<form name="UserGroupsSearchForm" class="form-inline" ng-submit="buyerDetails.search()">
+    <fieldset class="form-group">
+        <input type="search" placeholder="Search User Groups..." ng-model="buyerDetails.parameters.search" class="form-control">
+    </fieldset>
+    <fieldset class="form-group" ng-class="{'text-center':application.$ocMedia('max-width:767px')}">
+		<span ng-class="{'btn-group':buyerDetails.searchResults}">
+			<button type="submit" class="btn btn-primary">Search</button>
+			<button ng-if="buyerDetails.searchResults" ng-click="buyerDetails.clearSearch()" type="button"
+                    class="btn btn-default"><i class="fa fa-times"></i></button>
+		</span>
+		<span ng-class="{'btn-group':buyerDetails.filtersApplied}" ng-if="application.$ocMedia('max-width:767px')">
+			<button type="button" class="btn btn-default"
+                    ng-click="buyerDetails.showFilters = !buyerDetails.showFilters"><i class="fa fa-filter"></i> Filters
+            </button>
+			<button ng-if="buyerDetails.filtersApplied" ng-click="buyerDetails.clearFilters()" type="button"
+                    class="btn btn-default"><i class="fa fa-times"></i></button>
+		</span>
+    </fieldset>
+    <button type="button" class="btn btn-primary pull-right" ui-sref="userGroups.create({fromRoute: 'buyerDetails', buyerid: buyerDetails.selectedBuyer.ID})"><i class="fa fa-plus-circle"></i> Create New</button>
+</form>
+<div class="row" style="margin-top:15px;" uib-collapse="!buyerDetails.showFilters">
+    <div class="col-md-6 col-lg-4">
+        <div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
+            <label>Sort By:</label>
+            <div ng-class="{'input-group':buyerDetails.sortSelection}">
+                <select placeholder="Sort" class="form-control" ng-model="buyerDetails.sortSelection"
+                        ng-change="buyerDetails.updateSort()">
+                    <option value="">None</option>
+                    <option value="ID">ID</option>
+                    <option value="Name">Name</option>
+                </select>
+                <div ng-if="buyerDetails.sortSelection" class="input-group-btn">
+                    <button class="btn btn-default" ng-click="buyerDetails.reverseSort()">
+                        <i class="fa fa-sort"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-hover oc-table-responsive">
+    <thead>
+    <tr>
+        <th scope="col">
+            <a href="#" role="button" ng-click="buyerDetails.updateSort('ID')">
+                ID
+                <i class="fa fa-caret-down" ng-show="buyerDetails.parameters.sortBy == 'ID'"></i>
+                <i class="fa fa-caret-up" ng-show="buyerDetails.parameters.sortBy == '!ID'"></i>
+            </a>
+        </th>
+        <th scope="col">
+            <a href="#" role="button" ng-click="buyerDetails.updateSort('Name')">
+                Name
+                <i class="fa fa-caret-down" ng-show="buyerDetails.parameters.sortBy == 'Name'"></i>
+                <i class="fa fa-caret-up" ng-show="buyerDetails.parameters.sortBy == '!Name'"></i>
+            </a>
+        </th>
+        <th scope="col">
+            <a href="#" role="button" ng-click="buyerDetails.updateSort('Description')">
+                Description
+                <i class="fa fa-caret-down" ng-show="buyerDetails.parameters.sortBy == 'Description'"></i>
+                <i class="fa fa-caret-up" ng-show="buyerDetails.parameters.sortBy == '!Description'"></i>
+            </a>
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="userGroups in buyerDetails.userGroupList.Items">
+        <th scope="row">{{userGroups.ID}}</th>
+        <td data-title="Name">{{userGroups.Name}}</td>
+        <td data-title="Description">{{userGroups.Description}}</td>
+        <td class="actions-cell">
+            <button ui-sref="userGroups.edit({usergroupid:userGroups.ID})" class="btn btn-default btn-sm">Edit</button>
+            <button ui-sref="userGroups.assign({fromRoute: 'buyerDetails', usergroupid:userGroups.ID, buyerid: buyerDetails.selectedBuyer.ID})" class="btn btn-default btn-sm">Assign</button>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,123 @@
+<h3 class="page-header">
+    <b>Edit Price Schedule:</b> {{priceScheduleEdit.priceScheduleName}}
+</h3>
+<form name="PriceScheduleEditForm" ng-submit="priceScheduleEdit.Submit()" novalidate>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="priceScheduleIDInput">Price Schedule ID</label>
+            <input id="priceScheduleIDInput" type="text" class="form-control" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="priceScheduleEdit.priceSchedule.ID" ng-required="true"/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="priceScheduleNameInput">Price Schedule Name</label>
+            <input id="priceScheduleNameInput" type="text" class="form-control" ng-model="priceScheduleEdit.priceSchedule.Name" ng-required="true"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-sm-6 col-no-padding">
+            <div class="col-sm-6">
+                Apply:
+                <div>
+                    <label for="priceScheduleApplyShippingInput">
+                        <input id="priceScheduleApplyShippingInput" type="checkbox" ng-model="priceScheduleEdit.priceSchedule.ApplyShipping"/>
+                        Shipping
+                    </label>
+                </div>
+                <div>
+                    <label for="priceScheduleApplyTaxInput">
+                        <input id="priceScheduleApplyTaxInput" type="checkbox" ng-model="priceScheduleEdit.priceSchedule.ApplyTax"/>
+                        Tax
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                Quantity Selection:
+                <div>
+                    <label for="priceScheduleCumlative">
+                        <input id="priceScheduleCumlative" type="radio" name="selection" ng-value="false" ng-model="priceScheduleEdit.priceSchedule.RestrictedQuantity"/>
+                        Open
+                    </label>
+                </div>
+                <div>
+                    <label for="priceScheduleRestricted">
+                        <input id="priceScheduleRestricted" type="radio" name="selection" ng-value="true" ng-model="priceScheduleEdit.priceSchedule.RestrictedQuantity"/>
+                        Restricted
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-no-padding">
+            <div class="col-sm-6">
+                <label for="priceScheduleMinQInput">Minumum Quantity</label>
+                <input id="priceScheduleMinQInput" ng-class="{'input-disabled': priceScheduleEdit.priceSchedule.RestrictedQuantity}" pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger" ng-disabled="priceScheduleEdit.priceSchedule.RestrictedQuantity" type="number" class="form-control" ng-model="priceScheduleEdit.priceSchedule.MinQuantity"/>
+            </div>
+            <div class="col-sm-6">
+                <label for="priceScheduleMaxQInput">Maximum Quantity</label>
+                <input id="priceScheduleMaxQInput" ng-class="{'input-disabled': priceScheduleEdit.priceSchedule.RestrictedQuantity}" pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger" ng-disabled="priceScheduleEdit.priceSchedule.RestrictedQuantity" type="number" class="form-control" ng-model="priceScheduleEdit.priceSchedule.MaxQuantity"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="priceScheduleTypeInput">Price Schedule Type</label>
+            <select id="priceScheduleTypeInput" class="form-control" ng-model="priceScheduleEdit.priceSchedule.OrderType">
+                <option value="Standard">Standard</option>
+                <option value="Replenishment">Replenishment</option>
+                <option value="PriceRequest">Price Request</option>
+            </select>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label for="priceSchedulePBQInput">Quantity</label>
+            <input id="priceSchedulePBQInput" type="number" class="form-control" pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger" ng-model="priceScheduleEdit.quantity"/>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label for="priceSchedulePBPInput">Price (each)</label>
+            <input id="priceSchedulePBPInput" type="number" step="any" class="form-control" ng-model="priceScheduleEdit.price"/>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label class="invisible hidden-xs">Add</label><br/>
+            <button type="button" class="btn btn-default" ng-disabled="!priceScheduleEdit.price || !priceScheduleEdit.quantity" ng-click="priceScheduleEdit.addPriceBreak()">Add</button>
+        </div>
+    </div>
+    <div class="row" ng-if="priceScheduleEdit.priceSchedule.PriceBreaks.length">
+        <div class="col-sm-6 col-sm-offset-6">
+            <section class="table-fixed-header">
+                <div class="table-header-bg"></div>
+                <div class="table-container">
+                    <table class="table table-hover">
+                        <colgroup>
+                            <col class="action-column"/>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>
+                            </th>
+                            <th>
+                                <div>Quantity</div>
+                            </th>
+                            <th>
+                                <div>{{priceScheduleEdit.priceHeader}}</div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="pricebreak in priceScheduleEdit.priceSchedule.PriceBreaks track by $index">
+                            <td class="text-center">
+                                <a class="fa fa-trash text-danger" ng-click="priceScheduleEdit.deletePriceBreak(priceScheduleEdit.priceSchedule, $index)"></a>
+                            </td>
+                            <td ng-if="priceScheduleEdit.priceSchedule.RestrictedQuantity">{{pricebreak.Quantity}}</td>
+                            <td ng-if="!priceScheduleEdit.priceSchedule.RestrictedQuantity">{{pricebreak.displayQuantity}} </td>
+                            <td ng-if="priceScheduleEdit.priceSchedule.RestrictedQuantity">{{pricebreak.Price * pricebreak.Quantity | currency}}</td>
+                            <td ng-if="!priceScheduleEdit.priceSchedule.RestrictedQuantity">{{pricebreak.Price | currency}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-disabled="PriceScheduleEditForm.$invalid || !priceScheduleEdit.priceSchedule.PriceBreaks.length">Save</button>
+        <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="priceScheduleEdit.Delete()"><i class="fa fa-trash text-danger"></i></button>
+    </div>
+</form>

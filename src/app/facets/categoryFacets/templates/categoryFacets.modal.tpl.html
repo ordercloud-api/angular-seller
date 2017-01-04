@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <h3 class="modal-title">Create Category Facet</h3>
+</div>
+<div class="modal-body">
+    <form name=facetInput>
+        <div class="form-group">
+            <label for="facet">Facet</label>
+            <input id="facet" name="Facet" type="text" class="form-control" ng-model="catFacetModal.facet" ng-pattern="/^[ a-zA-Z0-9-_]+$/" pattern-err-type="noSpecialChars">
+        </div>
+        <div class="panel panel-default text-capitalize" ng-if="catFacetModal.facetValues.length">
+            <div class="panel-heading">Values</div>
+            <table class="table">
+                <colgroup>
+                    <col/>
+                    <col class="action-column"/>
+                </colgroup>
+                <tbody>
+                <tr ng-repeat="value in catFacetModal.facetValues track by $index">
+                    <td>{{value}}</td>
+                    <td>
+                        <button class="btn btn-default btn-block" ng-click="catFacetModal.removeValue($index)"><i class="fa fa-trash text-danger"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+    <form name="newValInput" ng-submit="catFacetModal.addValue()">
+        <div class="form-group">
+            <div class="input-group">
+                <input id="newFacetValue" type="text" class="form-control" ng-model="catFacetModal.facetValue" placeholder="Add new value">
+                <span class="input-group-btn">
+                    <button class="btn btn-success" type="submit"><i class="fa fa-plus-circle"></i></button>
+                </span>
+            </div>
+        </div>
+    </form>
+        <div class="form-group">
+            <label><input type="checkbox" ng-model="catFacetModal.isRequired"> Required</label>
+        </div>
+    </div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="catFacetModal.save()" ng-disabled="catFacetModal.facet == null || catFacetModal.facetValues.length == 0">Save</button>
+    <button class="btn btn-default" type="button" ng-click="catFacetModal.cancel()">Cancel</button>
+</div>

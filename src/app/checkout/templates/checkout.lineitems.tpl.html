@@ -1,0 +1,66 @@
+<div id="LineItems" class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <ng-pluralize count="checkoutLI.lineItems.Meta.TotalCount" when="{
+							'1': '1 Item in Your Cart',
+							'other': '{} Items in Your Cart'
+						}"></ng-pluralize>
+        </h3>
+    </div>
+    <div style="max-height:500px; overflow-y:auto;" ordercloud-infinite-scroll controlleras="checkoutLI">
+        <table class="table table-hover">
+            <tbody>
+            <colgroup>
+                <col style="width:100px;">
+                <col>
+                <col style="width:75px;">
+            </colgroup>
+            <tr ng-repeat-start="lineItem in checkoutLI.lineItems.Items track by $index" class="item_info">
+                <td>
+                    <form class="form-group" name="{{'lineitem_' + $index + '_quantity'}}">
+                        <input tabindex="{{$index + 1}}" type="number" ng-change="checkoutLI.UpdateQuantity(order, lineItem)" class="form-control text-center" ng-model="lineItem.Quantity">
+                    </form>
+                </td>
+                <td>
+                    <a href="#">{{lineItem.Product.Name}}</a><br>
+                    <small class="text-muted">{{lineItem.ProductID}}</small></br>
+                </td>
+                <td>
+                    <button ng-click="checkoutLI.RemoveItem(order, lineItem)" class="btn btn-default btn-block">
+                        <i class="fa fa-trash text-danger"></i>
+                    </button>
+                </td>
+            </tr>
+            <tr ng-if="lineItem.ShippingAddress">
+                <td colspan="3">
+                    <p>Shipping To:</p>
+                    <p>{{lineItem.ShippingAddress | address:'full'}}</p>
+                </td>
+            </tr>
+            <tr ng-repeat-end class="shipping_info">
+                <div ng-if="checkout.isMultipleAddressShipping">
+                    <td colspan="3">
+                        <label>Change Shipping Address:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-truck"></i></span>
+                            <select required="true" ng-change="checkoutLI.UpdateShipping(order, lineItem, lineItem.ShippingAddressID);" ng-model="lineItem.ShippingAddress.ID" class="form-control" ng-options="address.ID as (address.AddressName || address.Street1) for address in addresses"></select>
+                            <span ng-click="checkoutLI.setCustomShipping(order, lineItem);" class="btn-success input-group-addon"><i class="fa fa-plus-circle"></i></span>
+                        </div>
+                    </td>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h4>Subtotal: <span class="text-success pull-right">{{order.Subtotal | currency}}</span></h4>
+        <!--<div ng-if="checkoutLI.taxInformation">-->
+            <!--<p class="lead">Tax: <span class="text-success pull-right">{{checkoutLI.taxInformation | currency}}</span></p>-->
+            <!--<p class="lead">Grand Total: <span class="text-success pull-right">{{order.Subtotal + checkoutLI.taxInformation | currency}}</span></p>-->
+        <!--</div>-->
+        <!--<div ng-if="!checkoutLI.taxInformation && checkoutLI.calculatingTax">-->
+            <!--<p class="lead">Tax: <span class="text-muted pull-right">Calculating Tax</span></p>-->
+            <!--<p class="lead">Grand Total: <span class="text-success pull-right">{{order.Subtotal | currency}}</span></p>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>

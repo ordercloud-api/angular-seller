@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><b>Billing</b></div>
+    <div class="panel-body">
+        <div ng-if="!checkoutBilling.customAddress">
+            <div class="form-group" ng-if="checkoutBilling.billingAddresses.length">
+                <label for="billing_address">Billing Address</label>
+                <select id="billing_address" required="true" name="BillingAddress" ng-change="checkoutBilling.SaveBillingAddress(checkout.currentOrder);" ng-model="checkout.currentOrder.BillingAddressID" class="form-control" ng-options="address.ID as (address.AddressName || address.Street1 + ' ' + address.Street2) for address in checkoutBilling.billingAddresses"></select>
+            </div>
+            <p id="address_paragraph" ng-if="checkout.currentOrder.BillingAddress">{{checkout.currentOrder.BillingAddress | address: 'full'}}</p>
+        </div>
+        <div class="form-group">
+            <button ng-click="checkoutBilling.customAddress = true;" type="button" class="btn btn-success"><i class="fa fa-plus-circle"></i> Use Custom</button>
+        </div>
+        <div ng-if="checkoutBilling.customAddress">
+            <form class="form-group" ng-submit="checkoutBilling.SaveCustomAddress(checkout.currentOrder)" name="order_billing">
+                <ordercloud-address-form address="checkoutBilling.address" isbilling="true"></ordercloud-address-form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label><input type="checkbox" ng-model="checkoutBilling.saveAddress"> Save Address for Future Use</label>
+                    </div>
+                </div>
+                <button ng-disabled="order_billing.address_form.$invalid" type="submit" class="btn btn-success pull-left">Submit</button>
+                <button ng-click="checkoutBilling.customAddress = false;" type="button" class="btn btn-danger pull-right">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>

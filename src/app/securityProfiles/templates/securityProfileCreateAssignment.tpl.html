@@ -1,0 +1,188 @@
+<!--====== HEADING ======-->
+<div class="page-header">
+	<div class="btn-toolbar pull-right">
+		<button type="button" class="btn btn-default" ui-sref="^"><i class="fa fa-arrow-left"></i> Back</button>
+	</div>
+	<h3>Create a New Security Profile Assignment</h3>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<h4>Choose Assignee</h4>
+	</div>
+	<div class="col-sm-6">
+		<h4>Assignments:</h4>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<uib-accordion>
+			<!--====== Assign Buyer Company ======-->
+			<uib-accordion-group class="panel panel-primary" is-open="isBuyerOpen"
+								 template-url="securityProfiles/templates/securityProfileAccordion.tpl.html">
+				<uib-accordion-heading ng-click="isBuyerOpen=!isBuyerOpen">
+					<div>
+						Assign Buyer <i class="fa pull-right"
+										ng-class="{'fa-plus':!isBuyerOpen,'fa-minus':isBuyerOpen}"></i>
+					</div>
+				</uib-accordion-heading>
+		<span ng-click="securityProfileCreateAssignment.assignBuyer = !securityProfileCreateAssignment.assignBuyer">
+			<i class="fa"
+			   ng-class="{'fa-square-o':!securityProfileCreateAssignment.assignBuyer, 'fa-check-square-o':securityProfileCreateAssignment.assignBuyer, 'text-success':securityProfileCreateAssignment.assignBuyer}"></i> Assign at the Buyer Level
+		</span>
+			</uib-accordion-group>
+			<!--====== Assign User Groups ======-->
+			<uib-accordion-group class="panel panel-primary" is-disabled="securityProfileCreateAssignment.assignBuyer"
+								 is-open="isGroupOpen"
+								 template-url="securityProfiles/templates/securityProfileAccordion.tpl.html">
+				<uib-accordion-heading ng-click="isGroupOpen=!isGroupOpen">
+					Assign User Groups <i class="fa pull-right"
+										  ng-class="{'fa-plus':!isGroupOpen,'fa-minus':isGroupOpen}"></i>
+				</uib-accordion-heading>
+				<div>
+					<ordercloud-search servicename="UserGroups" controlleras="securityProfileCreateAssignment"
+									   model="groupList"></ordercloud-search>
+					<div class="well well-lg text-center"
+						 ng-if="!securityProfileCreateAssignment.groupList.Items.length">
+						<b><i class="fa fa-search"></i> No UserGroups match your search</b>
+					</div>
+					<section class="table-fixed-header" ng-if="securityProfileCreateAssignment.groupList.Items.length">
+						<div class="table-header-bg"></div>
+						<div class="table-container" ordercloud-infinite-scroll servicename="UserGroups"
+							 controlleras="securityProfileCreateAssignment" style="max-height:160px;">
+							<table class="table table-hover">
+								<colgroup>
+									<col class="action-column"/>
+								</colgroup>
+								<thead>
+								<tr>
+									<th>
+									</th>
+									<th>
+										<div>ID</div>
+									</th>
+									<th>
+										<div>Name</div>
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="group in securityProfileCreateAssignment.groupList.Items track by $index">
+									<td class="text-center">
+										<div class="btn"
+											 ng-click="securityProfileCreateAssignment.toggleSelection(group, 'Groups')">
+											<i class="fa"
+											   ng-class="{'fa-square-o':!group.selected, 'text-success': group.selected, 'fa-check-square':group.selected}"></i>
+										</div>
+									</td>
+									<td>{{group.ID}}</td>
+									<td>{{group.Name}}</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+			</uib-accordion-group>
+			<!--====== Assign Users ======-->
+			<uib-accordion-group class="panel panel-primary" is-disabled="securityProfileCreateAssignment.assignBuyer"
+								 is-open="isUserOpen"
+								 template-url="securityProfiles/templates/securityProfileAccordion.tpl.html">
+				<uib-accordion-heading ng-click="isUserOpen=!isUserOpen">
+					Assign Users <i class="fa pull-right" ng-class="{'fa-plus':!isUserOpen,'fa-minus':isUserOpen}"></i>
+				</uib-accordion-heading>
+				<div>
+					<ordercloud-search servicename="Users" controlleras="securityProfileCreateAssignment"
+									   model="userList"></ordercloud-search>
+					<div class="well well-lg text-center"
+						 ng-if="!securityProfileCreateAssignment.userList.Items.length">
+						<b><i class="fa fa-search"></i> No Users match your search</b>
+					</div>
+					<section class="table-fixed-header" ng-if="securityProfileCreateAssignment.userList.Items.length">
+						<div class="table-header-bg"></div>
+						<div class="table-container" ordercloud-infinite-scroll servicename="UserGroups"
+							 controlleras="securityProfileCreateAssignment" style="max-height:160px;">
+							<table class="table table-hover">
+								<colgroup>
+									<col class="action-column"/>
+								</colgroup>
+								<thead>
+								<tr>
+									<th>
+									</th>
+									<th>
+										<div>ID</div>
+									</th>
+									<th>
+										<div>Name</div>
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="user in securityProfileCreateAssignment.userList.Items track by $index">
+									<td class="text-center">
+										<div class="btn"
+											 ng-click="securityProfileCreateAssignment.toggleSelection(user, 'Users')">
+											<i class="fa"
+											   ng-class="{'fa-square-o':!user.selected, 'text-success': user.selected, 'fa-check-square':user.selected}"></i>
+										</div>
+									</td>
+									<td>{{user.ID}}</td>
+									<td>{{user.Username}}</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+			</uib-accordion-group>
+		</uib-accordion>
+	</div>
+	<!--====== Selected Assignments ======-->
+	<div class="col-sm-6 ">
+		<div ng-if="!(securityProfileCreateAssignment.selectedGroups.length || securityProfileCreateAssignment.selectedUsers.length ||  securityProfileCreateAssignment.assignBuyer)" class="text-muted">
+			<p>You can assign a Security Profile to Users, UserGroups or to the entire Buyer company.</p>
+		</div>
+		<div ng-if="securityProfileCreateAssignment.assignBuyer" class="text-muted">
+			<p>Assigned to entire Buyer company.</p>
+		</div>
+		<div>
+			<section class="table-fixed-header"  ng-if="(((securityProfileCreateAssignment.selectedGroups.length) || (securityProfileCreateAssignment.selectedUsers.length)) && !securityProfileCreateAssignment.assignBuyer)">
+				<div class="table-header-bg"></div>
+				<div class="table-container" style="max-height:160px;">
+					<table class="table table-hover">
+						<colgroup>
+						<col class="action-column"/>
+						</colgroup>
+						<thead>
+							<tr>
+								<th>
+									ID<div>ID</div>
+								</th>
+								<th>
+									Name<div>Name</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="group in securityProfileCreateAssignment.selectedGroups">
+								<td>{{group.ID}}</td>
+								<td>{{group.Name}}</td>
+							</tr>
+							<tr ng-repeat="user in securityProfileCreateAssignment.userList.Items | filter: {selected:true} track by $index">
+								<td>{{user.ID}}</td>
+								<td>{{user.Username}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+	</div>
+</div>
+<!--====== Submit/Cancel ======-->
+<div class="row">
+	<div class="col-sm-6">
+		<button type="button" class="btn btn-default" ui-sref="^.assignments({securityprofileid:securityProfileCreateAssignment.securityProfileID})">Cancel</button>
+		<button type="button" class="btn btn-primary" ng-click="securityProfileCreateAssignment.Submit()" ng-disabled="!(securityProfileCreateAssignment.selectedGroups.length || securityProfileCreateAssignment.selectedUsers.length || securityProfileCreateAssignment.assignBuyer)">Save Assignment</button>
+	</div>
+</div>

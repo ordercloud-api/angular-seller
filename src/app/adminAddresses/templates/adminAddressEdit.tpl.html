@@ -1,0 +1,74 @@
+<h3 class="page-header">
+    <b>Edit Address:</b> {{adminAddressEdit.adminAddressName}}
+</h3>
+<form name="AddressEditForm" ng-submit="adminAddressEdit.Submit()" novalidate>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="addressIDInput">Address ID</label>
+            <input id="addressIDInput" type="text" class="form-control" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="adminAddressEdit.adminAddress.ID"/>
+        </div>
+        <div class="col-sm-6 form-group">
+            <label for="addressNameInput">Address Name</label>
+            <input id="addressNameInput" type="text" class="form-control"  ng-model="adminAddressEdit.adminAddressName" required/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="addressCompanyNameInput">Company Name</label>
+            <input id="addressCompanyNameInput" type="text" class="form-control" ng-model="adminAddressEdit.adminAddress.CompanyName"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="addressFirstNameInput">First Name</label>
+            <input id="addressFirstNameInput" type="text" class="form-control" ng-model="adminAddressEdit.adminAddress.FirstName"/>
+        </div>
+        <div class="col-sm-6 form-group">
+            <label for="addressLastNameInput">Last Name</label>
+            <input id="addressLastNameInput" type="text" class="form-control" ng-model="adminAddressEdit.adminAddress.LastName"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="addressStreet1Input">Street 1</label>
+            <input id="addressStreet1Input" type="text" class="form-control" ng-model="adminAddressEdit.adminAddress.Street1" required/>
+        </div>
+        <div class="col-sm-6 form-group">
+            <label for="addressStreet2Input">Street 2</label>
+            <input id="addressStreet2Input" type="text" class="form-control" ng-model="adminAddressEdit.adminAddress.Street2"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="addressCityInput">City</label>
+            <input id="addressCityInput" type="text" class="form-control" ng-model="adminAddressEdit.adminAddress.City" required/>
+        </div>
+        <div class="col-sm-3 form-group" ng-show="adminAddressEdit.adminAddress.Country == 'US' || adminAddressEdit.adminAddress.Country == 'CA'">
+            <label for="addressStateInput">State</label>
+            <select id="addressStateInput" class="form-control" ng-options="state.value as state.label for state in adminAddressEdit.states" ng-model="adminAddressEdit.adminAddress.State" required/>
+        </div>
+        <div class="col-sm-3 form-group"  ng-hide="adminAddressEdit.adminAddress.Country == 'US' || adminAddressEdit.adminAddress.Country == 'CA'">
+            <label for="addressStateInput">State</label>
+            <input id="addressStateInput" class="form-control" ng-model="adminAddressEdit.adminAddress.State" required/>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label for="addressZipInput">Zip</label>
+            <input id="addressZipInput" type="text" class="form-control" ng-model="adminAddressEdit.adminAddress.Zip" required/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label for="addressCountryInput">Country</label>
+            <select id="addressCountryInput" class="form-control" ng-options="country.value as country.label for country in adminAddressEdit.countries" ng-model="adminAddressEdit.adminAddress.Country" required/>
+        </div>
+        <div class="col-sm-6 form-group">
+            <label for="addressPhoneInput">Phone Number</label>
+            <input id="addressPhoneInput" type="text" class="form-control" ng-model="adminAddressEdit.adminAddress.Phone"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-disabled="AdminAddressEditForm.$invalid">Save</button>
+        <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="adminAddressEdit.Delete()"><i class="fa fa-trash text-danger"></i></button>
+    </div>
+</form>

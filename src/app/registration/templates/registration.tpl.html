@@ -1,0 +1,102 @@
+<article id="COMPONENT_Registration" ui-view class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <h3 class="page-header">
+                <b>Registration</b>
+            </h3>
+            <form name="RegistrationForm" ng-submit="registration.register()" novalidate>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label for="userIDInput">User ID</label>
+                        <input id="userIDInput" ordercloud-auto-id type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="registration.user.ID"/>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="userNameInput">User Name</label>
+                        <input id="userNameInput" type="text" class="form-control" ng-model="registration.user.Username" required/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label for="userFirstNameInput">First Name</label>
+                        <input id="userFirstNameInput" type="text" class="form-control" ng-model="registration.user.FirstName" required/>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label for="userLastNameInput">Last Name</label>
+                        <input id="userLastNameInput" type="text" class="form-control" ng-model="registration.user.LastName" required/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <!-- TODO: make phonefield -->
+                        <label for="userPhoneNumberInput">Phone Number</label>
+                        <input id="userPhoneNumberInput" type="text" class="form-control" ng-model="registration.user.Phone" />
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="userEmailAddressInput">Email Address</label>
+                        <input id="userEmailAddressInput" type="email" class="form-control" ng-model="registration.user.Email" required/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label for="userPasswordInput">Password</label>
+                        <input id="userPasswordInput" type="password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$" pattern-err-type="customPassword" class="form-control" ng-model="registration.user.Password" confirmpassword="{{registration.PasswordConfirm}}" required/>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label for="userPasswordConfirmInput">Confirm Password</label>
+                        <input id="userPasswordConfirmInput" type="password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$" pattern-err-type="customPassword"  class="form-control" ng-model="registration.PasswordConfirm" confirmpassword="{{registration.user.Password}}" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" ng-disabled="RegistrationForm.$invalid">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-6" ng-switch="registration.form">
+            <h3 class="page-header">
+                <b>{{registration.loginFormHeaders[registration.form]}}</b>
+            </h3>
+            <form class="panel-body" name="LoginForm" ng-submit="registration.login()" ng-switch-when="login">
+                <div class="form-group">
+                    <label for="Username">Username</label>
+                    <input type="text" class="form-control" id="Username" ng-model="registration.credentials.Username" ng-required="true" />
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password</label>
+                    <input type="password" class="form-control" id="Password" ng-model="registration.credentials.Password" ng-required="true" />
+                </div>
+                <button id="submit_login" type="submit" class="btn btn-primary" ng-disabled="LoginForm.$invalid">Submit</button>
+                <a id="forgot_password" class="btn btn-link" ng-click="registration.setForm('forgot')">Forgot Password?</a> <!--TODO: should this be functional in the Seed Project?-->
+            </form>
+            <form class="panel-body" name="ForgotPasswordForm" ng-submit="registration.forgotPassword()" ng-switch-when="forgot">
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    <input type="text" class="form-control" id="Email" ng-model="registration.credentials.Email" ng-required="true" />
+                </div>
+                <button type="submit" id="email_submit" class="btn btn-primary" ng-disabled="ForgotPasswordForm.$invalid">Submit</button>
+                <a id="back_to_login" class="btn btn-link" ng-click="registration.setForm('login')">Back to Login</a>
+            </form>
+            <form class="panel-body" name="ResetPasswordForm" ng-submit="registration.resetPassword()" ng-switch-when="reset">
+                <div class="form-group">
+                    <label for="ResetUsername">Username</label>
+                    <input type="text" class="form-control" id="ResetUsername" ng-model="registration.credentials.ResetUsername" ng-required="true" />
+                </div>
+                <div class="form-group">
+                    <label for="NewPassword">New Password</label>
+                    <input type="password" class="form-control" id="NewPassword" ng-model="registration.credentials.NewPassword" ng-required="true" />
+                </div>
+                <div class="form-group">
+                    <label for="ConfirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="ConfirmPassword" ng-model="registration.credentials.ConfirmPassword" ng-required="true" />
+                </div>
+                <button type="submit" id="reset_submit" class="btn btn-primary" ng-disabled="ResetPasswordForm.$invalid || registration.credentials.NewPassword != registration.credentials.ConfirmPassword">Submit</button>
+            </form>
+            <form class="panel-body" name="VerificationCodeSuccessForm" ng-switch-when="verificationCodeSuccess">
+                <div class="alert alert-info" id="forgot_message">Forgot Password email has been sent. Please check your email in order to reset your password.</div>
+            </form>
+            <form class="panel-body" name="ResetSuccessForm" ng-switch-when="resetSuccess">
+                <div class="alert alert-info">Your password has been reset.</div>
+                <a class="btn btn-link" id="back_to_login2" ng-click="registration.setForm('login')">Back to Login</a>
+            </form>
+        </div>
+    </div>
+</article>

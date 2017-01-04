@@ -1,0 +1,61 @@
+<div class="modal-body">
+    <div class="page-header"><h3>Assign Catalog {{catalogAssignd.selectedCatalog.Name}} to a Buyer Organization</h3></div>
+    <div class="form-group">
+        <label>Select Buyer(s)</label>
+        <ui-select multiple ng-model="catalogAssign.selectedBuyers"
+                   close-on-select="false">
+            <ui-select-match>
+                {{$item.Name}}
+                <span ng-bind="$select.selected.Name"></span>
+            </ui-select-match>
+            <ui-select-choices
+                    repeat="group in (catalogAssign.buyers.Items | filter: $select.search) track by $index">
+                <span ng-bind="group.Name"></span>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+    <div>
+        <h3>Existing Assignments</h3>
+        <!--ng-include="'products/templates/productAssignments.tpl.html'">-->
+        <div class="well well-lg text-center" ng-if="!catalogAssign.assignedBuyers.Items.length">
+            <b>This product does not have any assignments for the active Buyer company.</b>
+        </div>
+
+        <!--====== LIST ======-->
+        <div ng-if="catalogAssign.assignedBuyers.Items.length">
+            <table class="table table-hover table-condensed oc-table-responsive" controlleras="catalogAssignment">
+                <thead>
+                <tr>
+                    <th>
+                        <div>Party ID</div>
+                    </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="assignment in catalogAssign.assignedBuyers.Items">
+                    <th scope="row">{{assignment.BuyerID}}
+                        <small class="text-muted" ng-if="!assignment.UserID && !assignment.UserGroupID">(Buyer)</small>
+                    </th>
+                    <td class="actions-cell">
+                        <button type="button" class="btn btn-danger btn-sm" uib-tooltip="Delete Assignment"
+                                tooltip-placement="left" ng-click="catalogAssign.deleteAssignments(this)">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="text-center"
+                 ng-if="application.$ocMedia('min-width:768px') && productCreateAssignment.assignedBuyers.Meta.TotalPages > 1">
+                <uib-pagination boundary-links="productCreateAssignment.assignments.Meta.TotalPages > 5"
+                                max-size="10" total-items="productCreateAssignment.assignments.Meta.TotalCount"
+                                items-per-page="productCreateAssignment.assignments.Meta.PageSize"
+                                ng-model="productCreateAssignment.assignments.Meta.Page"
+                                ng-change="productCreateAssignment.pageChanged()"></uib-pagination>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-default" type="button" ui-sref="catalogs">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="catalogAssign.saveAssignments()">Save</button>
+</div>

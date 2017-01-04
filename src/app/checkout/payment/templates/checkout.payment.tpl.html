@@ -1,0 +1,66 @@
+<div class="panel panel-default" ng-init="checkoutPayment.setAmountMax(checkout.currentOrder)">
+    <div class="panel-heading">Payment</div>
+    <div class="panel-body">
+        <oc-checkout-payment ng-repeat="payment in checkoutPayment.currentOrderPayments"></oc-checkout-payment>
+        <!--<label for="payment_method">Payment Method</label>
+        <select id="payment_method" required="true" ng-change="checkoutPayment.setPaymentMethod(checkout.currentOrder)" class="form-control" ng-model="checkoutPayment.currentOrderPayments[0].Type" ng-options="paymentMethod.Value as paymentMethod.Display for paymentMethod in checkoutPayment.paymentMethods"></select>
+        <div ng-switch="checkoutPayment.currentOrderPayments[0].Type">
+            <div ng-switch-when="PurchaseOrder">
+                &lt;!&ndash;Nothing to do here yet&ndash;&gt;
+            </div>
+            <div ng-switch-when="CreditCard">
+                <div ng-if="!checkoutPayment.createNewCard">
+                    <label for="credit_card">Credit Card</label>
+                    <select id="credit_card" ng-required="checkout.PaymentMethod === 'CreditCard'" ng-change="checkoutPayment.setCreditCard(checkout.currentOrder)" class="form-control" ng-model="checkoutPayment.currentOrderPayments[0].CreditCardID" ng-options="creditCard.ID as ('XXXX-XXXX-XXXX-' + creditCard.PartialAccountNumber) for creditCard in checkoutPayment.creditCards"></select>
+                    </br>
+                    <button class="btn btn-success" ng-click="checkoutPayment.createNewCard = true"><i class="fa fa-plus-circle"></i> Create New</button>
+                </div>
+                <div ng-if="checkoutPayment.createNewCard">
+                    <form ng-submit="checkoutPayment.saveCreditCard(checkout.currentOrder)" class="form-group" name="new_credit_card">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="cardholder_name">Cardholder Name</label>
+                                <input id="cardholder_name" required="true" class="form-control" type="text" ng-model="checkoutPayment.creditCard.CardholderName">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cardtype">Card Type</label>
+                                <select id="cardtype" required="true" class="form-control" ng-model="checkoutPayment.creditCard.CardType" ng-options="type as type for type in checkoutPayment.CreditCardTypes"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="cardnum">Account Number</label>
+                                <input id="cardnum" type="text" class="form-control" ng-model="checkoutPayment.creditCard.PartialAccountNumber">
+                            </div>
+                            <div class="form-group col-md-6" ng-init="open = false">
+                                <label for="creditCardExpirationInput">Expiration Date</label>
+                                <input class="form-control"
+                                       required="true"
+                                       type="text"
+                                       is-open="open"
+                                       uib-datepicker-popup="MM/yy"
+                                       datepicker-mode="'year'"
+                                       min-mode="'month'"
+                                       ng-click="open = !open"
+                                       id="creditCardExpirationInput"
+                                       datepicker-append-to-body="true"
+                                       show-weeks="false"
+                                       min-date="checkoutPayment.today"
+                                       ng-model="checkoutPayment.creditCard.ExpirationDate"/>
+                            </div>
+                        </div>
+                        <button ng-disabled="new_credit_card.$invalid" type="submit" class="btn btn-success pull-left">Submit</button>
+                        <button ng-click="checkoutPayment.createNewCard = false; checkoutPayment.creditCard = null" type="button" class="btn btn-danger pull-right">Cancel</button>
+                    </form>
+                </div>
+            </div>
+            <div ng-switch-when="SpendingAccount">
+                <label for="spending_account">Spending Account</label>
+                <select id="spending_account" ng-required="checkout.PaymentMethod === 'SpendingAccount'" ng-change="checkoutPayment.setSpendingAccount(checkout.currentOrder)" class="form-control" ng-model="checkoutPayment.currentOrderPayments[0].SpendingAccountID" ng-options="spendingAccount.ID as spendingAccount.Name for spendingAccount in checkoutPayment.spendingAccounts"></select>
+            </div>
+        </div>-->
+        <div class="text-center add-payment"  ng-if="checkoutPayment.allowMultiplePayments">
+            <button type="button" class="btn btn-default" ng-click="checkoutPayment.createPayment(checkout.currentOrder)" ng-disabled="!checkoutPayment.canAddPayment(checkout.currentOrder, checkoutPayment.currentOrderPayments)"><i class="fa fa-plus-circle"></i> Add Another Payment</button>
+        </div>
+    </div>
+</div>

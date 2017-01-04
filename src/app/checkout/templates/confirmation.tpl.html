@@ -1,0 +1,63 @@
+<article id="COMPONENT_Confirmation" class="container-fluid">
+	<h3 class="page-header">
+		Order Confirmation
+	</h3>
+    <div class="panel panel-default">
+        <div class="panel-heading"><b>Billing Address</b></div>
+        <div class="panel-body">
+            <div>
+                <p id="address_paragraph">{{orderConfirmation.currentOrder.BillingAddress | address: 'full'}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default" ng-if="!orderConfirmation.isMultipleAddressShipping">
+        <div class="panel-heading"><b>Shipping Address</b></div>
+        <div class="panel-body">
+            <div>
+                <p id="address_paragraph">{{orderConfirmation.lineItems.Items[0].ShippingAddress | address: 'full'}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><b>Payment Information</b></div>
+        <div class="panel-body">
+            <div ng-repeat="payment in orderConfirmation.orderPayments">
+                <div ng-if="payment.Type == 'CreditCard'">
+                    <p>Cardholder Name: {{orderConfirmation.orderPayments[$index].creditCardDetails.CardholderName}}</p>
+                    <p><i class="fa fa-2x"
+                          ng-class="{'fa-cc-visa': orderConfirmation.orderPayments[$index].creditCardDetails.CardType == 'Visa',
+                          'fa-cc-mastercard': orderConfirmation.orderPayments[$index].creditCardDetails.CardType == 'Master Card',
+                          'fa-cc-amex': orderConfirmation.orderPayments[$index].creditCardDetails.CardType == 'American Expresss',
+                          'fa-cc-discover': orderConfirmation.orderPayments[$index].creditCardDetails.CardType == 'Discover'}">
+                    </i>
+                        ending in {{orderConfirmation.orderPayments[$index].creditCardDetails.PartialAccountNumber}}</p>
+                </div>
+                <div ng-if="payment.Type == 'SpendingAccount'">
+                    Spending Account ID: {{orderConfirmation.orderPayments[$index].spendingAccountDetails.Name}}
+                </div>
+                <div ng-if="payment.Type == 'PurchaseOrder'">
+                    Purchase Order
+                    <span ng-if="payment.xp.PONumber">
+                       : {{orderConfirmation.orderPayments[$index].xp.PONumber}}
+                    </span>
+                </div>
+                <!--<div>-->
+                <!--Subtotal: {{orderConfirmation.currentOrder.Subtotal | currency}}-->
+                <!--</div>-->
+                <!--<div ng-if="orderConfirmation.currentOrder.xp.taxInfo">-->
+                <!--Tax: {{orderConfirmation.currentOrder.xp.taxInfo | currency}}-->
+                <!--</div>-->
+                Amount: {{payment.Amount | currency}}
+                <hr>
+            </div>
+            <div>
+                Total: {{orderConfirmation.currentOrder.Subtotal | currency}}
+            </div>
+        </div>
+    </div>
+    <ordercloud-confirmation-lineitems order="orderConfirmation.currentOrder"></ordercloud-confirmation-lineitems>
+    <div class="form-group pull-right">
+        <button class="btn btn-default" ui-sref="checkout.shipping">Back</button>
+        <button class="btn btn-primary" ng-click="orderConfirmation.submitOrder()">Submit Order</button>
+    </div>
+</article>

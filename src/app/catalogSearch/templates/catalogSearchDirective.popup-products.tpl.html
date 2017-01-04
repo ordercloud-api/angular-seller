@@ -1,0 +1,8 @@
+<div class="products-popup-results">
+    <ul class="dropdown-menu" role="listbox">
+        <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }"
+            ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">
+            <div ng-if="match.model.NameType==='Product'" uib-typeahead-match index="$index" match="match" query="query" ></div>
+        </li>
+    </ul>
+</div>

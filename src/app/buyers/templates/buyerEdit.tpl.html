@@ -1,0 +1,33 @@
+<h3 class="page-header">
+    <b>Edit Buyer:</b> {{buyerEdit.buyerName}}
+</h3>
+<form ng-submit="buyerEdit.Submit()" name="BuyerEditForm" novalidate>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="buyer_id">ID</label>
+            <input id="buyer_id" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="buyerEdit.buyer.ID" class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="buyer_name">Name</label>
+            <input id="buyer_name" type="text" ng-model="buyerEdit.buyer.Name" class="form-control" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label id="buyer_analytics">Analytics ID</label>
+            <input for="buyer_analytics" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="buyerEdit.buyer.xp.analytics_code" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="buyer_active">
+                <input id="buyer_active" type="checkbox" ng-model="buyerEdit.buyer.Active"> Active
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit" ng-disabled="BuyerEditForm.$invalid">Save</button>
+        <button class="btn btn-default" ui-sref="^" type="button">Cancel</button>
+        <!--<button class="btn btn-primary" ng-click="buyerEdit.Delete();" type="button"><i class="fa fa-trash text-danger"></i> Delete</button>-->
+    </div>
+</form>

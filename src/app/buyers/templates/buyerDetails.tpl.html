@@ -1,0 +1,22 @@
+<article ui-view>
+    <button class="btn btn-default" ui-sref="buyers">Buyers List</button>
+    <div class="container-fluid">
+        <h3 class="page-header">{{buyerDetails.selectedBuyer.Name}}</h3>
+        <uib-tabset>
+            <uib-tab>
+                <br>
+                <uib-tab-heading>Users</uib-tab-heading>
+                <div ng-include="'buyers/templates/buyerDetails_users.tpl.html'"></div>
+            </uib-tab>
+            <uib-tab>
+                <br>
+                <uib-tab-heading>User Groups</uib-tab-heading>
+                <div ng-include="'buyers/templates/buyerDetails_userGroups.tpl.html'"></div>
+            </uib-tab>
+            <uib-tab>
+                <br>
+                <uib-tab-heading>Catalogs</uib-tab-heading>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</article>

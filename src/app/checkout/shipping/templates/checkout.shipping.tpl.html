@@ -1,0 +1,30 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><b>Shipping</b></div>
+    <div class="panel-body">
+        <div ng-if="!checkoutShipping.customShipping" class="form-group">
+            <div ng-if="checkout.shippingAddresses.length">
+                <label for="shipping_address">Shipping Address</label>
+                <select id="shipping_address" name="ShippingAddress" ng-change="checkoutShipping.SaveShippingAddress(checkout.currentOrder);" ng-model="checkout.currentOrder.ShippingAddressID" class="form-control" ng-options="address.ID as (address.AddressName || address.Street1) for address in checkout.shippingAddresses"></select>
+            </div>
+            <p id="address_paragraph" ng-if="checkout.currentOrder.ShippingAddressID">{{checkout.currentOrder.ShippingAddress | address: 'full'}}</p>
+        </div>
+            <div class="form-group">
+                <button ng-click="checkoutShipping.customShipping = true;" type="button" class="btn btn-success"><i class="fa fa-plus-circle"></i> Use Custom</button>
+            </div>
+        <div ng-if="checkoutShipping.customShipping">
+            <form class="form-group" ng-submit="checkoutShipping.SaveCustomAddress(checkout.currentOrder)" name="order_shipping">
+                <ordercloud-address-form address="checkoutShipping.address" isbilling="checkoutShipping.isAlsoBilling"></ordercloud-address-form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label><input type="checkbox" ng-click="checkoutShipping.isAlsoBilling = false;" ng-model="checkoutShipping.saveAddress"> Save Address for Future Use</label>
+                    </div>
+                    <div ng-if="checkoutShipping.saveAddress" class="col-md-6">
+                        <label><input type="checkbox" ng-model="checkoutShipping.isAlsoBilling"> Allow as Billing Address</label>
+                    </div>
+                </div>
+                <button ng-disabled="order_shipping.address_form.$invalid" type="submit" class="btn btn-success pull-left">Submit</button>
+                <button ng-click="checkoutShipping.customShipping = false;" type="button" class="btn btn-danger pull-right">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>

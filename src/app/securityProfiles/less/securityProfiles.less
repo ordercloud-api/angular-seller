@@ -1,0 +1,45 @@
+#COMPONENT_SecurityProfiles {
+		.oc-table-responsive {
+		.fa-check {
+	    	color:@gray-light;
+	    	&.active {
+	      		color:@brand-success;
+	    		}
+	 		}
+		}
+		.roles-list {
+			.label {
+				margin: 0 3px 3px 0;
+				display: inline-block;
+				line-height: normal;
+				font-size: 1.1em;
+				font-weight: 100;
+				background-color: @brand-primary;
+				letter-spacing: 1px;
+			}
+		}
+}
+
+.disabled {
+	cursor: not-allowed;
+	opacity:0.65;
+
+	a {
+		cursor: not-allowed;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+}
+
+.panel-title {
+	&> div {
+		&:focus {
+			outline: none;
+		}
+	}
+	&:focus {
+		outline: none;
+	}
+}

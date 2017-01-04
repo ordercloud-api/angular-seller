@@ -1,0 +1,113 @@
+<article id="COMPONENT_CreditCards" ui-view class="container-fluid" >
+   <div class="page-header">
+       <button type="button" class="btn btn-success pull-right" ui-sref=".create"><i class="fa fa-plus-circle"></i> Create New</button>
+       <h3 >Credit Cards</h3>
+   </div>
+
+    <!--====== SEARCH/FILTERS ======-->
+    <form name="CreditCardsSearchForm" class="form-inline" ng-submit="creditCards.search()">
+        <fieldset class="form-group">
+            <input type="search" placeholder="Search creditCards..." ng-model="creditCards.parameters.search" class="form-control">
+        </fieldset>
+        <fieldset class="form-group" ng-class="{'text-center':application.$ocMedia('max-width:767px')}">
+		<span ng-class="{'btn-group':creditCards.searchResults}">
+			<button type="submit" class="btn btn-primary">Search</button>
+			<button ng-if="creditCards.searchResults" ng-click="creditCards.clearSearch()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
+		</span>
+		<span ng-class="{'btn-group':creditCards.filtersApplied}" ng-if="application.$ocMedia('max-width:767px')">
+			<button type="button" class="btn btn-default" ng-click="creditCards.showFilters = !creditCards.showFilters"><i class="fa fa-filter"></i> Filters</button>
+			<button ng-if="creditCards.filtersApplied" ng-click="creditCards.clearFilters()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
+		</span>
+        </fieldset>
+    </form>
+    <div class="row" style="margin-top:15px;" uib-collapse="!creditCards.showFilters">
+        <div class="col-md-6 col-lg-4">
+            <div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
+                <label>Sort By:</label>
+                <div ng-class="{'input-group':creditCards.sortSelection}">
+                    <select placeholder="Sort" class="form-control" ng-model="creditCards.sortSelection" ng-change="creditCards.updateSort()">
+                        <option value="">None</option>
+                        <option value="ID">ID</option>
+                        <option value="CardholderName">Card Holder Name</option>
+                        <option value="CardType">Card Type</option>
+                        <option value="ExpirationDate">Expiration Date</option>
+                    </select>
+                    <div ng-if="creditCards.sortSelection" class="input-group-btn">
+                        <button class="btn btn-default" ng-click="creditCards.reverseSort()">
+                            <i class="fa fa-sort"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--====== LIST ======-->
+    <div class="no-matches" ng-if="!creditCards.list.Items.length">
+        <b>The selected buyer does not have any credit cards.</b>
+    </div>
+    <div ng-if="creditCards.list.Items.length">
+        <b class="pull-right">{{(application.$ocMedia('min-width:768px') ? creditCards.list.Meta.ItemRange[0] : '1') + ' - ' +  creditCards.list.Meta.ItemRange[1] + ' of ' + creditCards.list.Meta.TotalCount + ' results'}}</b>
+        <table class="table table-hover oc-table-responsive">
+            <thead>
+            <tr>
+                <th scope="col">
+                    <a href="#" role="button" ng-click="creditCards.updateSort('ID')">
+                        ID
+                        <i class="fa fa-caret-down" ng-show="creditCards.parameters.sortBy == 'ID'"></i>
+                        <i class="fa fa-caret-up" ng-show="creditCards.parameters.sortBy == '!ID'"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a href="#" role="button" ng-click="creditCards.updateSort('CardholderName')">
+                        Card Holder Name
+                        <i class="fa fa-caret-down" ng-show="creditCards.parameters.sortBy == 'CardholderName'"></i>
+                        <i class="fa fa-caret-up" ng-show="creditCards.parameters.sortBy == '!CardholderName'"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a href="#" role="button" ng-click="creditCards.updateSort('CardType')">
+                        Card Type
+                        <i class="fa fa-caret-down" ng-show="creditCards.parameters.sortBy == 'CardType'"></i>
+                        <i class="fa fa-caret-up" ng-show="creditCards.parameters.sortBy == 'CardType'"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a href="#" role="button" ng-click="creditCards.updateSort('ExpirationDate')">
+                        Expiration Date
+                        <i class="fa fa-caret-down" ng-show="creditCards.parameters.sortBy == 'ExpirationDate'"></i>
+                        <i class="fa fa-caret-up" ng-show="creditCards.parameters.sortBy == '!ExpirationDate'"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="card in creditCards.list.Items">
+                <th scope="row">{{card.ID}}</th>
+                <td data-title="CardholderName">{{card.CardholderName}}</td>
+                <td data-title="PartialAccountNumber">{{card.CardType}}</td>
+                <td data-title="ExpirationDate">{{card.ExpirationDate | date:'shortDate'}}</td>
+                <td class="actions-cell">
+                    <button ui-sref=".edit({creditcardid:card.ID})" class="btn btn-default btn-sm">Edit</button>
+                    <button ui-sref=".assign({creditcardid:card.ID})" class="btn btn-default btn-sm">Assign</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && creditCards.list.Meta.TotalPages > 1">
+            <uib-pagination boundary-links="creditCards.list.Meta.TotalPages > 5"
+                            max-size="5" total-items="creditCards.list.Meta.TotalCount"
+                            items-per-page="creditCards.list.Meta.PageSize"
+                            ng-model="creditCards.list.Meta.Page"
+                            ng-change="creditCards.pageChanged()"></uib-pagination>
+        </div>
+        <button type="button"
+                ng-if="application.$ocMedia('max-width:767px')"
+                class="btn btn-default btn-block btn-lg"
+                ng-show="creditCards.list.Meta.Page < creditCards.list.Meta.TotalPages"
+                ng-click="creditCards.loadMore()">Load More</button>
+    </div>
+</article>

@@ -1,0 +1,45 @@
+<h3 class="page-header">
+    User Group Assignments for {{spendingAccountAssignGroup.spendingAccount.Name}}
+</h3>
+<ordercloud-search servicename="UserGroups" controlleras="spendingAccountAssignGroup"></ordercloud-search>
+<section class="table-fixed-header">
+    <div class="table-header-bg"></div>
+    <div class="table-container" ordercloud-infinite-scroll servicename="UserGroups" controlleras="spendingAccountAssignGroup" idname="UserGroupID" disable-dynamic-validation>
+        <table class="table table-hover">
+            <colgroup>
+                <col class="action-column">
+            </colgroup>
+            <thead>
+            <tr>
+                <th></th>
+                <th>
+                    <div>ID</div>
+                </th>
+                <th>
+                    <div>Name</div>
+                </th>
+                <th>
+                    <div>Allow Exceed Balance</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="group in spendingAccountAssignGroup.list.Items track by $index">
+                <td class="text-center">
+                    <input name="{{'assignCheckbox' + $index}}" type="checkbox" ng-model="group.selected">
+                </td>
+                <td>{{group.ID}}</td>
+                <td>{{group.Name}}</td>
+                <td class="text-center">
+                    <input name="{{'allowExceed' + $index}}" type="checkbox" ng-model="group.allowExceed">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="form-group">
+    <button type="button" class="btn btn-default" ui-sref="^"><i class="fa fa-arrow-left"></i> Back</button>
+    <button type="button" class="btn btn-primary" ng-click="spendingAccountAssignGroup.saveAssignments()">Update Group Assignments</button>
+    <button type="button" class="btn btn-default" ui-sref="^.assignUser({spendingaccountid: spendingAccountAssignGroup.spendingAccount.ID})">Assign Users</button>
+</div>

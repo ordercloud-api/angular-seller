@@ -1,0 +1,40 @@
+<div>
+    <button type="button" class="btn btn-default" aria-label="Close"
+            ui-sref="products"><i class="fa fa-angle-left" aria-hidden="true"></i> Products
+    </button>
+    <h3 class="page-header">
+        {{details.product.Name}}
+        <td class="text-center" data-title="Active">
+            <i class="fa" ng-class="{'fa-circle text-success': details.product.Active, 'fa-circle text-muted': !details.product.Active}"></i>
+        </td>
+    </h3>
+    <div class="row">
+        <div class="col-sm-6">
+            <h5><b>Name: </b> {{details.product.Name}}</h5>
+            <h5><b>ID: </b> {{details.product.ID}}</h5>
+            <h5><b>Description: </b> {{details.product.Description}}</h5>
+            <h5><b>Quantity Multiplier: </b> {{details.product.QuantityMultiplier}}x</h5>
+            <h5><b>Inventory Enabled: </b> {{details.product.InventoryEnabled}}</h5>
+            <h5><b>Inventory Visible: </b> {{details.product.InventoryVisible}}</h5>
+            <h5><b>Ship Weight: </b> {{details.product.ShipWeight}}</h5>
+            <h5><b>Ship Height: </b> {{details.product.ShipHeight}}</h5>
+            <h5><b>Ship Width: </b> {{details.product.ShipWidth}}</h5>
+            <h5><b>Ship Length: </b> {{details.product.ShipLength}}</h5>
+            <h5 ng-if="details.product.ShipFromAddressID"><b>Ship From Address: </b> {{details.product.ShipFromAddressID}}</h5>
+        </div>
+        <div class="col-sm-6">
+            <img class="img-responsive" ng-src="{{details.product.xp.image.URL || 'http://placehold.it/300x300'}}" alt="Product Image">
+        </div>
+    </div>
+    <button class="btn btn-default" ng-click="details.editProduct()">Edit</button>
+
+        <div class="btn-toolbar pull-right">
+            <button class="btn btn-primary" ui-sref="^.createAssignment({productid:details.productID})"><i
+                    class="fa fa-plus-circle"></i> New Assignment
+            </button>
+        </div>
+    <oc-assignment-list productid="details.product.ID"></oc-assignment-list>
+    <div>
+        <button class="btn btn-danger pull-right" ng-click="details.deleteProduct()">Delete Product</button>
+    </div>
+</div>

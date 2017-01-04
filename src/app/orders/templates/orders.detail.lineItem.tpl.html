@@ -1,0 +1,57 @@
+<h3 class="page-header">
+    <b>Line Item - {{ordersDetailLineItem.lineItem.ID}}</b>
+</h3>
+<form name="OrdersDetailLineItemForm" class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-1">Product ID:</label>
+        <div class="col-sm-11">
+            {{ordersDetailLineItem.lineItem.Product.ID}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-1">Product Name:</label>
+        <div class="col-sm-11">
+            {{ordersDetailLineItem.lineItem.Product.Name}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-1">Unit Price:</label>
+        <div class="col-sm-11">
+            {{ordersDetailLineItem.lineItem.UnitPrice | currency}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-1">Quantity:</label>
+        <div class="col-sm-11">
+            {{ordersDetailLineItem.lineItem.Quantity}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-1">Price:</label>
+        <div class="col-sm-11">
+            {{ordersDetailLineItem.lineItem.LineTotal | currency}}
+        </div>
+    </div>
+    <div class="form-group" ng-if="ordersDetailLineItem.lineItem.Specs.length">
+        <label class="col-sm-1">Specs:</label>
+        <div class="col-sm-11">
+            <div class="form-group" ng-repeat="spec in ordersDetailLineItem.lineItem.Specs" ng-if="spec.Value">
+                <span class="col-sm-1">{{spec.Name}}:</span>
+                <div class="col-sm-11">
+                    {{spec.Value}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" ng-if="ordersDetailLineItem.lineItem.ShippingAddress">
+        <label class="col-sm-1">Ship To:</label>
+        <div class="col-sm-11">
+            <span ng-if="ordersDetailLineItem.lineItem.ShippingAddress.CompanyName">{{ordersDetailLineItem.lineItem.ShippingAddress.CompanyName}}<br /></span>
+            <span ng-if="ordersDetailLineItem.lineItem.ShippingAddress.FirstName || ordersDetailLineItem.lineItem.ShippingAddress.LastName">{{ordersDetailLineItem.lineItem.ShippingAddress.FirstName + ' ' + ordersDetailLineItem.lineItem.ShippingAddress.LastName}}<br /></span>
+            <span>{{ordersDetailLineItem.lineItem.ShippingAddress.Street1}}<br /></span>
+            <span ng-if="ordersDetailLineItem.lineItem.ShippingAddress.Street2">{{ordersDetailLineItem.lineItem.ShippingAddress.Street2}}<br /></span>
+            <span>{{ordersDetailLineItem.lineItem.ShippingAddress.City + ', ' + ordersDetailLineItem.lineItem.ShippingAddress.State + ' ' + ordersDetailLineItem.lineItem.ShippingAddress.Zip}}<br /></span>
+        </div>
+    </div>
+    <button type="button" class="btn btn-default" ui-sref="^">Back to Order</button>
+</form>

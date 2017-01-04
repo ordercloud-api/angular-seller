@@ -1,0 +1,101 @@
+<article id="COMPONENT_OrderReview" class="container-fluid">
+    <div class="order-review-header">
+	    <h3 class="page-header">
+		    Order Review
+	    </h3>
+        <div class="hidden-print form-group">
+            <button class="btn btn-default" ng-click="orderReview.print()">Print</button>
+            <button class="btn btn-info" ng-click="orderReview.removeFromFavorites()" ng-if="orderReview.submittedOrder.xp.favorite">
+                <i class="fa fa-star"> </i> Remove from Favorites
+            </button>
+            <button class="btn btn-primary" ng-click="orderReview.addToFavorites()" ng-if="!(orderReview.submittedOrder.xp.favorite)">
+                <i class="fa fa-star"> </i> Favorite This Order
+            </button>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>Billing Address</b></div>
+            <div class="panel-body">
+                <div>
+                    <p id="address_paragraph">{{orderReview.submittedOrder.BillingAddress | address: 'full'}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-if="orderReview.submittedOrder.ShippingAddressID">
+            <div class="panel-heading"><b>Shipping Address</b></div>
+            <div class="panel-body">
+                <div>
+                    <p id="address_paragraph">{{orderReview.LineItems.Items[0].ShippingAddress | address: 'full'}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>Payment Information</b></div>
+            <div class="panel-body">
+                <div ng-repeat="payment in orderReview.orderPayments">
+                    <div ng-if="payment.Type == 'CreditCard'">
+                        <p>Cardholder Name: {{orderReview.orderPayments[$index].creditCardDetails.CardholderName}}</p>
+                        <p><i class="fa fa-2x"
+                              ng-class="{'fa-cc-visa': orderReview.orderPayments[$index].creditCardDetails.CardType == 'Visa',
+                          'fa-cc-mastercard': orderReview.orderPayments[$index].creditCardDetails.CardType == 'Master Card',
+                          'fa-cc-amex': orderReview.orderPayments[$index].creditCardDetails.CardType == 'American Expresss',
+                          'fa-cc-discover': orderReview.orderPayments[$index].creditCardDetails.CardType == 'Discover'}">
+                        </i>
+                            ending in {{orderReview.orderPayments[$index].creditCardDetails.PartialAccountNumber}}</p>
+                    </div>
+                    <div ng-if="payment.Type == 'SpendingAccount'">
+                        Spending Account ID: {{orderReview.orderPayments[$index].spendingAccountDetails.Name}}
+                    </div>
+                    <div ng-if="payment.Type == 'PurchaseOrder'">
+                        Purchase Order
+                        <span ng-if="payment.xp.PONumber">
+                         : {{orderReview.orderPayments[$index].xp.PONumber}}
+                        </span>
+                    </div>
+                    <!--<div>-->
+                    <!--Subtotal: {{orderConfirmation.currentOrder.Subtotal | currency}}-->
+                    <!--</div>-->
+                    <!--<div ng-if="orderConfirmation.currentOrder.xp.taxInfo">-->
+                    <!--Tax: {{orderConfirmation.currentOrder.xp.taxInfo | currency}}-->
+                    <!--</div>-->
+                    Amount: {{payment.Amount | currency}}
+                    <hr>
+                </div>
+                <div>
+                    Total: {{orderReview.submittedOrder.Total | currency}}
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>Line Items</b></div>
+            <div class="panel-body">
+                <div>
+                    <table class="table table-hover">
+                        <tbody>
+                        <colgroup>
+                            <col style="width:100px;">
+                            <col>
+                            <col style="width:75px;">
+                        </colgroup>
+                        <tr ng-repeat-start="lineItem in orderReview.LineItems.Items track by $index" class="item_info">
+                            <td>
+                                {{lineItem.Quantity}}
+                            </td>
+                            <td>
+                                <a href="#">{{lineItem.Product.Name}}</a><br>
+                                <small class="text-muted">{{lineItem.ProductID}}</small></br>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end class="shipping_info" ng-if="!orderReview.submittedOrder.ShippingAddressID">
+                            <div>
+                                <td colspan="3">
+                                    <label>Shipping To:</label>
+                                    <p>{{lineItem.ShippingAddress | address}}</p>
+                                </td>
+                            </div>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</article>

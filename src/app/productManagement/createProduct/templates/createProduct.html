@@ -1,0 +1,135 @@
+<form name="CreateForm" ng-submit="productCreate.submit()" novalidate>
+    <h3 class="page-header">
+        <b>New Product</b>
+    </h3>
+    <div class="row">
+        <div class="col-md-10 form-group">
+            <label for="productIDInput">Product ID</label>
+            <input id="productIDInput" type="text" class="form-control" pattern="([A-Za-z0-9\-\_]+)"
+                   pattern-err-type="ID_Name" ng-model="productCreate.product.ID"/>
+        </div>
+        <!--<div class="col-md-1 form-group" ng-click="productCreate.product.Active = !productCreate.product.Active">-->
+            <!--&lt;!&ndash;<label for="productActiveInput">&ndash;&gt;-->
+            <!--&lt;!&ndash;<input id="productActiveInput" type="checkbox" ng-model="productCreate.product.Active"/>&ndash;&gt;-->
+            <!--<span ng-if="productCreate.product.Active">Active</span>-->
+            <!--<span ng-if="!productCreate.product.Active">Inactive</span>-->
+
+            <!--<i class="fa"-->
+               <!--ng-class="{'fa-circle text-success': productCreate.product.Active, 'fa-circle text-muted': !productCreate.product.Active}"></i>-->
+        <!--</div>-->
+        <div class="col-md-2 form-group">
+            <label>Status</label>
+            <label class="btn btn-default c-product_label" for="productActiveInput">
+                <input class="badgebox" id="productActiveInput" type="checkbox"
+                       ng-model="productCreate.product.Active"/>
+                Active <span class="badge"><i class="fa fa-check"></i></span>
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="productNameInput">Product Name</label>
+        <input id="productNameInput" type="text" class="form-control" ng-model="productCreate.product.Name"
+               ng-required="true"/>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="productDescriptionInput">Description</label>
+            <textarea id="productDescriptionInput" type="text" class="form-control"
+                      ng-model="productCreate.product.Description"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-3">
+            <label for="productQuantityMultInput">Quantity Multiplier</label>
+            <input id="productQuantityMultInput" type="number" pattern="^[0-9]*[1-9][0-9]*$"
+                   pattern-err-type="positiveInteger" class="form-control" placeholder="Number of items in unit"
+                   ng-model="productCreate.product.QuantityMultiplier" ng-required="true"/>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="productShipWeightInput">Shipping: Weight</label>
+            <input id="productShipWeightInput" type="number" step="any" class="form-control" placeholder="lbs"
+                   ng-model="productCreate.product.ShipWeight"/>
+        </div>
+
+        <div class="form-group col-md-2">
+            <label for="productShipheightInput">Height</label>
+            <input id="productShipheightInput" type="number" step="any" class="form-control"
+                   ng-model="productCreate.product.ShipHeight"/>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="productShipWidthInput">Width</label>
+            <input id="productShipWidthInput" type="number" step="any" class="form-control"
+                   ng-model="productCreate.product.ShipWidth" />
+        </div>
+        <div class="form-group col-md-2">
+            <label for="productShipLengthInput">Length</label>
+            <input id="productShipLengthInput" type="number" step="any" class="form-control"
+                   ng-model="productCreate.product.ShipLength"/>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label>Inventory Options:</label>
+        <label class="btn btn-default c-product_label" for="productInventory2Input">
+            <input class="badgebox" id="productInventory2Input" type="checkbox"
+                   ng-model="productCreate.product.InventoryEnabled"/>
+            Track Inventory <span class="badge"><i class="fa fa-check"></i></span>
+        </label>
+    </div>
+
+
+    <div class="panel panel-default" ng-show="productCreate.product.InventoryEnabled">
+        <div class="panel-header"></div>
+        <div class="panel-body">
+
+                <div class="form-group">
+                    <label for="productInventoryInput">Inventory Notification Point</label>
+                    <input id="productInventoryInput" type="number" class="form-control"
+                           ng-model="productCreate.product.InventoryNotificationPoint"/>
+                </div>
+
+            <div class="row">
+                <div ng-show="productCreate.product.InventoryEnabled">
+                    <div class="col-md-4 form-group">
+                        <label class="btn btn-default c-product_label" for="productInventory3Input">
+                            <input class="badgebox" id="productInventory3Input" type="checkbox"
+                                   ng-model="productCreate.product.VariantLevelInventory"/>
+                            <span class="badge"><i class="fa fa-check"></i></span> Variant Level Inventory
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label class="btn btn-default c-product_label " for="productInventory4Input">
+                        <input class="badgebox" id="productInventory4Input" type="checkbox"
+                               ng-model="productCreate.product.ExceedInventory"/>
+                        <span class="badge"><i class="fa fa-check"></i></span> Can Exceed Inventory
+                    </label>
+                </div>
+
+
+                <div class="col-md-4 form-group">
+                    <label class="btn btn-default c-product_label" for="productInventory5Input">
+                        <input class="badgebox" id="productInventory5Input" type="checkbox"
+                               ng-model="productCreate.product.DisplayInventory"/>
+                        <span class="badge"><i class="fa fa-check"></i></span> Display Inventory
+                    </label>
+
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="form-group">
+            <!--<label>Image:</label>-->
+            <ordercloud-file-upload  model="productCreate.product" label="Image:"
+                                    keyname="image" extensions="jpg, png, gif, jpeg, tiff"></ordercloud-file-upload>
+        </div>
+
+
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" ng-disabled="CreateForm.$invalid" ng-click="productCreate.submit()">Save</button>
+            <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+            <button type="submit" class="btn btn-default pull-right" ng-disabled="CreateForm.$invalid">Next</button>
+        </div>
+</form>

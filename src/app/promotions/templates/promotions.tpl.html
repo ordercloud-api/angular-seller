@@ -1,0 +1,112 @@
+<article id="COMPONENT_Promotions" ui-view class="container-fluid">
+    <div class="page-header">
+        <button type="button" class="btn btn-success pull-right" ui-sref=".create"><i class="fa fa-plus-circle"></i> Create New</button>
+        <h3>Promotions</h3>
+    </div>
+
+    <!--====== SEARCH/FILTERS ======-->
+    <form name="PromotionsSearchForm" class="form-inline" ng-submit="promotions.search()">
+        <fieldset class="form-group">
+            <input type="search" placeholder="Search Promotions..." ng-model="promotions.parameters.search" class="form-control">
+        </fieldset>
+        <fieldset class="form-group" ng-class="{'text-center':application.$ocMedia('max-width:767px')}">
+            <span ng-class="{'btn-group':promotions.searchResults}">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <button ng-if="promotions.searchResults" ng-click="promotions.clearSearch()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
+            </span>
+            <span ng-class="{'btn-group':promotions.filtersApplied}" ng-if="application.$ocMedia('max-width:767px')">
+                <button type="button" class="btn btn-default" ng-click="promotions.showFilters = !promotions.showFilters"><i class="fa fa-filter"></i> Filters</button>
+                <button ng-if="promotions.filtersApplied" ng-click="promotions.clearFilters()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
+            </span>
+        </fieldset>
+    </form>
+    <div class="row" style="margin-top:15px;" uib-collapse="!promotions.showFilters">
+        <div class="col-md-6 col-lg-4">
+            <div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
+                <label>Sort By:</label>
+                <div ng-class="{'input-group':promotions.sortSelection}">
+                    <select placeholder="Sort" class="form-control" ng-model="promotions.sortSelection" ng-change="promotions.updateSort()">
+                        <option value="">None</option>
+                        <option value="ID">ID</option>
+                        <option value="Name">Name</option>
+                    </select>
+                    <div ng-if="promotions.sortSelection" class="input-group-btn">
+                        <button class="btn btn-default" ng-click="promotions.reverseSort()">
+                            <i class="fa fa-sort"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--====== LIST ======-->
+    <div class="no-matches" ng-if="!promotions.list.Items.length">
+        <b>No matches found.</b>
+    </div>
+    <div ng-if="promotions.list.Items.length">
+        <b class="pull-right">{{(application.$ocMedia('min-width:768px') ? promotions.list.Meta.ItemRange[0] : '1') + ' - ' +  promotions.list.Meta.ItemRange[1] + ' of ' + promotions.list.Meta.TotalCount + ' results'}}</b>
+        <table class="table table-hover oc-table-responsive">
+            <thead>
+            <tr>
+                <th scope="col">
+                    <a href="#" role="button" ng-click="promotions.updateSort('ID')">
+                        ID
+                        <i class="fa fa-caret-down" ng-show="promotions.parameters.sortBy == 'ID'"></i>
+                        <i class="fa fa-caret-up" ng-show="promotions.parameters.sortBy == '!ID'"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    <a href="#" role="button" ng-click="promotions.updateSort('Name')">
+                        Name
+                        <i class="fa fa-caret-down" ng-show="promotions.parameters.sortBy == 'Name'"></i>
+                        <i class="fa fa-caret-up" ng-show="promotions.parameters.sortBy == '!Name'"></i>
+                    </a>
+                </th>
+                <th scope="col">
+                    Code
+                </th>
+                <th scope="col">
+                    Start Date
+                </th>
+                <th scope="col">
+                    End Date
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="promotion in promotions.list.Items">
+                <th scope="row">{{promotion.ID}}</th>
+                <td data-title="Name">{{promotion.Name}}</td>
+                <td data-title="Balance">{{promotion.Code}}</td>
+                <td data-title="Start Date">{{promotion.StartDate | date:'MM/dd/yyyy'}}</td>
+                <td data-title="End Date">{{promotion.ExpirationDate | date:'MM/dd/yyyy'}}</td>
+                <td class="actions-cell">
+                    <button class="btn btn-default btn-sm" ui-sref=".edit({promotionid: promotion.ID})">Edit</button>
+                    <div class="btn-group" uib-dropdown dropdown-append-to-body>
+                        <button type="button" class="btn btn-default btn-sm" uib-dropdown-toggle>Assign <span class="caret"></span></button>
+                        <ul class="dropdown-menu-right" uib-dropdown-menu role="menu">
+                            <li role="menuitem"><a ui-sref=".assignGroup({promotionid: promotion.ID})">Group Assignments</a></li>
+                            <li role="menuitem"><a ui-sref=".assignUser({promotionid: promotion.ID})">User Assignments</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && promotions.list.Meta.TotalPages > 1">
+            <uib-pagination boundary-links="promotions.list.Meta.TotalPages > 5"
+                            max-size="5" total-items="promotions.list.Meta.TotalCount"
+                            items-per-page="promotions.list.Meta.PageSize"
+                            ng-model="promotions.list.Meta.Page"
+                            ng-change="promotions.pageChanged()"></uib-pagination>
+        </div>
+        <button type="button"
+                ng-if="application.$ocMedia('max-width:767px')"
+                class="btn btn-default btn-block btn-lg"
+                ng-show="promotions.list.Meta.Page < promotions.list.Meta.TotalPages"
+                ng-click="promotions.loadMore()">Load More</button>
+    </div>
+
+</article>

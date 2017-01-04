@@ -1,0 +1,44 @@
+<h3 class="page-header">
+    <b>Edit Spending Account:</b> {{spendingAccountEdit.spendingAccountName}}
+</h3>
+<form name="SpendingAccountEditForm" ng-submit="spendingAccountEdit.Submit()" novalidate>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="spendingAccountIDInput">Spending Account ID</label>
+            <input id="spendingAccountIDInput" type="text" class="form-control" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="spendingAccountEdit.spendingAccount.ID"/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="spendingAccountNameInput">Spending Account Name</label>
+            <input id="spendingAccountNameInput" type="text" class="form-control" ng-model="spendingAccountEdit.spendingAccount.Name" required="true"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="spendingAccountStartDate">Start Date</label>
+            <input class="form-control" ng-show="application.isTouchDevice" type="date" id="spendingAccountEditStartinput2" ng-model="spendingAccountEdit.spendingAccount.StartDate"/>
+            <input id="spendingAccountStartDate" ng-hide="application.isTouchDevice" type="text" ng-click="open1 = !open1" is-open="open1" uib-datepicker-popup="MM/dd/yyyy" datepicker-append-to-body="true" class="form-control" ng-model="spendingAccountEdit.spendingAccount.StartDate">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="spendingAccountExpirationDate">End Date</label>
+            <input class="form-control"  ng-disabled="!spendingAccountEdit.spendingAccount.StartDate" ng-show="application.isTouchDevice" type="date" id="spendingAccountStartcreateinput2" ng-model="spendingAccountEdit.spendingAccount.EndDate"/>
+            <input id="spendingAccountExpirationDate" ng-hide="application.isTouchDevice"  type="text" ng-click="open2 = !open2" is-open="open2" min-date="spendingAccountEdit.spendingAccount.StartDate" ng-disabled="!spendingAccountEdit.spendingAccount.StartDate" uib-datepicker-popup="MM/dd/yyyy" datepicker-append-to-body="true" class="form-control" ng-model="spendingAccountEdit.spendingAccount.EndDate">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="spendingAccountBalanceInput">Spending Account Balance</label>
+            <input id="spendingAccountBalanceInput" type="number" step="any" class="form-control" ng-model="spendingAccountEdit.spendingAccount.Balance" required="true"/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="spendingAccountAllowInput">
+                <input id="spendingAccountAllowInput" type="checkbox" ng-model="spendingAccountEdit.spendingAccount.AllowAsPaymentMethod"/>
+                Allow as Payment Type
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-disabled="SpendingAccountEditForm.$invalid">Save</button>
+        <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="spendingAccountEdit.Delete()"><i class="fa fa-trash text-danger"></i></button>
+    </div>
+</form>

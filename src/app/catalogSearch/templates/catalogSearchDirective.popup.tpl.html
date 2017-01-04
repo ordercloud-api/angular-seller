@@ -1,0 +1,8 @@
+<div class="custom-popup-wrapper"
+     ng-show="isOpen() && !moveInProgress"
+     aria-hidden="{{!isOpen()}}">
+    <p class="popup-headers text-primary" ng-if="$parent.catalogSearch.productData.length">Products</p>
+    <div class="products-popup-results" ng-include="'./catalogSearch/templates/catalogSearchDirective.popup-products.tpl.html'"></div>
+    <p class="popup-headers text-primary" ng-if="$parent.catalogSearch.categoryData.length">Categories</p>
+    <div class="categories-popup-results" ng-include="'./catalogSearch/templates/catalogSearchDirective.popup-categories.tpl.html'"></div>
+</div>
