@@ -1,27 +1,21 @@
 describe('Component: Catalogs', function(){
     var scope,
-        rootScope,
         q,
         oc,
-        catalog,
-        catalogViewManagement,
-        categoryModalFactory;
+        catalog;
     beforeEach(module(function($provide){
         $provide.value('Parameters', {search:null, page: null, pageSize: null, searchOn: null, sortBy: null, userID: null, userGroupID: null, level: null, buyerID: null})
     }));
     beforeEach(module('orderCloud'));
     beforeEach(module('orderCloud.sdk'));
-    beforeEach(inject(function($rootScope, $q, OrderCloud, CatalogViewManagement, CategoryModalFactory){
+    beforeEach(inject(function($rootScope, $q, OrderCloud){
         scope = $rootScope.$new();
-        rootScope = $rootScope;
         q = $q;
         oc = OrderCloud;
         catalog = {
             ID: 'CatalogID',
             Name: 'CatalogName'
         };
-        catalogViewManagement = CatalogViewManagement;
-        categoryModalFactory = CategoryModalFactory;
     }));
 
     describe('State: catalogs', function(){
@@ -43,18 +37,6 @@ describe('Component: Catalogs', function(){
         it('should resolve BuyersList', inject(function($injector, Parameters){
             $injector.invoke(state.resolve.BuyersList);
             expect(oc.Buyers.List).toHaveBeenCalledWith(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy)
-        }))
-    });
-
-    describe('State: catalogs.edit', function(){
-        var state;
-        beforeEach(inject(function($state, CategoryTreeService){
-            state = $state.get('catalogs.edit');
-            spyOn(CategoryTreeService, 'GetCategoryTree');
-        }));
-        it('should resolve Tree', inject(function($injector, $stateParams, CategoryTreeService){
-            $injector.invoke(state.views[""].resolve.Tree);
-            expect(CategoryTreeService.GetCategoryTree).toHaveBeenCalledWith($stateParams.catalogid)
         }))
     });
 
@@ -84,7 +66,7 @@ describe('Component: Catalogs', function(){
             it('should call the filter method', function(){
                 catalogsCtrl.search();
                 expect(catalogsCtrl.filter).toHaveBeenCalledWith(true);
-            })
+            });
         });
         describe('clearSearch', function(){
             beforeEach(function(){
@@ -93,7 +75,7 @@ describe('Component: Catalogs', function(){
             it('should call the filter method', function(){
                 catalogsCtrl.clearSearch();
                 expect(catalogsCtrl.filter).toHaveBeenCalledWith(true);
-            })
+            });
         });
         describe('clearFilters', function(){
             beforeEach(function(){
@@ -102,7 +84,7 @@ describe('Component: Catalogs', function(){
             it('should call the filter method', function(){
                 catalogsCtrl.clearFilters();
                 expect(catalogsCtrl.filter).toHaveBeenCalledWith(true);
-            })
+            });
         });
         describe('updateSort', function(){
             beforeEach(function(){
@@ -111,7 +93,7 @@ describe('Component: Catalogs', function(){
             it('should call the filter method', function(){
                 catalogsCtrl.updateSort();
                 expect(catalogsCtrl.filter).toHaveBeenCalledWith(false);
-            })
+            });
         });
         describe('pageChanged', function(){
             beforeEach(function(){
@@ -148,12 +130,12 @@ describe('Component: Catalogs', function(){
         })
     });
 
-    describe('Controller: CatalogCreateCtrl', function(){
+    describe('Controller: CreateCatalogCtrl', function(){
         var catalogCreateCtrl,
             toaster;
         beforeEach(inject(function($state, $controller, toastr){
             toaster = toastr;
-            catalogCreateCtrl = $controller('CatalogCreateCtrl', {
+            catalogCreateCtrl = $controller('CreateCatalogCtrl', {
                 $scope: scope,
                 toastr: toaster
             });
@@ -176,97 +158,8 @@ describe('Component: Catalogs', function(){
                 expect(toaster.success).toHaveBeenCalledWith('Catalog Created', 'Success');
             });
             it('should enter the catalogs state and reload the state', inject(function($state){
-                expect($state.go).toHaveBeenCalledWith('catalogs', {catalogid: catalogCreateCtrl.catalog.ID, fromstate: "catalogCreate"}, {reload: true});
-            }))
-        })
-    });
-
-    describe('Controller: CatalogTreeCtrl', function(){
-        var catalogTreeCtrl;
-        beforeEach(inject(function($controller, Tree){
-            catalogTreeCtrl = $controller('CatalogTreeCtrl', {
-                selectedCategory: {}
-            });
-            catalogTreeCtrl.tree = Tree;
-            catalogTreeCtrl.selectedCategory = {};
-        }));
-        describe('categorySelected', function(){
-            beforeEach(inject(function(){
-                spyOn(catalogViewManagement, 'SetCategoryID');
-                catalogTreeCtrl.categorySelected('category');
+                expect($state.go).toHaveBeenCalledWith('catalogs', {catalogid: catalogCreateCtrl.catalog.ID}, {reload: true});
             }));
-            it('should call the SetCategoryID method on catalogViewManagement', function(){
-                expect(catalogViewManagement.SetCategoryID).toHaveBeenCalledWith('category');
-            })
         });
-        describe('createCategory', function(){
-            beforeEach(inject(function(){
-                spyOn(categoryModalFactory, 'Create');
-                catalogTreeCtrl.createCategory('parentid');
-            }));
-            it('should call the Create method on categoryModalFactory', function(){
-                expect(categoryModalFactory.Create).toHaveBeenCalledWith('parentid')
-            })
-        })
     });
-
-    describe('Controller: CatalogAssignmentsCtrl', function(){
-        var catalogAssignmentsCtrl;
-        beforeEach(inject(function($controller){
-            catalogAssignmentsCtrl = $controller('CatalogAssignmentsCtrl', {
-                categoryid: null
-            });
-        }));
-        describe('getAssignments', function(){
-            beforeEach(function(){
-                var defer = q.defer();
-                catalogAssignmentsCtrl.assignments = {};
-                catalogAssignmentsCtrl.categoryid = 'categoryID';
-                defer.resolve();
-                spyOn(oc.Categories, 'ListAssignments').and.returnValue(defer.promise);
-                rootScope.$broadcast('CatalogViewManagement:CatalogIDChanged', '123');
-            });
-            it('should call the ListAssignments method on OrderCloud Categories', function(){
-                expect(oc.Categories.ListAssignments).toHaveBeenCalledWith(catalogAssignmentsCtrl.categoryid);
-            })
-        });
-        describe('getProducts', function(){
-            beforeEach(function(){
-                var defer = q.defer();
-                catalogAssignmentsCtrl.categoryid = 'categoryID';
-                defer.resolve();
-                spyOn(oc.Categories, 'ListProductAssignments').and.returnValue(defer.promise);
-                rootScope.$broadcast('CatalogViewManagement:CatalogIDChanged', '123');
-            });
-            it('should call the ListAssignments method on OrderCloud Categories', function(){
-                expect(oc.Categories.ListProductAssignments).toHaveBeenCalledWith(catalogAssignmentsCtrl.categoryid);
-            })
-        });
-        describe('listAllProducts', function(){
-            beforeEach(function(){
-                var defer = q.defer();
-                catalogAssignmentsCtrl.listProducts = {};
-                defer.resolve(catalogAssignmentsCtrl.listProducts);
-                spyOn(oc.Products, 'List').and.returnValue(defer.promise);
-            });
-            it('should call the List method on OrderCloud Products', function(){
-                var product = {};
-                catalogAssignmentsCtrl.listAllProducts(product);
-                expect(oc.Products.List).toHaveBeenCalledWith(product);
-            })
-        });
-        describe('deleteAssignment', function(){
-            beforeEach(function(){
-                var defer = q.defer();
-                catalogAssignmentsCtrl.categoryid = 'categoryID';
-                defer.resolve();
-                spyOn(oc.Categories, 'DeleteProductAssignment').and.returnValue(defer.promise);
-            });
-            it('should call the DeleteProductAssignment method on OrderCloud Categories', inject(function($stateParams){
-                var product = {};
-                catalogAssignmentsCtrl.deleteAssignment(product);
-                expect(oc.Categories.DeleteProductAssignment).toHaveBeenCalledWith(catalogAssignmentsCtrl.categoryid, product.ID, $stateParams.catalogid)
-            }))
-        })
-    })
 });
