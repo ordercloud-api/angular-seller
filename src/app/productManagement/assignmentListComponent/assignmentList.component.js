@@ -15,10 +15,16 @@ angular.module('orderCloud')
 // when the buyerid or productid is changed it will make an api call to filter based on buyer ID and product ID
 function ocAssignmentListCtrl($q, $resource, OrderCloud){
     var vm = this;
-
+    vm.priceSchedules = null;
+    vm.$onInit = $onInit;
     vm.$onChanges = onChanges;
+    vm.DeleteAssignment = DeleteAssignment;
     vm.getBuyers = getBuyers;
 
+
+    function $onInit(){
+
+    }
 
     function onChanges(change){
         if( change && change.buyerid && change.buyerid.currentValue){
@@ -40,6 +46,7 @@ function ocAssignmentListCtrl($q, $resource, OrderCloud){
     function getBuyers(){
         //loading indicator promise
         var df =  $q.defer();
+        var queue = [];
         df.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
         df.message = 'Loading Assignments';
         vm.loading = df;
@@ -53,12 +60,45 @@ function ocAssignmentListCtrl($q, $resource, OrderCloud){
             }
         }).callApi(null).$promise
             .then(function(data) {
-                df.resolve(data);
-                vm.listAssignments = data;
+                // df.resolve(data);
+                console.log(data);
+                var assignments = _.groupBy(data.Items, function(assignment){return assignment.PriceScheduleID});
+                console.log("here is the assignment object", assignments);
+                angular.forEach(assignments, function(value, key){
+                    queue.push(OrderCloud.PriceSchedules.Get(key));
+                });
+                $q.all(queue)
+                    .then(function(pricescheduleInfo){
+
+                        console.log("this is data returned before I mess with it",pricescheduleInfo);
+
+                        angular.forEach(pricescheduleInfo, function(value, index){
+                        pricescheduleInfo[index].Assignments = assignments[value.ID];
+
+                        });
+                        console.log("this is data returned AFTER I mess with it",pricescheduleInfo);
+                        df.resolve(data, pricescheduleInfo);
+                        vm.listAssignments = pricescheduleInfo;
+                    });
+
 
             })
             .catch(function(ex) {
                 console.warn(ex)
             });
     }
+    function DeleteAssignment(scope) {
+        console.log("hello the delete assignment function is being called", scope)
+        OrderCloud.Products.DeleteAssignment(scope.assignment.ProductID, null, scope.assignment.UserGroupID)
+            .then(function() {
+                $state.reload();
+                toastr.success('Product Assignment Deleted', 'Success');
+                $state.go('.',{},{reload: true});
+            })
+            .catch(function(ex) {
+                $exceptionHandler(ex)
+            });
+    };
+
+
 }

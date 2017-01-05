@@ -1,41 +1,118 @@
 <div cg-busy="productAssignment.loading">
     <div class="page-header">
-        <h3>Assignments for {{productAssignment.productName}}</h3>
+        <h3>Price schedules assigned to this product</h3>
     </div>
-    <div class="well well-lg text-center" ng-if="!productAssignment.listAssignments.Items.length">
-        <b>This product does not have any assignments for the active Buyer company.</b>
-    </div>
+    <!--<div class="well well-lg text-center" ng-if="!productAssignment.listAssignments.Items.length">-->
+        <!--<b>This product does not have any assignments for the active Buyer company.</b>-->
+    <!--</div>-->
     <!--====== LIST ======-->
-    <div ng-if="productAssignment.listAssignments.Items.length">
-        <table class="table table-hover table-condensed oc-table-responsive">
-            <thead>
-            <tr>
-                <th>
-                    <div>Party ID</div>
-                </th>
-                <th>
-                    <div>Standard Price Schedule ID</div>
-                </th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="assignment in productAssignment.listAssignments.Items">
-                <th scope="row">{{assignment.UserID || assignment.UserGroupID || assignment.BuyerID}}
-                    <small class="text-muted" ng-if="!assignment.UserID && !assignment.UserGroupID">(Buyer)</small>
-                </th>
-                <td data-title="Standard Price Schedule">{{assignment.StandardPriceScheduleID}}
-                    <span class="text-muted" ng-if="!assignment.StandardPriceScheduleID">None</span>
-                </td>
-                <td class="actions-cell">
-                    <button type="button" class="btn btn-danger btn-sm" uib-tooltip="Delete Assignment"
-                            tooltip-placement="left" ng-click="productAssignment.DeleteAssignment(this)">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div ng-if="productAssignment.listAssignments" ng-repeat="priceSchedule in productAssignment.listAssignments">
+        <div class="panel panel-default">
+            <div class="panel-heading"> {{priceSchedule.Name}}</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>ID:</label> {{priceSchedule.ID}} <br>
+                        <label>Tax Applied:</label>{{priceSchedule.ApplyTax}}<br>
+                        <label>Shipping Applied:</label> {{priceSchedule.ApplyShipping}}<br>
+                        <label>Minimum Quantity:</label> {{priceSchedule.MinQuantity}}<br>
+                        <label>Max Quantity:</label> {{priceSchedule.MaxQuantity}}<br>
+                    </div>
+                    <div class="col-sm-6">
+                        <table class="table table-hover table-condensed oc-table-responsive">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <div>Quantity</div>
+                                </th>
+                                <th>
+                                    <div>Price</div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="priceBreak in priceSchedule.PriceBreaks">
+                                <td>{{priceBreak.Quantity}}</td>
+                                <td>{{priceBreak.Price |currency:"$" }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <table class="table table-hover table-condensed oc-table-responsive">
+                        <thead>
+                        <tr>
+                            <th>
+                                <div>User Groups</div>
+                            </th>
+                            <th>
+                                <div>Buyer</div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="assignnee in priceSchedule.Assignments">
+                            <td>{{assignnee.UserGroupID}}</td>
+                            <td>{{assignnee.BuyerID}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+            </div>
+        </div>
+        <!--<table class="table table-hover table-condensed oc-table-responsive">-->
+            <!--<thead>-->
+            <!--<tr>-->
+                <!--<th>-->
+                    <!--<div>Name</div>-->
+                <!--</th>-->
+                <!--<th>-->
+                    <!--<div>ID</div>-->
+                <!--</th>-->
+                <!--<th>-->
+                    <!--<div>Tax Applied</div>-->
+                <!--</th>-->
+                <!--<th>-->
+                    <!--<div>Shipping Applied</div>-->
+                <!--</th>-->
+                <!--<th>-->
+                    <!--<div>Minimum Quantity</div>-->
+                <!--</th>-->
+                <!--<th>-->
+                    <!--<div>Max Quantity</div>-->
+                <!--</th>-->
+
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr ng-repeat="priceSchedule in productAssignment.listAssignments">-->
+                <!--<td>{{priceSchedule.Name}}</td>-->
+                <!--<td>{{priceSchedule.ID}}</td>-->
+                <!--<td>{{priceSchedule.ApplyTax}}</td>-->
+                <!--<td>{{priceSchedule.ApplyShipping}}</td>-->
+                <!--<td>{{priceSchedule.MinQuantity}}</td>-->
+                <!--<td>{{priceSchedule.MaxQuantity}}</td>-->
+                <!--&lt;!&ndash;<th scope="row">{{assignment.UserID || assignment.UserGroupID || assignment.BuyerID}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<small class="text-muted" ng-if="!assignment.UserID && !assignment.UserGroupID">(Buyer)</small>&ndash;&gt;-->
+                <!--&lt;!&ndash;</th>&ndash;&gt;-->
+                <!--&lt;!&ndash;<td data-title="Standard Price Schedule">{{assignment.StandardPriceScheduleID}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="text-muted" ng-if="!assignment.StandardPriceScheduleID">None</span>&ndash;&gt;-->
+                <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                <!--&lt;!&ndash;<td class="actions-cell">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="button" class="btn btn-danger btn-sm" uib-tooltip="Delete Assignment"&ndash;&gt;-->
+                            <!--&lt;!&ndash;tooltip-placement="left" ng-click="productAssignment.DeleteAssignment(this)">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<i class="fa fa-trash"></i>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                <!--&lt;!&ndash;</td>&ndash;&gt;-->
+            <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
         <div class="text-center"
              ng-if="application.$ocMedia('min-width:768px') && productAssignment.listAssignments.Meta.TotalPages > 1">
         <uib-pagination boundary-links="productAssignment.listAssignments.Meta.TotalPages > 5"

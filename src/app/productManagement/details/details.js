@@ -49,7 +49,7 @@ function DetailsController($stateParams, $exceptionHandler, $state, toastr, Orde
     vm.productName = angular.copy(SelectedProduct.Name);
     vm.schedule = PriceSchedule;
 
-    vm.DeleteAssignment = DeleteAssignment;
+
     vm.deleteProduct = deleteProduct;
     vm.editProduct = editProduct;
     vm.newAssignment = newAssignment;
@@ -63,16 +63,6 @@ function DetailsController($stateParams, $exceptionHandler, $state, toastr, Orde
              })
     };
 
-    function DeleteAssignment(scope) {
-        OrderCloud.Products.DeleteAssignment(scope.assignment.ProductID, null, scope.assignment.UserGroupID)
-            .then(function() {
-                $state.reload();
-                toastr.success('Product Assignment Deleted', 'Success');
-            })
-            .catch(function(ex) {
-                $exceptionHandler(ex)
-            });
-    };
 
     function deleteProduct(){
         OrderCloudConfirm.Confirm('Are you sure you want to delete this product?')
