@@ -1,7 +1,11 @@
 # OrderCloud Seed - AngularJS
 A seed project for custom Four51 Solutions built on AngularJS
 ***
-
+## Build Status
+### development
+[![Build Status](https://travis-ci.org/ordercloud-api/angular-admin.svg?branch=development)](https://travis-ci.org/ordercloud-api/angular-admin)
+### master
+[![Build Status](https://travis-ci.org/ordercloud-api/angular-admin.svg?branch=master)](https://travis-ci.org/ordercloud-api/angular-admin)
 ## Get started
 
 Node.js is required for the following node package manager (npm) tasks. If you don't have node.js installed, you can download it [here](http://nodejs.org/).
