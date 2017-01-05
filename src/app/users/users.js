@@ -8,7 +8,7 @@ angular.module('orderCloud')
 function UsersConfig($stateProvider) {
     $stateProvider
         .state('users', {
-            parent: 'base',
+            parent: 'buyers.details',
             templateUrl: 'users/templates/users.tpl.html',
             controller: 'UsersCtrl',
             controllerAs: 'users',
@@ -19,7 +19,7 @@ function UsersConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 UserList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
                 }
             }
         })
@@ -36,29 +36,14 @@ function UsersConfig($stateProvider) {
         })
         .state('users.create', {
             url: '/create',
-            params: {
-                fromRoute: null,
-                buyerid: null
-            },
             templateUrl: 'users/templates/userCreate.tpl.html',
             controller: 'UserCreateCtrl',
-            controllerAs: 'userCreate',
-            resolve: {
-                Parameters: function ($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
-                },
-                SelectedBuyer: function($stateParams, OrderCloud) {
-                    return OrderCloud.Buyers.Get($stateParams.buyerid);
-                },
-                UsersFrom: function(RouteManagement){
-                    return RouteManagement.GetUserFrom();
-                }
-            }
+            controllerAs: 'userCreate'
         })
     ;
 }
 
-function UsersController($state, $ocMedia, $rootScope, RouteManagement, OrderCloud, OrderCloudParameters, UserList, Parameters) {
+function UsersController($state, $ocMedia, OrderCloud, OrderCloudParameters, UserList, Parameters) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
@@ -131,14 +116,6 @@ function UsersController($state, $ocMedia, $rootScope, RouteManagement, OrderClo
                 vm.list.Meta = data.Meta;
             });
     };
-
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
-        if (fromState.name === "users" && toState.name === "users.create") setUserFrom(false)
-    });
-
-    function setUserFrom(boolean) {
-        RouteManagement.SetUserFrom(boolean);
-    }
 }
 
 function UserEditController($exceptionHandler, $state, toastr, OrderCloud, SelectedUser) {
@@ -175,23 +152,16 @@ function UserEditController($exceptionHandler, $state, toastr, OrderCloud, Selec
     };
 }
 
-function UserCreateController($exceptionHandler, $state, toastr, UsersFrom, OrderCloud, SelectedBuyer) {
+function UserCreateController($exceptionHandler, $state, toastr, OrderCloud) {
     var vm = this;
-
-    vm.selectedBuyer = SelectedBuyer;
     vm.user = {Email: '', Password: ''};
     vm.user.Active = false;
     vm.Submit = function() {
         vm.user.TermsAccepted = new Date();
         OrderCloud.Users.Create(vm.user)
-            .then(function(user) {
-                if(UsersFrom.value) {
-                    $state.go('buyers.createAssignment', {userID: user.ID, buyerID: vm.selectedBuyer.ID}, {reload: true});
-                    toastr.success('User Created', 'Success');
-                } else {
-                    $state.go('users', {}, {reload: true});
-                    toastr.success('User Created', 'Success');
-                }
+            .then(function() {
+                $state.go('users', {}, {reload: true});
+                toastr.success('User Created', 'Success');
             })
             .catch(function(ex) {
                 $exceptionHandler(ex)
