@@ -8,7 +8,7 @@ angular.module('orderCloud')
 function UsersConfig($stateProvider) {
     $stateProvider
         .state('users', {
-            parent: 'base',
+            parent: 'buyers.details',
             templateUrl: 'users/templates/users.tpl.html',
             controller: 'UsersCtrl',
             controllerAs: 'users',
@@ -19,7 +19,7 @@ function UsersConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 UserList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
                 }
             }
         })
@@ -36,18 +36,9 @@ function UsersConfig($stateProvider) {
         })
         .state('users.create', {
             url: '/create',
-            params: {
-                fromRoute: null,
-                buyerid: null
-            },
             templateUrl: 'users/templates/userCreate.tpl.html',
             controller: 'UserCreateCtrl',
-            controllerAs: 'userCreate',
-            resolve: {
-                Parameters: function ($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
-                }
-            }
+            controllerAs: 'userCreate'
         })
     ;
 }
@@ -161,7 +152,7 @@ function UserEditController($exceptionHandler, $state, toastr, OrderCloud, Selec
     };
 }
 
-function UserCreateController($exceptionHandler, $state, toastr, OrderCloud, Parameters) {
+function UserCreateController($exceptionHandler, $state, toastr, OrderCloud) {
     var vm = this;
     vm.user = {Email: '', Password: ''};
     vm.user.Active = false;
@@ -169,17 +160,11 @@ function UserCreateController($exceptionHandler, $state, toastr, OrderCloud, Par
         vm.user.TermsAccepted = new Date();
         OrderCloud.Users.Create(vm.user)
             .then(function() {
-                if(Parameters.fromRoute == "buyerDetails") {
-                    $state.go('buyers.details', {buyerid: Parameters.buyerid}, {reload: true});
-                    toastr.success('User Created', 'Success');
-                } else {
-                    $state.go('users', {}, {reload: true});
-                    toastr.success('User Created', 'Success');
-                }
+                $state.go('users', {}, {reload: true});
+                toastr.success('User Created', 'Success');
             })
             .catch(function(ex) {
                 $exceptionHandler(ex)
             });
-
     };
 }
