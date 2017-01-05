@@ -60,28 +60,19 @@ function ocAssignmentListCtrl($q, $resource, OrderCloud){
             }
         }).callApi(null).$promise
             .then(function(data) {
-                // df.resolve(data);
-                console.log(data);
+
                 var assignments = _.groupBy(data.Items, function(assignment){return assignment.PriceScheduleID});
-                console.log("here is the assignment object", assignments);
                 angular.forEach(assignments, function(value, key){
                     queue.push(OrderCloud.PriceSchedules.Get(key));
                 });
                 $q.all(queue)
                     .then(function(pricescheduleInfo){
-
-                        console.log("this is data returned before I mess with it",pricescheduleInfo);
-
                         angular.forEach(pricescheduleInfo, function(value, index){
                         pricescheduleInfo[index].Assignments = assignments[value.ID];
-
                         });
-                        console.log("this is data returned AFTER I mess with it",pricescheduleInfo);
                         df.resolve(data, pricescheduleInfo);
                         vm.listAssignments = pricescheduleInfo;
                     });
-
-
             })
             .catch(function(ex) {
                 console.warn(ex)
