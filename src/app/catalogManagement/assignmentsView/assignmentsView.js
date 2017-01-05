@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CatalogAssignmentsCtrl', CatalogAssignmentsController)
 ;
 
- function CatalogAssignmentsController($q, toastr, $rootScope, OrderCloud, ProductManagementModal, Tree, CatalogID){
+ function CatalogAssignmentsController($q, $exceptionHandler, toastr, $rootScope, OrderCloud, ProductManagementModal, Tree, CatalogID){
      var vm = this;
      vm.productIds = null;
      vm.pageSize = 10; //set pageSize for pagination. Max: 100
@@ -10,8 +10,15 @@ angular.module('orderCloud')
      vm.tree = Tree;
      vm.category = null;
      vm.products = null;
-     //vm.selectedProducts = [];
+     vm.selectedProducts = [];
 
+     //functions
+     vm.addProductModal = addProductModal;
+     vm.deleteAssignment = deleteAssignment;
+     vm.listAllProducts = listAllProducts;
+     vm.pageChanged = pageChanged;
+     vm.saveAssignment = saveAssignment;
+     
      $rootScope.$on('CatalogViewManagement:CategoryIDChanged', function(e, category){
          vm.category = category;
          getProducts();
@@ -34,18 +41,18 @@ angular.module('orderCloud')
             });
      }
 
-     vm.pageChanged = function() {
+     function pageChanged() {
          getProducts(vm.products.Meta.Page);
-    };
+    }
 
-     vm.listAllProducts = function(product){
+     function listAllProducts(product){
          return OrderCloud.Products.List(product)
              .then(function(data){
                  vm.listProducts = data;
              });
-     };
+     }
 
-     vm.saveAssignment = function(){
+     function saveAssignment(){
          var productQueue = [];
          var df = $q.defer();
          angular.forEach(vm.selectedProducts, function(product){
@@ -58,13 +65,12 @@ angular.module('orderCloud')
              ));
          });
          $q.all(productQueue)
-             .then(function(data){
-                 console.log(data);
+             .then(function(){
                  df.resolve();
-                 toastr.success('All Products Saved', 'Success');
+                 toastr.success('Products Assigned to ' + vm.category.Name, 'Success');
              })
              .catch(function(error){
-                 toastr.error(error.data.Errors[0].Message);
+                 $exceptionHandler(error);
              })
              .finally(function(){
                  getProducts();
@@ -73,21 +79,20 @@ angular.module('orderCloud')
          return df.promise;
      }
          
-     vm.addProductModal = function(){
+     function addProductModal(){
          ProductManagementModal.AssignProductToCategory(vm.category.ID, vm.catalogID);
-     };
+     }
 
-     vm.deleteAssignment = function(product){
+     function deleteAssignment(product){
          OrderCloud.Categories.DeleteProductAssignment(vm.category.ID, product.ID, vm.catalogID)
              .then(function(){
-                 toastr.success('Product ' + product.Name + ' Removed from Category ' + vm.category.ID);
+                 toastr.success(product.Name + ' Removed from ' + vm.category.Name);
              })
              .catch(function(error){
-                 toastr.error('There was an error removing products from the category');
+                 $exceptionHandler(error);
              })
              .finally(function(){
                  getProducts();
-             })
+             });
      }
-     
  }
