@@ -9,7 +9,7 @@ angular.module('orderCloud')
 function UserGroupsConfig($stateProvider) {
     $stateProvider
         .state('userGroups', {
-            parent: 'base',
+            parent: 'buyers.details',
             templateUrl: 'userGroups/templates/userGroups.tpl.html',
             controller: 'UserGroupsCtrl',
             controllerAs: 'userGroups',
@@ -20,7 +20,8 @@ function UserGroupsConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 UserGroupList: function(OrderCloud, Parameters) {
-                    return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    console.log(Parameters);
+                    return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerID);
                 }
             }
         })

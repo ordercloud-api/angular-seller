@@ -8,7 +8,7 @@ angular.module('orderCloud')
 function UsersConfig($stateProvider) {
     $stateProvider
         .state('users', {
-            parent: 'base',
+            parent: 'buyers.details',
             templateUrl: 'users/templates/users.tpl.html',
             controller: 'UsersCtrl',
             controllerAs: 'users',
@@ -19,7 +19,8 @@ function UsersConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 UserList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    console.log(Parameters);
+                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerID);
                 }
             }
         })
