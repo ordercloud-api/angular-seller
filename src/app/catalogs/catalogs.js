@@ -6,7 +6,7 @@ angular.module('orderCloud')
 function CatalogsConfig($stateProvider){
     $stateProvider
         .state('catalogs', {
-            parent: 'base',
+            parent: 'buyers.details',
             url: '/catalogs?search?page?pageSize?searchOn?sortBy?filters',
             templateUrl: 'catalogs/templates/catalogs.html',
             controller: 'CatalogsCtrl',
