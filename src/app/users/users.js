@@ -10,8 +10,7 @@ function UsersConfig($stateProvider) {
             templateUrl: 'users/templates/users.tpl.html',
             controller: 'UsersCtrl',
             controllerAs: 'users',
-            url: '/users?from&to&search&page&pageSize&searchOn&sortBy&filters',
-            data: {componentName: 'Users'},
+            url: '/users' /*?from&to&search&page&pageSize&searchOn&sortBy&filters*/,
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
