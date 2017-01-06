@@ -9,7 +9,7 @@ function BuyerConfig($stateProvider) {
             templateUrl: 'buyers/templates/buyers.tpl.html',
             controller: 'BuyerCtrl',
             controllerAs: 'buyers',
-            url: '/buyers'/*?search&page&pageSize&searchOn&sortBy*/,
+            url: '/buyers',
             resolve : {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
