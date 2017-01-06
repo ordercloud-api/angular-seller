@@ -22,8 +22,8 @@ function UserCreateController($exceptionHandler, $state, toastr, OrderCloud) {
         vm.user.TermsAccepted = new Date();
         OrderCloud.Users.Create(vm.user)
             .then(function() {
-                $state.go('users', {}, {reload: true});
                 toastr.success('User Created', 'Success');
+                $state.go('users', {}, {reload: true});
             })
             .catch(function(ex) {
                 $exceptionHandler(ex)
