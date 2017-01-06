@@ -2,26 +2,39 @@ angular.module('orderCloud')
     .controller('CatalogAssignmentsCtrl', CatalogAssignmentsController)
 ;
 
- function CatalogAssignmentsController($q, $exceptionHandler, toastr, $rootScope, OrderCloud, ProductManagementModal, Tree, CatalogID){
+ function CatalogAssignmentsController($q, $exceptionHandler, toastr, $rootScope, OrderCloud, ProductManagementModal, Tree, CatalogID, SelectedBuyer){
      var vm = this;
+     vm.assignmentType = 'buyer';
      vm.productIds = null;
      vm.pageSize = 10; //set pageSize for pagination. Max: 100
      vm.catalogID = CatalogID;
+     vm.buyerID = vm.catalogID; //default configuration assumes one catalog per buyer
      vm.tree = Tree;
      vm.category = null;
      vm.products = null;
+     vm.uiSelectProducts; //product list retrived by ui-select
+     vm.userGroups = null;
+     vm.uiSelectedGroups; //user group list retrieved by ui-select
      vm.selectedProducts = [];
+     vm.selectedUserGroups = [];
 
      //functions
      vm.addProductModal = addProductModal;
      vm.deleteAssignment = deleteAssignment;
-     vm.listAllProducts = listAllProducts;
-     vm.pageChanged = pageChanged;
+     vm.deletePartyAssignment = deletePartyAssignment;
+     vm.listAllProducts = listAllProducts; //retrieves ui-select list
+     vm.listAllUserGroups = listAllUserGroups; //retrieves ui-select list
+     vm.productPageChanged = productPageChanged;
+     vm.userGroupPageChanged = userGroupPageChanged;
      vm.saveAssignment = saveAssignment;
+     vm.savePartyAssignment = savePartyAssignment;
+     vm.toggleBuyerAssignment = toggleBuyerAssignment;
      
      $rootScope.$on('CatalogViewManagement:CategoryIDChanged', function(e, category){
          vm.category = category;
          getProducts();
+         getUserGroups();
+         isAssignedAtBuyerLevel();
      });
 
      function getProducts(page){
@@ -32,7 +45,7 @@ angular.module('orderCloud')
                     vm.products = null;
                 } else {
                     var filter = {ID: vm.productIds.join('|')};
-                    OrderCloud.Products.List(null, null, 100, null, null, filter)
+                    OrderCloud.Products.List(null, null, vm.pageSize, null, null, filter)
                         .then(function(productList){
                             productList.Meta = assignmentList.Meta;
                             vm.products = productList;
@@ -41,15 +54,52 @@ angular.module('orderCloud')
             });
      }
 
-     function pageChanged() {
+     function getUserGroups(page){
+         OrderCloud.Categories.ListAssignments(vm.category.ID, null, null, null, page, vm.pageSize, vm.buyerID, vm.catalogID)
+            .then(function(assignmentList){
+                //get list of userGroupIDs. Remove any null values (from buyerID assignments);
+                var userGroupIDs =  _.compact(_.pluck(assignmentList.Items, 'UserGroupID'));
+                if(!userGroupIDs.length) {
+                    vm.userGroups = null;
+                } else {
+                    var filter = {ID: userGroupIDs.join('|')};
+                    OrderCloud.UserGroups.List(null, null, vm.pageSize, null, null, filter, vm.buyerID)
+                        .then(function(userGroupList){
+                            vm.assignmentType = (assignmentList.Items.length > userGroupIDs.length) ? 'buyer' : 'userGroups';
+                            userGroupList.Meta = assignmentList.Meta;
+                            vm.userGroups = userGroupList;
+                        });
+                }
+            });
+     }
+
+     function isAssignedAtBuyerLevel(){
+         OrderCloud.Categories.ListAssignments(vm.category.ID, null, null, 'Company', null, null, vm.buyerID, vm.catalogID)
+            .then(function(buyerAssignment){
+                vm.assignmentType = (buyerAssignment.Meta.TotalCount) ? 'buyer' : 'userGroups';
+            });
+     }
+
+     function productPageChanged() {
          getProducts(vm.products.Meta.Page);
+    }
+
+    function userGroupPageChanged(){
+        getUserGroups(vm.userGroups.Meta.Page);
     }
 
      function listAllProducts(product){
          return OrderCloud.Products.List(product)
              .then(function(data){
-                 vm.listProducts = data;
+                 vm.uiSelectProducts = data;
              });
+     }
+
+     function listAllUserGroups(userGroup){
+         return OrderCloud.UserGroups.List(userGroup, null, null, null, null, null, vm.buyerID)
+            .then(function(data){
+                vm.uiSelectedGroups = data;
+            });
      }
 
      function saveAssignment(){
@@ -67,7 +117,7 @@ angular.module('orderCloud')
          $q.all(productQueue)
              .then(function(){
                  df.resolve();
-                 toastr.success('Products Assigned to ' + vm.category.Name, 'Success');
+                 toastr.success('Products assigned to ' + vm.category.Name, 'Success');
              })
              .catch(function(error){
                  $exceptionHandler(error);
@@ -78,6 +128,54 @@ angular.module('orderCloud')
              });
          return df.promise;
      }
+
+     function savePartyAssignment(){
+         var queue = [];
+         var dfd = $q.defer();
+         
+         angular.forEach(vm.selectedUserGroups, function(userGroup){
+             var assignment = {
+                CategoryID: vm.category.ID,
+                BuyerID: vm.buyerID,
+                UserID: null,
+                UserGroupID: userGroup.ID
+            };
+             queue.push(OrderCloud.Categories.SaveAssignment(assignment, vm.catalogID));
+         });
+         $q.all(queue)
+            .then(function(){
+                dfd.resolve();
+                toastr.success('User Groups assigned to ' + vm.category.Name, 'Success');
+            })
+            .catch(function(error){
+                $exceptionHandler(error);
+            })
+            .finally(function(){
+                getUserGroups();
+                vm.selectedUserGroups = null;
+            });
+     }
+
+     function toggleBuyerAssignment() {
+         var assignment = {
+             CategoryID: vm.category.ID,
+             BuyerID: vm.buyerID,
+             UserID: null,
+             UserGroupID: null
+         };
+
+         if(vm.assignmentType === 'buyer') {
+             OrderCloud.Categories.SaveAssignment(assignment, vm.catalogID)
+                .then(function(){
+                    toastr.success('Buyer organization assigned to ' + vm.category.Name, 'Success');
+                })
+                .catch(function(error){
+                    $exceptionHandler(error);
+                });
+         } else {
+             vm.deletePartyAssignment();
+         }
+     }
          
      function addProductModal(){
          ProductManagementModal.AssignProductToCategory(vm.category.ID, vm.catalogID);
@@ -86,7 +184,7 @@ angular.module('orderCloud')
      function deleteAssignment(product){
          OrderCloud.Categories.DeleteProductAssignment(vm.category.ID, product.ID, vm.catalogID)
              .then(function(){
-                 toastr.success(product.Name + ' Removed from ' + vm.category.Name);
+                 toastr.success(product.Name + ' removed from ' + vm.category.Name);
              })
              .catch(function(error){
                  $exceptionHandler(error);
@@ -94,5 +192,15 @@ angular.module('orderCloud')
              .finally(function(){
                  getProducts();
              });
+     }
+
+     function deletePartyAssignment(userGroup){
+         var userGroupID = userGroup ? userGroup.ID : null;
+         OrderCloud.Categories.DeleteAssignment(vm.category.ID, null, userGroupID, vm.buyerID, vm.catalogID)
+            .then(function(){
+                var party = userGroup ? userGroup.Name : 'Buyer organization';
+                toastr.success(party + ' removed from ' + vm.category.Name);
+                getUserGroups();
+            });
      }
  }
