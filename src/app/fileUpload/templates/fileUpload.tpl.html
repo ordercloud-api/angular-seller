@@ -1,0 +1,26 @@
+<div class="form-group" ng-class="{'has-error': invalidExtension}">
+    <figure ng-if="model.xp[keyname].URL && model.xp[keyname].Type.indexOf('image') > -1">
+        <img class="img-responsive" ng-src="{{model.xp[keyname].URL}}" alt="Product Image">
+    </figure>
+    <label>{{label}}</label>
+    <p>
+        <button type="button" class="btn btn-default" ng-click="upload()">{{model.xp[keyname].URL ? 'Replace' : 'Upload'}}</button>
+        <button type="button" class="btn btn-default" ng-click="remove()" ng-if="model.xp[keyname].URL"><i class="fa fa-trash text-danger"></i></button>
+    </p>
+    <input class="ng-hide" name="upload" type="file" id="orderCloudUpload" />
+    <span class="help-block error-msg" ng-show="invalidExtension">Invalid File Type</span>{{model.xp}}
+</div>
+
+<!--<fieldset> -->
+    <!--<legend>Upload on form submit</legend>-->
+    <!--Profile Picture: <input type="file" ngf-select ng-model="picFile" name="file" ngf-accept="'image/*'"  >-->
+    <!--<i ng-show="myForm.file.$error.required">*required</i>-->
+    <!--<br/>-->
+
+    <!--<button ng-disabled="!myForm.$valid" ng-click="uploadPic(picFile)">Submit</button>-->
+    <!--<img ngf-src="picFile" class="thumb">-->
+    <!--<span class="progress" ng-show="picFile.progress >= 0">-->
+                  <!--<div style="width:{{picFile.progress}}%" ng-bind="picFile.progress + '%'"></div>-->
+              <!--</span>-->
+    <!--<span ng-show="picFile.result">Upload Successful</span>-->
+<!--</fieldset>-->
