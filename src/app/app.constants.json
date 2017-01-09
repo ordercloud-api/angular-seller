@@ -1,9 +1,9 @@
 {
   "appname": "Angular Admin",
   "scope": "FullAccess",
-  "clientid": "D89E2196-CC75-4312-A4A9-67E4CC4BEDFB",
-  "buyerid": "A",
-  "catalogid": "SHARED",
+  "clientid": "XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXX",
+  "buyerid": "XXXX",
+  "catalogid": "XXXX",
   "environment": "prod",
   "defaultstate": "home",
   "anonymous": false
