@@ -4,13 +4,13 @@
         <h3 class="page-header">{{buyerDetails.selectedBuyer.Name}}</h3>
         <ul class="nav nav-pills">
             <li role="presentation" ui-sref-active="active">
-                <a ui-sref="users">Users</a>
+                <a ui-sref="users({ search: '', sortBy: ''})">Users</a>
             </li>
             <li role="presentation" ui-sref-active="active">
-                <a ui-sref="userGroups">User Groups</a>
+                <a ui-sref="userGroups({ search: '', sortBy: ''})">User Groups</a>
             </li>
             <li role="presentation" ui-sref-active="active">
-                <a ui-sref="catalogManagement">Catalog Management</a>
+                <a ui-sref="catalogManagement({ search: '', sortBy: ''})">Catalog Management</a>
             </li>
         </ul>
         <ui-view></ui-view>
