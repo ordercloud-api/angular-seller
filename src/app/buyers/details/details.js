@@ -6,7 +6,7 @@ angular.module('orderCloud')
 function BuyerDetailsConfig($stateProvider) {
     $stateProvider
         .state('buyers.details', {
-                url: '/:buyerid/details',
+                url: '/:buyerid/details?search&page&pageSize&searchOn&sortBy',
                 templateUrl: 'buyers/details/templates/details.html',
                 controller: 'BuyerDetailsCtrl',
                 controllerAs: 'buyerDetails',
@@ -18,7 +18,8 @@ function BuyerDetailsConfig($stateProvider) {
             })
 }
 
-function BuyerDetailsController(SelectedBuyer){
+function BuyerDetailsController($state, SelectedBuyer){
     var vm = this;
+    vm.state = $state;
     vm.selectedBuyer = SelectedBuyer;
 }

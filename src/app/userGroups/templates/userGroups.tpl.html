@@ -35,7 +35,7 @@
                         <option value="">None</option>
                         <option value="ID">ID</option>
                         <option value="Name">Name</option>
-                        <option value="Description">Description</option>
+                        <option>Description</option>
                     </select>
                     <div ng-if="userGroups.sortSelection" class="input-group-btn">
                         <button class="btn btn-default" ng-click="userGroups.reverseSort()">
@@ -70,13 +70,7 @@
                         <i class="fa fa-caret-up" ng-show="userGroups.parameters.sortBy == '!Name'"></i>
                     </a>
                 </th>
-                <th scope="col">
-                    <a href="#" role="button" ng-click="userGroups.updateSort('Description')">
-                        Description
-                        <i class="fa fa-caret-down" ng-show="userGroups.parameters.sortBy == 'Description'"></i>
-                        <i class="fa fa-caret-up" ng-show="userGroups.parameters.sortBy == '!Description'"></i>
-                    </a>
-                </th>
+                <th>Description</th>
                 <th></th>
             </tr>
             </thead>
