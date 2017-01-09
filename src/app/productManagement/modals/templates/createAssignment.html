@@ -1,58 +1,17 @@
-<form>
+<form name="CreateAssignmentForm">
     <div class="modal-header">
+        <span class="fa fa-times pull-right" ng-click="createAssignmentModal.cancel()"></span>
         <h1 class="modal-title">
-            {{createAssignmentModal.product.Name}}'s Price Configuration
+           Create a new Price Schedule for {{createAssignmentModal.product.Name}}
         </h1>
+
     </div>
     <div class="modal-body">
-        <h3>Choose a price</h3>
-        <p class="text-muted">Choose a price to assign to product.</p>
-        <div class="row">
-            <div class="col-md-10">
-                <label>Select Standard Price Schedule</label>
+        <h3>Create a price schedule</h3>
+        <!--<p class="text-muted">Choose a price to assign to product.</p>-->
 
-                <ui-select ng-model="createAssignmentModal.selectedPriceSchedule"
-                           close-on-select="true" ng-change="createAssignmentModal.priceScheduleAssignments(createAssignmentModal.selectedPriceSchedule)">
-                    <ui-select-match>
-                        <!--{{$item.MinQuantity}}-->
-                        <span ng-bind="$select.selected.Name"></span>
-                    </ui-select-match>
-                    <ui-select-choices
-                            repeat="group in (createAssignmentModal.priceSchedules.Items | filter: $select.search ) track by $index"
-                            refresh="createAssignmentModal.searchPriceSchedule($select.search)"
-                            refresh-delay="1000">
-                        <b><span ng-bind="group.Name"></span></b>
-                        <br>
-                        <small>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    ID: {{group.ID}}
-                                    <br>
-                                    Min: {{group.MinQuantity}}
-                                    Max: {{group.MaxQuantity}}
-                                    <br>
-                                    <span ng-if="group.ApplyTax">Tax Applied<br></span>
-                                    <span ng-if="group.ApplyShipping">Shipping Applied</span>
-                                </div>
-                                <div class="col-md-6">
-                                    PriceBreaks:
-                                    <span ng-repeat="price in group.PriceBreaks"><br>Quantity: {{price.Quantity}}  Price: {{price.Price}} </span>
-                                </div>
-                            </div>
-                            <br>
-                        </small>
-                    </ui-select-choices>
-                </ui-select>
-                <br>
-            </div>
-            <div class="form-group col-md-2">
-                <label></label>
-                <button type="button" class="btn btn-primary form-control"
-                        ng-click="createAssignmentModal.createPriceSchedule()"><i
-                        class="fa fa-plus-circle"></i> Create New
-                </button>
-            </div>
-        </div>
+        <div ng-include="'productManagement/modals/templates/createPriceSchedule.html'"></div>
+
         <div uib-collapse="!createAssignmentModal.selectedPriceSchedule"><div class="panel panel-default">
             <div class="panel-heading">
                 Price Schedule Details
@@ -86,7 +45,7 @@
         </div>
         <hr>
         <div>
-            <h3>Choose product availability </h3>
+            <h3>Assign the Price Schedule </h3>
             <p class="text-muted">You can assign a product to a specific UserGroup or to the entire Buyer Company. UserGroup
                 assignments will take precedent over Buyer assignments.</p>
 
@@ -131,8 +90,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary pull-right"  ng-click="createAssignmentModal.saveAssignment()"
-                ng-disabled="!(createAssignmentModal.selectedBuyer && createAssignmentModal.selectedPriceSchedule )">
+        <button type="submit" class="btn btn-primary pull-right" ng-click="createAssignmentModal.saveAssignment()"
+                ng-disabled="!(createAssignmentModal.selectedBuyer && createAssignmentModal.priceSchedule.Name && createAssignmentModal.priceSchedule.PriceBreaks.length )">
             Save Assignment
         </button>
     </div>

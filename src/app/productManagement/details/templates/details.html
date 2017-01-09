@@ -29,14 +29,49 @@
     <button class="btn btn-default" ng-click="details.editProduct()">Edit</button>
 
         <div class="btn-toolbar pull-right">
-            <button class="btn btn-primary" ng-click="details.newAssignment()""><i
+            <button class="btn btn-primary" ng-click="details.newAssignment()"><i
                     class="fa fa-plus-circle"></i> New Assignment
             </button>
         </div>
     <!--<oc-assignment-list productid="details.product.ID"></oc-assignment-list>-->
+    <div class="page-header">
+        <h3>Price schedules assigned to this product</h3>
+    </div>
+    <div class="well well-lg text-center" ng-if="!details.listAssignments">
+    <b>This product does not have any assignments for the active Buyer company.</b>
+    </div>
+    <!--====== LIST ======-->
+    <div ng-if="details.listAssignments">
 
+        <table class="table table-hover table-condensed oc-table-responsive">
+            <thead>
+            <tr>
+                <th><div>Name</div></th>
+                <th><div>ID</div></th>
+                <th><div>First Price Break</div></th>
+                <th><div>Buyers</div></th>
+                <th><div>User Groups</div></th>
+                <th><div></div></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat=" assignment  in details.listAssignments">
+                <td>{{assignment.PriceSchedule.Name}}</td>
+                <td>{{assignment.PriceSchedule.ID}}</td>
+                <td>{{assignment.PriceSchedule.PriceBreaks[0].Price | currency}}</td>
+                <td>{{assignment.Buyers.length}}</td>
+                <td>{{assignment.UserGroups.length}}</td>
+                <td>
+                    <button class="btn btn-default btn-sm pull-right">Details</button>
+                    <button class="btn btn-default btn-sm pull-right">Edit</button>
 
+                </td>
 
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <div>
         <button class="btn btn-danger pull-right" ng-click="details.deleteProduct()">Delete Product</button>
     </div>
