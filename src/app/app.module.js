@@ -5,6 +5,7 @@ angular.module('orderCloud', [
         'ngTouch',
         'ui.tree',
         'ui.router',
+        'ui.select',
         'ui.bootstrap',
         'ui.select',
         'orderCloud.sdk',

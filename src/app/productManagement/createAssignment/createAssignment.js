@@ -169,9 +169,5 @@ function ProductCreateAssignmentController($q, $stateParams, $state, toastr, Ord
         $state.go('.', {page:vm.assignments.Meta.Page});
     };
 
-
-
-
-
 }
 

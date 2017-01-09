@@ -13,14 +13,12 @@ function UserGroupsConfig($stateProvider) {
             templateUrl: 'userGroups/templates/userGroups.tpl.html',
             controller: 'UserGroupsCtrl',
             controllerAs: 'userGroups',
-            url: '/usergroups?search&page&pageSize&sortBy&searchOn&filters',
-            data: {componentName: 'User Groups'},
+            url: '/usergroups' /*?search&page&pageSize&sortBy&searchOn&filters*/,
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 UserGroupList: function(OrderCloud, Parameters) {
-                    console.log('params', Parameters);
                     return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
                 }
             }
