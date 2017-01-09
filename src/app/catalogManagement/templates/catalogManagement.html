@@ -1,0 +1,15 @@
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-5">
+            <h3>Catalog Management</h3>
+        </div>
+        <div class="col-sm-7">
+            <h3 ng-if="!catalogManagement.selectedCategory">Select a category to view details</h3>
+            <h3 ng-if="catalogManagement.selectedCategory">Category Selected: {{catalogManagement.selectedCategory.Name}}</h3>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-5" ui-view="category-tree"></div>
+    <div class="col-sm-7" ui-view="assignments"></div>
+</div>

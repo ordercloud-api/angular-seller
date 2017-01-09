@@ -50,28 +50,13 @@ describe('Component: Buyers', function() {
 
     describe('State: buyers.details', function(){
         var state;
-        beforeEach(inject(function($state, OrderCloudParameters){
+        beforeEach(inject(function($state){
             state = $state.get('buyers.details');
-            spyOn(OrderCloudParameters, 'Get');
             spyOn(oc.Buyers, 'Get');
-            spyOn(oc.Users, 'List');
-            spyOn(oc.UserGroups, 'List');
-        }));
-        it('should resolve Parameters', inject(function($injector, OrderCloudParameters, $stateParams) {
-            $injector.invoke(state.resolve.Parameters);
-            expect(OrderCloudParameters.Get).toHaveBeenCalledWith($stateParams)
         }));
         it('should resolve SelectedBuyer', inject(function($injector, $stateParams){
             $injector.invoke(state.resolve.SelectedBuyer);
             expect(oc.Buyers.Get).toHaveBeenCalledWith($stateParams.buyerid);
-        }));
-        it('should resolve UserList', inject(function($injector, $stateParams, Parameters){
-            $injector.invoke(state.resolve.UserList);
-            expect(oc.Users.List).toHaveBeenCalledWith(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, $stateParams.buyerid)
-        }));
-        it('should resolve UserGroupList', inject(function($injector, $stateParams, Parameters){
-            $injector.invoke(state.resolve.UserGroupList);
-            expect(oc.UserGroups.List).toHaveBeenCalledWith(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, $stateParams.buyerid);
         }));
     });
 

@@ -9,18 +9,17 @@ angular.module('orderCloud')
 function UserGroupsConfig($stateProvider) {
     $stateProvider
         .state('userGroups', {
-            parent: 'base',
+            parent: 'buyers.details',
             templateUrl: 'userGroups/templates/userGroups.tpl.html',
             controller: 'UserGroupsCtrl',
             controllerAs: 'userGroups',
-            url: '/usergroups?search&page&pageSize&sortBy&searchOn&filters',
-            data: {componentName: 'User Groups'},
+            url: '/usergroups' /*?search&page&pageSize&sortBy&searchOn&filters*/,
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 UserGroupList: function(OrderCloud, Parameters) {
-                    return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
                 }
             }
         })
@@ -37,10 +36,6 @@ function UserGroupsConfig($stateProvider) {
         })
         .state('userGroups.create', {
             url: '/create',
-            params: {
-                fromRoute: null,
-                buyerid: null
-            },
             templateUrl: 'userGroups/templates/userGroupCreate.tpl.html',
             controller: 'UserGroupCreateCtrl',
             controllerAs: 'userGroupCreate',
@@ -52,10 +47,6 @@ function UserGroupsConfig($stateProvider) {
         })
         .state('userGroups.assign', {
             url: '/:usergroupid/assign',
-            params: {
-                fromRoute: null,
-                buyerid: null
-            },
             templateUrl: 'userGroups/templates/userGroupAssign.tpl.html',
             controller: 'UserGroupAssignCtrl',
             controllerAs: 'userGroupAssign',

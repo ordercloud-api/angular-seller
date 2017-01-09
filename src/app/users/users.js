@@ -1,51 +1,22 @@
 angular.module('orderCloud')
     .config(UsersConfig)
     .controller('UsersCtrl', UsersController)
-    .controller('UserEditCtrl', UserEditController)
-    .controller('UserCreateCtrl', UserCreateController)
 ;
 
 function UsersConfig($stateProvider) {
     $stateProvider
         .state('users', {
-            parent: 'base',
+            parent: 'buyers.details',
             templateUrl: 'users/templates/users.tpl.html',
             controller: 'UsersCtrl',
             controllerAs: 'users',
-            url: '/users?from&to&search&page&pageSize&searchOn&sortBy&filters',
-            data: {componentName: 'Users'},
+            url: '/users' /*?from&to&search&page&pageSize&searchOn&sortBy&filters*/,
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 UserList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
-                }
-            }
-        })
-        .state('users.edit', {
-            url: '/:userid/edit',
-            templateUrl: 'users/templates/userEdit.tpl.html',
-            controller: 'UserEditCtrl',
-            controllerAs: 'userEdit',
-            resolve: {
-                SelectedUser: function($stateParams, OrderCloud) {
-                    return OrderCloud.Users.Get($stateParams.userid);
-                }
-            }
-        })
-        .state('users.create', {
-            url: '/create',
-            params: {
-                fromRoute: null,
-                buyerid: null
-            },
-            templateUrl: 'users/templates/userCreate.tpl.html',
-            controller: 'UserCreateCtrl',
-            controllerAs: 'userCreate',
-            resolve: {
-                Parameters: function ($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
                 }
             }
         })
@@ -124,62 +95,5 @@ function UsersController($state, $ocMedia, OrderCloud, OrderCloudParameters, Use
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
             });
-    };
-}
-
-function UserEditController($exceptionHandler, $state, toastr, OrderCloud, SelectedUser) {
-    var vm = this,
-        userid = SelectedUser.ID;
-    vm.userName = SelectedUser.Username;
-    vm.user = SelectedUser;
-    if (vm.user.TermsAccepted != null) {
-        vm.TermsAccepted = true;
-    }
-
-    vm.Submit = function() {
-        var today = new Date();
-        vm.user.TermsAccepted = today;
-        OrderCloud.Users.Update(userid, vm.user)
-            .then(function() {
-                $state.go('users', {}, {reload: true});
-                toastr.success('User Updated', 'Success');
-            })
-            .catch(function(ex) {
-                $exceptionHandler(ex)
-            });
-    };
-
-    vm.Delete = function() {
-        OrderCloud.Users.Delete(userid)
-            .then(function() {
-                $state.go('users', {}, {reload: true});
-                toastr.success('User Deleted', 'Success');
-            })
-            .catch(function(ex) {
-                $exceptionHandler(ex)
-            });
-    };
-}
-
-function UserCreateController($exceptionHandler, $state, toastr, OrderCloud, Parameters) {
-    var vm = this;
-    vm.user = {Email: '', Password: ''};
-    vm.user.Active = false;
-    vm.Submit = function() {
-        vm.user.TermsAccepted = new Date();
-        OrderCloud.Users.Create(vm.user)
-            .then(function() {
-                if(Parameters.fromRoute == "buyerDetails") {
-                    $state.go('buyers.details', {buyerid: Parameters.buyerid}, {reload: true});
-                    toastr.success('User Created', 'Success');
-                } else {
-                    $state.go('users', {}, {reload: true});
-                    toastr.success('User Created', 'Success');
-                }
-            })
-            .catch(function(ex) {
-                $exceptionHandler(ex)
-            });
-
     };
 }
