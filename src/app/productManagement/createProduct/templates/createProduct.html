@@ -19,10 +19,11 @@
         <!--</div>-->
         <div class="col-md-2 form-group">
             <label>Status</label>
-            <label class="btn btn-default c-product_label" for="productActiveInput">
-                <input class="badgebox" id="productActiveInput" type="checkbox"
+            <br>
+            <label for="productActiveInput">
+                <input id="productActiveInput" type="checkbox"
                        ng-model="productCreate.product.Active"/>
-                Active <span class="badge"><i class="fa fa-check"></i></span>
+                Active
             </label>
         </div>
     </div>
@@ -71,10 +72,11 @@
 
     <div class="form-group">
         <label>Inventory Options:</label>
-        <label class="btn btn-default c-product_label" for="productInventory2Input">
+        <label  for="productInventory2Input">
+            <br>
             <input class="badgebox" id="productInventory2Input" type="checkbox"
                    ng-model="productCreate.product.InventoryEnabled"/>
-            Track Inventory <span class="badge"><i class="fa fa-check"></i></span>
+            Track Inventory
         </label>
     </div>
 
@@ -92,28 +94,31 @@
             <div class="row">
                 <div ng-show="productCreate.product.InventoryEnabled">
                     <div class="col-md-4 form-group">
-                        <label class="btn btn-default c-product_label" for="productInventory3Input">
-                            <input class="badgebox" id="productInventory3Input" type="checkbox"
+                        <label for="productInventory3Input">
+                            <br>
+                            <input  id="productInventory3Input" type="checkbox"
                                    ng-model="productCreate.product.VariantLevelInventory"/>
-                            <span class="badge"><i class="fa fa-check"></i></span> Variant Level Inventory
+                             Variant Level Inventory
                         </label>
                     </div>
                 </div>
 
                 <div class="col-md-4 form-group">
-                    <label class="btn btn-default c-product_label " for="productInventory4Input">
-                        <input class="badgebox" id="productInventory4Input" type="checkbox"
+                    <label for="productInventory4Input">
+                        <br>
+                        <input id="productInventory4Input" type="checkbox"
                                ng-model="productCreate.product.ExceedInventory"/>
-                        <span class="badge"><i class="fa fa-check"></i></span> Can Exceed Inventory
+                        Can Exceed Inventory
                     </label>
                 </div>
 
 
                 <div class="col-md-4 form-group">
-                    <label class="btn btn-default c-product_label" for="productInventory5Input">
-                        <input class="badgebox" id="productInventory5Input" type="checkbox"
+                    <label  for="productInventory5Input">
+                        <br>
+                        <input id="productInventory5Input" type="checkbox"
                                ng-model="productCreate.product.DisplayInventory"/>
-                        <span class="badge"><i class="fa fa-check"></i></span> Display Inventory
+                         Display Inventory
                     </label>
 
                 </div>

@@ -107,7 +107,7 @@
                     <b><i class="fa fa-search"></i> No UserGroups under this buyer</b>
                 </div>
                 <div class="form-group" uib-collapse="!productCreateAssignment.list.Items.length">
-                    <label>Select User Group(s)</label>
+                    <label>Select User Group(s) <span class="text-muted">Optional</span></label>
                     <ui-select multiple ng-model="productCreateAssignment.selectedUserGroups"
                                close-on-select="false">
                         <ui-select-match>
@@ -127,7 +127,7 @@
             Save Assignment
         </button>
     </div>
-    <oc-assignment-list productid="productCreateAssignment.product.ID" buyerid="productCreateAssignment.selectedBuyer"></oc-assignment-list>
+    <!--<oc-assignment-list productid="productCreateAssignment.product.ID" buyerid="productCreateAssignment.selectedBuyer"></oc-assignment-list>-->
 </div>
 <hr>
 
