@@ -19,10 +19,9 @@ function ProductDetailConfig($stateProvider) {
                     return OrderCloud.Products.Get($stateParams.productid);
                 },
                 AssignmentList: function($q, Parameters, $resource, OrderCloud, buyerid){
-                   OrderCloud.BuyerID.Set(null);
-
+                    OrderCloud.BuyerID.Set(undefined);
                     return OrderCloud.Products.ListAssignments(Parameters.productid, null, null, null, null, null, null, null)
-                        .then(function(data){
+                        .then(function(data) {
                             var queue =[];
                              var assignments = data;
                             if(data.Meta.TotalPages > data.Meta.Page){
