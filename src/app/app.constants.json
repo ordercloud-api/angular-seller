@@ -1,9 +1,10 @@
 {
-  "appname": "XXXXX",
-  "scope": "BuyerReader",
-  "clientid": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX",
-  "buyerid": "XXXXX",
-  "catalogid": "XXXXX",
+  "appname": "Angular Admin",
+  "scope": "FullAccess",
+  "clientid": "XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXX",
+  "buyerid": "XXXX",
+  "catalogid": "XXXX",
   "environment": "prod",
+  "defaultstate": "home",
   "anonymous": false
 }
