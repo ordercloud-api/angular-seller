@@ -12,18 +12,17 @@ angular.module('orderCloud')
      vm.tree = Tree;
      vm.category = null;
      vm.products = null;
-     vm.uiSelectProducts; //product list retrived by ui-select
+     vm.uiSelectProducts; //list of selected products
      vm.userGroups = null;
-     vm.uiSelectedGroups; //user group list retrieved by ui-select
+     vm.uiSelectedGroups; //list of selected userGroups
      vm.selectedProducts = [];
      vm.selectedUserGroups = [];
 
      //functions
-     vm.addProductModal = addProductModal;
      vm.deleteAssignment = deleteAssignment;
      vm.deletePartyAssignment = deletePartyAssignment;
-     vm.listAllProducts = listAllProducts; //retrieves ui-select list
-     vm.listAllUserGroups = listAllUserGroups; //retrieves ui-select list
+     vm.listAllProducts = listAllProducts; // available products for ui-select
+     vm.listAllUserGroups = listAllUserGroups; //available userGroups for ui-select
      vm.productPageChanged = productPageChanged;
      vm.userGroupPageChanged = userGroupPageChanged;
      vm.saveAssignment = saveAssignment;
@@ -65,7 +64,6 @@ angular.module('orderCloud')
                     var filter = {ID: userGroupIDs.join('|')};
                     OrderCloud.UserGroups.List(null, null, vm.pageSize, null, null, filter, vm.buyerID)
                         .then(function(userGroupList){
-                            vm.assignmentType = (assignmentList.Items.length > userGroupIDs.length) ? 'buyer' : 'userGroups';
                             userGroupList.Meta = assignmentList.Meta;
                             vm.userGroups = userGroupList;
                         });
@@ -175,10 +173,6 @@ angular.module('orderCloud')
          } else {
              vm.deletePartyAssignment();
          }
-     }
-         
-     function addProductModal(){
-         ProductManagementModal.AssignProductToCategory(vm.category.ID, vm.catalogID);
      }
 
      function deleteAssignment(product){

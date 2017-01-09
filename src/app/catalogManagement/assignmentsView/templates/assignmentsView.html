@@ -78,8 +78,10 @@
         <div ng-if="catalogAssignments.category">
             <p>Assign to:
             <form name="selectAssignmentType">
-                <input type="radio" ng-model="catalogAssignments.assignmentType" ng-change="catalogAssignments.toggleBuyerAssignment()" value="buyer"> Buyer Organization <br>
-                <input type="radio" ng-model="catalogAssignments.assignmentType" ng-change="catalogAssignments.toggleBuyerAssignment()" value="userGroups"> User Groups
+                <div class="form-group">
+                    <input type="radio" ng-model="catalogAssignments.assignmentType" ng-change="catalogAssignments.toggleBuyerAssignment()" value="buyer"> Buyer Organization <br>
+                    <input type="radio" ng-model="catalogAssignments.assignmentType" ng-change="catalogAssignments.toggleBuyerAssignment()" value="userGroups"> User Groups
+                </div>
             </form>
             <hr>
         </div>
