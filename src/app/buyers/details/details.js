@@ -18,7 +18,8 @@ function BuyerDetailsConfig($stateProvider) {
             })
 }
 
-function BuyerDetailsController(SelectedBuyer){
+function BuyerDetailsController($state, SelectedBuyer){
     var vm = this;
+    vm.state = $state;
     vm.selectedBuyer = SelectedBuyer;
 }

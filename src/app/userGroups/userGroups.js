@@ -13,7 +13,7 @@ function UserGroupsConfig($stateProvider) {
             templateUrl: 'userGroups/templates/userGroups.tpl.html',
             controller: 'UserGroupsCtrl',
             controllerAs: 'userGroups',
-            url: '/usergroups' /*?search&page&pageSize&sortBy&searchOn&filters*/,
+            url: '/usergroups',
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);

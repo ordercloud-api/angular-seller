@@ -3,13 +3,13 @@
     <div class="container-fluid">
         <h3 class="page-header">{{buyerDetails.selectedBuyer.Name}}</h3>
         <ul class="nav nav-pills">
-            <li role="presentation" ui-sref-active="active">
+            <li role="presentation" ng-class="{active: buyerDetails.state.current.name === 'users'}">
                 <a ui-sref="users({ search: '', sortBy: ''})">Users</a>
             </li>
-            <li role="presentation" ui-sref-active="active">
+            <li role="presentation" ng-class="{active: buyerDetails.state.current.name === 'userGroups'}">
                 <a ui-sref="userGroups({ search: '', sortBy: ''})">User Groups</a>
             </li>
-            <li role="presentation" ui-sref-active="active">
+            <li role="presentation" ng-class="{active: buyerDetails.state.current.name === 'catalogManagement'}">
                 <a ui-sref="catalogManagement({ search: '', sortBy: ''})">Catalog Management</a>
             </li>
         </ul>
