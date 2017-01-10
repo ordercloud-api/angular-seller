@@ -9,7 +9,7 @@ function BuyerConfig($stateProvider) {
             templateUrl: 'buyers/templates/buyers.tpl.html',
             controller: 'BuyerCtrl',
             controllerAs: 'buyers',
-            url: '/buyers',
+            url: '/buyers?search&page&pageSize',
             resolve : {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
@@ -44,11 +44,17 @@ function BuyerController($state, $ocMedia, OrderCloud, OrderCloudParameters, Par
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        vm.filter(true);
+        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        vm.searchLoading = OrderCloud.Buyers.List(vm.parameters.search, 1, vm.parameters.pageSize)
+            .then(function(data) {
+                vm.list = data;
+                vm.searchResults = vm.parameters.search.length > 0;
+            })
     };
 
     //Clear the search parameter, reload the state & reset the page
     vm.clearSearch = function() {
+        vm.searchResults = false;
         vm.parameters.search = null;
         vm.filter(true);
     };
