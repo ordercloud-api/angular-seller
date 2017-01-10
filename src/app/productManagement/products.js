@@ -36,39 +36,31 @@ function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, 
     vm.searchResults = Parameters.search && Parameters.search.length > 0;
     vm.showFilters = vm.filtersApplied;
 
-    //Clear relevant filters, reload the state & reset the page
-    vm.clearFilters = clearFilters;
-    //Clear the search parameter, reload the state & reset the page
-    vm.clearSearch =  clearSearch;
-    //Reload the state with new parameters
-    vm.filter = filter;
-    //Load the next page of results with all of the same parameters
-    vm.loadMore = loadMore;
-    //Reload the state with the incremented page parameter
-    vm.pageChanged = pageChanged;
-    //Used on mobile devices
-    vm.reverseSort = reverseSort;
-    //Reload the state with new search parameter & reset the page
-    vm.search = search;
-    //Conditionally set, reverse, remove the sortBy parameter & reload the state
-    vm.updateSort = updateSort;
+
+    vm.clearFilters = clearFilters;//Clear relevant filters, reload the state & reset the page
+    vm.clearSearch =  clearSearch;//Clear the search parameter, reload the state & reset the page
+    vm.filter = filter;//Reload the state with new parameters
+    vm.loadMore = loadMore;//Load the next page of results with all of the same parameters
+    vm.pageChanged = pageChanged; //Reload the state with the incremented page parameter
+    vm.reverseSort = reverseSort;//Used on mobile devices
+    vm.search = search;//Reload the state with new search parameter & reset the page
+    vm.updateSort = updateSort;//Conditionally set, reverse, remove the sortBy parameter & reload the state
 
 
 
 
     function filter(resetPage) {
         $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
-    };
-
+    }
 
     function search() {
         vm.filter(true);
-    };
+    }
 
     function clearSearch() {
         vm.parameters.search = null;
         vm.filter(true);
-    };
+    }
 
     function clearFilters() {
         vm.parameters.filters = null;
@@ -76,7 +68,7 @@ function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, 
         vm.parameters.to = null;
         $ocMedia('max-width:767px') ? vm.parameters.sortBy = null : angular.noop(); //Clear out sort by on mobile devices
         vm.filter(true);
-    };
+    }
 
     function updateSort(value) {
         value ? angular.noop() : value = vm.sortSelection;
@@ -91,16 +83,16 @@ function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, 
                 vm.parameters.sortBy = value;
         }
         vm.filter(false);
-    };
+    }
 
     function reverseSort() {
         Parameters.sortBy.indexOf('!') == 0 ? vm.parameters.sortBy = Parameters.sortBy.split('!')[1] : vm.parameters.sortBy = '!' + Parameters.sortBy;
         vm.filter(false);
-    };
+    }
 
     function pageChanged() {
         $state.go('.', {page:vm.list.Meta.Page});
-    };
+    }
 
    function loadMore() {
         return OrderCloud.Products.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
@@ -108,7 +100,7 @@ function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, 
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
             });
-    };
+    }
 }
 
 

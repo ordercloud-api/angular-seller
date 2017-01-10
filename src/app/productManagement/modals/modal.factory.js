@@ -1,23 +1,35 @@
 angular.module('orderCloud')
     .factory('ProductManagementModal', ProductManagementModalFactory)
-    .controller('CreatePriceScheduleModalCtrl', CreatePriceScheduleModalController)
+    .controller('CreateAssignmentModalCtrl', CreateAssignmentModalController)
+    // .controller('CreatePriceScheduleModalCtrl', CreatePriceScheduleModalController)
     .controller('EditPriceScheduleModalCtrl', EditPriceScheduleModalController)
     .controller('EditProductModalCtrl', EditProductModalController)
 ;
 
 function ProductManagementModalFactory($uibModal, $q, OrderCloud) {
     return {
-        CreatePriceSchedule : _createPriceSchedule,
+        CreateAssignment : _createAssignment,
         EditPriceSchedule : _editPriceSchedule,
         EditProduct : _editProduct
     };
 
-    function _createPriceSchedule(){
-       return $uibModal.open({
-            templateUrl: 'productManagement/modals/templates/createPriceSchedule.html',
-            controller: 'CreatePriceScheduleModalCtrl',
-            controllerAs: 'createPriceScheduleModal',
-            size: 'lg'
+    function _createAssignment(){
+        return $uibModal.open({
+            templateUrl: 'productManagement/modals/templates/createAssignment.html',
+            controller: 'CreateAssignmentModalCtrl',
+            controllerAs: 'createAssignmentModal',
+            size: 'lg',
+            resolve: {
+                Parameters: function($stateParams, OrderCloudParameters) {
+                    return OrderCloudParameters.Get($stateParams);
+                },
+                Buyers: function(OrderCloud){
+                    return OrderCloud.Buyers.List();
+                },
+                SelectedProduct: function ($stateParams, OrderCloud) {
+                    return OrderCloud.Products.Get($stateParams.productid);
+                }
+            }
         }).result
     }
 
@@ -67,18 +79,42 @@ function ProductManagementModalFactory($uibModal, $q, OrderCloud) {
     }
 }
 
-function CreatePriceScheduleModalController($q, $uibModalInstance, $exceptionHandler, toastr, OrderCloud, PriceBreak) {
+function CreateAssignmentModalController($q, $stateParams, $state, $uibModalInstance, toastr, OrderCloud, Assignments, SelectedProduct, Buyers, PriceBreak){
     var vm = this;
+    vm.assignBuyer = false;
+    vm.assignments =  Assignments;
+    vm.buyers = Buyers;
+    vm.model = {
+        ProductID : $stateParams.productid,
+        BuyerID : vm.selectedBuyer,
+        UserGroupID :  null,
+        PriceScheduleID : null
+    };
+    vm.product = SelectedProduct;
+    vm.productsAssignedToPriceSchedule = [];
+    vm.selectedPriceSchedules = [];
     vm.priceSchedule = {};
     vm.priceSchedule.RestrictedQuantity = false;
     vm.priceSchedule.PriceBreaks = [];
     vm.priceSchedule.MinQuantity = 1;
     vm.priceSchedule.OrderType = 'Standard';
 
+
+
+    //functions
+    // vm.createPriceSchedule = createPriceSchedule;
+    vm.deleteAssignment = deleteAssignment;
+    // vm.editPriceSchedule = editPriceSchedule;
+    vm.getUserList = getUserList;
+
+    vm.saveAssignment = saveAssignment;
+    vm.searchPriceSchedule = searchPriceSchedule;
+
     vm.addPriceBreak = addPriceBreak;
     vm.deletePriceBreak = PriceBreak.DeletePriceBreak;
     vm.submit = submit;
     vm.cancel = cancel;
+
 
     function addPriceBreak() {
         PriceBreak.AddPriceBreak(vm.priceSchedule, vm.price, vm.quantity);
@@ -87,11 +123,7 @@ function CreatePriceScheduleModalController($q, $uibModalInstance, $exceptionHan
     };
 
     function submit () {
-        //loading indicator promise
-        var df =  $q.defer();
-        df.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
-        df.message = 'Creating Price Schedule';
-        vm.loading = df;
+
 
         vm.priceSchedule = PriceBreak.SetMinMax(vm.priceSchedule);
         OrderCloud.PriceSchedules.Create(vm.priceSchedule)
@@ -108,7 +140,111 @@ function CreatePriceScheduleModalController($q, $uibModalInstance, $exceptionHan
     function cancel() {
         $uibModalInstance.dismiss('cancel');
     };
-};
+
+    // function createPriceSchedule(){
+    //     ProductManagementModal.CreatePriceSchedule()
+    //         .then(function(data){
+    //             vm.selectedPriceSchedule = data;
+    //
+    //         });
+    //
+    // }
+
+    function deleteAssignment(scope) {
+        OrderCloud.Products.DeleteAssignment(scope.assignment.ProductID, null, scope.assignment.UserGroupID)
+            .then(function() {
+                $state.reload();
+                toastr.success('Product Assignment Deleted', 'Success');
+            })
+            .catch(function(ex) {
+                $exceptionHandler(ex)
+            });
+    };
+
+    function getUserList(buyer){
+        vm.selectedUserGroups = null;
+        vm.model.BuyerID = buyer.ID;
+        OrderCloud.UserGroups.List(null, 1, 20, null, null, null, buyer.ID)
+            .then(function(data){
+                vm.list = data;
+            })
+        OrderCloud.Products.ListAssignments($stateParams.productid, null, null, null, null, null, null, buyer.ID)
+            .then(function(data){
+                vm.assignments = data;
+            })
+    };
+
+    function saveAssignment() {
+
+        //loading indicator promise
+        // var df =  $q.defer();
+        // df.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
+        // df.message = 'Creating and Assigning Price Schedule';
+        // vm.loading = df;
+
+        vm.priceSchedule = PriceBreak.SetMinMax(vm.priceSchedule);
+        OrderCloud.PriceSchedules.Create(vm.priceSchedule)
+            .then(function (data) {
+                if (vm.selectedBuyer && (vm.selectedUserGroups == null ||  vm.selectedUserGroups.length == 0 )) {
+                    var assignmentBuyer = angular.copy(vm.model);
+                    assignmentBuyer.PriceScheduleID = data.ID;
+                    OrderCloud.Products.SaveAssignment(assignmentBuyer)
+                        .then(function(data){
+                            toastr.success('Assignment Updated', 'Success');
+                            $uibModalInstance.close(data);
+                            $state.go('.',{},{reload: true})
+                        })
+                        .catch(function (error) {
+                            toastr.error('An error occurred while trying to save your product assignment', 'Error');
+                        });
+                } else if(vm.selectedBuyer && vm.selectedUserGroups.length > 0 ) {
+                    var assignmentQueue = [];
+                    var df = $q.defer();
+                    angular.forEach(vm.selectedUserGroups, function(usergroup){
+                        var assignment = angular.copy(vm.model);
+                        assignment.PriceScheduleID = vm.selectedPriceSchedule.ID;
+                        assignment.UserGroupID = usergroup.ID;
+                        assignmentQueue.push(OrderCloud.Products.SaveAssignment(assignment));
+                    });
+                    return $q.all(assignmentQueue)
+                        .then(function (data) {
+                            toastr.success('Assignment Updated', 'Success');
+                            $uibModalInstance.close(data);
+                            $state.go('.',{},{reload: true})
+                        })
+                        .catch(function (error) {
+                            toastr.error('An error occurred while trying to save your product assignment', 'Error');
+                        })
+
+                }
+
+            })
+            .catch(function (ex) {
+                $exceptionHandler(ex)
+            });
+
+
+    };
+
+    function searchPriceSchedule(search){
+        if (search == null || ""){
+            return;
+        }else{
+            return OrderCloud.PriceSchedules.List(search, null, 10)
+                .then(function(data){
+                    vm.priceSchedules= data
+                });
+        }
+
+    }
+
+    function assignPriceSchedule() {
+    }
+
+
+
+}
+
 
 function EditPriceScheduleModalController($q, $state, $exceptionHandler, $uibModalInstance, toastr, OrderCloud, SelectedPriceSchedule, PriceBreak , ProductsAssignedToPriceSchedule, OrderCloudConfirm) {
     var vm = this;
@@ -199,7 +335,7 @@ function EditProductModalController($q, $exceptionHandler, $uibModalInstance, $s
             .then(function(data) {
                 df.resolve(data);
                 $uibModalInstance.close(data);
-                // $state.go('products.detail', {productid: data.ID}, {reload: false});
+                $state.go('products.detail', {productid: data.ID}, {reload: true});
                 toastr.success('Product Updated', 'Success');
 
             })

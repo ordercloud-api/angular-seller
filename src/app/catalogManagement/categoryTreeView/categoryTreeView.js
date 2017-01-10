@@ -1,8 +1,8 @@
 angular.module('orderCloud')
-    .controller('CategoryTreeCtrl', CategoryTreeController)
+    .controller('CategoryViewTreeCtrl', CategoryViewTreeController)
 ;
 
-function CategoryTreeController(CatalogViewManagement, CategoryModalFactory, Tree, CatalogID){
+function CategoryViewTreeController(CatalogViewManagement, CategoryModalFactory, Tree, CatalogID){
      var vm = this;
      vm.tree = Tree;
      vm.catalogid = CatalogID;
@@ -10,6 +10,7 @@ function CategoryTreeController(CatalogViewManagement, CategoryModalFactory, Tre
          CatalogViewManagement.SetCategoryID(category, vm.catalogid);
          vm.selectedCategory = category;
      };
+
      vm.createCategory = function(parentid){
          CategoryModalFactory.Create(parentid, vm.catalogid);
      };

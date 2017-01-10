@@ -1,0 +1,99 @@
+<form name="CreateAssignmentForm">
+    <div class="modal-header">
+        <span class="fa fa-times pull-right" ng-click="createAssignmentModal.cancel()"></span>
+        <h1 class="modal-title">
+           Create a new Price Schedule for {{createAssignmentModal.product.Name}}
+        </h1>
+
+    </div>
+    <div class="modal-body">
+        <h3>Create a price schedule</h3>
+        <!--<p class="text-muted">Choose a price to assign to product.</p>-->
+
+        <div ng-include="'productManagement/modals/templates/createPriceSchedule.html'"></div>
+
+        <div uib-collapse="!createAssignmentModal.selectedPriceSchedule"><div class="panel panel-default">
+            <div class="panel-heading">
+                Price Schedule Details
+                <button class="btn btn-default pull-right" ng-click="createAssignmentModal.editPriceSchedule(createAssignmentModal.selectedPriceSchedule)">Edit</button>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>ID:</label> {{createAssignmentModal.selectedPriceSchedule.ID}}
+                        <br>
+                        <label>Name:</label> {{createAssignmentModal.selectedPriceSchedule.Name}}
+                        <br>
+                        <label>Min Quantity:</label>{{createAssignmentModal.selectedPriceSchedule.MaxQuantity}}
+                        <br>
+                        <label>Max Quantity:</label>{{createAssignmentModal.selectedPriceSchedule.MinQuantity}}
+                        <br>
+                        <div ng-if="createAssignmentModal.selectedPriceSchedule.PriceBreaks"><label>Tax Applied</label></div>
+                        <div ng-if="createAssignmentModal.selectedPriceSchedule.PriceBreaks"><label>Shipping Applied</label></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Price Breaks</label>
+                        <hr>
+                        <span ng-repeat="price in createAssignmentModal.selectedPriceSchedule.PriceBreaks"><label>Quantity: </label> {{price.Quantity}}  <label>Price: </label> {{price.Price}} <br></span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        </div>
+        <hr>
+        <div>
+            <h3>Assign the Price Schedule </h3>
+            <p class="text-muted">You can assign a product to a specific UserGroup or to the entire Buyer Company. UserGroup
+                assignments will take precedent over Buyer assignments.</p>
+
+            <div class="form-group">
+                <label>Select Buyer</label>
+                <ui-select ng-model="createAssignmentModal.selectedBuyer"
+                           close-on-select="true"
+                           ng-change="createAssignmentModal.getUserList(createAssignmentModal.selectedBuyer)">
+                    <ui-select-match>
+                        <span ng-bind="$select.selected.Name"></span>
+                    </ui-select-match>
+                    <ui-select-choices
+                            repeat="group in (createAssignmentModal.buyers.Items | filter: $select.search) track by $index">
+                        <span ng-bind="group.Name"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <br>
+            <div uib-collapse="!createAssignmentModal.selectedBuyer">
+                <br>
+                <div uib-collapse="createAssignmentModal.assignBuyer">
+                    <div class="well well-lg text-center" ng-if="!createAssignmentModal.list.Items.length">
+                        <b><i class="fa fa-search"></i> No UserGroups under this buyer</b>
+                    </div>
+                    <div class="form-group" uib-collapse="!createAssignmentModal.list.Items.length">
+                        <label>Select User Group(s)</label>
+                        <ui-select multiple ng-model="createAssignmentModal.selectedUserGroups"
+                                   close-on-select="false">
+                            <ui-select-match>
+                                {{$item.Name}}
+                                <span ng-bind="$select.selected.Name"></span>
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="group in (createAssignmentModal.list.Items | filter: $select.search) track by $index">
+                                <span ng-bind="group.Name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary pull-right" ng-click="createAssignmentModal.saveAssignment()"
+                ng-disabled="!(createAssignmentModal.selectedBuyer && createAssignmentModal.priceSchedule.Name && createAssignmentModal.priceSchedule.PriceBreaks.length )">
+            Save Assignment
+        </button>
+    </div>
+    
+</form>

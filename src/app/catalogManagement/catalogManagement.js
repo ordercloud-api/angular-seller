@@ -25,7 +25,7 @@ function CatalogManagementConfig($stateProvider) {
                 },
                 'category-tree@catalogManagement': {
                     templateUrl: 'catalogManagement/categoryTreeView/templates/categoryTreeView.html',
-                    controller: 'CategoryTreeCtrl',
+                    controller: 'CategoryViewTreeCtrl',
                     controllerAs: 'categoryTree'
                 },
                 'assignments@catalogManagement': {
