@@ -9,9 +9,9 @@ function CatalogManagementConfig($stateProvider) {
             parent: 'buyers.details',
             url: '/catalogManagement',
             resolve: {
-                CatalogID: function($stateParams) {
-                    //set catalog id instead to use non-default catalog
-                    return $stateParams.buyerid;
+                CatalogID: function(SelectedBuyer) {
+                    //TODO: write unit test for this resolve
+                    return SelectedBuyer.DefaultCatalogID;
                 },
                 Tree: function(CategoryTreeService, CatalogID) {
                     return CategoryTreeService.GetCategoryTree(CatalogID);
