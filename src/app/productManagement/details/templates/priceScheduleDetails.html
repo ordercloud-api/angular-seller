@@ -12,9 +12,6 @@
             <h5><b>Maximum Quantity: </b> {{priceScheduleDetails.data.PriceSchedule.MaxQuantity}} <i class="fa fa-edit" ng-click="priceScheduleDetails.editFields(['MaxQuantity'])"></i></h5>
         </div>
         <div class="col-sm-6">
-            <div class="text-center">
-                <button class="btn btn-link" ng-click="priceScheduleDetails.createPriceBreak()"><i class="fa fa-plus-circle"></i> Create Price Break</button>
-            </div>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
@@ -30,6 +27,9 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-link" ng-click="priceScheduleDetails.createPriceBreak()"><i class="fa fa-plus-circle"></i> Create Price Break</button>
             </div>
         </div>
     </div>
@@ -47,9 +47,12 @@
                         <ul class="list-group">
                             <li class="list-group-item" ng-repeat="userGroup in buyer.UserGroups">
                                 {{userGroup.Name}}
-                                <span class="pull-right"><i class="fa fa-times text-danger"></i></span>
+                                <span class="pull-right" ng-click="priceScheduleDetails.deleteUserGroupAssignment(buyer, userGroup)"><i class="fa fa-times text-danger"></i></span>
                             </li>
                         </ul>
+                    </div>
+                    <div class="text-center" ng-if="!buyer.Assigned">
+                        <button class="btn btn-link" ng-click="priceScheduleDetails.addUserGroupAssignment(buyer)"><i class="fa fa-plus-circle"></i> Add User Group</button>
                     </div>
                 </div>
             </div>
