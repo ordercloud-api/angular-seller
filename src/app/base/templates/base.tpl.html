@@ -1,4 +1,47 @@
+<nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm offcanvas-xs" role="navigation">
+    <a class="navmenu-brand" href="#">Brand</a>
+    <ul class="nav navmenu-nav">
+        <li class="active"><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+            <ul class="dropdown-menu navmenu-nav" role="menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
 <header class="c-header c-header--fixed-top">
-    <nav ui-view="nav"></nav>
+    <nav class="container container-smooth">
+        <div class="c-topnav">
+            <div class="c-topnav__group--left">
+                <div class="c-topnav__item hidden-md hidden-lg">
+                    <a data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body"><i class="fa fa-bars"></i></a>
+                </div>
+                <!--BRAND-->
+                <div class="c-topnav__item c-topnav__brand">
+                    <a ui-sref="home">
+                        {{application.name}}
+                    </a>
+                </div>
+                <div class="c-topnav__item">
+                    <a ui-sref="products"><i class="fa fa-archive" aria-hidden="true"></i> <span class="hidden-xs hidden-sm">Product Management</span></a>
+                </div>
+                <div class="c-topnav__item">
+                    <a ui-sref="buyers"><i class="fa fa-university" aria-hidden="true"></i> <span class="hidden-xs hidden-sm">Buyer Management</span></a>
+                </div>
+                <div class="c-topnav__item c-topnav__account" uib-dropdown ng-if="!base.currentUser.Anonymous">
+                    <a uib-dropdown-toggle role="button"><i class="fa fa-user"></i> <span class="hidden-xs hidden-sm">Account</span> <span class="caret hidden-xs"></span></a>
+                    <ul class="dropdown-menu-right" uib-dropdown-menu>
+                        <li><a ng-click="application.logout()">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
 </header>
-<main ui-view class="container" cg-busy="application.stateLoading"></main>
+<main ui-view class="container container-smooth" cg-busy="application.stateLoading"></main>
