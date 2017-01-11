@@ -9,11 +9,11 @@ angular.module('orderCloud')
 function UserGroupsConfig($stateProvider) {
     $stateProvider
         .state('userGroups', {
-            parent: 'buyers.details',
+            parent: 'buyersDetails',
             templateUrl: 'userGroups/templates/userGroups.tpl.html',
             controller: 'UserGroupsCtrl',
             controllerAs: 'userGroups',
-            url: '/usergroups',
+            url: '/usergroups?search&page&pageSize&searchOn&sortBy&filters',
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);

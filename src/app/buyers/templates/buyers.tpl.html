@@ -1,9 +1,9 @@
-<article id="COMPONENT_Buyers" ui-view class="container-fluid">
-    <div class="page-header">
+<article ui-view>
+    <div class="page-title">
         <button type="button" class="btn btn-primary pull-right" ui-sref="buyers.create"><i class="fa fa-plus-circle"></i> Create New</button>
         <h3>Buyers</h3>
     </div>
-
+    <hr>
     <!--====== SEARCH/FILTERS ======-->
     <form name="BuyersSearchForm">
         <fieldset class="form-group">
@@ -66,20 +66,14 @@
                     <th class="text-center" scope="col">
                         Active
                     </th>
-                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="buyer in buyers.list.Items">
                     <th scope="row">{{buyer.ID}}</th>
-                    <td data-title="Name">{{buyer.Name}}</td>
-                    <td class="text-center" data-title="Active"><i class="fa fa-circle" aria-hidden="true"
-                                                                   ng-class="{'active':buyer.Active}"></i></td>
-                    <td class="actions-cell">
-                        <button type="button" ui-sref="buyers.edit({buyerid: buyer.ID})" class="btn btn-default btn-sm">Edit
-                        </button>
-                        <button type="button" ui-sref="users({buyerid: buyer.ID})" class="btn btn-default btn-sm">Details
-                        </button>
+                    <td data-title="Name"><a href="" ui-sref="users({buyerid:buyer.ID})"><b>{{buyer.Name}}</b></a></td>
+                    <td class="text-center" data-title="Active">
+                        <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':buyer.Active}"></i>
                     </td>
                 </tr>
                 </tbody>

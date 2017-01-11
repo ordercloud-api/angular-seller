@@ -6,7 +6,7 @@ angular.module('orderCloud')
 function CatalogManagementConfig($stateProvider) {
     $stateProvider
         .state('catalogManagement', {
-            parent: 'buyers.details',
+            parent: 'buyersDetails',
             url: '/catalogManagement',
             resolve: {
                 CatalogID: function(SelectedBuyer) {

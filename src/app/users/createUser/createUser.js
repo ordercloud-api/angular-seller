@@ -14,14 +14,17 @@ function CreateUserConfig($stateProvider) {
     ;
 }
 
-function UserCreateController($exceptionHandler, $state, toastr, OrderCloud) {
+function UserCreateController($exceptionHandler, $uibModalInstance, $state, toastr, OrderCloud) {
     var vm = this;
-    vm.user = {Email: '', Password: ''};
-    vm.user.Active = false;
+    vm.user = {Email: '', Password: '', Active: false};
+
     vm.Submit = function() {
         vm.user.TermsAccepted = new Date();
-        OrderCloud.Users.Create(vm.user)
-            .then(function() {
+
+        vm.loading = {backdrop:false};
+        vm.loading.promise = OrderCloud.Users.Create(vm.user)
+            .then(function(data) {
+                $uibModalInstance.close(data);
                 toastr.success('User Created', 'Success');
                 $state.go('users', {}, {reload: true});
             })
@@ -29,4 +32,8 @@ function UserCreateController($exceptionHandler, $state, toastr, OrderCloud) {
                 $exceptionHandler(ex)
             });
     };
+
+    vm.Cancel = function() {
+        $uibModalInstance.dismiss();
+    }
 }

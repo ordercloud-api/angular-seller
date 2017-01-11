@@ -6,11 +6,11 @@ angular.module('orderCloud')
 function UsersConfig($stateProvider) {
     $stateProvider
         .state('users', {
-            parent: 'buyers.details',
+            parent: 'buyersDetails',
             templateUrl: 'users/templates/users.tpl.html',
             controller: 'UsersCtrl',
             controllerAs: 'users',
-            url: '/users',
+            url: '/users?userGroupID&search&page&pageSize&searchOn&sortBy&filters',
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
@@ -23,7 +23,7 @@ function UsersConfig($stateProvider) {
     ;
 }
 
-function UsersController($state, $ocMedia, OrderCloud, OrderCloudParameters, UserList, Parameters) {
+function UsersController($state, $uibModal, toastr,$ocMedia, OrderCloud, OrderCloudParameters, UserList, Parameters) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
@@ -43,7 +43,12 @@ function UsersController($state, $ocMedia, OrderCloud, OrderCloudParameters, Use
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        vm.filter(true);
+        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        vm.searchLoading = OrderCloud.Users.List(vm.parameters.userGroupID, vm.parameters.search, 1, vm.parameters.pageSize || 12, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
+            .then(function(data) {
+                vm.list = data;
+                vm.searchResults = vm.parameters.search.length > 0;
+            })
     };
 
     //Clear the search parameter, reload the state & reset the page
@@ -96,4 +101,31 @@ function UsersController($state, $ocMedia, OrderCloud, OrderCloudParameters, Use
                 vm.list.Meta = data.Meta;
             });
     };
+
+    vm.editUser = function(scope) {
+        $uibModal.open({
+            templateUrl: 'users/editUser/templates/editUser.html',
+            controller: 'UserEditCtrl',
+            controllerAs: 'userEdit',
+            scope: scope,
+            bindToController: true
+        }).result
+            .then(function(data) {
+                if (data.update) vm.list.Items[scope.$index] = data.update;
+                toastr.success(data.update.Username + ' was updated.', 'Success!');
+            })
+    };
+
+    vm.createUser = function() {
+        $uibModal.open({
+            templateUrl: 'users/createUser/templates/createUser.html',
+            controller: 'UserCreateCtrl',
+            controllerAs: 'userCreate',
+            bindToController: true
+        }).result
+            .then(function(data) {
+                if (data.update) vm.list.Items.unshift(data.update);
+                toastr.success(data.update.Username + ' was updated.', 'Success!');
+            })
+    }
 }

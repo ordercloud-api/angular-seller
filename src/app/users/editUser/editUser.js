@@ -1,9 +1,9 @@
 angular.module('orderCloud')
-    .config(EditUserConfig)
+    //.config(EditUserConfig)
     .controller('UserEditCtrl', UserEditController)
 ;
 
-function EditUserConfig($stateProvider) {
+/*function EditUserConfig($stateProvider) {
     $stateProvider
         .state('users.edit', {
             url: '/:userid/edit',
@@ -17,14 +17,16 @@ function EditUserConfig($stateProvider) {
             }
         })
 
-}
+}*/
 
 
-function UserEditController($exceptionHandler, $state, toastr, OrderCloud, SelectedUser) {
-    var vm = this,
-        userid = SelectedUser.ID;
-    vm.userName = SelectedUser.Username;
-    vm.user = SelectedUser;
+function UserEditController($exceptionHandler, $uibModalInstance, OrderCloud) {
+    var vm = this;
+
+    vm.username = angular.copy(vm.user.Username);
+    vm.fullName = vm.user.FirstName ? (vm.user.FirstName + (vm.user.LastName ? ' ' + vm.user.LastName : '')) : (vm.user.LastName ? vm.user.LastName : null);
+    vm.userCopy = angular.copy(vm.user);
+
     if (vm.user.TermsAccepted != null) {
         vm.TermsAccepted = true;
     }
@@ -32,10 +34,10 @@ function UserEditController($exceptionHandler, $state, toastr, OrderCloud, Selec
     vm.Submit = function() {
         var today = new Date();
         vm.user.TermsAccepted = today;
-        OrderCloud.Users.Update(userid, vm.user)
-            .then(function() {
-                $state.go('users', {}, {reload: true});
-                toastr.success('User Updated', 'Success');
+        vm.loading = {backdrop:false};
+        vm.loading.promise = OrderCloud.Users.Update(vm.user.ID, vm.userCopy)
+            .then(function(data) {
+                $uibModalInstance.close({update:data});
             })
             .catch(function(ex) {
                 $exceptionHandler(ex)
@@ -45,11 +47,14 @@ function UserEditController($exceptionHandler, $state, toastr, OrderCloud, Selec
     vm.Delete = function() {
         OrderCloud.Users.Delete(userid)
             .then(function() {
-                $state.go('users', {}, {reload: true});
-                toastr.success('User Deleted', 'Success');
+                $uibModalInstance.close();
             })
             .catch(function(ex) {
                 $exceptionHandler(ex)
             });
     };
+
+    vm.Cancel = function() {
+        $uibModalInstance.dismiss();
+    }
 }

@@ -1,18 +1,19 @@
-<article>
-    <button class="btn btn-default" ui-sref="buyers">Buyers List</button>
-    <div class="container-fluid">
-        <h3 class="page-header">{{buyerDetails.selectedBuyer.Name}}</h3>
-        <ul class="nav nav-pills">
-            <li role="presentation" ng-class="{active: buyerDetails.state.current.name === 'users'}">
-                <a ui-sref="users({ search: '', sortBy: ''})">Users</a>
-            </li>
-            <li role="presentation" ng-class="{active: buyerDetails.state.current.name === 'userGroups'}">
-                <a ui-sref="userGroups({ search: '', sortBy: ''})">User Groups</a>
-            </li>
-            <li role="presentation" ng-class="{active: buyerDetails.state.current.name === 'catalogManagement'}">
-                <a ui-sref="catalogManagement({ search: '', sortBy: ''})">Catalog Management</a>
-            </li>
-        </ul>
-        <ui-view></ui-view>
-    </div>
-</article>
+<!--<button class="btn btn-default" ui-sref="buyers"><i class="fa fa-arrow-left"></i> Back</button>-->
+<header class="jumbotron">
+    <h3><small>Buyer Organization</small>
+    <br>
+    {{buyerDetails.selectedBuyer.Name}}</h3>
+</header>
+<ul class="nav nav-tabs">
+    <li role="presentation" ng-class="{active: application.$state.includes('users')}">
+        <a ui-sref="users({ search: '', sortBy: '', filters: '', page: ''})">Users</a>
+    </li>
+    <li role="presentation" ng-class="{active: application.$state.includes('userGroups')}">
+        <a ui-sref="userGroups({ search: '', sortBy: '', filters: '', page: ''})">User Groups</a>
+    </li>
+    <li role="presentation" ng-class="{active: application.$state.includes('catalogManagement')}">
+        <a ui-sref="catalogManagement({ search: '', sortBy: ''})">Catalog Management</a>
+    </li>
+</ul>
+<br>
+<ui-view></ui-view>
