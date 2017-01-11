@@ -1,27 +1,6 @@
 angular.module('orderCloud')
-    .config(UsersConfig)
     .controller('UsersCtrl', UsersController)
 ;
-
-function UsersConfig($stateProvider) {
-    $stateProvider
-        .state('users', {
-            parent: 'buyersDetails',
-            templateUrl: 'users/templates/users.tpl.html',
-            controller: 'UsersCtrl',
-            controllerAs: 'users',
-            url: '/users?userGroupID&search&page&pageSize&searchOn&sortBy&filters',
-            resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
-                },
-                UserList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
-                }
-            }
-        })
-    ;
-}
 
 function UsersController($state, $uibModal, toastr,$ocMedia, OrderCloud, OrderCloudParameters, UserList, Parameters) {
     var vm = this;
@@ -104,9 +83,9 @@ function UsersController($state, $uibModal, toastr,$ocMedia, OrderCloud, OrderCl
 
     vm.editUser = function(scope) {
         $uibModal.open({
-            templateUrl: 'users/editUser/templates/editUser.html',
-            controller: 'UserEditCtrl',
-            controllerAs: 'userEdit',
+            templateUrl: 'users/templates/userEdit.modal.html',
+            controller: 'UserEditModalCtrl',
+            controllerAs: 'userEditModal',
             scope: scope,
             bindToController: true
         }).result
@@ -118,9 +97,9 @@ function UsersController($state, $uibModal, toastr,$ocMedia, OrderCloud, OrderCl
 
     vm.createUser = function() {
         $uibModal.open({
-            templateUrl: 'users/createUser/templates/createUser.html',
-            controller: 'UserCreateCtrl',
-            controllerAs: 'userCreate',
+            templateUrl: 'users/templates/userCreate.modal.html',
+            controller: 'UserCreateModalCtrl',
+            controllerAs: 'userCreateModal',
             bindToController: true
         }).result
             .then(function(data) {

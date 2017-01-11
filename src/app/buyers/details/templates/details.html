@@ -1,8 +1,17 @@
 <!--<button class="btn btn-default" ui-sref="buyers"><i class="fa fa-arrow-left"></i> Back</button>-->
-<header class="jumbotron">
-    <h3><small>Buyer Organization</small>
-    <br>
-    {{buyerDetails.selectedBuyer.Name}}</h3>
+<header class="jumbotron buyer-header">
+    <button class="btn btn-default pull-right" type="button"><b><i class="fa fa-edit"></i> Edit Buyer Info</b></button>
+    <div ng-class="{row:buyerDetails.selectedBuyer.Description}">
+        <div ng-class="{'col-sm-5':buyerDetails.selectedBuyer.Description}">
+            <h3><small>Buyer Organization</small>
+                <br>
+                {{buyerDetails.selectedBuyer.Name}}</h3>
+        </div>
+        <div class="col-sm-7" ng-if="buyerDetails.selectedBuyer.Description">
+            <p ng-bind-html="buyerDetails.selectedBuyer.Description"></p>
+        </div>
+
+    </div>
 </header>
 <ul class="nav nav-tabs">
     <li role="presentation" ng-class="{active: application.$state.includes('users')}">

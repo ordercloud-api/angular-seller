@@ -1,15 +1,18 @@
 <article ui-view>
-    <div class="form-group">
-        <button type="button" class="btn btn-success" ng-click="users.createUser()"><i class="fa fa-plus-circle"></i> New User</button>
-    </div>
     <!--====== SEARCH/FILTERS ======-->
     <form name="UsersSearchForm">
         <fieldset class="form-group">
-            <div ng-class="{'input-group':users.searchResults}">
-                <input type="search" ng-change="users.search()" ng-model-options="{debounce:1000}" placeholder="Search Users..." ng-model="users.parameters.search" class="form-control">
-                <span ng-if="users.searchResults" class="input-group-btn">
-                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="users.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
-                </span>
+            <div class="row">
+                <div class="col-xs-9 col-md-10">
+                    <div ng-class="{'input-group':users.searchResults}">
+                        <input type="search" ng-change="users.search()" ng-model-options="{debounce:1000}" placeholder="Search Users..." ng-model="users.parameters.search" class="form-control">
+                        <span ng-if="users.searchResults" class="input-group-btn">
+                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="users.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                        </span>
+                    </div></div>
+                <div class="col-xs-3 col-md-2">
+                    <button type="button" class="btn btn-block btn-primary" ng-click="users.createUser()"><i class="fa fa-plus-circle"></i> <span class="hidden-xs">New User</span> </button>
+                </div>
             </div>
         </fieldset>
         <fieldset class="form-group" ng-if="application.$ocMedia('max-width:767px')">

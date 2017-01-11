@@ -1,26 +1,9 @@
 angular.module('orderCloud')
-    //.config(EditUserConfig)
-    .controller('UserEditCtrl', UserEditController)
+    .controller('UserEditModalCtrl', UserEditModalController)
 ;
 
-/*function EditUserConfig($stateProvider) {
-    $stateProvider
-        .state('users.edit', {
-            url: '/:userid/edit',
-            templateUrl: 'users/editUser/templates/editUser.html',
-            controller: 'UserEditCtrl',
-            controllerAs: 'userEdit',
-            resolve: {
-                SelectedUser: function($stateParams, OrderCloud) {
-                    return OrderCloud.Users.Get($stateParams.userid);
-                }
-            }
-        })
 
-}*/
-
-
-function UserEditController($exceptionHandler, $uibModalInstance, OrderCloud) {
+function UserEditModalController($exceptionHandler, $uibModalInstance, OrderCloud) {
     var vm = this;
 
     vm.username = angular.copy(vm.user.Username);
@@ -31,7 +14,7 @@ function UserEditController($exceptionHandler, $uibModalInstance, OrderCloud) {
         vm.TermsAccepted = true;
     }
 
-    vm.Submit = function() {
+    vm.submit = function() {
         var today = new Date();
         vm.user.TermsAccepted = today;
         vm.loading = {backdrop:false};
@@ -44,7 +27,7 @@ function UserEditController($exceptionHandler, $uibModalInstance, OrderCloud) {
             });
     };
 
-    vm.Delete = function() {
+    vm.delete = function() {
         OrderCloud.Users.Delete(userid)
             .then(function() {
                 $uibModalInstance.close();
@@ -54,7 +37,7 @@ function UserEditController($exceptionHandler, $uibModalInstance, OrderCloud) {
             });
     };
 
-    vm.Cancel = function() {
+    vm.cancel = function() {
         $uibModalInstance.dismiss();
     }
 }

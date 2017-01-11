@@ -1,24 +1,12 @@
 angular.module('orderCloud')
-    .config(CreateUserConfig)
-    .controller('UserCreateCtrl', UserCreateController)
+    .controller('UserCreateModalCtrl', UserCreateModalController)
 ;
 
-function CreateUserConfig($stateProvider) {
-    $stateProvider
-        .state('users.create', {
-            url: '/create',
-            templateUrl: 'users/createUser/templates/createUser.html',
-            controller: 'UserCreateCtrl',
-            controllerAs: 'userCreate'
-        })
-    ;
-}
-
-function UserCreateController($exceptionHandler, $uibModalInstance, $state, toastr, OrderCloud) {
+function UserCreateModalController($exceptionHandler, $uibModalInstance, $state, toastr, OrderCloud) {
     var vm = this;
     vm.user = {Email: '', Password: '', Active: false};
 
-    vm.Submit = function() {
+    vm.submit = function() {
         vm.user.TermsAccepted = new Date();
 
         vm.loading = {backdrop:false};
@@ -33,7 +21,7 @@ function UserCreateController($exceptionHandler, $uibModalInstance, $state, toas
             });
     };
 
-    vm.Cancel = function() {
+    vm.cancel = function() {
         $uibModalInstance.dismiss();
     }
 }
