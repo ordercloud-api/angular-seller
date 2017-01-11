@@ -2,6 +2,7 @@ angular.module('orderCloud')
     .config(ProductDetailConfig)
     .controller('DetailsCtrl', DetailsController)
     .controller('PriceScheduleDetailsCtrl', PriceScheduleDetailsController)
+    .controller('PriceSchedulePriceBreakCtrl', PriceSchedulePriceBreakController)
     .factory('ocProductPricing', ocProductPricing)
 ;
 
@@ -85,7 +86,7 @@ function DetailsController($stateParams, $exceptionHandler, $state, toastr, Orde
     }
 }
 
-function PriceScheduleDetailsController(OrderCloud, ocPatchModal, AssignmentDataDetail) {
+function PriceScheduleDetailsController($uibModal, OrderCloud, ocPatchModal, AssignmentDataDetail) {
     var vm = this;
     vm.data = AssignmentDataDetail;
 
@@ -106,14 +107,58 @@ function PriceScheduleDetailsController(OrderCloud, ocPatchModal, AssignmentData
     };
 
     vm.patchField = function(field) {
-        vm.loading = {
-            message: 'Saving...'
-        };
         var partial = _.pick(vm.data.PriceSchedule, field);
-        vm.loading = OrderCloud.PriceSchedules.Patch(vm.data.PriceSchedule.ID, partial)
+        OrderCloud.PriceSchedules.Patch(vm.data.PriceSchedule.ID, partial)
             .then(function(data) {
                 vm.data.PriceSchedule = data;
             });
+    };
+
+    vm.createPriceBreak = function() {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'productManagement/details/templates/priceBreakModal.modal.html',
+            size: 'md',
+            controller: 'PriceSchedulePriceBreakCtrl',
+            controllerAs: 'priceBreak',
+            resolve: {
+                PriceScheduleID: function() {
+                    return vm.data.PriceSchedule.ID;
+                }
+            }
+        });
+
+        modalInstance.result.then(function(priceSchedule) {
+            vm.data.PriceSchedule = priceSchedule;
+        });
+    };
+
+    vm.deletePriceBreak = function(scope) {
+        OrderCloud.PriceSchedules.DeletePriceBreak(vm.data.PriceSchedule.ID, scope.pb.Quantity)
+            .then(function() {
+                vm.data.PriceSchedule.PriceBreaks.splice(scope.$index, 1);
+            });
+    };
+}
+
+function PriceSchedulePriceBreakController($uibModalInstance, OrderCloud, PriceScheduleID) {
+    var vm = this;
+    vm.priceBreak = {
+        Quantity: 1,
+        Price: 0
+    };
+
+    vm.confirm = function() {
+        vm.loading = {
+            message: 'Saving...'
+        };
+        vm.loading = OrderCloud.PriceSchedules.SavePriceBreak(PriceScheduleID, vm.priceBreak)
+            .then(function(priceSchedule) {
+                $uibModalInstance.close(priceSchedule);
+            });
+    };
+
+    vm.cancel = function() {
+        $uibModalInstance.dismiss();
     };
 }
 

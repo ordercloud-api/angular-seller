@@ -4,8 +4,6 @@
     </h3>
     <div class="row">
         <div class="col-sm-6">
-
-
             <h5><b>Name: </b> {{priceScheduleDetails.data.PriceSchedule.Name}} <i class="fa fa-edit" ng-click="priceScheduleDetails.editFields(['Name'])"></i></h5>
             <h5><b>ID: </b> {{priceScheduleDetails.data.PriceSchedule.ID}} <i class="fa fa-edit" ng-click="priceScheduleDetails.editFields(['ID'])"></i></h5>
             <h5><b>Apply Shipping: </b> <input type="checkbox" ng-model="priceScheduleDetails.data.PriceSchedule.ApplyShipping" ng-change="priceScheduleDetails.patchField('ApplyShipping')" /></h5>
@@ -14,6 +12,9 @@
             <h5><b>Maximum Quantity: </b> {{priceScheduleDetails.data.PriceSchedule.MaxQuantity}} <i class="fa fa-edit" ng-click="priceScheduleDetails.editFields(['MaxQuantity'])"></i></h5>
         </div>
         <div class="col-sm-6">
+            <div class="text-center">
+                <button class="btn btn-link" ng-click="priceScheduleDetails.createPriceBreak()"><i class="fa fa-plus-circle"></i> Create Price Break</button>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
@@ -23,9 +24,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="pb in priceScheduleDetails.data.PriceSchedule.PriceBreaks">
+                        <tr ng-repeat="pb in priceScheduleDetails.data.PriceSchedule.PriceBreaks | orderBy:'Quantity'">
                             <td>{{pb.Quantity}}</td>
-                            <td>{{pb.Price | currency}}</td>
+                            <td>{{pb.Price | currency}} <span class="pull-right" ng-click="priceScheduleDetails.deletePriceBreak(this)"><i class="fa fa-times text-danger"></i></span></td>
                         </tr>
                     </tbody>
                 </table>
