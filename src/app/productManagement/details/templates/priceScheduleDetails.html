@@ -1,0 +1,57 @@
+<article>
+    <h3 class="page-header">
+        {{priceScheduleDetails.data.PriceSchedule.Name}}
+    </h3>
+    <div class="row">
+        <div class="col-sm-6">
+
+
+            <h5><b>Name: </b> {{priceScheduleDetails.data.PriceSchedule.Name}} <i class="fa fa-edit" ng-click="priceScheduleDetails.editFields(['Name'])"></i></h5>
+            <h5><b>ID: </b> {{priceScheduleDetails.data.PriceSchedule.ID}} <i class="fa fa-edit" ng-click="priceScheduleDetails.editFields(['ID'])"></i></h5>
+            <h5><b>Apply Shipping: </b> <input type="checkbox" ng-model="priceScheduleDetails.data.PriceSchedule.ApplyShipping" ng-change="priceScheduleDetails.patchField('ApplyShipping')" /></h5>
+            <h5><b>Apply Tax: </b> <input type="checkbox" ng-model="priceScheduleDetails.data.PriceSchedule.ApplyTax" ng-change="priceScheduleDetails.patchField('ApplyTax')" /></h5>
+            <h5><b>Minimum Quantity: </b> {{priceScheduleDetails.data.PriceSchedule.MinQuantity}}</h5>
+            <h5><b>Maximum Quantity: </b> {{priceScheduleDetails.data.PriceSchedule.MaxQuantity}} <i class="fa fa-edit" ng-click="priceScheduleDetails.editFields(['MaxQuantity'])"></i></h5>
+        </div>
+        <div class="col-sm-6">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="pb in priceScheduleDetails.data.PriceSchedule.PriceBreaks">
+                            <td>{{pb.Quantity}}</td>
+                            <td>{{pb.Price | currency}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <h4>Assignments</h4>
+    <div class="row">
+        <div class="col-sm-6" ng-repeat="buyer in priceScheduleDetails.data.Buyers">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <label>
+                        <input type="checkbox" ng-model="buyer.Assigned" />
+                        {{buyer.Name}}
+                    </label>
+                    <div ng-if="buyer.UserGroups.length">
+                        <h5>User Groups</h5>
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="userGroup in buyer.UserGroups">
+                                {{userGroup.Name}}
+                                <span class="pull-right"><i class="fa fa-times text-danger"></i></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

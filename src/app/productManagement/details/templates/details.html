@@ -1,12 +1,12 @@
-<div>
+<article ui-view>
     <button type="button" class="btn btn-default" aria-label="Close"
             ui-sref="products"><i class="fa fa-angle-left" aria-hidden="true"></i> Products
     </button>
     <h3 class="page-header">
         {{details.product.Name}}
-        <td class="text-center" data-title="Active">
+        <span class="text-center" data-title="Active">
             <i class="fa" ng-class="{'fa-circle text-success': details.product.Active, 'fa-circle text-muted': !details.product.Active}"></i>
-        </td>
+        </span>
     </h3>
     <div class="row">
         <div class="col-sm-6">
@@ -63,11 +63,8 @@
                 <td>{{assignment.Buyers.length}}</td>
                 <td>{{assignment.UserGroups.length}}</td>
                 <td>
-                    <button class="btn btn-default btn-sm pull-right">Details</button>
-                    <button class="btn btn-default btn-sm pull-right">Edit</button>
-
+                    <button class="btn btn-default btn-sm pull-right" ui-sref=".price({pricescheduleid: assignment.PriceSchedule.ID})">View Details</button>
                 </td>
-
             </tr>
             </tbody>
         </table>
@@ -75,4 +72,4 @@
     <div>
         <button class="btn btn-danger pull-right" ng-click="details.deleteProduct()">Delete Product</button>
     </div>
-</div>
+</article>
