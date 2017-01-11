@@ -23,7 +23,7 @@
             <h5 ng-if="details.product.ShipFromAddressID"><b>Ship From Address: </b> {{details.product.ShipFromAddressID}}</h5>
         </div>
         <div class="col-sm-6">
-            <img class="img-responsive" ng-src="{{details.product.xp.image.URL || 'http://placehold.it/300x300'}}" alt="Product Image">
+            <img class="img-responsive" ng-src="{{details.product.xp.image.URL || 'http://placehold.it/300x300'}}" alt="Product Image">{{details.product.xp.image.URL}}
         </div>
     </div>
     <button class="btn btn-default" ng-click="details.editProduct()">Edit</button>
