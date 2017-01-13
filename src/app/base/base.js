@@ -9,16 +9,9 @@ function BaseConfig($stateProvider) {
     $stateProvider.state('base', {
         url: '',
         abstract: true,
-        views: {
-            '': {
-                templateUrl: 'base/templates/base.tpl.html',
-                controller: 'BaseCtrl',
-                controllerAs: 'base'
-            },
-            'nav@base': {
-                'templateUrl': 'base/templates/navigation.tpl.html'
-            }
-        },
+        templateUrl: 'base/templates/base.tpl.html',
+        controller: 'BaseCtrl',
+        controllerAs: 'base',
         resolve: {
             CurrentUser: function($q, $state, OrderCloud, buyerid, anonymous) {
                 var dfd = $q.defer();
