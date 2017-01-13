@@ -9,7 +9,7 @@ angular.module('orderCloud')
 function UserGroupsConfig($stateProvider) {
     $stateProvider
         .state('userGroups', {
-            parent: 'buyersDetails',
+            parent: 'buyer',
             templateUrl: 'userGroups/templates/userGroups.tpl.html',
             controller: 'UserGroupsCtrl',
             controllerAs: 'userGroups',

@@ -20,5 +20,6 @@ function AppRun(OrderCloud, catalogid, uibDatepickerConfig, uibDatepickerPopupCo
         //regex ID_Name = ([A-Za-z0-9\-\_]+)
         errorMessages['confirmpassword'] = 'Your passwords do not match';
         errorMessages['noSpecialChars'] = 'Only Alphanumeric characters are allowed';
+        errorMessages['Buyer.UnavailableID'] = 'This ID is already in use.';
     });
 }

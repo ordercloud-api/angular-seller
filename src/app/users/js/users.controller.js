@@ -104,7 +104,7 @@ function UsersController($state, $uibModal, toastr,$ocMedia, OrderCloud, OrderCl
         }).result
             .then(function(data) {
                 if (data.update) vm.list.Items.unshift(data.update);
-                toastr.success(data.update.Username + ' was updated.', 'Success!');
+                toastr.success(data.update.Username + ' was created.', 'Success!');
             })
     }
 }

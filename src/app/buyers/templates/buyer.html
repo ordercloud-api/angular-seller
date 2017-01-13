@@ -1,0 +1,49 @@
+<!--<button class="btn btn-default" ui-sref="buyers"><i class="fa fa-arrow-left"></i> Back</button>-->
+<nav class="navbar navbar-default navbar-fixed-top navbar-unstacked navmenu-on-canvas-md navmenu-on-canvas-lg">
+    <div class="container container-smooth">
+        <ul class="nav navbar-nav navbar-left" ng-if="application.$ocMedia('max-width:991px')">
+            <li>
+                <a href="" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </li>
+        </ul>
+        <div class="navbar-header">
+            <a href="" ui-sref="buyers" class="navbar-brand"><b>Buyers:</b></a>
+            <a href="" ui-sref="buyer.settings({buyerid:buyer.selectedBuyer.ID})" class="navbar-brand">{{buyer.selectedBuyer.Name}}</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <button type="button" class="btn btn-primary btn-sm navbar-btn" ng-click="buyer.createBuyer()"><i class="fa fa-plus-circle"></i> New Buyer Organization</button>
+        </ul>
+    </div>
+</nav>
+<article class="navbar-padding-top">
+    <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{active: application.$state.includes('buyerOrders')}">
+            <a ui-sref="buyerOrders({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-file-o"></i> Orders</a>
+        </li>
+        <li role="presentation" ng-class="{active: application.$state.includes('catalogManagement')}">
+            <a ui-sref="catalogManagement({ search: '', sortBy: ''})"><i class="fa fa-sitemap"></i> Catalog</a>
+        </li>
+        <li role="presentation" ng-class="{active: application.$state.includes('users')}">
+            <a ui-sref="users({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-user"></i> Users</a>
+        </li>
+        <li role="presentation" ng-class="{active: application.$state.includes('userGroups')}">
+            <a ui-sref="userGroups({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-users"></i> User Groups</a>
+        </li>
+        <li role="presentation" ng-class="{active: application.$state.includes('paymentMethods')}">
+            <a ui-sref="paymentMethods({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-dollar"></i> Payment Methods</a>
+        </li>
+        <li role="presentation" ng-class="{active: application.$state.includes('giftCards')}">
+            <a ui-sref="giftCards({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-gift"></i> Gift Cards</a>
+        </li>
+        <li role="presentation" ng-class="{active: application.$state.includes('promotions')}">
+            <a ui-sref="promotions({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-bullhorn"></i> Promotions</a>
+        </li>
+        <li role="presentation" ui-sref-active="active">
+            <a ui-sref=".settings"><i class="fa fa-cog"></i> Buyer Settings</a>
+        </li>
+    </ul>
+    <br>
+    <ui-view></ui-view>
+</article>

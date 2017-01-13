@@ -6,8 +6,8 @@ angular.module('orderCloud')
 function CatalogManagementConfig($stateProvider) {
     $stateProvider
         .state('catalogManagement', {
-            parent: 'buyersDetails',
-            url: '/catalogManagement',
+            parent: 'buyer',
+            url: '/catalog',
             resolve: {
                 CatalogID: function(SelectedBuyer) {
                     //TODO: write unit test for this resolve

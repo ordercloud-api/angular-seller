@@ -1,30 +1,7 @@
 angular.module('orderCloud')
-    .config(BuyerConfig)
-    .controller('BuyerCtrl', BuyerController);
+    .controller('BuyersCtrl', BuyersController);
 
-function BuyerConfig($stateProvider) {
-    $stateProvider
-        .state('buyers', {
-            parent: 'base',
-            templateUrl: 'buyers/templates/buyers.tpl.html',
-            controller: 'BuyerCtrl',
-            controllerAs: 'buyers',
-            url: '/buyers?search&page&pageSize',
-            resolve : {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
-                },
-                BuyerList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Buyers.List(Parameters.search, Parameters.page, Parameters.pageSize || 12/*, Parameters.searchOn, Parameters.sortBy, Parameters.filters*/);
-                    //Commenting out params that don't exist yet in the API
-                }
-            }
-        })
-
-
-}
-
-function BuyerController($state, $ocMedia, OrderCloud, OrderCloudParameters, Parameters, BuyerList) {
+function BuyersController($state, $uibModal, toastr, $ocMedia, OrderCloud, Buyers, OrderCloudParameters, Parameters, BuyerList) {
     var vm = this;
     vm.list = BuyerList;
     vm.parameters = Parameters;
@@ -101,6 +78,14 @@ function BuyerController($state, $ocMedia, OrderCloud, OrderCloudParameters, Par
                 vm.list.Meta = data.Meta;
             });
     };
+
+    vm.createBuyer = function() {
+        Buyers.Create()
+            .then(function(data) {
+                toastr.success(data.Name + ' was created.', 'Success!');
+                $state.go('buyer.settings', {buyerid: data.ID});
+            })
+    }
 }
 
 

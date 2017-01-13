@@ -5,7 +5,7 @@ angular.module('orderCloud')
 function UsersConfig($stateProvider) {
     $stateProvider
         .state('users', {
-            parent: 'buyersDetails',
+            parent: 'buyer',
             templateUrl: 'users/templates/users.html',
             controller: 'UsersCtrl',
             controllerAs: 'users',
