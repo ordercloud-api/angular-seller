@@ -1,22 +1,20 @@
+<nav class="navbar navbar-default navbar-unstacked">
+    <div class="container container-smooth">
+        <ul class="nav navbar-nav navbar-left">
+            <ul class="breadcrumb">
+                <li class="active" ui-sref="buyers">Buyers</li>
+            </ul>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <button type="button" class="btn btn-primary btn-sm navbar-btn" ng-click="buyers.createBuyer()"><i class="fa fa-plus-circle"></i>
+                <span class="hidden-lg hidden-md">Buyer</span>
+                <span class=" hidden-xs hidden-sm">New Buyer Organization</span>
+            </button>
+        </ul>
+    </div>
+</nav>
 <article>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-unstacked navmenu-on-canvas-md navmenu-on-canvas-lg">
-        <div class="container container-smooth">
-            <ul class="nav navbar-nav navbar-left" ng-if="application.$ocMedia('max-width:991px')">
-                <li>
-                    <a href="" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
-                        <i class="fa fa-bars"></i>
-                    </a>
-                </li>
-            </ul>
-            <div class="navbar-header">
-                <a href="" class="navbar-brand"><b>Buyers</b></a>
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                <button type="button" class="btn btn-primary btn-sm navbar-btn" ng-click="buyers.createBuyer()"><i class="fa fa-plus-circle"></i> New Buyer Organization</button>
-            </ul>
-        </div>
-    </nav>
-    <div class="navbar-padding-top">
+    <div>
         <!--====== SEARCH/FILTERS ======-->
         <form name="BuyersSearchForm">
             <fieldset class="form-group">

@@ -41,21 +41,6 @@ function BaseConfig($stateProvider) {
                     });
                 return dfd.promise;
             },
-            // CurrentOrder: function($q, OrderCloud, NewOrder) {
-            //     var dfd = $q.defer();
-            //     OrderCloud.Me.ListOutgoingOrders(null, 1, 1, null, "!DateCreated", {Status:"Unsubmitted"})
-            //         .then(function(data) {
-            //             if (data.Items.length) {
-            //                 dfd.resolve(data.Items[0]);
-            //             } else {
-            //                 NewOrder.Create({})
-            //                     .then(function(data) {
-            //                         dfd.resolve(data);
-            //                     })
-            //             }
-            //         });
-            //     return dfd.promise;
-            // },
             AnonymousUser: function($q, OrderCloud, CurrentUser) {
                 CurrentUser.Anonymous = angular.isDefined(JSON.parse(atob(OrderCloud.Auth.ReadToken().split('.')[1])).orderid);
             }

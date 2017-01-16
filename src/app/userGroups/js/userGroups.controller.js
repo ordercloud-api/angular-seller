@@ -1,9 +1,10 @@
 angular.module('orderCloud')
-    .controller('BuyersCtrl', BuyersController);
+    .controller('UserGroupsCtrl', UserGroupsController)
+;
 
-function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderCloudParameters, Parameters, BuyerList) {
+function UserGroupsController($state, $uibModal, toastr, $ocMedia, OrderCloud, OrderCloudParameters, UserGroupList, Parameters) {
     var vm = this;
-    vm.list = BuyerList;
+    vm.list = UserGroupList;
     vm.parameters = Parameters;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
 
@@ -22,7 +23,7 @@ function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderC
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
         $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.Buyers.List(vm.parameters.search, 1, vm.parameters.pageSize || 12)
+        vm.searchLoading = OrderCloud.UserGroups.List(vm.parameters.search, 1, vm.parameters.pageSize || 12, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
                 vm.list = data;
                 vm.searchResults = vm.parameters.search.length > 0;
@@ -31,7 +32,6 @@ function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderC
 
     //Clear the search parameter, reload the state & reset the page
     vm.clearSearch = function() {
-        vm.searchResults = false;
         vm.parameters.search = null;
         vm.filter(true);
     };
@@ -72,21 +72,23 @@ function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderC
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Buyers.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        return OrderCloud.UserGroups.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
             });
     };
 
-    vm.createBuyer = function() {
-        ocBuyers.Create()
+    vm.createGroup = function() {
+        $uibModal.open({
+            templateUrl: 'userGroups/templates/userGroupCreate.modal.html',
+            controller: 'UserGroupCreateModalCtrl',
+            controllerAs: 'userGroupCreateModal',
+            bindToController: true
+        }).result
             .then(function(data) {
                 toastr.success(data.Name + ' was created.', 'Success!');
-                $state.go('buyer.settings', {buyerid: data.ID});
+                $state.go('userGroup.detail', {usergroupid:data.ID});
             })
     }
 }
-
-
-

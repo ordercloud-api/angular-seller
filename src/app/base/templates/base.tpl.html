@@ -1,15 +1,27 @@
 <nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm offcanvas-xs" role="navigation">
-    <a class="navmenu-brand" href="" ui-sref="home">{{application.name}}</a>
+    <a class="navmenu-brand hidden-xs hidden-sm" href="" ui-sref="home">{{application.name}}</a>
     <ul class="nav navmenu-nav">
         <li ui-sref-active="active"><a ui-sref="adminUsers">Seller Users</a></li>
         <li ui-sref-active="active"><a ui-sref="adminUserGroups">Seller User Groups</a></li>
         <li ui-sref-active="active"><a ui-sref="adminAddresses">Seller Addresses</a></li>
-        <li ui-sref-active="active"><a ui-sref="products">Products</a></li>
+        <li ui-sref-active="active"><a ui-sref="products">All Products</a></li>
         <li ui-sref-active="active"><a ui-sref="orders">All Orders</a></li>
         <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}"><a ui-sref="buyers">Buyers</a></li>
         <li class="divider"></li>
         <li ui-sref-active="active"><a ui-sref="account">Account</a></li>
         <li ui-sref-active="active"><a ng-click="application.logout()">Log Out</a></li>
     </ul>
+</nav>
+<nav class="navbar navbar-default navbar-unstacked navbar-fixed-top navmenu-on-canvas-lg navmenu-on-canvas-md" ng-if="application.$ocMedia('max-width:991px')">
+    <div class="container container-smooth">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
+                <i class="fa fa-bars"></i>
+            </a>
+            <a class="navbar-brand" href="">
+                {{application.name}}
+            </a>
+        </div>
+    </div>
 </nav>
 <main ui-view class="container container-smooth" cg-busy="application.stateLoading"></main>

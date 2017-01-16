@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCtrl', BuyerController)
 ;
 
-function BuyerController($state, $exceptionHandler, toastr, OrderCloud, Buyers, SelectedBuyer, OrderCloudConfirm){
+function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers, SelectedBuyer, OrderCloudConfirm){
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.settings = angular.copy(SelectedBuyer);
@@ -41,7 +41,7 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloud, Buyers, 
     };
 
     vm.createBuyer = function() {
-        Buyers.Create()
+        ocBuyers.Create()
             .then(function(data) {
                 toastr.success(data.Name + ' was created.', 'Success!');
                 $state.go('buyer.settings', {buyerid: data.ID});

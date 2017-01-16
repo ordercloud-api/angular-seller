@@ -1,52 +1,37 @@
 <article ui-view>
-    <div class="page-header">
-        <button type="button" class="btn btn-success pull-right" ui-sref=".create"><i class="fa fa-plus-circle"></i> Create New</button>
-        <h3>User Groups</h3>
-    </div>
-
     <!--====== SEARCH/FILTERS ======-->
-    <form name="UserGroupsSearchForm" class="form-inline" ng-submit="userGroups.search()">
+    <form name="UsersSearchForm">
         <fieldset class="form-group">
-            <input type="search" placeholder="Search User Groups..." ng-model="userGroups.parameters.search"
-                   class="form-control">
-        </fieldset>
-        <fieldset class="form-group" ng-class="{'text-center':application.$ocMedia('max-width:767px')}">
-		<span ng-class="{'btn-group':userGroups.searchResults}">
-			<button type="submit" class="btn btn-primary">Search</button>
-			<button ng-if="userGroups.searchResults" ng-click="userGroups.clearSearch()" type="button"
-                    class="btn btn-default"><i class="fa fa-times"></i></button>
-		</span>
-		<span ng-class="{'btn-group':userGroups.filtersApplied}" ng-if="application.$ocMedia('max-width:767px')">
-			<button type="button" class="btn btn-default"
-                    ng-click="userGroups.showFilters = !userGroups.showFilters"><i class="fa fa-filter"></i> Filters
-			</button>
-			<button ng-if="userGroups.filtersApplied" ng-click="userGroups.clearFilters()" type="button"
-                    class="btn btn-default"><i class="fa fa-times"></i></button>
-		</span>
-        </fieldset>
-    </form>
-    <div class="row" style="margin-top:15px;" uib-collapse="!userGroups.showFilters">
-        <div class="col-md-6 col-lg-4">
-            <div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
-                <label>Sort By:</label>
-                <div ng-class="{'input-group':userGroups.sortSelection}">
-                    <select placeholder="Sort" class="form-control" ng-model="userGroups.sortSelection"
-                            ng-change="userGroups.updateSort()">
-                        <option value="">None</option>
-                        <option value="ID">ID</option>
-                        <option value="Name">Name</option>
-                        <option>Description</option>
-                    </select>
-                    <div ng-if="userGroups.sortSelection" class="input-group-btn">
-                        <button class="btn btn-default" ng-click="userGroups.reverseSort()">
-                            <i class="fa fa-sort"></i>
-                        </button>
-                    </div>
+            <div class="row">
+                <div class="col-xs-9 col-md-10">
+                    <div ng-class="{'input-group':userGroups.searchResults}">
+                        <input type="search" ng-change="userGroups.search()" ng-model-options="{debounce:1000}" placeholder="Search User Groups..." ng-model="userGroups.parameters.search" class="form-control">
+                        <span ng-if="userGroups.searchResults" class="input-group-btn">
+                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="userGroups.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                        </span>
+                    </div></div>
+                <div class="col-xs-3 col-md-2">
+                    <button type="button" class="btn btn-block btn-primary" ng-click="userGroups.createGroup()"><i class="fa fa-plus-circle"></i> <span class="hidden-xs">New Group</span> </button>
                 </div>
             </div>
-        </div>
-    </div>
-
+        </fieldset>
+        <fieldset class="form-group" ng-if="application.$ocMedia('max-width:767px')">
+            <label>Sort By:</label>
+            <div ng-class="{'input-group':userGroups.sortSelection}">
+                <select placeholder="Sort" class="form-control" ng-model="userGroups.sortSelection" ng-change="userGroups.updateSort()">
+                    <option value="">None</option>
+                    <option value="ID">ID</option>
+                    <option value="Name">Name</option>
+                    <option value="Description">Description</option>
+                </select>
+                <div ng-if="userGroups.sortSelection" class="input-group-btn">
+                    <button class="btn btn-default" ng-click="userGroups.reverseSort()">
+                        <i class="fa fa-sort"></i>
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
     <!--====== LIST ======-->
     <div class="no-matches" ng-if="!userGroups.list.Items.length">
         <b>No matches found.</b>
@@ -80,8 +65,7 @@
                 <td data-title="Name">{{userGroup.Name}}</td>
                 <td data-title="Description">{{userGroup.Description}}</td>
                 <td class="actions-cell">
-                    <button ui-sref=".edit({usergroupid:userGroup.ID})" class="btn btn-default btn-sm">Edit</button>
-                    <button ui-sref=".assign({usergroupid:userGroup.ID})" class="btn btn-default btn-sm">Assign</button>
+                    <button ui-sref=".detail({usergroupid:userGroup.ID})" class="btn btn-default btn-sm btn-block">View Group</button>
                 </td>
             </tr>
             </tbody>

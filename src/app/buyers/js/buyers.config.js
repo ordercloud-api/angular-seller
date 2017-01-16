@@ -6,9 +6,9 @@ function BuyerConfig($stateProvider) {
     $stateProvider
         .state('buyers', {
             parent: 'base',
+            templateUrl: 'buyers/templates/buyers.html',
             controller: 'BuyersCtrl',
             controllerAs: 'buyers',
-            templateUrl: 'buyers/templates/buyers.html',
             url: '/buyers?search&page&pageSize',
             resolve : {
                 Parameters: function($stateParams, OrderCloudParameters) {

@@ -34,50 +34,37 @@
   }
 }
 
-.navbar-padding-top {
-  padding-top:@body-padding-top;
+// Default navbar
+.navbar-white {
+  background-color: white;
+  border-color: @gray-lighter;
+  .breadcrumb {
+    background-color:white;
+  }
 }
 
-.navbar-unstacked {
-  .navbar-header {
-    float: left !important;
-    margin-right:0 !important;
-    &:not(:first-child) {
-      &,
-      > .navbar-brand {
-        margin-left:0 !important;
-      }
-
-    }
+.nav {
+  .breadcrumb {
+    background-color:transparent;
+    margin: 7px 10px;
+    float:left;
   }
-
-  .navbar-nav {
-    &,
-    & > li {
-      margin-top:0 !important;
-      margin-bottom:0 !important;
-      float: left !important;
-      & > a {
-        padding:15px !important;
-      }
-    }
-    &.navbar-left {
-      margin:0 !important;
+  &.navbar-left {
+    .breadcrumb {
       &:first-child {
-        margin-left:-15px !important;
+        padding-left:0;
+        margin-left:0;
       }
     }
-    &.navbar-right {
-      float: right !important;
-      margin-right:0;
-    }
-    .open {
-      .dropdown-menu {
-        position:absolute !important;
-        background-color:@dropdown-bg;
-        border:1px solid @dropdown-border;
-        .box-shadow(0 6px 12px rgba(0,0,0,.175));
+  }
+  &.navbar-right {
+    .breadcrumb {
+      &:last-child {
+        padding-right:0;
+        margin-right:0;
       }
     }
   }
 }
+
+@grid-float-breakpoint: 0;
