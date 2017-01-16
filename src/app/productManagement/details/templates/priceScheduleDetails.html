@@ -39,7 +39,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <label>
-                        <input type="checkbox" ng-model="buyer.Assigned" />
+                        <input type="checkbox" ng-model="buyer.Assigned" ng-change="priceScheduleDetails.buyerAssignmentChange(buyer)" />
                         {{buyer.Name}}
                     </label>
                     <div ng-if="buyer.UserGroups.length">

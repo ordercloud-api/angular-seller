@@ -87,7 +87,7 @@ function DetailsController($stateParams, $exceptionHandler, $state, toastr, Orde
     }
 }
 
-function PriceScheduleDetailsController($stateParams, $uibModal, OrderCloud, ocPatchModal, AssignmentDataDetail) {
+function PriceScheduleDetailsController($stateParams, $uibModal, OrderCloud, ocProductPricing, ocPatchModal, AssignmentDataDetail) {
     var vm = this;
     vm.data = AssignmentDataDetail;
 
@@ -138,6 +138,21 @@ function PriceScheduleDetailsController($stateParams, $uibModal, OrderCloud, ocP
             .then(function() {
                 vm.data.PriceSchedule.PriceBreaks.splice(scope.$index, 1);
             });
+    };
+
+    vm.buyerAssignmentChange = function(buyer) {
+        if (buyer.Assigned) {
+            ocProductPricing.AssignBuyer(buyer, $stateParams.productid, vm.data.PriceSchedule.ID)
+                .then(function(data) {
+                    buyer = data;
+                });
+        }
+        else {
+            OrderCloud.Products.DeleteAssignment($stateParams.productid, null, null, buyer.ID)
+                .then(function() {
+                     buyer.UserGroups = [];
+                });
+        }
     };
 
     vm.addUserGroupAssignment = function(buyer) {
@@ -260,7 +275,8 @@ function ocProductPricing($q, OrderCloud) {
     var service = {
         AssignmentList: _assignmentList,
         AssignmentData: _assignmentData,
-        AssignmentDataDetail: _assignmentDataDetail
+        AssignmentDataDetail: _assignmentDataDetail,
+        AssignBuyer: _assignBuyer
     };
 
     function _assignmentList(parameters, buyerid) {
@@ -410,6 +426,24 @@ function ocProductPricing($q, OrderCloud) {
             }
             return listChunks;
         }
+
+        return deferred.promise;
+    }
+
+    //This method not only assigns the buyer company to the price schedule, but it removes any user group assignments under that buyer as well
+    function _assignBuyer(buyer, productid, pricescheduleid) {
+        var deferred = $q.defer();
+
+        var queue = [];
+        angular.forEach(buyer.UserGroups, function(group) {
+            queue.push(OrderCloud.Products.DeleteAssignment(productid, null, group.ID, buyer.ID));
+        });
+        queue.push(OrderCloud.Products.SaveAssignment({BuyerID: buyer.ID, ProductID: productid, PriceScheduleID: pricescheduleid}));
+
+        $q.all(queue).then(function() {
+            buyer.UserGroups = [];
+            deferred.resolve(buyer);
+        });
 
         return deferred.promise;
     }
