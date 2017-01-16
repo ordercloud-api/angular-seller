@@ -17,7 +17,17 @@ gulp.task('clean:styles', function() {
 gulp.task('styles', ['clean:styles'], function() {
     return gulp
         .src([].concat(
-            mainBowerFiles({filter: '**/*.less'}),
+            mainBowerFiles({
+                filter: '**/*.less',
+                overrides: {
+                    'jasny-bootstrap': {
+                        main: [
+                            "./dist/js/jasny-bootstrap.js",
+                            "./less/jasny-bootstrap.less"
+                        ]
+                    }
+                }
+            }),
             './src/app/styles/main.less'
         ))
         .pipe(sourcemaps.init())

@@ -20,7 +20,17 @@ gulp.task('app-css', ['clean:app-css'], function() {
 
     return gulp
         .src([].concat(
-            mainBowerFiles({filter: ['**/*.css', '**/*.less']}),
+            mainBowerFiles({
+                filter: ['**/*.css', '**/*.less'],
+                overrides: {
+                    'jasny-bootstrap': {
+                        main: [
+                            "./dist/js/jasny-bootstrap.js",
+                            "./less/jasny-bootstrap.less"
+                        ]
+                    }
+                }
+            }),
             './src/app/styles/main.less'
         ))
         .pipe(lessFilter)

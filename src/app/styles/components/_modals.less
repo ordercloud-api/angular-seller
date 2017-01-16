@@ -11,3 +11,9 @@
         }
     }
 }
+
+@media(min-width:@screen-md-min) {
+    .modal.fade .modal-dialog, .modal.in .modal-dialog {
+        transform: none !important; //prevent uibModal animation from sliding in on desktop (keep the fade in though)
+    }
+}
