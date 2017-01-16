@@ -8,12 +8,12 @@ angular.module('orderCloud')
 
 function ProductManagementModalFactory($uibModal, $q, OrderCloud) {
     return {
-        CreateAssignment : _createAssignment,
+        /*CreateAssignment : _createAssignment,*/
         EditPriceSchedule : _editPriceSchedule,
         EditProduct : _editProduct
     };
 
-    function _createAssignment(){
+    /*function _createAssignment(){
         return $uibModal.open({
             templateUrl: 'productManagement/modals/templates/createAssignment.html',
             controller: 'CreateAssignmentModalCtrl',
@@ -31,7 +31,7 @@ function ProductManagementModalFactory($uibModal, $q, OrderCloud) {
                 }
             }
         }).result
-    }
+    }*/
 
     function _editPriceSchedule(priceSchedule) {
         var priceSchedule = angular.copy(priceSchedule);

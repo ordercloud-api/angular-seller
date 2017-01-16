@@ -2,12 +2,18 @@
     <button type="button" class="btn btn-default" aria-label="Close"
             ui-sref="products"><i class="fa fa-angle-left" aria-hidden="true"></i> Products
     </button>
-    <h3 class="page-header">
-        {{details.product.Name}}
-        <span class="text-center" data-title="Active">
-            <i class="fa" ng-class="{'fa-circle text-success': details.product.Active, 'fa-circle text-muted': !details.product.Active}"></i>
-        </span>
-    </h3>
+    <div class="page-header">
+        <h3>
+            {{details.product.Name}}
+            <span class="text-center" data-title="Active">
+                <i class="fa" ng-class="{'fa-circle text-success': details.product.Active, 'fa-circle text-muted': !details.product.Active}"></i>
+            </span>
+            <div class="pull-right">
+                <button class="btn btn-default" ng-click="details.editProduct()">Edit</button>
+                <button class="btn btn-danger" ng-click="details.deleteProduct()">Delete</button>
+            </div>
+        </h3>
+    </div>
     <div class="row">
         <div class="col-sm-6">
             <h5><b>Name: </b> {{details.product.Name}}</h5>
@@ -23,19 +29,17 @@
             <h5 ng-if="details.product.ShipFromAddressID"><b>Ship From Address: </b> {{details.product.ShipFromAddressID}}</h5>
         </div>
         <div class="col-sm-6">
-            <img class="img-responsive" ng-src="{{details.product.xp.image.URL || 'http://placehold.it/300x300'}}" alt="Product Image">{{details.product.xp.image.URL}}
+            <img class="img-responsive" ng-src="{{details.product.xp.image.URL || 'http://placehold.it/300x300'}}" alt="Product Image">
         </div>
     </div>
-    <button class="btn btn-default" ng-click="details.editProduct()">Edit</button>
-
-        <div class="btn-toolbar pull-right">
-            <button class="btn btn-primary" ng-click="details.newAssignment()"><i
-                    class="fa fa-plus-circle"></i> New Assignment
-            </button>
-        </div>
     <!--<oc-assignment-list productid="details.product.ID"></oc-assignment-list>-->
     <div class="page-header">
-        <h3>Price schedules assigned to this product</h3>
+        <h3>
+            Price schedules assigned to this product
+            <button class="btn btn-primary pull-right" ui-sref=".createAssignment">
+                <i class="fa fa-plus-circle"></i> New Assignment
+            </button>
+        </h3>
     </div>
     <div class="well well-lg text-center" ng-if="!details.listAssignments">
     <b>This product does not have any assignments for the active Buyer company.</b>
@@ -63,13 +67,10 @@
                 <td>{{assignment.Buyers.length}}</td>
                 <td>{{assignment.UserGroups.length}}</td>
                 <td>
-                    <button class="btn btn-default btn-sm pull-right" ui-sref=".price({pricescheduleid: assignment.PriceSchedule.ID})">View Details</button>
+                    <button class="btn btn-default btn-sm pull-right" ui-sref=".priceScheduleDetails({pricescheduleid: assignment.PriceSchedule.ID})">View Details</button>
                 </td>
             </tr>
             </tbody>
         </table>
-    </div>
-    <div>
-        <button class="btn btn-danger pull-right" ng-click="details.deleteProduct()">Delete Product</button>
     </div>
 </article>
