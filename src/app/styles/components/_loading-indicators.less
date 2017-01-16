@@ -6,6 +6,7 @@
   position:absolute;
   left:0; right:0; top:0; bottom:0;
   z-index:1001;
+  transform: none !important;
   &.ng-hide-add,
   &.ng-hide-remove {
 	transition:all .3s ease;
@@ -34,8 +35,8 @@
 	  margin:0 2px;
 	  width: 15px;
 	  height: 15px;
-	  background-color:@brand-primary;
 	  border-radius: 2px;
+      transition:all ease-in-out;
 	  animation-name:indicator-fade-in-out;
 	  animation-iteration-count: infinite;
 	  animation-duration:500ms;
@@ -54,12 +55,13 @@
 
 @keyframes indicator-fade-in-out {
   0% {
-	opacity:1;
+	background-color:@brand-primary;
   }
   50% {
-	opacity:0.2;
+	background-color:white;
   }
   100% {
-	opacity:1;
+	background-color:@brand-primary;
+
   }
 }

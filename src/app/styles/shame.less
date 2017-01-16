@@ -10,3 +10,18 @@ body.modal-open {
 a[disabled] {
   pointer-events: none;
 }
+
+.fa-circle {
+  color:@gray-light;
+  &.active {
+    color:@brand-success;
+  }
+}
+
+.container-smooth {
+  margin-left:0;
+}
+
+.navbar-right {
+  margin-right:0; //Navbar-btn was not behaving as expected, so for now this will override bootstrap
+}

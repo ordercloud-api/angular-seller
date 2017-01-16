@@ -1,0 +1,33 @@
+<form name="buyerCreateModal.form" class="form-horizontal" ng-submit="buyerCreateModal.submit()" novalidate autocomplete="off">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="buyerCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title">Creating New Buyer Organization</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="buyerIDInput" class="control-label col-sm-3">Buyer ID:</label>
+            <div class="col-sm-9">
+                <input id="buyerIDInput" name="buyerIDinput" type="text" ng-change="buyerCreateModal.updateValidity()" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="buyerCreateModal.buyer.ID"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="buyerNameInput" class="control-label col-sm-3">Buyer Name:</label>
+            <div class="col-sm-9">
+                <input id="buyerNameInput" name="buyerNameInput"  type="text" ng-model="buyerCreateModal.buyer.Name" class="form-control" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <div class="checkbox">
+                    <label for="buyerActiveCheckbox">
+                        <input id="buyerActiveCheckbox" name="buyerActiveCheckbox" type="checkbox" ng-model="buyerCreateModal.buyer.Active"/>
+                        Active
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-block btn-primary" ng-disabled="buyerCreateModal.form.$invalid" cg-busy="buyerCreateModal.loading">Submit</button>
+    </div>
+</form>

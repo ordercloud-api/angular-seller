@@ -246,7 +246,7 @@ function CreateAssignmentModalController($q, $stateParams, $state, $uibModalInst
 }
 
 
-function EditPriceScheduleModalController($q, $state, $exceptionHandler, $uibModalInstance, toastr, OrderCloud, SelectedPriceSchedule, PriceBreak , ProductsAssignedToPriceSchedule, OrderCloudConfirm) {
+function EditPriceScheduleModalController($state, $exceptionHandler, $uibModalInstance, toastr, OrderCloud, SelectedPriceSchedule, PriceBreak , ProductsAssignedToPriceSchedule, OrderCloudConfirm) {
     var vm = this;
     vm.priceSchedule = SelectedPriceSchedule;
     vm.productsAssignedToPriceSchedule = ProductsAssignedToPriceSchedule;
@@ -274,15 +274,8 @@ function EditPriceScheduleModalController($q, $state, $exceptionHandler, $uibMod
     };
 
     function submit() {
-        //loading indicator promise
-        var df =  $q.defer();
-        df.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
-        df.message = 'Editing Price Schedule';
-        vm.loading = df;
-
-        OrderCloud.PriceSchedules.Patch(vm.priceSchedule.ID, vm.priceSchedule)
+        vm.loading = OrderCloud.PriceSchedules.Patch(vm.priceSchedule.ID, vm.priceSchedule)
             .then(function(data){
-                df.resolve(data);
                 $uibModalInstance.close(data);
                 toastr.success('Price Schedule modified', 'Success');
             })
@@ -294,14 +287,8 @@ function EditPriceScheduleModalController($q, $state, $exceptionHandler, $uibMod
     function Delete(){
         OrderCloudConfirm.Confirm("Are you sure you want to delete this Price Schedule, it may be assigned to other products?")
             .then(function(){
-                var df = $q.defer();
-                df.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
-                df.message = 'Deleting Selected Price Schedule';
-                vm.loading = df;
-
-                OrderCloud.PriceSchedules.Delete(vm.priceSchedule.ID)
+                vm.loading = OrderCloud.PriceSchedules.Delete(vm.priceSchedule.ID)
                     .then(function(){
-                        df.resolve();
                         $uibModalInstance.close();
                         toastr.success('Price Schedule Deleted', 'Success');
                         $state.go('.', {}, {reload: true});
@@ -313,7 +300,7 @@ function EditPriceScheduleModalController($q, $state, $exceptionHandler, $uibMod
     }
 }
 
-function EditProductModalController($q, $exceptionHandler, $uibModalInstance, $state, $stateParams, toastr, OrderCloud, SelectedProduct) {
+function EditProductModalController($exceptionHandler, $uibModalInstance, $state, $stateParams, toastr, OrderCloud, SelectedProduct) {
     var vm = this,
         productid = angular.copy(SelectedProduct.ID);
     vm.productName = angular.copy(SelectedProduct.Name);
@@ -325,15 +312,8 @@ function EditProductModalController($q, $exceptionHandler, $uibModalInstance, $s
     vm.cancel = cancel;
 
     function updateProduct() {
-        //loading indicator promise
-        var df =  $q.defer();
-        df.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
-        df.message = 'Updating Product';
-        vm.loading = df;
-
-        OrderCloud.Products.Update(productid, vm.product)
+        vm.loading = OrderCloud.Products.Update(productid, vm.product)
             .then(function(data) {
-                df.resolve(data);
                 $uibModalInstance.close(data);
                 $state.go('products.detail', {productid: data.ID}, {reload: true});
                 toastr.success('Product Updated', 'Success');

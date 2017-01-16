@@ -75,11 +75,7 @@ function CreateCategoryModalController($state, $exceptionHandler, $uibModalInsta
         if (vm.category.ParentID === '') {
             vm.category.ParentID = null;
         }
-        vm.loading = {
-            templateUrl:'common/loading-indicators/templates/view.loading.tpl.html',
-            message:'Creating Category'
-        };
-        vm.loading.promise = OrderCloud.Categories.Create(vm.category, vm.catalogid)
+        vm.loading = OrderCloud.Categories.Create(vm.category, vm.catalogid)
             .then(function(category) {
                 $uibModalInstance.close(category);
                 //TODO: replace state reload with something less resource intensive
@@ -105,11 +101,7 @@ function EditCategoryModalController($state, $exceptionHandler, $uibModalInstanc
         if (vm.category.ParentID === '') {
             vm.category.ParentID = null;
         }
-        vm.loading = {
-            templateUrl:'common/loading-indicators/templates/view.loading.tpl.html',
-            message:'Updating Category'
-        };
-        vm.loading.promise = OrderCloud.Categories.Update(originalcategoryID, vm.category, vm.catalogid)
+        vm.loading = OrderCloud.Categories.Update(originalcategoryID, vm.category, vm.catalogid)
             .then(function(category) {
                 $uibModalInstance.close(category);
                 //TODO: replace state reload with something less resource intensive

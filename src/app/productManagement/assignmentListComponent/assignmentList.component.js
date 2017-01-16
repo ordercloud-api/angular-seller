@@ -47,8 +47,6 @@ function ocAssignmentListCtrl($q, $resource, OrderCloud){
         //loading indicator promise
         var df =  $q.defer();
         var queue = [];
-        df.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
-        df.message = 'Loading Assignments';
         vm.loading = df;
 
         var apiUrl = 'https://api.ordercloud.io/v1/products/assignments';

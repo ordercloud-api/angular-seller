@@ -1,0 +1,70 @@
+.navbar.navmenu-on-canvas {
+  left:@navmenu-width;
+  @media(max-width:@screen-xs-max) {
+    &-xs {
+      &.navbar-fixed-top,
+      &.navbar-fixed-bottom {
+        left:@navmenu-width;
+      }
+    }
+  }
+  @media(min-width:@screen-sm-min) and (max-width:@screen-sm-max) {
+    &-sm {
+      &.navbar-fixed-top,
+      &.navbar-fixed-bottom {
+        left:@navmenu-width;
+      }
+    }
+  }
+  @media(min-width:@screen-md-min) and (max-width:@screen-md-max) {
+    &-md {
+      &.navbar-fixed-top,
+      &.navbar-fixed-bottom {
+        left:@navmenu-width;
+      }
+    }
+  }
+  @media(min-width:@screen-lg-min) {
+    &-lg {
+      &.navbar-fixed-top,
+      &.navbar-fixed-bottom {
+        left:@navmenu-width;
+      }
+    }
+  }
+}
+
+// Default navbar
+.navbar-white {
+  background-color: white;
+  border-color: @gray-lighter;
+  .breadcrumb {
+    background-color:white;
+  }
+}
+
+.nav {
+  .breadcrumb {
+    background-color:transparent;
+    margin: 7px 10px;
+    float:left;
+  }
+  &.navbar-left {
+    .breadcrumb {
+      &:first-child {
+        padding-left:0;
+        margin-left:0;
+      }
+    }
+  }
+  &.navbar-right {
+    .breadcrumb {
+      &:last-child {
+        padding-right:0;
+        margin-right:0;
+      }
+    }
+  }
+}
+
+@grid-float-breakpoint: 0;
