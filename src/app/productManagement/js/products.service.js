@@ -201,7 +201,7 @@ function ocProductsService($q, OrderCloud, PriceBreak) {
                             deferred.reject(error);
                         });
                 }
-                else if (vselectedBuyer && vselectedUserGroups.length > 0 ) {
+                else if (selectedBuyer && selectedUserGroups.length > 0 ) {
                     var assignmentQueue = [];
                     angular.forEach(vm.selectedUserGroups, function(usergroup) {
                         var userGroupAssignment = angular.copy(assignment);
