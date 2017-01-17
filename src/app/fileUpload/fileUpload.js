@@ -60,7 +60,7 @@ function ordercloudFileUpload($parse, FileReader, FilesService) {
             model: '=',
             extensions: '@',
             invalidExtension: '@',
-            patch: '='
+            patch: '&'
         },
         restrict: 'E',
         templateUrl: 'fileUpload/templates/fileUpload.tpl.html',

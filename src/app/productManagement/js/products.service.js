@@ -2,12 +2,13 @@ angular.module('orderCloud')
     .factory('ocProductsService', ocProductsService)
 ;
 
-function ocProductsService($q, OrderCloud, PriceBreak) {
+function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak) {
     var service = {
         AssignmentList: _assignmentList,
         AssignmentData: _assignmentData,
         AssignmentDataDetail: _assignmentDataDetail,
-        AssignBuyer: _assignBuyer,
+        AssignBuyerRemoveUserGroups: _assignBuyerRemoveUserGroups,
+        CreateAssignment: _createAssignment,
         CreateNewPriceScheduleAndAssignments: _createNewPriceScheduleAndAssignments
     };
 
@@ -163,7 +164,7 @@ function ocProductsService($q, OrderCloud, PriceBreak) {
     }
 
     //This method not only assigns the buyer company to the price schedule, but it removes any user group assignments under that buyer as well
-    function _assignBuyer(buyer, productid, pricescheduleid) {
+    function _assignBuyerRemoveUserGroups(buyer, productid, pricescheduleid) {
         var deferred = $q.defer();
 
         var queue = [];
@@ -176,6 +177,47 @@ function ocProductsService($q, OrderCloud, PriceBreak) {
             buyer.UserGroups = [];
             deferred.resolve(buyer);
         });
+
+        return deferred.promise;
+    }
+
+    function _createAssignment(assignment) {
+        var deferred = $q.defer();
+
+        OrderCloud.Products.SaveAssignment(assignment)
+            .then(function(data) {
+                deferred.resolve(data);
+            })
+            .catch(function(ex) {
+                if (ex.status == 409 && ex.data.Errors[0].ErrorCode == 'IdExists') {
+                    OrderCloudConfirm.Confirm('Another price schedule is already assigned to your selected party. Would you like to replace that assignment?')
+                        .then(function() {
+                            OrderCloud.Products.DeleteAssignment(assignment.ProductID, null, assignment.UserGroupID, assignment.BuyerID)
+                                .then(function() {
+                                    OrderCloud.Products.SaveAssignment(assignment)
+                                        .then(function(data) {
+                                            deferred.resolve(data);
+                                        });
+                                });
+                        })
+                        .catch(function() {
+                            deferred.reject();
+                        });
+                }
+                else {
+                    toastr.error('There was an error creating your assignment. Please try again.', 'Error');
+                    deferred.reject(ex);
+                }
+            });
+
+        /*OrderCloudConfirm.Confirm("Are you sure you want to delete this buyer organization and all of it's related data?  <b>This action cannot be undone.</b>")
+            .then(function() {
+                OrderCloud.Buyers.Delete(vm.selectedBuyer.ID)
+                    .then(function() {
+                        toastr.success(vm.selectedBuyer.Name + ' was deleted.', 'Success!');
+                        $state.go('buyers');
+                    })
+            })*/
 
         return deferred.promise;
     }

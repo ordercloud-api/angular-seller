@@ -273,7 +273,7 @@ function PriceScheduleDetailController($stateParams, $uibModal, OrderCloud, ocPr
 
     vm.buyerAssignmentChange = function(buyer) {
         if (buyer.Assigned) {
-            ocProductsService.AssignBuyer(buyer, $stateParams.productid, vm.data.PriceSchedule.ID)
+            ocProductsService.AssignBuyerRemoveUserGroups(buyer, $stateParams.productid, vm.data.PriceSchedule.ID)
                 .then(function(data) {
                     buyer = data;
                 });
@@ -401,7 +401,7 @@ function PriceSchedulePriceBreakController($uibModalInstance, OrderCloud, PriceS
     };
 }
 
-function PriceScheduleCreateAssignmentController($uibModalInstance, $stateParams, OrderCloud, Buyers, SelectedBuyer, BuyerUserGroups, AssignedBuyers, AssignedUserGroups) {
+function PriceScheduleCreateAssignmentController($uibModalInstance, $stateParams, OrderCloud, ocProductsService, Buyers, SelectedBuyer, BuyerUserGroups, AssignedBuyers, AssignedUserGroups) {
     var vm = this;
     vm.buyers = {Items: []};
     vm.selectedBuyer = SelectedBuyer;
@@ -448,9 +448,12 @@ function PriceScheduleCreateAssignmentController($uibModalInstance, $stateParams
             BuyerID: vm.selectedBuyer.ID
         };
         if (vm.selectedUserGroup) assignment.UserGroupID = vm.selectedUserGroup.ID;
-        vm.loading.promise = OrderCloud.Products.SaveAssignment(assignment)
+        vm.loading.promise = ocProductsService.CreateAssignment(assignment)
             .then(function(data) {
                 $uibModalInstance.close({Buyer: vm.selectedBuyer, UserGroup: vm.selectedUserGroup});
+            })
+            .catch(function(ex) {
+                $uibModalInstance.dismiss();
             });
     };
 
