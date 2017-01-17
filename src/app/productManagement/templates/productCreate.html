@@ -9,13 +9,13 @@
                    pattern-err-type="ID_Name" ng-model="productCreate.product.ID"/>
         </div>
         <!--<div class="col-md-1 form-group" ng-click="productCreate.product.Active = !productCreate.product.Active">-->
-            <!--&lt;!&ndash;<label for="productActiveInput">&ndash;&gt;-->
-            <!--&lt;!&ndash;<input id="productActiveInput" type="checkbox" ng-model="productCreate.product.Active"/>&ndash;&gt;-->
-            <!--<span ng-if="productCreate.product.Active">Active</span>-->
-            <!--<span ng-if="!productCreate.product.Active">Inactive</span>-->
+        <!--&lt;!&ndash;<label for="productActiveInput">&ndash;&gt;-->
+        <!--&lt;!&ndash;<input id="productActiveInput" type="checkbox" ng-model="productCreate.product.Active"/>&ndash;&gt;-->
+        <!--<span ng-if="productCreate.product.Active">Active</span>-->
+        <!--<span ng-if="!productCreate.product.Active">Inactive</span>-->
 
-            <!--<i class="fa"-->
-               <!--ng-class="{'fa-circle text-success': productCreate.product.Active, 'fa-circle text-muted': !productCreate.product.Active}"></i>-->
+        <!--<i class="fa"-->
+        <!--ng-class="{'fa-circle text-success': productCreate.product.Active, 'fa-circle text-muted': !productCreate.product.Active}"></i>-->
         <!--</div>-->
         <div class="col-md-2 form-group">
             <label>Status</label>
@@ -85,11 +85,11 @@
         <div class="panel-header"></div>
         <div class="panel-body">
 
-                <div class="form-group">
-                    <label for="productInventoryInput">Inventory Notification Point</label>
-                    <input id="productInventoryInput" type="number" class="form-control"
-                           ng-model="productCreate.product.InventoryNotificationPoint"/>
-                </div>
+            <div class="form-group">
+                <label for="productInventoryInput">Inventory Notification Point</label>
+                <input id="productInventoryInput" type="number" class="form-control"
+                       ng-model="productCreate.product.InventoryNotificationPoint"/>
+            </div>
 
             <div class="row">
                 <div ng-show="productCreate.product.InventoryEnabled">
@@ -97,8 +97,8 @@
                         <label for="productInventory3Input">
                             <br>
                             <input  id="productInventory3Input" type="checkbox"
-                                   ng-model="productCreate.product.VariantLevelInventory"/>
-                             Variant Level Inventory
+                                    ng-model="productCreate.product.VariantLevelInventory"/>
+                            Variant Level Inventory
                         </label>
                     </div>
                 </div>
@@ -118,23 +118,16 @@
                         <br>
                         <input id="productInventory5Input" type="checkbox"
                                ng-model="productCreate.product.DisplayInventory"/>
-                         Display Inventory
+                        Display Inventory
                     </label>
 
                 </div>
             </div>
         </div>
     </div>
-        <div class="form-group">
-            <!--<label>Image:</label>-->
-            <ordercloud-file-upload  model="productCreate.product" label="Image:"
-                                    keyname="image" extensions="jpg, png, gif, jpeg, tiff"></ordercloud-file-upload>
-        </div>
-
-
-        <div class="form-group">
-            <button type="button" class="btn btn-primary" ng-disabled="CreateForm.$invalid" ng-click="productCreate.submit()">Save</button>
-            <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
-            <button type="submit" class="btn btn-default pull-right" ng-disabled="CreateForm.$invalid">Next</button>
-        </div>
+    <oc-file-upload  model="productCreate.product" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" ng-disabled="CreateForm.$invalid" ng-click="productCreate.submit()">Save</button>
+        <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
+    </div>
 </form>
