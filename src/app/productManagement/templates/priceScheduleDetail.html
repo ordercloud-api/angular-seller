@@ -33,17 +33,26 @@
             </div>
         </div>
     </div>
-    <h4>Assignments</h4>
     <div class="row">
-        <div class="col-sm-6" ng-repeat="buyer in priceScheduleDetail.data.Buyers">
-            <div class="panel panel-default">
+        <div class="col-sm-6">
+            <h4>Buyer Assignments</h4>
+            <div class="panel panel-default" ng-repeat="buyer in priceScheduleDetail.data.Buyers" ng-if="buyer.Assigned">
                 <div class="panel-body">
                     <label>
                         <input type="checkbox" ng-model="buyer.Assigned" ng-change="priceScheduleDetail.buyerAssignmentChange(buyer)" />
                         {{buyer.Name}}
                     </label>
-                    <div ng-if="buyer.UserGroups.length">
-                        <h5>User Groups</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <h4>User Group Assignments</h4>
+            <div class="panel panel-default" ng-repeat="buyer in priceScheduleDetail.data.Buyers" ng-if="!buyer.Assigned">
+                <div class="panel-body">
+                    <label>
+                        {{buyer.Name}}
+                    </label>
+                    <div>
                         <ul class="list-group">
                             <li class="list-group-item" ng-repeat="userGroup in buyer.UserGroups">
                                 {{userGroup.Name}}

@@ -148,7 +148,7 @@ function ProductDetailController($scope, $stateParams, $exceptionHandler, $state
     };
 
     $scope.$watch(function () {
-        return vm.product.xp.Image;
+        return vm.product.xp && vm.product.xp.Image;
     },function(value){
         if (value) {
             var partial = {'xp.Image': value};
@@ -339,6 +339,10 @@ function PriceScheduleDetailController($stateParams, $uibModal, OrderCloud, ocPr
                         angular.forEach(b.UserGroups, function(g, index) {
                             if (g.ID == group.ID) {
                                 b.UserGroups.splice(index, 1);
+                                if (!b.UserGroups.length) {
+                                    b.Assigned = true;
+                                    vm.buyerAssignmentChange(b);
+                                }
                             }
                         });
                     }
