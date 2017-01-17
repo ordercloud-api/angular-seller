@@ -2,13 +2,13 @@ angular.module('orderCloud')
     .controller('CatalogAssignmentsCtrl', CatalogAssignmentsController)
 ;
 
- function CatalogAssignmentsController($q, $exceptionHandler, toastr, $rootScope, OrderCloud, ProductManagementModal, Tree, CatalogID, SelectedBuyer){
+ function CatalogAssignmentsController($q, $exceptionHandler, toastr, $rootScope, OrderCloud, ProductManagementModal, CategoryModalFactory, Tree, CatalogID, SelectedBuyer){
      var vm = this;
      vm.assignmentType = 'buyer';
      vm.productIds = null;
      vm.pageSize = 10; //set pageSize for pagination. Max: 100
      vm.catalogID = CatalogID;
-     vm.buyerID = vm.catalogID; //default configuration assumes one catalog per buyer
+     vm.buyerID = SelectedBuyer.ID; //default configuration assumes one catalog per buyer
      vm.tree = Tree;
      vm.category = null;
      vm.products = null;
@@ -28,6 +28,20 @@ angular.module('orderCloud')
      vm.saveAssignment = saveAssignment;
      vm.savePartyAssignment = savePartyAssignment;
      vm.toggleBuyerAssignment = toggleBuyerAssignment;
+
+
+     vm.editCategory = function(id){
+         CategoryModalFactory.Edit(id, vm.catalogID)
+             .then(function(data) {
+                 vm.category = data;
+             })
+     };
+     vm.deleteCategory = function(id) {
+         CategoryModalFactory.Delete(id, vm.catalogID)
+             .then(function(data) {
+
+             })
+     };
      
      $rootScope.$on('CatalogViewManagement:CategoryIDChanged', function(e, category){
          vm.category = category;
@@ -37,7 +51,7 @@ angular.module('orderCloud')
      });
 
      function getProducts(page){
-         OrderCloud.Categories.ListProductAssignments(vm.category.ID, null, page, vm.pageSize, vm.catalogID)
+         OrderCloud.Categories.ListProductAssignments(vm.category.ID, null, page || 1, vm.pageSize, vm.catalogID)
             .then(function(assignmentList){
                 vm.productIds = _.pluck(assignmentList.Items, 'ProductID');
                 if(!vm.productIds.length) {
@@ -54,7 +68,7 @@ angular.module('orderCloud')
      }
 
      function getUserGroups(page){
-         OrderCloud.Categories.ListAssignments(vm.category.ID, null, null, null, page, vm.pageSize, vm.buyerID, vm.catalogID)
+         OrderCloud.Categories.ListAssignments(vm.category.ID, null, null, null, page || 1, vm.pageSize, vm.buyerID, vm.catalogID)
             .then(function(assignmentList){
                 //get list of userGroupIDs. Remove any null values (from buyerID assignments);
                 var userGroupIDs =  _.compact(_.pluck(assignmentList.Items, 'UserGroupID'));
