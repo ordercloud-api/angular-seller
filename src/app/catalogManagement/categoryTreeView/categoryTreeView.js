@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CategoryViewTreeCtrl', CategoryViewTreeController)
 ;
 
-function CategoryViewTreeController(CatalogViewManagement, CategoryModalFactory, Tree, CatalogID){
+function CategoryViewTreeController(CatalogViewManagement, CategoryTreeService, CategoryModalFactory, Tree, CatalogID){
      var vm = this;
      vm.tree = Tree;
      vm.catalogid = CatalogID;
@@ -11,13 +11,13 @@ function CategoryViewTreeController(CatalogViewManagement, CategoryModalFactory,
          vm.selectedCategory = category;
      };
 
+    vm.treeOptions = {
+        dropped: function(event) {
+            CategoryTreeService.UpdateCategoryNode(event, vm.catalogid);
+        }
+    };
+
      vm.createCategory = function(parentid){
          CategoryModalFactory.Create(parentid, vm.catalogid);
-     };
-     vm.editCategory = function(id){
-         CategoryModalFactory.Edit(id, vm.catalogid);
-     };
-     vm.deleteCategory = function(id) {
-         CategoryModalFactory.Delete(id, vm.catalogid);
      };
 }

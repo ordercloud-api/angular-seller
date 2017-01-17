@@ -1,146 +1,168 @@
-<uib-tabset ng-if="catalogAssignments.tree.length">
-    <uib-tab>
-        <br>
-        <uib-tab-heading>Products</uib-tab-heading>
-        <div ng-if="!catalogAssignments.category" class="well text-center">
-            Select a category to view details
-        </div>
-        <!--Assign a Product to Category-->
-        <div class="row" ng-if="catalogAssignments.category">
-            <div class="col-xs-12">
-                Select Product(s) to assign to {{catalogAssignments.category.Name}}
-                <ui-select multiple ng-model="catalogAssignments.selectedProducts" close-on-select="false">
-                    <ui-select-match placeholder="Type to search products">
-                        {{$item.Name}}
-                        <span ng-bind="$select.selected.Name"></span>
-                    </ui-select-match>
-                    <ui-select-choices repeat="product in (catalogAssignments.uiSelectProducts.Items | filter: $select.search) track by $index" refresh="catalogAssignments.listAllProducts($select.search)" refresh-delay="300">
-                        <b><span ng-bind="product.Name"></span></b>
-                        <br>
-                        <small>
-                    <div class="row">
-                        <div class="col-md-6">
-                            ID: {{product.ID}}
-                            <br>
-                            Description: {{product.Description}}
-                        </div>
-                    </div>
-                </small>
-                    </ui-select-choices>
-                </ui-select>
+<div ng-if="catalogAssignments.tree.length">
+    <div ng-if="!catalogAssignments.category" class="well text-center">
+        Select a category to view details
+    </div>
+    <div ng-if="catalogAssignments.category">
+        <header>
+            <div class="pull-right">
+                <button type="button" class="btn btn-default" ng-click="catalogAssignments.editCategory(catalogAssignments.category.ID)"><i class="fa fa-edit"></i> Edit</button>
+                <button type="button" class="btn btn-default" ng-click="catalogAssignments.deleteCategory(catalogAssignments.category.ID)"><i class="fa fa-trash text-danger"></i> Delete</button>
             </div>
-            <div class="col-xs-12">
-                <button class="btn btn-success btn-block" ng-disabled="!catalogAssignments.selectedProducts.length" ng-click="catalogAssignments.saveAssignment()"><i class="fa fa-plus-circle"></i> Add Products</button>
-            </div>
-        </div>
-        <!--Product Assignment List-->
-        <div ng-if="catalogAssignments.products.Items">
-            <hr>
-             <b class="pull-right">{{catalogAssignments.products.Meta.ItemRange[1] + ' of ' + catalogAssignments.products.Meta.TotalCount + ' results'}}</b>
-            <table class="table table-hover oc-table-responsive">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>
-                        </tH>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="product in catalogAssignments.products.Items">
-                        <th scope="row">{{product.ID}}</th>
-                        <td data-title="Name">{{product.Name}}</td>
-                        <td data-title="Description">{{product.Description}}</td>
-                        <td class="text-center">
-                            <a class="fa fa-trash text-danger" ng-click="catalogAssignments.deleteAssignment(product)"></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="text-center" ng-if="catalogAssignments.products.Meta.TotalPages > 1">
-                <uib-pagination boundary-links="catalogAssignments.products.Meta.TotalPages > 5"
-                    max-size="5" total-items="catalogAssignments.products.Meta.TotalCount"
-                    items-per-page="catalogAssignments.products.Meta.PageSize"
-                    ng-model="catalogAssignments.products.Meta.Page"
-                    ng-change="catalogAssignments.productPageChanged()">
-                </uib-pagination>
-            </div>
-        </div>
-    </uib-tab>
-    <uib-tab>
-        <uib-tab-heading>Availability</uib-tab-heading>
-        <br>
-        <div ng-if="!catalogAssignments.category" class="well text-center">
-            Select a category to view details
-        </div>
-        <!-- -->
-        <div ng-if="catalogAssignments.category">
-            <p>Assign to:
-            <form name="selectAssignmentType">
-                <div class="form-group">
-                    <input type="radio" ng-model="catalogAssignments.assignmentType" ng-change="catalogAssignments.toggleBuyerAssignment()" value="buyer"> Buyer Organization <br>
-                    <input type="radio" ng-model="catalogAssignments.assignmentType" ng-change="catalogAssignments.toggleBuyerAssignment()" value="userGroups"> User Groups
+            <h3>
+                {{catalogAssignments.category.Name}}
+                <small>(ID: {{catalogAssignments.category.ID}})</small>
+            </h3>
+            <p ng-bind-html="catalogAssignments.category.Description || '<em class=\'text-muted\'>No description</em>'"></p>
+        </header>
+        <uib-tabset>
+            <uib-tab>
+                <br>
+                <uib-tab-heading>Products <span class="badge">{{catalogAssignments.products.Meta.TotalCount || 0}}</span></uib-tab-heading>
+                <div ng-if="!catalogAssignments.category" class="well text-center">
+                    Select a category to view details
                 </div>
-            </form>
-            <hr>
-        </div>
-        <!--Party Assignment List-->
-        <div class="row" ng-if="catalogAssignments.category && catalogAssignments.assignmentType === 'userGroups'">
-            <div class="col-xs-12">
-                <label>Select UserGroup(s) to assign to {{catalogAssignments.category.Name}}</label>
-                <ui-select multiple ng-model="catalogAssignments.selectedUserGroups" close-on-select="false">
-                    <ui-select-match placeholder="Type to search user groups">
-                        {{$item.Name}}
-                        <span ng-bind="$select.selected.Name"></span>
-                    </ui-select-match>
-                    <ui-select-choices repeat="userGroup in (catalogAssignments.uiSelectedGroups.Items | filter: $select.search) track by $index" refresh="catalogAssignments.listAllUserGroups($select.search)" refresh-delay="300">
-                        <b><span ng-bind="userGroup.Name"></span></b>
-                        <br>
-                        <small>
-                    <div class="row">
-                        <div class="col-md-6">
-                            ID: {{userGroup.ID}}
-                        </div>
+                <!--Assign a Product to Category-->
+                <div class="row" ng-if="catalogAssignments.category">
+                    <div class="col-xs-12 col-sm-8 col-md-9">
+                        <ui-select multiple ng-model="catalogAssignments.selectedProducts" close-on-select="false">
+                            <ui-select-match placeholder="Search and select products to add...">
+                                {{$item.Name}}
+                                <span ng-bind="$select.selected.Name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="product in (catalogAssignments.uiSelectProducts.Items | filter: $select.search) track by $index" refresh="catalogAssignments.listAllProducts($select.search)" refresh-delay="300">
+                                <b><span ng-bind="product.Name"></span></b>
+                                <br>
+                                <small>
+                                    <b>ID: </b>{{product.ID}}
+                                </small>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
-                </small>
-                    </ui-select-choices>
-                </ui-select>
-            </div>
-            <div class="col-xs-12">
-                <button class="btn btn-success btn-block" ng-disabled="!catalogAssignments.selectedUserGroups.length" ng-click="catalogAssignments.savePartyAssignment()"><i class="fa fa-plus-circle"></i> Assign User Group</button>
-            </div>
-        </div>
-        <div ng-if="catalogAssignments.userGroups.Items && catalogAssignments.assignmentType === 'userGroups'">
-            <hr>
-             <b class="pull-right">{{catalogAssignments.userGroups.Meta.ItemRange[1] + ' of ' + catalogAssignments.userGroups.Meta.TotalCount + ' results'}}</b><br>
-            <table class="table table-hover oc-table-responsive">
-                <thead>
-                    <tr>
-                        <th scope="col">User Group ID</th>
-                        <th>Name</th>
-                        <th>
-                        </tH>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="userGroup in catalogAssignments.userGroups.Items">
-                        <th scope="row">{{userGroup.ID}}</th>
-                        <td data-title="Name">{{userGroup.Name}}</td>
-                        <td class="text-center">
-                            <a class="fa fa-trash text-danger" ng-click="catalogAssignments.deletePartyAssignment(userGroup)"></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="text-center" ng-if="catalogAssignments.userGroups.Meta.TotalPages > 1">
-                <uib-pagination boundary-links="catalogAssignments.userGroups.Meta.TotalPages > 5"
-                    max-size="5" total-items="catalogAssignments.userGroups.Meta.TotalCount"
-                    items-per-page="catalogAssignments.userGroups.Meta.PageSize"
-                    ng-model="catalogAssignments.userGroups.Meta.Page"
-                    ng-change="catalogAssignments.userGroupPageChanged()">
-                </uib-pagination>
-            </div>
-        </div>
-    </uib-tab>
-</uib-tabset>
+                    <div class="col-xs-12 col-sm-4 col-md-3">
+                        <button class="btn btn-primary btn-block" ng-disabled="!catalogAssignments.selectedProducts.length" ng-click="catalogAssignments.saveAssignment()"><i class="fa fa-plus-circle"></i> Add Products</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="well text-center" ng-if="!catalogAssignments.products.Items.length">
+                    This category does not contain any products.
+                </div>
+                <!--Product Assignment List-->
+                <div ng-if="catalogAssignments.products.Items.length">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="product in catalogAssignments.products.Items">
+                            <th scope="row"><a href="" ui-sref="products.detail({productid: product.ID})">{{product.ID}}</a> <i class="fa fa-external-link text-muted"></i></th>
+                            <td data-title="Name">{{product.Name}}</td>
+                            <td class="text-right">
+                                <button type="button" class="btn btn-xs btn-default" uib-tooltip="Remove" tooltip-placement="left" ng-click="catalogAssignments.deleteAssignment(product)"><i class="fa fa-times text-danger"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center" ng-if="catalogAssignments.products.Meta.TotalPages > 1">
+                        <uib-pagination boundary-links="catalogAssignments.products.Meta.TotalPages > 5"
+                                        max-size="5" total-items="catalogAssignments.products.Meta.TotalCount"
+                                        items-per-page="catalogAssignments.products.Meta.PageSize"
+                                        ng-model="catalogAssignments.products.Meta.Page"
+                                        ng-change="catalogAssignments.productPageChanged()">
+                        </uib-pagination>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab>
+                <uib-tab-heading>Availability</uib-tab-heading>
+                <br>
+                <div ng-if="!catalogAssignments.category" class="well text-center">
+                    Select a category to view details
+                </div>
+                <!-- -->
+                <div ng-if="catalogAssignments.category">
+                    <p>Assign to:
+                    <form name="selectAssignmentType">
+                        <div class="form-group">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" ng-model="catalogAssignments.assignmentType" ng-change="catalogAssignments.toggleBuyerAssignment()" value="buyer">
+                                    Buyer Organization
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" ng-model="catalogAssignments.assignmentType" ng-change="catalogAssignments.toggleBuyerAssignment()" value="userGroups"> User Groups
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                    <hr ng-if="catalogAssignments.assignmentType === 'userGroups'">
+                </div>
+                <!--Party Assignment List-->
+                <div class="row" ng-if="catalogAssignments.category && catalogAssignments.assignmentType === 'userGroups'">
+                    <div class="col-xs-12 col-sm-8 col-md-9">
+                        <ui-select multiple ng-model="catalogAssignments.selectedUserGroups" close-on-select="false">
+                            <ui-select-match placeholder="Type to search user groups">
+                                {{$item.Name}}
+                                <span ng-bind="$select.selected.Name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="userGroup in (catalogAssignments.uiSelectedGroups.Items | filter: $select.search) track by $index" refresh="catalogAssignments.listAllUserGroups($select.search)" refresh-delay="300">
+                                <b><span ng-bind="userGroup.Name"></span></b>
+                                <br>
+                                <small>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            ID: {{userGroup.ID}}
+                                        </div>
+                                    </div>
+                                </small>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-3">
+                        <button class="btn btn-primary btn-block" ng-disabled="!catalogAssignments.selectedUserGroups.length" ng-click="catalogAssignments.savePartyAssignment()"><i class="fa fa-plus-circle"></i> Add Groups</button>
+                    </div>
+                </div>
+                <hr ng-if="catalogAssignments.assignmentType === 'userGroups'">
+                <div class="well text-center" ng-if="!catalogAssignments.userGroups.Items && catalogAssignments.assignmentType === 'userGroups'">
+                    This category is not assigned to any user groups.
+                </div>
+                <div ng-if="catalogAssignments.userGroups.Items && catalogAssignments.assignmentType === 'userGroups'">
+                    <table class="table table-hover oc-table-responsive">
+                        <thead>
+                        <tr>
+                            <th scope="col">User Group ID</th>
+                            <th>Name</th>
+                            <th>
+                            </tH>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="userGroup in catalogAssignments.userGroups.Items">
+                            <th scope="row"><a href="" ui-sref="userGroups.detail({usergroupid: userGroup.ID})">{{userGroup.ID}}</a> <i class="fa fa-external-link text-muted"></i></th>
+                            <td data-title="Name">{{userGroup.Name}}</td>
+                            <td class="text-right">
+                                <div class="btn btn-default btn-xs" uib-tooltip="Remove User Group" tooltip-placement="left" ng-click="catalogAssignments.deletePartyAssignment(userGroup)">
+                                    <i class="fa fa-trash text-danger"></i>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center" ng-if="catalogAssignments.userGroups.Meta.TotalPages > 1">
+                        <uib-pagination boundary-links="catalogAssignments.userGroups.Meta.TotalPages > 5"
+                                        max-size="5" total-items="catalogAssignments.userGroups.Meta.TotalCount"
+                                        items-per-page="catalogAssignments.userGroups.Meta.PageSize"
+                                        ng-model="catalogAssignments.userGroups.Meta.Page"
+                                        ng-change="catalogAssignments.userGroupPageChanged()">
+                        </uib-pagination>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>

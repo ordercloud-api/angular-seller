@@ -11,7 +11,7 @@ function CategoryModalFactory($state, $exceptionHandler, OrderCloud, OrderCloudC
     };
 
     function _create(parentid, catalogid) {
-        $uibModal.open({
+        return $uibModal.open({
             templateUrl: 'catalogManagement/categoryModalFactory/templates/create.html',
             controller: 'CreateCategoryModalCtrl',
             controllerAs: 'createCategory',
@@ -28,7 +28,7 @@ function CategoryModalFactory($state, $exceptionHandler, OrderCloud, OrderCloudC
     }
 
     function _edit(categoryid, catalogid) {
-        $uibModal.open({
+        return $uibModal.open({
             templateUrl: 'catalogManagement/categoryModalFactory/templates/edit.html',
             controller: 'EditCategoryModalCtrl',
             controllerAs: 'editCategory',
@@ -45,9 +45,9 @@ function CategoryModalFactory($state, $exceptionHandler, OrderCloud, OrderCloudC
     }
 
     function _delete(id, catalogid) {
-        OrderCloudConfirm.Confirm('Are you sure you want to delete this category?')
+        return OrderCloudConfirm.Confirm('Are you sure you want to delete this category?')
             .then(function() {
-                OrderCloud.Categories.Delete(id, catalogid)
+                return OrderCloud.Categories.Delete(id, catalogid)
                     .then(function() {
                         //TODO: replace state reload with something less resource intensive
                         $state.go('catalogManagement', {buyerID: catalogid, activeTab: 2}, {reload:true});
@@ -104,8 +104,9 @@ function EditCategoryModalController($state, $exceptionHandler, $uibModalInstanc
         vm.loading = OrderCloud.Categories.Update(originalcategoryID, vm.category, vm.catalogid)
             .then(function(category) {
                 $uibModalInstance.close(category);
+
                 //TODO: replace state reload with something less resource intensive
-                $state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2}, {reload:true});
+                //$state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2}, {reload:true});
             })
             .catch(function(ex) {
                 $exceptionHandler(ex);

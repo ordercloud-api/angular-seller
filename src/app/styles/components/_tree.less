@@ -16,19 +16,29 @@
 }
 
 .tree-node {
-  background: @well-bg;
-  border: 1px solid @well-border;
+  //background: @well-bg;
+  border-bottom: 1px solid @well-border;
   color: @text-color;
-  border-radius:@border-radius-base;
+  //border-radius:@border-radius-base;
+  transition:all 200ms ease-in-out;
   &.inactive-node {
     background-color: @state-warning-bg;
     border-color: @state-warning-border;
+  }
+  &.selected-node {
+    //background-color:lighten(@brand-primary, 10);
+    color:@brand-primary;
+    border-color:@brand-primary;
+    .fa-folder,
+    .fa-folder-open {
+      color:@brand-primary;
+    }
   }
 }
 
 .tree-node-content {
   padding:0.3em;
-  margin-bottom: 10px;
+  //margin-bottom: 10px;
   display:flex;
   flex-flow:row nowrap;
   justify-content: flex-start;
@@ -40,9 +50,8 @@
     flex-grow: 1;
     margin:0;
   }
-  .fa-folder,
-  .fa-folder-open {
-    color:@link-color;
+  i.fa {
+    color:@text-muted;
     padding:10px;
     width:30px;
     text-align:center;
