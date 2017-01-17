@@ -245,7 +245,7 @@ function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak
                 }
                 else if (selectedBuyer && selectedUserGroups.length > 0 ) {
                     var assignmentQueue = [];
-                    angular.forEach(vm.selectedUserGroups, function(usergroup) {
+                    angular.forEach(selectedUserGroups, function(usergroup) {
                         var userGroupAssignment = angular.copy(assignment);
                         userGroupAssignment.UserGroupID = usergroup.ID;
                         assignmentQueue.push(OrderCloud.Products.SaveAssignment(userGroupAssignment));
