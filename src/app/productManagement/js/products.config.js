@@ -6,7 +6,7 @@ function ProductsConfig($stateProvider) {
     $stateProvider
         .state('products', {
             parent: 'base',
-            templateUrl: 'productMgmt/templates/products.html',
+            templateUrl: 'productManagement/templates/products.html',
             controller: 'ProductsCtrl',
             controllerAs: 'products',
             url: '/products?from&to&search&page&pageSize&searchOn&sortBy&filters',
@@ -22,13 +22,13 @@ function ProductsConfig($stateProvider) {
         })
         .state('products.create', {
             url: '/create',
-            templateUrl: 'productMgmt/templates/productCreate.html',
+            templateUrl: 'productManagement/templates/productCreate.html',
             controller: 'ProductCreateCtrl',
             controllerAs: 'productCreate'
         })
         .state('products.detail', {
             url: '/:productid/detail?page',
-            templateUrl: 'productMgmt/templates/productDetail.html',
+            templateUrl: 'productManagement/templates/productDetail.html',
             controller: 'ProductDetailCtrl',
             controllerAs: 'productDetail',
             resolve: {
@@ -49,7 +49,7 @@ function ProductsConfig($stateProvider) {
         })
         .state('products.detail.createAssignment', {
             url: '/assign',
-            templateUrl: 'productMgmt/templates/productCreateAssignment.html',
+            templateUrl: 'productManagement/templates/productCreateAssignment.html',
             controller: 'ProductCreateAssignmentCtrl',
             controllerAs: 'productCreateAssignment',
             resolve: {
@@ -60,7 +60,7 @@ function ProductsConfig($stateProvider) {
         })
         .state('products.detail.priceScheduleDetail', {
             url: '/:pricescheduleid',
-            templateUrl: 'productMgmt/templates/priceScheduleDetail.html',
+            templateUrl: 'productManagement/templates/priceScheduleDetail.html',
             controller: 'PriceScheduleDetailCtrl',
             controllerAs: 'priceScheduleDetail',
             resolve: {

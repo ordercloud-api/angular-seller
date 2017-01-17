@@ -248,7 +248,7 @@ function PriceScheduleDetailController($stateParams, $uibModal, OrderCloud, ocPr
 
     vm.createPriceBreak = function() {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productMgmt/templates/priceSchedulePriceBreak.modal.html',
+            templateUrl: 'productManagement/templates/priceSchedulePriceBreak.modal.html',
             size: 'md',
             controller: 'PriceSchedulePriceBreakCtrl',
             controllerAs: 'priceBreak',
@@ -288,7 +288,7 @@ function PriceScheduleDetailController($stateParams, $uibModal, OrderCloud, ocPr
 
     vm.addUserGroupAssignment = function(buyer) {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productMgmt/templates/priceScheduleAssignment.modal.html',
+            templateUrl: 'productManagement/templates/priceScheduleAssignment.modal.html',
             size: 'md',
             controller: 'PriceScheduleCreateAssignmentCtrl',
             controllerAs: 'priceScheduleAssignment',
@@ -348,7 +348,7 @@ function PriceScheduleDetailController($stateParams, $uibModal, OrderCloud, ocPr
 
     vm.createAssignment = function() {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productMgmt/templates/priceScheduleAssignment.modal.html',
+            templateUrl: 'productManagement/templates/priceScheduleAssignment.modal.html',
             size: 'md',
             controller: 'PriceScheduleCreateAssignmentCtrl',
             controllerAs: 'priceScheduleAssignment',
