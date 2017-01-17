@@ -22,13 +22,13 @@
             <div class="form-group" ng-if="priceScheduleAssignment.buyerUserGroups.Items.length && !priceScheduleAssignment.preSelectedBuyer">
                 <label>
                     <input type="checkbox" ng-model="priceScheduleAssignment.assignAtUserGroupLevel" />
-                    Assign at User Group Level 
+                    Assign at User Group Level
                 </label>
             </div>
             <div class="form-group" ng-if="priceScheduleAssignment.assignAtUserGroupLevel">
                 <label>Select User Group(s)</label>
                 <ui-select ng-model="priceScheduleAssignment.selectedUserGroup"
-                        close-on-select="true">
+                           close-on-select="true">
                     <ui-select-match>
                         {{$item.Name}}
                         <span ng-bind="$select.selected.Name"></span>

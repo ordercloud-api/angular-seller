@@ -1,0 +1,64 @@
+<article>
+    <h3 class="page-header">
+        {{priceScheduleDetail.data.PriceSchedule.Name}}
+    </h3>
+    <div class="row">
+        <div class="col-sm-6">
+            <h5><b>Name: </b> {{priceScheduleDetail.data.PriceSchedule.Name}} <i class="fa fa-edit" ng-click="priceScheduleDetail.editFields(['Name'])"></i></h5>
+            <h5><b>ID: </b> {{priceScheduleDetail.data.PriceSchedule.ID}} <i class="fa fa-edit" ng-click="priceScheduleDetail.editFields(['ID'])"></i></h5>
+            <h5><b>Apply Shipping: </b> <input type="checkbox" ng-model="priceScheduleDetail.data.PriceSchedule.ApplyShipping" ng-change="priceScheduleDetail.patchField('ApplyShipping')" /></h5>
+            <h5><b>Apply Tax: </b> <input type="checkbox" ng-model="priceScheduleDetail.data.PriceSchedule.ApplyTax" ng-change="priceScheduleDetail.patchField('ApplyTax')" /></h5>
+            <h5><b>Minimum Quantity: </b> {{priceScheduleDetail.data.PriceSchedule.MinQuantity}}</h5>
+            <h5><b>Maximum Quantity: </b> {{priceScheduleDetail.data.PriceSchedule.MaxQuantity}} <i class="fa fa-edit" ng-click="priceScheduleDetail.editFields(['MaxQuantity'])"></i></h5>
+        </div>
+        <div class="col-sm-6">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="pb in priceScheduleDetail.data.PriceSchedule.PriceBreaks | orderBy:'Quantity'">
+                        <td>{{pb.Quantity}}</td>
+                        <td>{{pb.Price | currency}} <span class="pull-right" ng-click="priceScheduleDetail.deletePriceBreak(this)"><i class="fa fa-times text-danger"></i></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-link" ng-click="priceScheduleDetail.createPriceBreak()"><i class="fa fa-plus-circle"></i> Create Price Break</button>
+            </div>
+        </div>
+    </div>
+    <h4>Assignments</h4>
+    <div class="row">
+        <div class="col-sm-6" ng-repeat="buyer in priceScheduleDetail.data.Buyers">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <label>
+                        <input type="checkbox" ng-model="buyer.Assigned" ng-change="priceScheduleDetail.buyerAssignmentChange(buyer)" />
+                        {{buyer.Name}}
+                    </label>
+                    <div ng-if="buyer.UserGroups.length">
+                        <h5>User Groups</h5>
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="userGroup in buyer.UserGroups">
+                                {{userGroup.Name}}
+                                <span class="pull-right" ng-click="priceScheduleDetail.deleteUserGroupAssignment(buyer, userGroup)"><i class="fa fa-times text-danger"></i></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="text-center" ng-if="!buyer.Assigned">
+                        <button class="btn btn-link" ng-click="priceScheduleDetail.addUserGroupAssignment(buyer)"><i class="fa fa-plus-circle"></i> Add User Group</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-link" ng-click="priceScheduleDetail.createAssignment()"><i class="fa fa-plus-circle"></i> Create Assignment for New Buyer</button>
+    </div>
+</article>

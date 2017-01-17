@@ -4,8 +4,9 @@
     </div>
     <div class="modal-body">
             <div class="form-group" ng-repeat="property in patchModal.properties">
-                <label for="{{property.Key}}">{{property.Label}}</label>
-                <input type="text" id="{{property.Key}}" class="form-control" ng-model="patchModal.model[property.Key]" ng-required="property.Required" />
+                <label>{{property.Label}}</label>
+                <input ng-if="!property.TextArea" type="{{property.Type ? property.Type : 'text'}}" class="form-control" ng-model="patchModal.model[property.Key]" ng-required="property.Required" />
+                <textarea ng-if="property.TextArea" class="form-control" ng-model="patchModal.model[property.Key]" ng-required="property.Required"></textarea>
             </div>
 
     </div>
