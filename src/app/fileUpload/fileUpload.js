@@ -59,7 +59,8 @@ function ordercloudFileUpload($parse, FileReader, FilesService) {
         scope: {
             model: '=',
             extensions: '@',
-            invalidExtension: '@'
+            invalidExtension: '@',
+            patch: '&'
         },
         restrict: 'E',
         templateUrl: 'fileUpload/templates/fileUpload.tpl.html',
@@ -86,6 +87,7 @@ function ordercloudFileUpload($parse, FileReader, FilesService) {
                     if (!scope.model.xp) scope.model.xp = {};
                     scope.model.xp.image = {};
                     scope.model.xp.image.URL = fileData.Location;
+                    if (scope.patch) scope.patch({xp: scope.model.xp});
                 });
         }
 

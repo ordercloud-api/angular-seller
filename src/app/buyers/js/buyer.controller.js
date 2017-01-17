@@ -30,7 +30,7 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers
     };
 
     vm.deleteBuyer = function() {
-        OrderCloudConfirm.Confirm("Are you sure you want to delete this buyer organization and all of it's related data?  <b>This action cannot be undone.</b>")
+        OrderCloudConfirm.Confirm("Are you sure you want to delete this buyer organization and all of its related data?  <b>This action cannot be undone.</b>")
             .then(function() {
                 OrderCloud.Buyers.Delete(vm.selectedBuyer.ID)
                     .then(function() {
