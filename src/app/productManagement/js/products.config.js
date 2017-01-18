@@ -37,14 +37,25 @@ function ProductsConfig($stateProvider) {
                 }
             }
         })
-        .state('products.detail.inventory', {
-            url: '/inventory',
-            templateUrl: 'productManagement/templates/productInventory.html',
-            controller: 'ProductInventoryCtrl',
-            controllerAs: 'productInventory',
+        .state('products.detail.specs', {
+            url: '/specs',
+            templateUrl: 'productManagement/templates/productSpecs.html',
+            controller: 'ProductSpecsCtrl',
+            controllerAs: 'productSpecs',
             resolve: {
-                ProductInventory: function($stateParams, OrderCloud) {
-                    return OrderCloud.Products.GetInventory($stateParams.productid);
+                ProductSpecs: function($stateParams, OrderCloud) {
+                    return OrderCloud.Specs.ListProductAssignments(null, $stateParams.productid)
+                        .then(function(data) {
+                            if (data.Items.length) {
+                                return OrderCloud.Specs.List(null, null, null, null, null, {ID: _.pluck(data.Items, 'SpecID')})
+                                    .then(function(data2) {
+                                        data.Items = data2.Items;
+                                        return data;
+                                    })
+                            } else {
+                                return data;
+                            }
+                        });
                 }
             }
         })
@@ -60,6 +71,21 @@ function ProductsConfig($stateProvider) {
                 //when we group together the price schedules by the id , it messes with the pagination, I would would have to update the meta data before it resolves , and then translate the results.
                 AssignmentData: function (ocProductsService, AssignmentList) {
                     return ocProductsService.AssignmentData(AssignmentList);
+                }
+            }
+        })
+        .state('products.detail.shipping', {
+            url: '/shipping',
+            templateUrl: 'productManagement/templates/productShipping.html'
+        })
+        .state('products.detail.inventory', {
+            url: '/inventory',
+            templateUrl: 'productManagement/templates/productInventory.html',
+            controller: 'ProductInventoryCtrl',
+            controllerAs: 'productInventory',
+            resolve: {
+                ProductInventory: function($stateParams, OrderCloud) {
+                    return OrderCloud.Products.GetInventory($stateParams.productid);
                 }
             }
         })

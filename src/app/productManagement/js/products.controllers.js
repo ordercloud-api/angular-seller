@@ -2,8 +2,9 @@ angular.module('orderCloud')
     .controller('ProductsCtrl', ProductsController)
     .controller('ProductCreateCtrl', ProductCreateController)
     .controller('ProductDetailCtrl', ProductDetailController)
-    .controller('ProductInventoryCtrl', ProductInventoryController)
+    .controller('ProductSpecsCtrl', ProductSpecsController)
     .controller('ProductPricingCtrl', ProductPricingController)
+    .controller('ProductInventoryCtrl', ProductInventoryController)
     .controller('ProductCreateAssignmentCtrl', ProductCreateAssignmentController)
     .controller('PriceScheduleDetailCtrl', PriceScheduleDetailController)
     .controller('PriceSchedulePriceBreakCtrl', PriceSchedulePriceBreakController)
@@ -147,9 +148,9 @@ function ProductDetailController($exceptionHandler, $state, toastr, OrderCloud, 
     }
 }
 
-function ProductInventoryController(ProductInventory) {
+function ProductSpecsController(ProductSpecs) {
     var vm = this;
-    vm.inventory = angular.copy(ProductInventory);
+    vm.specs = angular.copy(ProductSpecs);
 }
 
 function ProductPricingController(AssignmentList, AssignmentData) {
@@ -160,6 +161,11 @@ function ProductPricingController(AssignmentList, AssignmentData) {
     vm.priceSelected = function(ID) {
         vm.selectedAssignmentID = ID;
     }
+}
+
+function ProductInventoryController(ProductInventory) {
+    var vm = this;
+    vm.inventory = angular.copy(ProductInventory);
 }
 
 function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProductsService, SelectedProduct, Buyers, PriceBreak) {
