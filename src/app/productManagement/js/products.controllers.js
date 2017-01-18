@@ -4,6 +4,7 @@ angular.module('orderCloud')
     .controller('ProductDetailCtrl', ProductDetailController)
     .controller('ProductSpecsCtrl', ProductSpecsController)
     .controller('ProductPricingCtrl', ProductPricingController)
+    .controller('PriceScheduleEditModalCtrl', PriceScheduleEditModalController)
     .controller('ProductInventoryCtrl', ProductInventoryController)
     .controller('ProductCreateAssignmentCtrl', ProductCreateAssignmentController)
     .controller('PriceScheduleDetailCtrl', PriceScheduleDetailController)
@@ -153,13 +154,73 @@ function ProductSpecsController(ProductSpecs) {
     vm.specs = angular.copy(ProductSpecs);
 }
 
-function ProductPricingController(AssignmentList, AssignmentData) {
+function ProductPricingController($uibModal, AssignmentList, AssignmentData, ocProductsService, OrderCloudConfirm, OrderCloud) {
     var vm = this;
     vm.list = AssignmentList;
     vm.listAssignments = AssignmentData;
 
     vm.priceSelected = function(ID) {
         vm.selectedAssignmentID = ID;
+    };
+
+    vm.selectPrice = function(scope) {
+        vm.loadingPrice = ocProductsService.AssignmentDataDetail(vm.listAssignments, scope.assignment.PriceSchedule.ID)
+            .then(function(data) {
+                vm.selectedPrice = scope.assignment;
+                vm.selectedPrice.data = data;
+            })
+    };
+
+    vm.editPrice = function() {
+        $uibModal.open({
+            templateUrl: 'productManagement/templates/priceScheduleEdit.modal.html',
+            controller: 'PriceScheduleEditModalCtrl',
+            controllerAs: 'priceScheduleEditModal',
+            resolve: {
+                SelectedPriceSchedule: function() {
+                    return vm.selectedPrice.PriceSchedule;
+                }
+            }
+        }).result
+            .then(function(updatedPriceSchedule) {
+                var oldAssignment = angular.copy(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID]);
+                oldAssignment.PriceSchedule = updatedPriceSchedule;
+                oldAssignment.PriceScheduleID = updatedPriceSchedule.ID;
+
+                delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
+
+                vm.listAssignments[updatedPriceSchedule.ID] = oldAssignment;
+                vm.selectedPrice = oldAssignment;
+                vm.selectedPrice.PriceSchedule = updatedPriceSchedule;
+            })
+    };
+
+    vm.deletePrice = function() {
+        OrderCloudConfirm.Confirm('Are you sure you want to delete this price and all of it\'s assignments? This action cannot be undone.')
+            .then(function() {
+                console.log('hit');
+                vm.loadingPrice = OrderCloud.PriceSchedules.Delete(vm.selectedPrice.PriceSchedule.ID)
+                    .then(function() {
+                        delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
+                        vm.selectedPrice = null;
+                    })
+            })
+    }
+}
+
+function PriceScheduleEditModalController($uibModalInstance, SelectedPriceSchedule, OrderCloud) {
+    var vm = this;
+    vm.data = angular.copy(SelectedPriceSchedule);
+
+    vm.submit = function() {
+        vm.loading = OrderCloud.PriceSchedules.Update(SelectedPriceSchedule.ID, vm.data)
+            .then(function(updatedPriceSchdule) {
+                $uibModalInstance.close(updatedPriceSchdule);
+            })
+    };
+
+    vm.cancel = function() {
+        $uibModalInstance.dismiss();
     }
 }
 
@@ -372,6 +433,14 @@ function PriceScheduleDetailController($stateParams, $uibModal, OrderCloud, ocPr
             if (assignment.UserGroup) assignment.Buyer.UserGroups = [assignment.UserGroup];
             vm.data.Buyers.push(assignment.Buyer);
         });
+    };
+
+    vm.selectAllUserGroups = function(scope) {
+        _.map(scope.buyer.UserGroups, function(ug) { ug.selected = scope.buyer.allGroupsSelected });
+    };
+
+    vm.selectUserGroup = function(buyer, scope) {
+        if (!scope.userGroup.selected) buyer.allGroupsSelected = false;
     };
 }
 

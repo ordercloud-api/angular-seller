@@ -1,13 +1,27 @@
 <div class="row">
     <div class="col-sm-5">
+
+        <!--==== No Prices Defined ====-->
         <div class="well well-lg text-center" ng-if="!productPricing.listAssignments">
             This product does not have any prices set. <br>
             <a href="" ui-sref=".createAssignment">Create One Now</a>
         </div>
-         <!--==== LIST ====-->
 
+        <!--==== Create New Assignment ====-->
+        <button class="btn btn-primary" ng-if="productPricing.listAssignments" ui-sref="^.createAssignment">
+            <i class="fa fa-plus-circle"></i> New Price
+        </button>
+        <br>
+        <br>
+
+        <!--==== Product Price Schedule List ====-->
         <div ng-if="productPricing.listAssignments">
-            <div ng-repeat="assignment in productPricing.listAssignments" ng-class="{'active':productPricing.selectedAssignmentID == assignment.PriceSchedule.ID}" class="c-price-card" ui-sref=".priceScheduleDetail({pricescheduleid: assignment.PriceSchedule.ID})">
+
+            <!--==== Product Price Selection ====-->
+            <div ng-repeat="assignment in productPricing.listAssignments"
+                 ng-class="{'active':productPricing.selectedPrice.PriceSchedule.ID == assignment.PriceSchedule.ID}"
+                 class="c-price-card"
+                 ng-click="productPricing.selectPrice(this)">
                 <div class="c-price-card__info">
                     <h5>{{assignment.PriceSchedule.Name}} <br>
                         <small>{{'ID: ' + assignment.PriceSchedule.ID}}</small>
@@ -27,14 +41,141 @@
                     {{assignment.UserGroups.length}}
                 </div>
             </div>
-            <button class="btn btn-primary btn-block" ng-if="productPricing.listAssignments" ui-sref="^.createAssignment">
-                <i class="fa fa-plus-circle"></i> New Price
-            </button>
         </div>
     </div>
-    <div class="col-sm-7" ui-view>
-        <div class="well text-center">
+
+
+    <div class="col-sm-7" cg-busy="productPricing.loadingPrice">
+
+        <!--==== No Price Selected Message ====-->
+        <div class="well text-center" ng-if="!productPricing.selectedPrice">
             Select a price to view it's details and assignments.
+        </div>
+
+        <!--==== Selected Price ====-->
+        <div ng-if="productPricing.selectedPrice">
+
+            <!--==== Basic Price Schedule Information ====-->
+            <header>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default" ng-click="productPricing.editPrice()"><i class="fa fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-default" ng-click="productPricing.deletePrice()"><i class="fa fa-trash text-danger"></i> Delete</button>
+                </div>
+                <h3>
+                    {{productPricing.selectedPrice.data.PriceSchedule.Name}}
+                    <small>(ID: {{productPricing.selectedPrice.data.PriceSchedule.ID}})</small>
+                </h3>
+                <p>
+                    <span ng-class="{
+                        'text-success':productPricing.selectedPrice.data.PriceSchedule.ApplyShipping,
+                        'text-warning':!productPricing.selectedPrice.data.PriceSchedule.ApplyShipping}">
+                        Shipping {{productPricing.selectedPrice.data.PriceSchedule.ApplyShipping ? 'Enabled' : 'Disabled'}}</span>,
+                    <span ng-class="{
+                        'text-success':productPricing.selectedPrice.data.PriceSchedule.ApplyTax,
+                        'text-warning':!productPricing.selectedPrice.data.PriceSchedule.ApplyTax}">
+                        Tax {{productPricing.selectedPrice.data.PriceSchedule.ApplyTax ? 'Enabled' : 'Disabled'}}
+                    </span>
+                </p>
+                <h5><b>Min Quantity: </b> {{productPricing.selectedPrice.data.PriceSchedule.MinQuantity}}</h5>
+                <h5><b>Max Quantity: </b> {{productPricing.selectedPrice.data.PriceSchedule.MaxQuantity || 'None'}}</h5>
+            </header>
+
+            <!--==== Price Schedule Tabs ====-->
+            <ul class="nav nav-tabs" ng-init="productPricing.activeTab = 'priceBreaks'">
+                <li ng-class="{active:productPricing.activeTab == 'priceBreaks'}"><a href="" ng-click="productPricing.activeTab = 'priceBreaks'">Price breaks</a></li>
+                <li ng-class="{active:productPricing.activeTab == 'availability'}"><a href="" ng-click="productPricing.activeTab = 'availability'">Availability</a></li>
+            </ul>
+            <br>
+
+            <!--==== Price Breaks ====-->
+            <div ng-show="productPricing.activeTab == 'priceBreaks'">
+                <button class="btn btn-primary" ng-click="productPricing.createPriceBreak()"><i class="fa fa-plus-circle"></i> Price Break</button>
+                <br>
+                <br>
+                <div class="panel panel-default">
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-hover table-bordered">
+                            <colgroup>
+                                <col style="width:45px;">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th class="text-center">
+                                    <input type="checkbox" ng-model="priceSchduleDetail.allBreaksSelected">
+                                </th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="pb in productPricing.selectedPrice.data.PriceSchedule.PriceBreaks | orderBy:'Quantity'">
+                                <td class="text-center">
+                                    <input type="checkbox" ng-model="pb.selected">
+                                </td>
+                                <td><span ng-if="$first">0 - </span>{{pb.Quantity}}<span ng-if="$last">+</span></td>
+                                <td>{{pb.Price | currency}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!--==== Assignments ====-->
+            <div ng-show="productPricing.activeTab == 'availability'">
+                <button class="btn btn-primary" ng-click="productPricing.createAssignment()"><i class="fa fa-plus-circle"></i> Assignment</button>
+                <br>
+                <br>
+                <div class="panel panel-default" ng-repeat="buyer in productPricing.selectedPrice.data.Buyers">
+                    <div class="panel-body">
+                        <div class="pull-right">
+                            <button type="button"
+                                    class="btn btn-default btn-sm"
+                                    ng-if="(buyer.UserGroups | filter:{'selected':true}).length"><i class="fa fa-times text-danger"></i> Remove User Groups</button>
+                            <button type="button"
+                                    class="btn btn-default btn-sm"
+                                    ng-click="productPricing.addUserGroupAssignment(buyer)"
+                                    ng-if="!(buyer.UserGroups | filter:{'selected':true}).length"><i class="fa fa-plus-circle"></i> User Group</button>
+                            <button type="button"
+                                    class="btn btn-default btn-sm"
+                                    uib-tooltip="Remove Buyer"
+                                    tooltip-placement="bottom-left"><i class="fa fa-times text-danger"></i></button>
+                        </div>
+                        <h5 style="margin:0;">
+                            <b>{{buyer.Name}}</b> <br>
+                            <small>(ID: {{buyer.ID}})</small>
+                        </h5>
+                        <p class="small text-center text-muted" style="margin-top:15px; margin-bottom:0;" ng-if="buyer.Assigned">This price is assigned to the entire buyer organization.</p>
+                    </div>
+                    <div class="table-responsive" ng-if="!buyer.Assigned">
+                        <table class="table table-condensed table-hover table-bordered">
+                            <colgroup>
+                                <col style="width:45px;">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th class="text-center">
+                                    <input type="checkbox" ng-model="buyer.allGroupsSelected" ng-change="productPricing.selectAllUserGroups(this)">
+                                </th>
+                                <th>ID</th>
+                                <th>Name</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="userGroup in buyer.UserGroups">
+                                <td class="text-center">
+                                    <input type="checkbox" ng-model="userGroup.selected" ng-change="productPricing.selectUserGroup(buyer, this)">
+                                </td>
+                                <td>
+                                    <a href="" ui-sref="userGroups.detail({buyerid:buyer.ID, usergroupid:userGroup.ID})">{{userGroup.ID}}</a>
+                                </td>
+                                <td>{{userGroup.Name}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
