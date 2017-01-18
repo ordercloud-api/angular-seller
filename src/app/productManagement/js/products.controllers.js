@@ -2,6 +2,8 @@ angular.module('orderCloud')
     .controller('ProductsCtrl', ProductsController)
     .controller('ProductCreateCtrl', ProductCreateController)
     .controller('ProductDetailCtrl', ProductDetailController)
+    .controller('ProductInventoryCtrl', ProductInventoryController)
+    .controller('ProductPricingCtrl', ProductPricingController)
     .controller('ProductCreateAssignmentCtrl', ProductCreateAssignmentController)
     .controller('PriceScheduleDetailCtrl', PriceScheduleDetailController)
     .controller('PriceSchedulePriceBreakCtrl', PriceSchedulePriceBreakController)
@@ -35,8 +37,13 @@ function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, 
     }
 
     function search() {
-        vm.filter(true);
-    }
+        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        vm.searchLoading = OrderCloud.Products.List(vm.parameters.search, 1, vm.parameters.pageSize || 12, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters)
+            .then(function(data) {
+                vm.list = data;
+                vm.searchResults = vm.parameters.search.length > 0;
+            })
+    };
 
     function clearSearch() {
         vm.parameters.search = null;
@@ -106,60 +113,24 @@ function ProductCreateController($exceptionHandler, $state, toastr, OrderCloud) 
     }
 }
 
-function ProductDetailController($scope, $stateParams, $exceptionHandler, $state, toastr, OrderCloud, OrderCloudConfirm, ocPatchModal, AssignmentList, AssignmentData, SelectedProduct) {
+function ProductDetailController($exceptionHandler, $state, toastr, OrderCloud, OrderCloudConfirm, SelectedProduct) {
     var vm = this;
-    vm.list = AssignmentList;
-    vm.listAssignments = AssignmentData;
-    vm.product = SelectedProduct;
-    vm.productID = $stateParams.productid;
+    vm.product = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
-
-    var fields = {
-        'Name': {Key: 'Name', Label: 'Name', Required: true},
-        'ID': {Key: 'ID', Label: 'ID', Required: true},
-        'Description': {Key: 'Description', Label: 'Description', Required: false, TextArea: true},
-        'QuantityMultiplier': {Key: 'QuantityMultiplier', Label: 'Quantity Multiplier', Required: true, Type: 'number'},
-        'ShipWeight': {Key: 'ShipWeight', Label: 'Ship Weight', Required: false, Type: 'number'},
-        'ShipHeight': {Key: 'ShipHeight', Label: 'Ship Height', Required: false, Type: 'number'},
-        'ShipWidth': {Key: 'ShipWidth', Label: 'Ship Width', Required: false, Type: 'number'},
-        'ShipLength': {Key: 'ShipLength', Label: 'Ship Length', Required: false, Type: 'number'},
-        'InventoryNotificationPoint': {Key: 'InventoryNotificationPoint', Label: 'Inventory Notification Point', Required: false, Type: 'number'}
-    };
-
-    vm.editFields = function(properties) {
-        var propertiesList = _.filter(fields, function(field) { return properties.indexOf(field.Key) > -1});
-        ocPatchModal.Edit(vm.product, propertiesList, 'Products', function(partial) {
-            return OrderCloud.Products.Patch(vm.product.ID, partial)
-        }).then(function(result) {
-            vm.product = result;
-        });
-    };
-
-    vm.patchField = function(field) {
-        var partial = _.pick(vm.product, field);
-        OrderCloud.Products.Patch(vm.product.ID, partial)
-            .then(function(data) {
-                vm.product = data;
-            });
-    };
-
-    vm.patchImage = function(imageXP) {
-        return OrderCloud.Products.Patch(vm.product.ID, imageXP);
-    };
-
-    $scope.$watch(function () {
-        return vm.product.xp && vm.product.xp.Image;
-    },function(value){
-        if (value) {
-            var partial = {'xp.Image': value};
-            OrderCloud.Products.Patch(vm.product.ID, partial)
-                .then(function(data) {
-                    vm.product = data;
-                });
-        }
-    }, true);
-
+    vm.updateProduct = updateProduct;
     vm.deleteProduct = deleteProduct;
+
+    function updateProduct() {
+        var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier']);
+        vm.productUpdateLoading = OrderCloud.Products.Patch(SelectedProduct.ID, partial)
+            .then(function(data) {
+                vm.product = angular.copy(data);
+                vm.productName = angular.copy(data.Name);
+                SelectedProduct = data;
+                vm.InfoForm.$setPristine();
+                toastr.success(data.Name + ' was updated', 'Success!');
+            })
+    }
 
     function deleteProduct(){
         OrderCloudConfirm.Confirm('Are you sure you want to delete this product?')
@@ -173,6 +144,21 @@ function ProductDetailController($scope, $stateParams, $exceptionHandler, $state
                         $exceptionHandler(ex)
                     });
             });
+    }
+}
+
+function ProductInventoryController(ProductInventory) {
+    var vm = this;
+    vm.inventory = angular.copy(ProductInventory);
+}
+
+function ProductPricingController(AssignmentList, AssignmentData) {
+    var vm = this;
+    vm.list = AssignmentList;
+    vm.listAssignments = AssignmentData;
+
+    vm.priceSelected = function(ID) {
+        vm.selectedAssignmentID = ID;
     }
 }
 
@@ -231,7 +217,7 @@ function PriceScheduleDetailController($stateParams, $uibModal, OrderCloud, ocPr
 
     vm.editFields = function(properties) {
         var propertiesList = _.filter(fields, function(field) { return properties.indexOf(field.Key) > -1});
-        ocPatchModal.Edit(vm.data.PriceSchedule, propertiesList, 'PriceSchedules', function(partial) {
+        ocPatchModal.Edit('Edit Price Schedule', vm.data.PriceSchedule, propertiesList, 'PriceSchedules', function(partial) {
             return OrderCloud.PriceSchedules.Patch(vm.data.PriceSchedule.ID, partial)
         }).then(function(result) {
             vm.data.PriceSchedule = result;

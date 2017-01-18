@@ -12,14 +12,14 @@ function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak
         CreateNewPriceScheduleAndAssignments: _createNewPriceScheduleAndAssignments
     };
 
-    function _assignmentList(parameters, buyerid) {
+    function _assignmentList(productid, buyerid) {
         var deferred = $q.defer();
 
         OrderCloud.BuyerID.Set(undefined);
 
         var page = 1;
         var pageSize = 100;
-        OrderCloud.Products.ListAssignments(parameters.productid, null, null, null, null, page, pageSize, null)
+        OrderCloud.Products.ListAssignments(productid, null, null, null, null, page, pageSize, null)
             .then(function(data) {
                 var queue = [];
                 var assignments = data;
@@ -27,7 +27,7 @@ function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak
                     page = data.Meta.Page;
                     while (page < data.Meta.TotalPages) {
                         page += 1;
-                        queue.push(OrderCloud.Products.ListAssignments(parameters.productid, null, null, null, null, page, data.Meta.PageSize, null));
+                        queue.push(OrderCloud.Products.ListAssignments(productid, null, null, null, null, page, data.Meta.PageSize, null));
                     }
                     return $q.all(queue)
                         .then(function(results) {

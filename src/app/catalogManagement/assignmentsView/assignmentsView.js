@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CatalogAssignmentsCtrl', CatalogAssignmentsController)
 ;
 
- function CatalogAssignmentsController($q, $exceptionHandler, toastr, $rootScope, OrderCloud, ProductManagementModal, CategoryModalFactory, Tree, CatalogID, SelectedBuyer){
+ function CatalogAssignmentsController($q, $exceptionHandler, toastr, $rootScope, OrderCloud, CategoryModalFactory, Tree, CatalogID, SelectedBuyer){
      var vm = this;
      vm.assignmentType = 'buyer';
      vm.productIds = null;

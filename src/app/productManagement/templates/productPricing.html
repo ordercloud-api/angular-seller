@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-sm-5">
+        <div class="well well-lg text-center" ng-if="!productPricing.listAssignments">
+            This product does not have any prices set. <br>
+            <a href="" ui-sref=".createAssignment">Create One Now</a>
+        </div>
+         <!--==== LIST ====-->
+
+        <div ng-if="productPricing.listAssignments">
+            <div ng-repeat="assignment in productPricing.listAssignments" ng-class="{'active':productPricing.selectedAssignmentID == assignment.PriceSchedule.ID}" class="c-price-card" ui-sref=".priceScheduleDetail({pricescheduleid: assignment.PriceSchedule.ID})">
+                <div class="c-price-card__info">
+                    <h5>{{assignment.PriceSchedule.Name}} <br>
+                        <small>{{'ID: ' + assignment.PriceSchedule.ID}}</small>
+                    </h5>
+                </div>
+                <div class="c-price-card__price">
+                    {{assignment.PriceSchedule.PriceBreaks[0].Price | currency}}
+                </div>
+                <div class="c-price-card__buyers">
+                    <small>Buyers</small>
+                    <br>
+                    {{assignment.Buyers.length}}
+                </div>
+                <div class="c-price-card__groups">
+                    <small>Groups</small>
+                    <br>
+                    {{assignment.UserGroups.length}}
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block" ng-if="productPricing.listAssignments" ui-sref="^.createAssignment">
+                <i class="fa fa-plus-circle"></i> New Price
+            </button>
+        </div>
+    </div>
+    <div class="col-sm-7" ui-view>
+        <div class="well text-center">
+            Select a price to view it's details and assignments.
+        </div>
+    </div>
+</div>

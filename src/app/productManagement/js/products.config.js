@@ -27,19 +27,35 @@ function ProductsConfig($stateProvider) {
             controllerAs: 'productCreate'
         })
         .state('products.detail', {
-            url: '/:productid/detail?page',
+            url: '/:productid',
             templateUrl: 'productManagement/templates/productDetail.html',
             controller: 'ProductDetailCtrl',
             controllerAs: 'productDetail',
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
-                },
                 SelectedProduct: function ($stateParams, OrderCloud) {
                     return OrderCloud.Products.Get($stateParams.productid);
-                },
-                AssignmentList: function(ocProductsService, Parameters, buyerid) {
-                    return ocProductsService.AssignmentList(Parameters, buyerid);
+                }
+            }
+        })
+        .state('products.detail.inventory', {
+            url: '/inventory',
+            templateUrl: 'productManagement/templates/productInventory.html',
+            controller: 'ProductInventoryCtrl',
+            controllerAs: 'productInventory',
+            resolve: {
+                ProductInventory: function($stateParams, OrderCloud) {
+                    return OrderCloud.Products.GetInventory($stateParams.productid);
+                }
+            }
+        })
+        .state('products.detail.pricing', {
+            url: '/pricing',
+            templateUrl: 'productManagement/templates/productPricing.html',
+            controller: 'ProductPricingCtrl',
+            controllerAs: 'productPricing',
+            resolve : {
+                AssignmentList: function(ocProductsService, $stateParams, buyerid) {
+                    return ocProductsService.AssignmentList($stateParams.productid, buyerid);
                 },
                 //when we group together the price schedules by the id , it messes with the pagination, I would would have to update the meta data before it resolves , and then translate the results.
                 AssignmentData: function (ocProductsService, AssignmentList) {
@@ -48,7 +64,7 @@ function ProductsConfig($stateProvider) {
             }
         })
         .state('products.detail.createAssignment', {
-            url: '/assign',
+            url: '/new-price',
             templateUrl: 'productManagement/templates/productCreateAssignment.html',
             controller: 'ProductCreateAssignmentCtrl',
             controllerAs: 'productCreateAssignment',
@@ -58,7 +74,7 @@ function ProductsConfig($stateProvider) {
                 }
             }
         })
-        .state('products.detail.priceScheduleDetail', {
+        .state('products.detail.pricing.priceScheduleDetail', {
             url: '/:pricescheduleid',
             templateUrl: 'productManagement/templates/priceScheduleDetail.html',
             controller: 'PriceScheduleDetailCtrl',

@@ -1,34 +1,34 @@
+<nav class="navbar navbar-default navbar-unstacked">
+    <div class="container container-smooth">
+        <ul class="nav navbar-nav navbar-left">
+            <ul class="breadcrumb">
+                <li><a href="" ui-sref="products">All Products</a></li>
+                <li class="active">Create New Product</li>
+            </ul>
+        </ul>
+    </div>
+</nav>
 <form name="CreateForm" ng-submit="productCreate.submit()" novalidate>
-    <h3 class="page-header">
-        <b>New Product</b>
-    </h3>
     <div class="row">
         <div class="col-md-10 form-group">
             <label for="productIDInput">Product ID</label>
             <input id="productIDInput" type="text" class="form-control" pattern="([A-Za-z0-9\-\_]+)"
                    pattern-err-type="ID_Name" ng-model="productCreate.product.ID"/>
         </div>
-        <!--<div class="col-md-1 form-group" ng-click="productCreate.product.Active = !productCreate.product.Active">-->
-        <!--&lt;!&ndash;<label for="productActiveInput">&ndash;&gt;-->
-        <!--&lt;!&ndash;<input id="productActiveInput" type="checkbox" ng-model="productCreate.product.Active"/>&ndash;&gt;-->
-        <!--<span ng-if="productCreate.product.Active">Active</span>-->
-        <!--<span ng-if="!productCreate.product.Active">Inactive</span>-->
-
-        <!--<i class="fa"-->
-        <!--ng-class="{'fa-circle text-success': productCreate.product.Active, 'fa-circle text-muted': !productCreate.product.Active}"></i>-->
-        <!--</div>-->
         <div class="col-md-2 form-group">
             <label>Status</label>
-            <br>
-            <label for="productActiveInput">
-                <input id="productActiveInput" type="checkbox"
-                       ng-model="productCreate.product.Active"/>
-                Active
-            </label>
+            <div class="checkbox">
+                <label for="productActiveInput">
+                    <input id="productActiveInput" type="checkbox"
+                           ng-model="productCreate.product.Active"/>
+                    Active
+                </label>
+
+            </div>
         </div>
     </div>
     <div class="form-group">
-        <label for="productNameInput">Product Name</label>
+        <label for="productNameInput">Name</label>
         <input id="productNameInput" type="text" class="form-control" ng-model="productCreate.product.Name"
                ng-required="true"/>
     </div>

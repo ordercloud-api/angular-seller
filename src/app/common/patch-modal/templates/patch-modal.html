@@ -1,16 +1,18 @@
-<form name="ocPatchModalForm" ng-submit="patchModal.confirm()" cg-busy="patchModal.loading">
+<form name="ocPatchModalForm" class="form-horizontal" ng-submit="patchModal.confirm()" cg-busy="patchModal.loading">
     <div class="modal-header">
         <button type="button" class="close" ng-click="patchModal.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" ng-bind="patchModal.title"></h3>
     </div>
     <div class="modal-body">
-            <div class="form-group" ng-repeat="property in patchModal.properties">
-                <label>{{property.Label}}</label>
-                <input ng-if="!property.TextArea" type="{{property.Type ? property.Type : 'text'}}" class="form-control" ng-model="patchModal.model[property.Key]" ng-required="property.Required" />
+        <div class="form-group" ng-repeat="property in patchModal.properties">
+            <label class="col-sm-3 control-label">{{property.Label + ':'}}</label>
+            <div class="col-sm-9">
+                <input ng-if="!property.TextArea" type="{{property.Type ? property.Type : 'text'}}" ng-min="property.MinValue" ng-max="property.MaxValue" class="form-control" ng-model="patchModal.model[property.Key]" ng-required="property.Required" />
                 <textarea ng-if="property.TextArea" class="form-control" ng-model="patchModal.model[property.Key]" ng-required="property.Required"></textarea>
             </div>
-
+        </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" ng-disabled="ocPatchModalForm.$invalid">Save</button>
+        <button type="submit" class="btn btn-block btn-primary" ng-disabled="ocPatchModalForm.$invalid">Save</button>
     </div>
 </form>

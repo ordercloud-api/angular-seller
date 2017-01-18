@@ -17,14 +17,8 @@
 </nav>
 <article>
     <ul class="nav nav-tabs">
-        <li role="presentation" ng-class="{active: application.$state.includes('buyerOrders')}">
-            <a ui-sref="buyerOrders({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-inbox"></i> Orders</a>
-        </li>
         <li role="presentation" ng-class="{active: application.$state.includes('catalogManagement')}">
             <a ui-sref="catalogManagement({ search: '', sortBy: ''})"><i class="fa fa-sitemap"></i> Catalog</a>
-        </li>
-        <li role="presentation" ng-class="{active: application.$state.includes('buyerProducts')}">
-            <a ui-sref="buyerProducts({ search: '', sortBy: ''})"><i class="fa fa-cube"></i> Products</a>
         </li>
         <li role="presentation" ng-class="{active: application.$state.includes('users')}">
             <a ui-sref="users({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-user"></i> Users</a>

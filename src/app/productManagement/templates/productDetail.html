@@ -1,79 +1,226 @@
-<article ui-view>
-    <button type="button" class="btn btn-default" aria-label="Close"
-            ui-sref="products"><i class="fa fa-angle-left" aria-hidden="true"></i> Products
-    </button>
-    <div class="page-header">
-        <h3>
-            {{productDetail.product.Name}}
-            <span class="text-center" data-title="Active">
-                <i class="fa fa-circle" ng-class="{'active': productDetail.product.Active}"></i>
-            </span>
-            <div class="pull-right">
-                <button class="btn btn-danger" ng-click="productDetail.deleteProduct()">Delete</button>
-            </div>
-        </h3>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <h5><b>Name: </b> {{productDetail.product.Name}} <i class="fa fa-edit" ng-click="productDetail.editFields(['Name'])"></i></h5>
-            <h5><b>ID: </b> {{productDetail.product.ID}} <i class="fa fa-edit" ng-click="productDetail.editFields(['ID'])"></i></h5>
-            <h5><b>Description: </b> {{productDetail.product.Description}} <i class="fa fa-edit" ng-click="productDetail.editFields(['Description'])"></i></h5>
-            <h5><b>Quantity Multiplier: </b> {{productDetail.product.QuantityMultiplier}}x <i class="fa fa-edit" ng-click="productDetail.editFields(['QuantityMultiplier'])"></i></h5>
-            <h5><b>Ship Weight: </b> {{productDetail.product.ShipWeight}} <i class="fa fa-edit" ng-click="productDetail.editFields(['ShipWeight'])"></i></h5>
-            <h5><b>Ship Height: </b> {{productDetail.product.ShipHeight}} <i class="fa fa-edit" ng-click="productDetail.editFields(['ShipHeight'])"></i></h5>
-            <h5><b>Ship Width: </b> {{productDetail.product.ShipWidth}} <i class="fa fa-edit" ng-click="productDetail.editFields(['ShipWidth'])"></i></h5>
-            <h5><b>Ship Length: </b> {{productDetail.product.ShipLength}} <i class="fa fa-edit" ng-click="productDetail.editFields(['ShipLength'])"></i></h5>
-            <h5 ng-if="productDetail.product.ShipFromAddressID"><b>Ship From Address: </b> {{productDetail.product.ShipFromAddressID}}</h5>
-            <h5><b>Inventory Enabled: </b> <input type="checkbox" ng-model="productDetail.product.InventoryEnabled" ng-change="productDetail.patchField('InventoryEnabled')" /></h5>
-            <div ng-if="productDetail.product.InventoryEnabled">
-                <h5><b>Inventory Notification Point: </b> {{productDetail.product.InventoryNotificationPoint}} <i class="fa fa-edit" ng-click="productDetail.editFields(['InventoryNotificationPoint'])"></i></h5>
-                <h5><b>Inventory Visible: </b> <input type="checkbox" ng-model="productDetail.product.InventoryVisible" ng-change="productDetail.patchField('InventoryVisible')" /></h5>
-                <h5><b>Variant Level Inventory: </b> <input type="checkbox" ng-model="productDetail.product.VariantLevelInventory" ng-change="productDetail.patchField('VariantLevelInventory')" /></h5>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <oc-file-upload  model="productDetail.product" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff" patch="productDetail.patchImage"></oc-file-upload>
-        </div>
-    </div>
-    <!--<oc-assignment-list productid="productDetail.product.ID"></oc-assignment-list>-->
-    <div class="page-header">
-        <h3>
-            Price schedules assigned to this product
-            <button class="btn btn-primary pull-right" ui-sref=".createAssignment">
-                <i class="fa fa-plus-circle"></i> New Assignment
-            </button>
-        </h3>
-    </div>
-    <div class="well well-lg text-center" ng-if="!productDetail.listAssignments">
-        <b>This product does not have any assignments for the active Buyer company.</b>
-    </div>
-    <!--====== LIST ======-->
-    <div ng-if="productDetail.listAssignments">
 
-        <table class="table table-hover table-condensed oc-table-responsive">
-            <thead>
-            <tr>
-                <th><div>Name</div></th>
-                <th><div>ID</div></th>
-                <th><div>First Price Break</div></th>
-                <th><div>Buyers</div></th>
-                <th><div>User Groups</div></th>
-                <th><div></div></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat=" assignment  in productDetail.listAssignments">
-                <td>{{assignment.PriceSchedule.Name}}</td>
-                <td>{{assignment.PriceSchedule.ID}}</td>
-                <td>{{assignment.PriceSchedule.PriceBreaks[0].Price | currency}}</td>
-                <td>{{assignment.Buyers.length}}</td>
-                <td>{{assignment.UserGroups.length}}</td>
-                <td>
-                    <button class="btn btn-default btn-sm pull-right" ui-sref=".priceScheduleDetail({pricescheduleid: assignment.PriceSchedule.ID})">View Details</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</article>
+    <nav class="navbar navbar-default navbar-unstacked">
+        <div class="container container-smooth">
+            <ul class="nav navbar-nav navbar-left">
+                <ul class="breadcrumb">
+                    <li><a href="" ui-sref="products">All Products</a></li>
+                    <li class="active">{{productDetail.productName}}</li>
+                </ul>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <button type="button" class="btn btn-primary btn-sm navbar-btn" ui-sref="products.create"><i class="fa fa-plus-circle"></i>
+                    <span class="hidden-lg hidden-md">Product</span>
+                    <span class=" hidden-xs hidden-sm">New Product</span>
+                </button>
+            </ul>
+        </div>
+    </nav>
+    <article>
+        <ul class="nav nav-tabs">
+            <li ng-class="{active:application.$state.is('products.detail')}"><a href="" ui-sref="products.detail"><i class="fa fa-cube"></i> Product Info</a></li>
+            <li><a href=""><i class="fa fa-edit"></i> Specs <span class="badge">{{productDtail.product.SpecsCount || 0}}</span></a></li>
+            <li ng-class="{active:application.$state.includes('products.detail.pricing') || application.$state.is('products.detail.createAssignment')}"><a href="" ui-sref=".pricing"><i class="fa fa-dollar"></i> Pricing</a></li>
+            <li><a href=""><i class="fa fa-truck"></i> Shipping</a></li>
+            <li ui-sref-active="active"><a href="" ui-sref=".inventory"><i class="fa fa-clipboard"></i> Inventory</a></li>
+        </ul>
+        <br>
+        <ui-view>
+            <div class="row">
+                <div class="col-sm-8">
+                    <form name="productDetail.InfoForm" autocomplete="off" ng-submit="productDetail.updateProduct()" novalidate class="form-horizontal">
+                        <fieldset class="form-group">
+                            <label for="ProductID" class="col-sm-3 control-label">Product ID:</label>
+                            <div class="col-sm-9">
+                                <input id="ProductID" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" type="text" class="form-control" ng-model="productDetail.product.ID" required>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label for="ProductName" class="col-sm-3 control-label">Name:</label>
+                            <div class="col-sm-9">
+                                <input id="ProductName" type="text" class="form-control" ng-model="productDetail.product.Name" required>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier:</label>
+                            <div class="col-sm-9">
+                                <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="productDetail.product.QuantityMultiplier" required>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label for="ProductDescription" class="col-sm-3 control-label">Description:</label>
+                            <div class="col-sm-9">
+                                <textarea id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="productDetail.product.Description"></textarea>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <oc-file-upload  model="productDetail.product" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <button type="submit" cg-busy="productDetail.productUpdateLoading" class="btn btn-primary btn-block">Update Product Info</button>
+                            </div>
+                        </fieldset>
+                        <hr>
+                        <button type="button" class="btn btn-default btn-block" ng-click="productDetail.deleteProduct()"><i class="fa fa-trash-o text-danger"></i> Delete Product</button>
+                    </form>
+                </div>
+            </div>
+        </ui-view>
+        <!--<div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <button type="button" class="btn btn-default btn-sm pull-right" ng-click="productDetail.editFields('Edit Info: ' + productDetail.product.Name, ['ID', 'Name', 'Description', 'QuantityMultiplier'])"><i class="fa fa-edit"></i> Edit</button>
+                        <h3 class="panel-title">Product Information</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            <div class="col-sm-3 text-right">
+                                <b>Product ID:</b>
+                            </div>
+                            <div class="col-sm-9">
+                                {{productDetail.product.ID}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3 text-right">
+                                <b>Name:</b>
+                            </div>
+                            <div class="col-sm-9">
+                                {{productDetail.product.Name}}
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-if="productDetail.product.QuantityMultiplier > 1">
+                            <div class="col-sm-3 text-right">
+                                <b>Qty Multiplier:</b>
+                            </div>
+                            <div class="col-sm-9">
+                                {{'x ' + productDetail.product.QuantityMultiplier}}
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-if="productDetail.product.Description">
+                            <div class="col-sm-3 text-right">
+                                <b>Description:</b>
+                            </div>
+                            <div class="col-sm-9">
+                                {{productDetail.product.Description}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <button type="button" class="btn btn-default btn-sm pull-right"
+                                ng-click="productDetail.editFields('Edit Ship Dimensions', ['ShipWeight', 'ShipHeight', 'ShipWidth', 'ShipLength'])">
+                            <i class="fa fa-edit"></i> Edit
+                        </button>
+                        <h3 class="panel-title">
+                            Ship Dimensions
+                        </h3>
+                    </div>
+                    <div class="panel-body text-center" ng-if="!(productDetail.product.ShipWeight || productDetail.product.ShipHeight || productDetail.product.ShipWidth || productDetail.product.ShipLength)">
+                        This product does not have any shipping options configured. <br>
+                        <a href="" ng-click="productDetail.editFields('Add Ship Dimensions', ['ShipWeight', 'ShipHeight', 'ShipWidth', 'ShipLength'])">
+                            Add ship dimensions
+                        </a>
+                    </div>
+                    <div class="panel-body" ng-if="productDetail.product.ShipWeight || productDetail.product.ShipHeight || productDetail.product.ShipWidth || productDetail.product.ShipLength">
+                        <div class="form-group row" ng-if="productDetail.product.ShipWeight">
+                            <div class="col-sm-3 text-right">
+                                <b>Ship Weight:</b>
+                            </div>
+                            <div class="col-sm-9">
+                                {{productDetail.product.ShipWeight}}
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-if="productDetail.product.ShipHeight">
+                            <div class="col-sm-3 text-right">
+                                <b>Height:</b>
+                            </div>
+                            <div class="col-sm-9">
+                                {{productDetail.product.ShipHeight}}
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-if="productDetail.product.ShipWidth">
+                            <div class="col-sm-3 text-right">
+                                <b>Width:</b>
+                            </div>
+                            <div class="col-sm-9">
+                                {{productDetail.product.ShipWidth}}
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-if="productDetail.product.ShipLength">
+                            <div class="col-sm-3 text-right">
+                                <b>Length:</b>
+                            </div>
+                            <div class="col-sm-9">
+                                {{productDetail.product.ShipLength}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                &lt;!&ndash;<h5 ng-if="productDetail.product.ShipFromAddressID"><b>Ship From Address: </b> {{productDetail.product.ShipFromAddressID}}</h5>&ndash;&gt;
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="checkbox pull-right">
+                            <label for="EnableInventory">
+                                <input id="EnableInventory" type="checkbox" ng-model="productDetail.product.InventoryEnabled" ng-change="productDetail.patchField('InventoryEnabled')" /> Enable
+                            </label>
+                        </div>
+                        <h3 class="panel-title">Inventory</h3>
+                    </div>
+                    <div uib-collapse="!productDetail.product.InventoryEnabled">
+                        <div class="panel-body">
+                            <h5><b>Inventory Notification Point: </b> {{productDetail.product.InventoryNotificationPoint}} <i class="fa fa-edit" ng-click="productDetail.editFields(['InventoryNotificationPoint'])"></i></h5>
+                            <h5><b>Inventory Visible: </b> <input type="checkbox" ng-model="productDetail.product.InventoryVisible" ng-change="productDetail.patchField('InventoryVisible')" /></h5>
+                            &lt;!&ndash;<h5><b>Variant Level Inventory: </b> <input type="checkbox" ng-model="productDetail.product.VariantLevelInventory" ng-change="productDetail.patchField('VariantLevelInventory')" /></h5>&ndash;&gt;
+                        </div>
+                    </div>
+                </div>
+                &lt;!&ndash;<oc-file-upload  model="productDetail.product" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff" patch="productDetail.patchImage"></oc-file-upload>&ndash;&gt;
+            </div>
+            <div class="col-sm-6">
+                <div class="page-header">
+                    <h3>
+                        Pricing
+                        <button class="btn btn-primary pull-right" ui-sref=".createAssignment">
+                            <i class="fa fa-plus-circle"></i> New Assignment
+                        </button>
+                    </h3>
+                </div>
+                <div class="well well-lg text-center" ng-if="!productDetail.listAssignments">
+                    <b>This product does not have any assignments for the active Buyer company.</b>
+                </div>
+                &lt;!&ndash;====== LIST ======&ndash;&gt;
+                <div ng-if="productDetail.listAssignments">
+
+                    <table class="table table-hover table-condensed oc-table-responsive">
+                        <thead>
+                        <tr>
+                            <th><div>Name</div></th>
+                            <th><div>ID</div></th>
+                            <th><div>First Price Break</div></th>
+                            <th><div>Buyers</div></th>
+                            <th><div>User Groups</div></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat=" assignment  in productDetail.listAssignments">
+                            <td>{{assignment.PriceSchedule.Name}}</td>
+                            <td>{{assignment.PriceSchedule.ID}}</td>
+                            <td>{{assignment.PriceSchedule.PriceBreaks[0].Price | currency}}</td>
+                            <td>{{assignment.Buyers.length}}</td>
+                            <td>{{assignment.UserGroups.length}}</td>
+                            <td class="action-cell">
+                                <button class="btn btn-default btn-sm pull-right" ui-sref=".priceScheduleDetail({pricescheduleid: assignment.PriceSchedule.ID})">View Details</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>-->
+    </article>

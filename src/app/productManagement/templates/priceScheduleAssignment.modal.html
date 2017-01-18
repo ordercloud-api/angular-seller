@@ -1,7 +1,7 @@
 <form name="PriceScheduleAssignmentForm" ng-submit="priceScheduleAssignment.confirm()" cg-busy="priceScheduleAssignment.loading">
     <div class="modal-header">
         <button type="button" class="close" ng-click="priceScheduleAssignment.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3>Add Assignment</h3>
+        <h3 class="modal-title">Add Assignment</h3>
     </div>
     <div class="modal-body">
         <div class="form-group">
@@ -20,10 +20,12 @@
         </div>
         <div ng-if="priceScheduleAssignment.selectedBuyer">
             <div class="form-group" ng-if="priceScheduleAssignment.buyerUserGroups.Items.length && !priceScheduleAssignment.preSelectedBuyer">
-                <label>
-                    <input type="checkbox" ng-model="priceScheduleAssignment.assignAtUserGroupLevel" />
-                    Assign at User Group Level
-                </label>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="priceScheduleAssignment.assignAtUserGroupLevel" />
+                        Assign at User Group Level
+                    </label>
+                </div>
             </div>
             <div class="form-group" ng-if="priceScheduleAssignment.assignAtUserGroupLevel">
                 <label>Select User Group(s)</label>
@@ -42,6 +44,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" ng-disabled="PriceScheduleAssignmentForm.$invalid">Save</button>
+        <button type="submit" class="btn btn-block btn-primary" ng-disabled="PriceScheduleAssignmentForm.$invalid">Save</button>
     </div>
 </form>
