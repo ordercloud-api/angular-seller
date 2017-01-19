@@ -1,14 +1,14 @@
-<div class="row">
+<!--==== No Prices Defined ====-->
+<div class="well well-lg text-center" ng-if="!productPricing.listAssignments.length">
+    This product does not have any prices set. <br>
+    <a href="" ui-sref="^.createAssignment">Create one now</a>
+</div>
+
+<div class="row" ng-if="productPricing.listAssignments.length">
     <div class="col-sm-5">
 
-        <!--==== No Prices Defined ====-->
-        <div class="well well-lg text-center" ng-if="!productPricing.listAssignments">
-            This product does not have any prices set. <br>
-            <a href="" ui-sref=".createAssignment">Create One Now</a>
-        </div>
-
         <!--==== Create New Assignment ====-->
-        <button class="btn btn-primary" ng-if="productPricing.listAssignments" ui-sref="^.createAssignment">
+        <button class="btn btn-primary" ng-if="productPricing.listAssignments.length" ui-sref="^.createAssignment">
             <i class="fa fa-plus-circle"></i> New Price
         </button>
         <br>
