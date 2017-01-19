@@ -306,9 +306,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
         });
 
         modalInstance.result.then(function(assignment) {
-            console.log('assignment', assignment);
             if (assignment.UserGroup) {
-                console.log('usergroups hit');
                 assignment.Buyer.Assigned = false;
                 assignment.Buyer.UserGroups = [assignment.UserGroup];
                 angular.forEach(vm.listAssignments, function(val, key) {
@@ -321,8 +319,6 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                 } else {
                     vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups = [{UserGroupID:assignment.UserGroup.ID, BuyerID:assignment.Buyer.ID}]
                 }
-                console.log('end of if was hit');
-
             } else {
                 assignment.Buyer.Assigned = true;
                 angular.forEach(vm.listAssignments, function(val, key) {
@@ -336,15 +332,34 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     };
 
     vm.removeBuyerAssignment = function(scope) {
+        vm.availabilityLoading = [];
         if (vm.selectedPrice.Availability.length == 1) {
-            //confirm they want to delete this price
-            //delete price schedule if yes
-            //cancel if no
+            OrderCloudConfirm.Confirm("Removing the last buyer organization will remove this price from the product entirely. Do you wish to continue?")
+                .then(function() {
+                    vm.availabilityLoading[scope.$index] = OrderCloud.PriceSchedules.Delete(vm.selectedPrice.PriceSchedule.ID)
+                        .then(function() {
+                            delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
+                            vm.selectedPrice = null;
+                        })
+                });
         } else if (!scope.buyer.Assigned) {
             //delete all user group assignments
+            var queue = [];
+            angular.forEach(scope.buyer.UserGroups, function(ug) {
+                vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups = _.filter(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups, function(group) {
+                    return !((group.UserGroupID == ug.ID) && (group.BuyerID == scope.buyer.ID));
+                });
+                queue.push(OrderCloud.Products.DeleteAssignment($stateParams.productid, null, ug.ID, scope.buyer.ID));
+            });
+
+            vm.availabilityLoading[scope.$index] = $q.all(queue)
+                .then(function() {
+                    vm.selectedPrice.Availability.splice(scope.$index, 1);
+                });
+
         } else {
             //delete buyer assignment
-            OrderCloud.Products.DeleteAssignment($stateParams.productid, null, null, scope.buyer.ID)
+            vm.availabilityLoading[scope.$index] = OrderCloud.Products.DeleteAssignment($stateParams.productid, null, null, scope.buyer.ID)
                 .then(function() {
                     vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].Buyers = _.without(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].Buyers, scope.buyer.ID);
                     vm.selectedPrice.Availability.splice(scope.$index, 1);
@@ -382,7 +397,13 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                 vm.selectedPrice.Availability[scope.$index].UserGroups.push(assignment.UserGroup);
                 angular.forEach(vm.listAssignments, function(val, key) {
                     angular.forEach(val.UserGroups, function(group, index) {
-                        if (group.UserGroupID == assignment.UserGroup.ID) vm.listAssignments[key].UserGroups.splice(index, 1);
+                        if (group.UserGroupID == assignment.UserGroup.ID && assignment.Buyer.ID == group.BuyerID) vm.listAssignments[key].UserGroups.splice(index, 1);
+                        if (!vm.listAssignments[key].UserGroups.length && !vm.listAssignments[key].Buyers.length) {
+                            OrderCloud.PriceSchedules.Delete(key)
+                                .then(function() {
+                                    delete vm.listAssignments[key];
+                                })
+                        }
                     });
                 });
                 vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups.push({UserGroupID:assignment.UserGroup.ID, BuyerID:scope.buyer.ID});
@@ -408,6 +429,32 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     vm.selectUserGroup = function(buyer, scope) {
         if (!scope.userGroup.selected) buyer.allGroupsSelected = false;
     };
+
+    vm.removeUserGroupAssignments = function(scope) {
+        if (scope.buyer.allGroupsSelected || (_.filter(scope.buyer.UserGroups, function(ug){ return ug.selected}).length == scope.buyer.UserGroups.length)) {
+            //TODO: Confirm if they want to assign this at the buyer level, if so, unassign all groups and assign to the buyer - update the VM
+            vm.removeBuyerAssignment(scope);
+        } else {
+            vm.availabilityLoading = [];
+            var queue = [];
+            var listAssignmentUserGroups = vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups;
+            var availabilityUserGroups = vm.selectedPrice.Availability[scope.$index].UserGroups;
+            angular.forEach(_.filter(scope.buyer.UserGroups, function(ug){ return ug.selected}), function(ug) {
+                listAssignmentUserGroups = _.filter(listAssignmentUserGroups, function(group) {
+                    return !((group.UserGroupID == ug.ID) && (group.BuyerID == scope.buyer.ID));
+                });
+                availabilityUserGroups = _.filter(availabilityUserGroups, function(group) {
+                    return group.ID != ug.ID;
+                });
+                queue.push(OrderCloud.Products.DeleteAssignment($stateParams.productid, null, ug.ID, scope.buyer.ID));
+            });
+            vm.availabilityLoading[scope.$index] = $q.all(queue)
+                .then(function() {
+                    vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups = listAssignmentUserGroups;
+                    vm.selectedPrice.Availability[scope.$index].UserGroups = availabilityUserGroups;
+                });
+        }
+    }
 }
 
 function PriceScheduleEditModalController($uibModalInstance, SelectedPriceSchedule, OrderCloud) {
