@@ -44,19 +44,8 @@ function ProductsConfig($stateProvider) {
             controller: 'ProductSpecsCtrl',
             controllerAs: 'productSpecs',
             resolve: {
-                ProductSpecs: function($stateParams, OrderCloud) {
-                    return OrderCloud.Specs.ListProductAssignments(null, $stateParams.productid)
-                        .then(function(data) {
-                            if (data.Items.length) {
-                                return OrderCloud.Specs.List(null, null, null, null, null, {ID: _.pluck(data.Items, 'SpecID')})
-                                    .then(function(data2) {
-                                        data.Items = data2.Items;
-                                        return data;
-                                    })
-                            } else {
-                                return data;
-                            }
-                        });
+                ProductSpecs: function($stateParams, OrderCloud, ocProductsService) {
+                    return ocProductsService.ProductSpecsDetail($stateParams.productid);
                 }
             }
         })
