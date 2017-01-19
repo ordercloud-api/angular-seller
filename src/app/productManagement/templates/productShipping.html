@@ -29,20 +29,11 @@
                 <label for="ShipFrom" class="col-sm-3 control-label">Ship From:</label>
                 <div class="col-sm-9">
                     <ui-select ng-model="productDetail.product.ShipFromAddressID" close-on-select="true" id="ShipFrom">
-                        <ui-select-match placeholder="Search and select seller addresses...">{{$item.AddressName}}
-
-                            <span ng-bind="$select.selected.AddressName"></span>
+                        <ui-select-match placeholder="Search and select seller addresses...">
+                            <span ng-bind-html="$select.selected | address"></span>
                         </ui-select-match>
                         <ui-select-choices repeat="address.ID as address in (productShipping.adminAddresses.Items | filter: $select.search) track by $index" refresh="productShipping.listAllAdminAddresses($select.search)" refresh-delay="300">
-                            <b><span ng-bind="address.AddressName"></span></b>
-                            <br>
-                            <small>
-                                <b>ID: </b>{{address.ID}}
-                                <br>
-                                <span>{{address.Street1}}</span><span ng-if="address.Street2">, {{address.Street2}}</span>
-                                <br>
-                                <span>{{address.City}}, {{address.State}} {{address.Zip}}</span>
-                            </small>
+                            <span ng-bind-html="address | address:'full'"></span>
                         </ui-select-choices>
                     </ui-select>
                 </div>

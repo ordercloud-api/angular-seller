@@ -10,13 +10,13 @@
             <fieldset class="form-group">
                 <label for="ReservedInventory" class="col-sm-3 control-label">Reserved Inventory:</label>
                 <div class="col-sm-9">
-                    <span id="ReservedInventory">{{productInventory.inventory.Reserved}}</span>
+                    <p id="ReservedInventory" class="form-control-static">{{productInventory.inventory.Reserved}}</p>
                 </div>
             </fieldset>
             <fieldset class="form-group" ng-if="productInventory.inventory.LastUpdated">
                 <label for="DateLastUpdated" class="col-sm-3 control-label">Date Last Updated:</label>
                 <div class="col-sm-9">
-                    <span id="DateLastUpdated">{{productInventory.inventory.LastUpdated | date:'short'}}</span>
+                    <p id="DateLastUpdated" class="form-control-static">{{productInventory.inventory.LastUpdated | date:'short'}}</p>
                 </div>
             </fieldset>
             <fieldset class="form-group">
