@@ -105,7 +105,7 @@ function ProductCreateController($exceptionHandler, $state, toastr, OrderCloud) 
     }
 }
 
-function ProductDetailController($exceptionHandler, $state, toastr, OrderCloud, ocConfirm, SelectedProduct) {
+function ProductDetailController($rootScope, $exceptionHandler, $state, toastr, OrderCloud, ocConfirm, SelectedProduct) {
     var vm = this;
     vm.product = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
@@ -141,4 +141,8 @@ function ProductDetailController($exceptionHandler, $state, toastr, OrderCloud, 
                     });
             });
     }
+
+    $rootScope.$on('ProductManagement:SpecCountChanged', function(event, action) {
+        vm.product.SpecCount += (action == 'increment') ? 1 : -1;
+    });
 }
