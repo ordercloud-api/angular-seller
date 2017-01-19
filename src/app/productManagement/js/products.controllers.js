@@ -170,6 +170,12 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
             })
     };
 
+    if ($stateParams.pricescheduleid && vm.listAssignments[$stateParams.pricescheduleid]) {
+        vm.selectPrice({assignment:vm.listAssignments[$stateParams.pricescheduleid]});
+    } else if (_.keys(vm.listAssignments).length) {
+        vm.selectPrice({assignment:vm.listAssignments[_.keys(vm.listAssignments)[0]]});
+    }
+
     vm.editPrice = function() {
         $uibModal.open({
             templateUrl: 'productManagement/templates/priceScheduleEdit.modal.html',
@@ -546,8 +552,9 @@ function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProduct
     function saveAssignment() {
         ocProductsService.CreateNewPriceScheduleAndAssignments(vm.product, vm.priceSchedule, vm.selectedBuyer, vm.selectedUserGroups)
             .then(function(data) {
+                console.log(data);
                 toastr.success('Assignment Created', 'Success');
-                $state.go('^', {}, {reload: true});
+                $state.go('^.pricing', {pricescheduleid:data.PriceScheduleID});
             })
             .catch(function (ex) {
                 toastr.error('An error occurred while trying to save your product assignment', 'Error');

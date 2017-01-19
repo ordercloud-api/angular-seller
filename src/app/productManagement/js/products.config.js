@@ -62,6 +62,9 @@ function ProductsConfig($stateProvider) {
         })
         .state('productDetail.pricing', {
             url: '/pricing',
+            params: {
+                pricescheduleid: undefined
+            },
             templateUrl: 'productManagement/templates/productPricing.html',
             controller: 'ProductPricingCtrl',
             controllerAs: 'productPricing',
