@@ -79,7 +79,7 @@ function ProductsConfig($stateProvider) {
             url: '/shipping',
             templateUrl: 'productManagement/templates/productShipping.html'
         })
-        .state('products.detail.inventory', {
+        .state('productDetail.inventory', {
             url: '/inventory',
             templateUrl: 'productManagement/templates/productInventory.html',
             controller: 'ProductInventoryCtrl',

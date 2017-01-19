@@ -1,4 +1,51 @@
+<div class="row">
+    <div class="col-sm-8">
+        <form name="productInventory.ProductInventoryForm" ng-submit="productInventory.updateProductInventory(productDetail.product)" autocomplete="off" novalidate class="form-horizontal">
+            <fieldset class="form-group">
+                <label for="AvailableInventory" class="col-sm-3 control-label">Available Inventory:</label>
+                <div class="col-sm-9">
+                    <input id="AvailableInventory" type="number" class="form-control" ng-model="productInventory.inventory.Available" />
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ReservedInventory" class="col-sm-3 control-label">Reserved Inventory:</label>
+                <div class="col-sm-9">
+                    <span id="ReservedInventory">{{productInventory.inventory.Reserved}}</span>
+                </div>
+            </fieldset>
+            <fieldset class="form-group" ng-if="productInventory.inventory.LastUpdated">
+                <label for="DateLastUpdated" class="col-sm-3 control-label">Date Last Updated:</label>
+                <div class="col-sm-9">
+                    <span id="DateLastUpdated">{{productInventory.inventory.LastUpdated | date:'short'}}</span>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="InventoryNotificationPoint" class="col-sm-3 control-label">Notification Point:</label>
+                <div class="col-sm-9">
+                    <input id="InventoryNotificationPoint" type="number" class="form-control" min="1" ng-model="productDetail.product.InventoryNotificationPoint" />
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="checkbox">
+                        <label for="AllowOrderExceedInventory">
+                            <input id="AllowOrderExceedInventory" name="ApplyTax" type="checkbox" ng-model="productDetail.product.AllowOrderExceedInventory">
+                            Allow Order to Exceed Inventory
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" cg-busy="productInventory.productUpdateLoading" class="btn btn-primary btn-block">Update</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<!--
 <h3>Product (productDetailCtrl)</h3>
 {{productDetail.product}}
 <h3>Inventory (productInventoryCtrl</h3>
-{{productInventory.inventory}}
+{{productInventory.inventory}}-->
