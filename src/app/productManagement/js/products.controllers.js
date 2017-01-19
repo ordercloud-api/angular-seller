@@ -87,7 +87,6 @@ function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, 
 
 function ProductCreateController($exceptionHandler, $state, toastr, OrderCloud) {
     var vm = this;
-
     vm.product = {};
     vm.product.Active = true;
     vm.product.QuantityMultiplier = 1;
@@ -97,9 +96,8 @@ function ProductCreateController($exceptionHandler, $state, toastr, OrderCloud) 
     function submit() {
         OrderCloud.Products.Create(vm.product)
             .then(function(data) {
-                vm.product.ID = data.ID;
                 toastr.success('Product Saved', 'Success');
-                $state.go('products.detail.createAssignment', {productid: vm.product.ID}, {reload: true});
+                $state.go('productDetail', {productid: data.ID});
             })
             .catch(function(ex) {
                 $exceptionHandler(ex)

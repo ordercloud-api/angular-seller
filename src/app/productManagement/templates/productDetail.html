@@ -17,7 +17,7 @@
 <article>
     <ul class="nav nav-tabs">
         <li ng-class="{active:application.$state.is('productDetail')}">
-            <a href="" ui-sref="productDetail"><i class="fa fa-cube"></i> Product Info</a>
+            <a href="" ui-sref="productDetail"><i class="fa fa-cube"></i> Product</a>
         </li>
         <li ui-sref-active="active">
             <a href="" ui-sref=".specs"><i class="fa fa-edit"></i> Specs <span class="badge">{{productDetail.product.SpecCount || 0}}</span></a>
@@ -50,15 +50,21 @@
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
+                        <label for="ProductDescription" class="col-sm-3 control-label">Description:</label>
+                        <div class="col-sm-9">
+                            <textarea id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="productDetail.product.Description"></textarea>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
                         <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier:</label>
                         <div class="col-sm-9">
                             <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="productDetail.product.QuantityMultiplier" required>
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
-                        <label for="ProductDescription" class="col-sm-3 control-label">Description:</label>
+                        <label class="col-sm-3 control-label">Image:</label>
                         <div class="col-sm-9">
-                            <textarea id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="productDetail.product.Description"></textarea>
+                            <oc-file-upload  model="productDetail.product" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
@@ -68,11 +74,11 @@
                                     <input id="InventoryEnabled" name="InventoryEnabled" type="checkbox" ng-model="productDetail.product.InventoryEnabled"> Inventory Enabled
                                 </label>
                             </div>
-                        </div>
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <div class="col-sm-offset-3 col-sm-9">
-                            <oc-file-upload  model="productDetail.product" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                            <div class="checkbox">
+                                <label for="ProductActive">
+                                    <input id="ProductActive" name="ProductActive" type="checkbox" ng-model="productDetail.product.Active"> Active
+                                </label>
+                            </div>
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
