@@ -77,9 +77,16 @@ function ProductsConfig($stateProvider) {
         })
         .state('productDetail.shipping', {
             url: '/shipping',
-            templateUrl: 'productManagement/templates/productShipping.html'
+            templateUrl: 'productManagement/templates/productShipping.html',
+            controller: 'ProductShippingCtrl',
+            controllerAs: 'productShipping',
+            resolve: {
+                AdminAddresses: function(OrderCloud) {
+                    return OrderCloud.AdminAddresses.List();
+                }
+            }
         })
-        .state('products.detail.inventory', {
+        .state('productDetail.inventory', {
             url: '/inventory',
             templateUrl: 'productManagement/templates/productInventory.html',
             controller: 'ProductInventoryCtrl',

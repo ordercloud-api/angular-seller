@@ -9,7 +9,8 @@ function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak
         AssignmentDataDetail: _assignmentDataDetail,
         AssignBuyerRemoveUserGroups: _assignBuyerRemoveUserGroups,
         CreateAssignment: _createAssignment,
-        CreateNewPriceScheduleAndAssignments: _createNewPriceScheduleAndAssignments
+        CreateNewPriceScheduleAndAssignments: _createNewPriceScheduleAndAssignments,
+        UpdateInventory: _updateInventory
     };
 
     function _assignmentList(productid, buyerid) {
@@ -261,6 +262,41 @@ function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak
             })
             .catch(function (ex) {
                 deferred.reject(ex);
+            });
+
+        return deferred.promise;
+    }
+
+    function _updateInventory(product, inventory) {
+        var deferred = $q.defer();
+        var inventoryResult;
+        var queue = [];
+
+        var productPartial = _.pick(product, ['InventoryNotificationPoint', 'AllowOrderExceedInventory']);
+        queue.push(OrderCloud.Products.Patch(product.ID, productPartial));
+
+        queue.push((function() {
+            var d = $q.defer();
+
+            OrderCloud.Products.UpdateInventory(product.ID, inventory.Available)
+                .then(function(data) {
+                    inventoryResult = data;
+                    d.resolve();
+                })
+                .catch(function(ex) {
+                    inventoryResult = ex;
+                    d.reject();
+                });
+
+            return d.promise;
+        })());
+
+        $q.all(queue)
+            .then(function() {
+                deferred.resolve(inventoryResult);
+            })
+            .catch(function() {
+                deferred.reject(inventoryResult);
             });
 
         return deferred.promise;

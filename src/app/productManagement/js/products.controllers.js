@@ -5,6 +5,7 @@ angular.module('orderCloud')
     .controller('ProductSpecsCtrl', ProductSpecsController)
     .controller('ProductPricingCtrl', ProductPricingController)
     .controller('PriceScheduleEditModalCtrl', PriceScheduleEditModalController)
+    .controller('ProductShippingCtrl', ProductShippingController)
     .controller('ProductInventoryCtrl', ProductInventoryController)
     .controller('ProductCreateAssignmentCtrl', ProductCreateAssignmentController)
     .controller('PriceScheduleDetailCtrl', PriceScheduleDetailController)
@@ -119,15 +120,17 @@ function ProductDetailController($exceptionHandler, $state, toastr, OrderCloud, 
     var vm = this;
     vm.product = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
+    vm.inventoryEnabled = angular.copy(SelectedProduct.InventoryEnabled);
     vm.updateProduct = updateProduct;
     vm.deleteProduct = deleteProduct;
 
     function updateProduct() {
-        var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier']);
+        var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'InventoryEnabled']);
         vm.productUpdateLoading = OrderCloud.Products.Patch(SelectedProduct.ID, partial)
             .then(function(data) {
                 vm.product = angular.copy(data);
                 vm.productName = angular.copy(data.Name);
+                vm.inventoryEnabled = angular.copy(data.InventoryEnabled);
                 SelectedProduct = data;
                 vm.InfoForm.$setPristine();
                 toastr.success(data.Name + ' was updated', 'Success!');
@@ -423,9 +426,42 @@ function PriceScheduleEditModalController($uibModalInstance, SelectedPriceSchedu
     }
 }
 
-function ProductInventoryController(ProductInventory) {
+function ProductShippingController(toastr, OrderCloud, AdminAddresses) {
+    var vm = this;
+    vm.adminAddresses = AdminAddresses;
+    vm.updateProductShipping = updateProductShipping;
+    vm.listAllAdminAddresses = listAllAdminAddresses;
+
+    function updateProductShipping(product) {
+        var partial = _.pick(product, ['ShipWeight', 'ShipHeight', 'ShipWidth', 'ShipLength', 'ShipFromAddressID']);
+        vm.productUpdateLoading = OrderCloud.Products.Patch(product.ID, partial)
+            .then(function() {
+                vm.ProductShippingForm.$setPristine();
+                toastr.success(product.Name + ' shipping was updated', 'Success!');
+            });
+    }
+
+    function listAllAdminAddresses(search){
+        return OrderCloud.AdminAddresses.List(search)
+            .then(function(data){
+                vm.adminAddresses = data;
+            });
+    }
+}
+
+function ProductInventoryController(toastr, ocProductsService, ProductInventory) {
     var vm = this;
     vm.inventory = angular.copy(ProductInventory);
+    vm.updateProductInventory = updateProductInventory;
+
+    function updateProductInventory(product) {
+        vm.productUpdateLoading = ocProductsService.UpdateInventory(product, vm.inventory)
+            .then(function(inventory) {
+                vm.inventory = angular.copy(inventory);
+                vm.ProductInventoryForm.$setPristine();
+                toastr.success(product.Name + ' inventory was updated', 'Success!');
+            });
+    }
 }
 
 function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProductsService, SelectedProduct, Buyers, PriceBreak) {
