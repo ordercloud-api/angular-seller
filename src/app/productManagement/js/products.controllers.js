@@ -2,7 +2,6 @@ angular.module('orderCloud')
     .controller('ProductsCtrl', ProductsController)
     .controller('ProductCreateCtrl', ProductCreateController)
     .controller('ProductDetailCtrl', ProductDetailController)
-    .controller('ProductCreateAssignmentCtrl', ProductCreateAssignmentController)
 ;
 
 function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, ProductList, Parameters) {
@@ -108,7 +107,7 @@ function ProductCreateController($exceptionHandler, $state, toastr, OrderCloud) 
     }
 }
 
-function ProductDetailController($exceptionHandler, $state, toastr, OrderCloud, OrderCloudConfirm, SelectedProduct) {
+function ProductDetailController($exceptionHandler, $state, toastr, OrderCloud, ocConfirm, SelectedProduct) {
     var vm = this;
     vm.product = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
@@ -130,7 +129,9 @@ function ProductDetailController($exceptionHandler, $state, toastr, OrderCloud, 
     }
 
     function deleteProduct(){
-        OrderCloudConfirm.Confirm('Are you sure you want to delete this product?')
+        ocConfirm.Confirm({
+            message:'Are you sure you want to delete this product?'
+            })
             .then(function(){
                 OrderCloud.Products.Delete(vm.productID)
                     .then(function() {
@@ -140,49 +141,6 @@ function ProductDetailController($exceptionHandler, $state, toastr, OrderCloud, 
                     .catch(function(ex) {
                         $exceptionHandler(ex)
                     });
-            });
-    }
-}
-
-function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProductsService, SelectedProduct, Buyers, PriceBreak) {
-    var vm = this;
-    vm.buyers = Buyers;
-    vm.product = SelectedProduct;
-    vm.selectedBuyer = null;
-    vm.priceSchedule = {
-        RestrictedQuantity: false,
-        PriceBreaks: [],
-        MinQuantity: 1,
-        OrderType: 'Standard'
-    };
-    vm.getBuyerUserGroups = getBuyerUserGroups;
-    vm.saveAssignment = saveAssignment;
-    vm.addPriceBreak = addPriceBreak;
-    vm.deletePriceBreak = PriceBreak.DeletePriceBreak;
-    vm.assignAtUserGroupLevel = false;
-
-    function addPriceBreak() {
-        PriceBreak.AddPriceBreak(vm.priceSchedule, vm.price, vm.quantity);
-        vm.quantity = null;
-        vm.price = null;
-    }
-
-    function getBuyerUserGroups(){
-        vm.selectedUserGroups = null;
-        OrderCloud.UserGroups.List(null, 1, 20, null, null, null, vm.selectedBuyer.ID)
-            .then(function(data){
-                vm.buyerUserGroups = data;
-            });
-    }
-
-    function saveAssignment() {
-        ocProductsService.CreateNewPriceScheduleAndAssignments(vm.product, vm.priceSchedule, vm.selectedBuyer, vm.selectedUserGroups)
-            .then(function(data) {
-                toastr.success('Assignment Created', 'Success');
-                $state.go('^', {}, {reload: true});
-            })
-            .catch(function (ex) {
-                toastr.error('An error occurred while trying to save your product assignment', 'Error');
             });
     }
 }

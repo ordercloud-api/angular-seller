@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocProductsService', ocProductsService)
 ;
 
-function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak) {
+function ocProductsService($q, toastr, OrderCloud, ocConfirm, PriceBreak) {
     var service = {
         AssignmentList: _assignmentList,
         AssignmentData: _assignmentData,
@@ -193,7 +193,9 @@ function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak
             })
             .catch(function(ex) {
                 if (ex.status == 409 && ex.data.Errors[0].ErrorCode == 'IdExists') {
-                    OrderCloudConfirm.Confirm('Another price schedule is already assigned to your selected party. Would you like to replace that assignment?')
+                    ocConfirm.Confirm({
+                        message: 'Another price schedule is already assigned to your selected party. Would you like to replace that assignment?'
+                        })
                         .then(function() {
                             OrderCloud.Products.DeleteAssignment(assignment.ProductID, null, assignment.UserGroupID, assignment.BuyerID)
                                 .then(function() {
@@ -213,7 +215,7 @@ function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak
                 }
             });
 
-        /*OrderCloudConfirm.Confirm("Are you sure you want to delete this buyer organization and all of it's related data?  <b>This action cannot be undone.</b>")
+        /*ocConfirm.Confirm("Are you sure you want to delete this buyer organization and all of it's related data?  <b>This action cannot be undone.</b>")
             .then(function() {
                 OrderCloud.Buyers.Delete(vm.selectedBuyer.ID)
                     .then(function() {
