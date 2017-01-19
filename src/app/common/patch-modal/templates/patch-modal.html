@@ -8,7 +8,7 @@
             <label class="col-sm-3 control-label">{{property.Label + ':'}}</label>
             <div class="col-sm-9">
                 <input ng-if="!property.TextArea" type="{{property.Type ? property.Type : 'text'}}" ng-min="property.MinValue" ng-max="property.MaxValue" class="form-control" ng-model="patchModal.model[property.Key]" ng-required="property.Required" />
-                <textarea ng-if="property.TextArea" class="form-control" ng-model="patchModal.model[property.Key]" ng-required="property.Required"></textarea>
+                <textarea rows="4" ng-if="property.TextArea" class="form-control" ng-model="patchModal.model[property.Key]" ng-required="property.Required"></textarea>
             </div>
         </div>
     </div>
