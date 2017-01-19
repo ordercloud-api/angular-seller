@@ -5,11 +5,12 @@ angular.module('orderCloud')
     .controller('ProductSpecOptionEditCtrl', ProductSpecOptionEditController)
 ;
 
-function ProductSpecsController($uibModal, ocProductsService, ProductSpecs) {
+function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConfirm, OrderCloud, ocProductsService, ProductSpecs) {
     var vm = this;
     vm.specs = angular.copy(ProductSpecs);
     vm.selectedSpec = null;
     vm.createSpec = createSpec;
+    vm.deleteSelectedSpec = deleteSelectedSpec;
     vm.specSelected = specSelected;
     vm.createSpecOption = createSpecOption;
     vm.specOptionSelected = specOptionSelected;
@@ -42,7 +43,29 @@ function ProductSpecsController($uibModal, ocProductsService, ProductSpecs) {
         modalInstance.result.then(function(assignment) {
             vm.specs.Items.push(assignment);
             vm.selectedSpec = assignment;
+            $rootScope.$broadcast('ProductManagement:SpecCountChanged', 'increment');
         });
+    }
+
+    function deleteSelectedSpec() {
+        ocConfirm.Confirm({message: 'Are you sure you want to delete this spec?'})
+            .then(function() {
+                OrderCloud.Specs.Delete(vm.selectedSpec.Spec.ID)
+                    .then(function() {
+                        var specIndex = 0;
+                        angular.forEach(vm.specs.Items, function(spec, index) {
+                            if (spec.Spec.ID == vm.selectedSpec.Spec.ID) {
+                                specIndex = index;
+                            }
+                        });
+                        vm.specs.Items.splice(specIndex, 1);
+                        vm.selectedSpec = null;
+                        $rootScope.$broadcast('ProductManagement:SpecCountChanged', 'decrement');
+                    })
+                    .catch(function(err) {
+                        $exceptionHandler(err);
+                    });
+            });
     }
 
     function specSelected(node) {
@@ -67,8 +90,13 @@ function ProductSpecsController($uibModal, ocProductsService, ProductSpecs) {
             }
         });
 
-        modalInstance.result.then(function() {
-            //
+        modalInstance.result.then(function(specOption) {
+            vm.selectedSpec.Options.push(specOption);
+            angular.forEach(vm.selectedSpec.Options, function(option, index) {
+                if (option.ID != specOption.ID) {
+                    vm.selectedSpec.Options[index].DefaultOption = specOption.DefaultOption ? false : option.DefaultOption;
+                }
+            });
         });
     }
 
@@ -91,8 +119,26 @@ function ProductSpecsController($uibModal, ocProductsService, ProductSpecs) {
             }
         });
 
-        modalInstance.result.then(function() {
-            //
+        modalInstance.result.then(function(specOption) {
+            if (specOption.Removed) {
+                var specOptionIndex = 0;
+                angular.forEach(vm.selectedSpec.Options, function(option, index) {
+                    if (option.ID == specOption.ID) {
+                        specOptionIndex = index;
+                    }
+                });
+                vm.selectedSpec.Options.splice(specOptionIndex, 1);
+            }
+            else {
+                angular.forEach(vm.selectedSpec.Options, function(option, index) {
+                    if (option.ID == specOption.OriginalID) {
+                        vm.selectedSpec.Options[index] = specOption;
+                    }
+                    else {
+                        vm.selectedSpec.Options[index].DefaultOption = specOption.DefaultOption ? false : option.DefaultOption;
+                    }
+                });
+            }
         });
     }
 }
@@ -119,9 +165,28 @@ function ProductSpecCreateController($uibModalInstance, toastr, OrderCloud, Prod
 
 function ProductSpecOptionCreateController($uibModalInstance, toastr, OrderCloud, ProductID, SpecID) {
     var vm = this;
+    vm.markupTypes = [
+        {Label: 'None', Value: 'NoMarkup'},
+        {Label: 'Fixed amount per unit', Value: 'AmountPerQuantity'},
+        {Label: 'Fixed amount per line item', Value: 'AmountTotal'},
+        {Label: 'Percentage of line total', Value: 'Percentage'}
+    ];
 
     vm.submit = function() {
-
+        vm.loading = OrderCloud.Specs.CreateOption(SpecID, vm.specOption)
+            .then(function(data) {
+                if (vm.specOption.DefaultOption) {
+                    OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: SpecID, DefaultOptionID: data.ID})
+                        .then(function() {
+                            data.DefaultOption = false;
+                            $uibModalInstance.close(data);
+                        });
+                }
+                else {
+                    data.DefaultOption = false;
+                    $uibModalInstance.close(data);
+                }
+            });
     };
 
     vm.cancel = function() {
@@ -129,12 +194,46 @@ function ProductSpecOptionCreateController($uibModalInstance, toastr, OrderCloud
     };
 }
 
-function ProductSpecOptionEditController($uibModalInstance, OrderCloud, ProductID, SpecID, SpecOption) {
+function ProductSpecOptionEditController($uibModalInstance, OrderCloud, ocConfirm, ProductID, SpecID, SpecOption) {
     var vm = this;
-    vm.specOption = SpecOption;
+    vm.specOption = angular.copy(SpecOption);
+    vm.specOptionValue = angular.copy(SpecOption.Value);
+    vm.markupTypes = [
+        {Label: 'None', Value: 'NoMarkup'},
+        {Label: 'Fixed amount per unit', Value: 'AmountPerQuantity'},
+        {Label: 'Fixed amount per line item', Value: 'AmountTotal'},
+        {Label: 'Percentage of line total', Value: 'Percentage'}
+    ];
 
     vm.submit = function() {
+        var partial = _.pick(vm.specOption, ['ID', 'Value', 'IsOpenText', 'PriceMarkupType', 'PriceMarkup']);
+        vm.loading = OrderCloud.Specs.PatchOption(SpecID, SpecOption.ID, partial)
+            .then(function(data) {
+                if (vm.specOption.DefaultOption && (vm.specOption.DefaultOption != SpecOption.DefaultOption)) {
+                    OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: SpecID, DefaultOptionID: data.ID})
+                        .then(function() {
+                            data.DefaultOption = true;
+                            data.OriginalID = SpecOption.ID;
+                            $uibModalInstance.close(data);
+                        });
+                }
+                else {
+                    data.DefaultOption = vm.specOption.DefaultOption;
+                    data.OriginalID = SpecOption.ID;
+                    $uibModalInstance.close(data);
+                }
+            });
+    };
 
+    vm.deleteSpecOption = function() {
+        ocConfirm.Confirm({message: 'Are you sure you want to delete this spec option?'})
+            .then(function() {
+                OrderCloud.Specs.DeleteOption(SpecID, vm.specOption.ID)
+                    .then(function() {
+                        SpecOption.Removed = true;
+                        $uibModalInstance.close(SpecOption);
+                    });
+            });
     };
 
     vm.cancel = function() {

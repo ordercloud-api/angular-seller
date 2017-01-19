@@ -28,6 +28,9 @@
         <div ng-if="productSpecs.selectedSpec">
             <header>
                 <h3>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" ng-click="productSpecs.deleteSelectedSpec()"><i class="fa fa-trash text-danger"></i> Delete</button>
+                    </div>
                     {{productSpecs.selectedSpec.Spec.Name}}
                     <small>(ID: {{productSpecs.selectedSpec.Spec.ID}})</small>
                 </h3>
@@ -45,18 +48,28 @@
                         <input id="SpecName" type="text" class="form-control" ng-model="productSpecs.selectedSpec.Spec.Name" required />
                     </div>
                 </fieldset>
-                <!--<fieldset class="form-group">
+                <fieldset class="form-group">
                     <label for="DefaultValue" class="col-sm-3 control-label">Default Value</label>
                     <div class="col-sm-9">
                         <input id="DefaultValue" placeholder="(Optional)" type="text" class="form-control" ng-model="productSpecs.selectedSpec.DefaultValue" />
                     </div>
-                </fieldset>-->
+                </fieldset>
                 <fieldset class="form-group">
                     <div class="col-sm-9 col-md-offset-3">
                         <div class="checkbox">
                             <label for="SpecRequired">
                                 <input id="SpecRequired" type="checkbox" ng-model="productSpecs.selectedSpec.Spec.Required"/>
                                 Required
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group">
+                    <div class="col-sm-9 col-md-offset-3">
+                        <div class="checkbox">
+                            <label for="AllowOpenText">
+                                <input id="AllowOpenText" type="checkbox" ng-model="productSpecs.selectedSpec.Spec.AllowOpenText"/>
+                                Allow Open Text
                             </label>
                         </div>
                     </div>
@@ -74,12 +87,15 @@
                 </header>
                 <script type="text/ng-template" id="spec_options_renderer.html">
                     <div class="tree-node tree-node-content">
-                        <p ng-click="productSpecs.specOptionSelected(node)">{{node.Value}}</p>
+                        <p ng-click="productSpecs.specOptionSelected(node)">
+                            {{node.Value}}
+                            <i class="fa fa-star" ng-if="node.DefaultOption"></i>
+                        </p>
                         <i ui-tree-handle class="fa fa-reorder text-muted"></i>
                     </div>
                 </script>
                 <section>
-                    <button type="button" class="btn btn-primary" ng-click="categoryTree.createSpecOption()">
+                    <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpecOption()">
                         <i class="fa fa-plus-circle" aria-hidden="true"></i>
                         New Option
                     </button>
@@ -89,26 +105,7 @@
                         </ol>
                     </div>
                 </section>
-                <!--<table class="table table-hover oc-table-responsive">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="spec in productSpecs.selectedSpec.Options | orderBy:'ListOrder'">
-                            <td>{{spec.ID}}</td>
-                            <td>{{spec.Value}}</td>
-                        </tr>
-                    </tbody>
-                </table>-->
             </div>
         </div>
     </div>
 </div>
-
-
-<!--
-<h3>Product Specs (productSpecsCtrl)</h3>
-{{productSpecs.specs}}-->

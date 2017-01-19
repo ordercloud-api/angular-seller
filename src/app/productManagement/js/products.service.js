@@ -302,6 +302,7 @@ function ocProductsService($q, toastr, OrderCloud, ocConfirm, PriceBreak) {
                         OrderCloud.Specs.ListOptions(specAssignment.Spec.ID, null, 1, 100)
                             .then(function(oData) {
                                 specAssignment.Options = oData.Items;
+                                _.map(specAssignment.Options, function(option) { option.DefaultOption = (specAssignment.DefaultOptionID == option.ID) });
                                 d.resolve();
                             });
 
