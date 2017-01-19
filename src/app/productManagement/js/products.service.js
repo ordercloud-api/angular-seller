@@ -50,7 +50,6 @@ function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak
                     deferred.resolve(assignments);
                 }
             });
-
         return deferred.promise;
     }
 

@@ -146,11 +146,12 @@
                 <button class="btn btn-primary" ng-click="productPricing.createAssignment()"><i class="fa fa-plus-circle"></i> Assignment</button>
                 <br>
                 <br>
-                <div class="panel panel-default" ng-repeat="buyer in productPricing.selectedPrice.Availability">
+                <div class="panel panel-default" ng-repeat="buyer in productPricing.selectedPrice.Availability" cg-busy="productPricing.availabilityLoading[$index]">
                     <div class="panel-body">
                         <div class="pull-right">
                             <button type="button"
                                     class="btn btn-default btn-sm"
+                                    ng-click="productPricing.removeUserGroupAssignments(this)"
                                     ng-if="(buyer.UserGroups | filter:{'selected':true}).length"><i class="fa fa-times text-danger"></i> Remove User Groups</button>
                             <button type="button"
                                     class="btn btn-default btn-sm"
