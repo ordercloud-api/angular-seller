@@ -272,10 +272,7 @@ function ocProductsService($q, toastr, OrderCloud, OrderCloudConfirm, PriceBreak
         var inventoryResult;
         var queue = [];
 
-        var productPartial = {
-            InventoryNotificationPoint: product.InventoryNotificationPoint,
-            AllowOrderExceedInventory: product.AllowOrderExceedInventory
-        };
+        var productPartial = _.pick(product, ['InventoryNotificationPoint', 'AllowOrderExceedInventory']);
         queue.push(OrderCloud.Products.Patch(product.ID, productPartial));
 
         queue.push((function() {

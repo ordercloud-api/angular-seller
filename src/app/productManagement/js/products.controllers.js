@@ -5,6 +5,7 @@ angular.module('orderCloud')
     .controller('ProductSpecsCtrl', ProductSpecsController)
     .controller('ProductPricingCtrl', ProductPricingController)
     .controller('PriceScheduleEditModalCtrl', PriceScheduleEditModalController)
+    .controller('ProductShippingCtrl', ProductShippingController)
     .controller('ProductInventoryCtrl', ProductInventoryController)
     .controller('ProductCreateAssignmentCtrl', ProductCreateAssignmentController)
     .controller('PriceScheduleDetailCtrl', PriceScheduleDetailController)
@@ -423,6 +424,29 @@ function PriceScheduleEditModalController($uibModalInstance, SelectedPriceSchedu
 
     vm.cancel = function() {
         $uibModalInstance.dismiss();
+    }
+}
+
+function ProductShippingController(toastr, OrderCloud, AdminAddresses) {
+    var vm = this;
+    vm.adminAddresses = AdminAddresses;
+    vm.updateProductShipping = updateProductShipping;
+    vm.listAllAdminAddresses = listAllAdminAddresses;
+
+    function updateProductShipping(product) {
+        var partial = _.pick(product, ['ShipWeight', 'ShipHeight', 'ShipWidth', 'ShipLength', 'ShipFromAddressID']);
+        vm.productUpdateLoading = OrderCloud.Products.Patch(product.ID, partial)
+            .then(function() {
+                vm.ProductShippingForm.$setPristine();
+                toastr.success(product.Name + ' shipping was updated', 'Success!');
+            });
+    }
+
+    function listAllAdminAddresses(search){
+        return OrderCloud.AdminAddresses.List(search)
+            .then(function(data){
+                vm.adminAddresses = data;
+            });
     }
 }
 
