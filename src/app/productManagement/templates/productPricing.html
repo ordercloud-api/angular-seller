@@ -56,29 +56,40 @@
         <div ng-if="productPricing.selectedPrice">
 
             <!--==== Basic Price Schedule Information ====-->
-            <header>
-                <div class="pull-right">
-                    <button type="button" class="btn btn-default" ng-click="productPricing.editPrice()"><i class="fa fa-edit"></i> Edit</button>
-                    <button type="button" class="btn btn-default" ng-click="productPricing.deletePrice()"><i class="fa fa-trash text-danger"></i> Delete</button>
+            <div class="pull-right">
+                <button type="button" class="btn btn-default" ng-click="productPricing.editPrice()"><i class="fa fa-edit"></i> Edit</button>
+                <button type="button" class="btn btn-default" ng-click="productPricing.deletePrice()"><i class="fa fa-trash text-danger"></i> Delete</button>
+            </div>
+            <h3>
+                {{productPricing.selectedPrice.PriceSchedule.Name}}
+                <small>(ID: {{productPricing.selectedPrice.PriceSchedule.ID}})</small>
+            </h3>
+            <div class="row">
+                <div class="col-xs-5">
+                    <h5 class="text-primary" ng-if="productPricing.selectedPrice.PriceSchedule.RestrictedQuantity">
+                        <b><i class="fa fa-lock"></i> Restricted Quantity</b>
+                    </h5>
+                    <h5 class="text-primary" ng-if="!productPricing.selectedPrice.PriceSchedule.RestrictedQuantity">
+                        <b><i class="fa fa-unlock-alt"></i> Open Quantity</b>
+                    </h5>
+                    <h5><b>Min Quantity: </b> {{productPricing.selectedPrice.PriceSchedule.MinQuantity}}</h5>
+                    <h5><b>Max Quantity: </b> {{productPricing.selectedPrice.PriceSchedule.MaxQuantity || 'None'}}</h5>
                 </div>
-                <h3>
-                    {{productPricing.selectedPrice.data.PriceSchedule.Name}}
-                    <small>(ID: {{productPricing.selectedPrice.data.PriceSchedule.ID}})</small>
-                </h3>
-                <p>
-                    <span ng-class="{
-                        'text-success':productPricing.selectedPrice.data.PriceSchedule.ApplyShipping,
-                        'text-warning':!productPricing.selectedPrice.data.PriceSchedule.ApplyShipping}">
-                        Shipping {{productPricing.selectedPrice.data.PriceSchedule.ApplyShipping ? 'Enabled' : 'Disabled'}}</span>,
-                    <span ng-class="{
-                        'text-success':productPricing.selectedPrice.data.PriceSchedule.ApplyTax,
-                        'text-warning':!productPricing.selectedPrice.data.PriceSchedule.ApplyTax}">
-                        Tax {{productPricing.selectedPrice.data.PriceSchedule.ApplyTax ? 'Enabled' : 'Disabled'}}
-                    </span>
-                </p>
-                <h5><b>Min Quantity: </b> {{productPricing.selectedPrice.data.PriceSchedule.MinQuantity}}</h5>
-                <h5><b>Max Quantity: </b> {{productPricing.selectedPrice.data.PriceSchedule.MaxQuantity || 'None'}}</h5>
-            </header>
+                <div class="col-xs-7">
+                    <h5 class="text-success" ng-if="productPricing.selectedPrice.PriceSchedule.ApplyShipping">
+                        <b><i class="fa fa-check"></i> Apply Shipping</b>
+                    </h5>
+                    <h5 class="text-warning" ng-if="!productPricing.selectedPrice.PriceSchedule.ApplyShipping">
+                        <b><i class="fa fa-times"></i> Apply Shipping</b>
+                    </h5>
+                    <h5 class="text-success" ng-if="productPricing.selectedPrice.PriceSchedule.ApplyTax">
+                        <b><i class="fa fa-check"></i> Apply Tax</b>
+                    </h5>
+                    <h5 class="text-warning" ng-if="!productPricing.selectedPrice.PriceSchedule.ApplyTax">
+                        <b><i class="fa fa-times"></i> Apply Tax</b>
+                    </h5>
+                </div>
+            </div>
 
             <!--==== Price Schedule Tabs ====-->
             <ul class="nav nav-tabs" ng-init="productPricing.activeTab = 'priceBreaks'">
@@ -88,7 +99,11 @@
             <br>
 
             <!--==== Price Breaks ====-->
-            <div ng-show="productPricing.activeTab == 'priceBreaks'">
+            <div ng-show="productPricing.activeTab == 'priceBreaks'" cg-busy="productPricing.removePriceBreaksLoading">
+                <button type="button"
+                        class="btn btn-default pull-right"
+                        ng-click="productPricing.removePriceBreaks()"
+                        ng-if="(productPricing.selectedPrice.PriceSchedule.PriceBreaks | filter:{'selected':true}).length"><i class="fa fa-times text-danger"></i> Remove Price Breaks</button>
                 <button class="btn btn-primary" ng-click="productPricing.createPriceBreak()"><i class="fa fa-plus-circle"></i> Price Break</button>
                 <br>
                 <br>
@@ -101,19 +116,24 @@
                             <thead>
                             <tr>
                                 <th class="text-center">
-                                    <input type="checkbox" ng-model="priceSchduleDetail.allBreaksSelected">
+                                    <input type="checkbox" ng-model="productPricing.selectedPrice.PriceSchedule.allPriceBreaksSelected"
+                                           ng-change="productPricing.selectAllPriceBreaks(productPricing.selectedPrice.PriceSchedule)">
                                 </th>
                                 <th>Quantity</th>
                                 <th>Price</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="pb in productPricing.selectedPrice.data.PriceSchedule.PriceBreaks | orderBy:'Quantity'">
+                            <tr ng-repeat="pricebreak in productPricing.selectedPrice.PriceSchedule.PriceBreaks | orderBy: 'Quantity' track by $index">
                                 <td class="text-center">
-                                    <input type="checkbox" ng-model="pb.selected">
+                                    <input type="checkbox" ng-model="pricebreak.selected" ng-change="productPricing.selectPriceBreak(productPricing.selectedPrice.PriceSchedule, this)">
                                 </td>
-                                <td><span ng-if="$first">0 - </span>{{pb.Quantity}}<span ng-if="$last">+</span></td>
-                                <td>{{pb.Price | currency}}</td>
+                                <td>
+                                    {{pricebreak.Quantity}}
+                                </td>
+                                <td>
+                                    {{pricebreak.Price | currency}}
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -126,7 +146,7 @@
                 <button class="btn btn-primary" ng-click="productPricing.createAssignment()"><i class="fa fa-plus-circle"></i> Assignment</button>
                 <br>
                 <br>
-                <div class="panel panel-default" ng-repeat="buyer in productPricing.selectedPrice.data.Buyers">
+                <div class="panel panel-default" ng-repeat="buyer in productPricing.selectedPrice.Availability">
                     <div class="panel-body">
                         <div class="pull-right">
                             <button type="button"
@@ -134,11 +154,12 @@
                                     ng-if="(buyer.UserGroups | filter:{'selected':true}).length"><i class="fa fa-times text-danger"></i> Remove User Groups</button>
                             <button type="button"
                                     class="btn btn-default btn-sm"
-                                    ng-click="productPricing.addUserGroupAssignment(buyer)"
+                                    ng-click="productPricing.addUserGroupAssignment(this)"
                                     ng-if="!(buyer.UserGroups | filter:{'selected':true}).length"><i class="fa fa-plus-circle"></i> User Group</button>
                             <button type="button"
                                     class="btn btn-default btn-sm"
                                     uib-tooltip="Remove Buyer"
+                                    ng-click="productPricing.removeBuyerAssignment(this)"
                                     tooltip-placement="bottom-left"><i class="fa fa-times text-danger"></i></button>
                         </div>
                         <h5 style="margin:0;">

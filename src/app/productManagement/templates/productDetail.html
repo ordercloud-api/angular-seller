@@ -16,13 +16,13 @@
 </nav>
 <article>
     <ul class="nav nav-tabs">
-        <li ng-class="{active:application.$state.is('products.detail')}">
-            <a href="" ui-sref="products.detail"><i class="fa fa-cube"></i> Product Info</a>
+        <li ng-class="{active:application.$state.is('productDetail')}">
+            <a href="" ui-sref="productDetail"><i class="fa fa-cube"></i> Product Info</a>
         </li>
         <li ui-sref-active="active">
             <a href="" ui-sref=".specs"><i class="fa fa-edit"></i> Specs <span class="badge">{{productDtail.product.SpecsCount || 0}}</span></a>
         </li>
-        <li ng-class="{active:application.$state.includes('products.detail.pricing') || application.$state.is('products.detail.createAssignment')}">
+        <li ng-class="{active:application.$state.includes('productDetail.pricing') || application.$state.is('productDetail.createAssignment')}">
             <a href="" ui-sref=".pricing"><i class="fa fa-dollar"></i> Pricing</a>
         </li>
         <li ui-sref-active="active">

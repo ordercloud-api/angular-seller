@@ -26,8 +26,9 @@ function ProductsConfig($stateProvider) {
             controller: 'ProductCreateCtrl',
             controllerAs: 'productCreate'
         })
-        .state('products.detail', {
-            url: '/:productid',
+        .state('productDetail', {
+            parent: 'base',
+            url: '/products/:productid',
             templateUrl: 'productManagement/templates/productDetail.html',
             controller: 'ProductDetailCtrl',
             controllerAs: 'productDetail',
@@ -37,7 +38,7 @@ function ProductsConfig($stateProvider) {
                 }
             }
         })
-        .state('products.detail.specs', {
+        .state('productDetail.specs', {
             url: '/specs',
             templateUrl: 'productManagement/templates/productSpecs.html',
             controller: 'ProductSpecsCtrl',
@@ -59,7 +60,7 @@ function ProductsConfig($stateProvider) {
                 }
             }
         })
-        .state('products.detail.pricing', {
+        .state('productDetail.pricing', {
             url: '/pricing',
             templateUrl: 'productManagement/templates/productPricing.html',
             controller: 'ProductPricingCtrl',
@@ -74,7 +75,7 @@ function ProductsConfig($stateProvider) {
                 }
             }
         })
-        .state('products.detail.shipping', {
+        .state('productDetail.shipping', {
             url: '/shipping',
             templateUrl: 'productManagement/templates/productShipping.html'
         })
@@ -89,7 +90,7 @@ function ProductsConfig($stateProvider) {
                 }
             }
         })
-        .state('products.detail.createAssignment', {
+        .state('productDetail.createAssignment', {
             url: '/new-price',
             templateUrl: 'productManagement/templates/productCreateAssignment.html',
             controller: 'ProductCreateAssignmentCtrl',
@@ -100,7 +101,7 @@ function ProductsConfig($stateProvider) {
                 }
             }
         })
-        .state('products.detail.pricing.priceScheduleDetail', {
+        .state('productDetail.pricing.priceScheduleDetail', {
             url: '/:pricescheduleid',
             templateUrl: 'productManagement/templates/priceScheduleDetail.html',
             controller: 'PriceScheduleDetailCtrl',

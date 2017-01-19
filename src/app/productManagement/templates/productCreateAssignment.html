@@ -1,87 +1,93 @@
-<form name="CreateAssignmentForm">
-    <div>
-        <h4>Price Schedule Details</h4>
-        <div class="form-group">
-            <label for="priceScheduleIDInput">Price Schedule ID</label>
-            <input id="priceScheduleIDInput" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control"
-                   ng-model="productCreateAssignment.priceSchedule.ID" />
-        </div>
-        <div class="form-group">
-            <label for="priceScheduleNameInput">Price Schedule Name</label>
-            <input id="priceScheduleNameInput" type="text" class="form-control"
-                   ng-model="productCreateAssignment.priceSchedule.Name" required />
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label for="priceScheduleMinQInput">Minimum Quantity</label>
-                    <input id="priceScheduleMinQInput"
-                           ng-class="{'input-disabled': priceScheduleCreate.priceSchedule.RestrictedQuantity}"
-                           pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger"
-                           ng-disabled="productCreateAssignment.priceSchedule.RestrictedQuantity" type="number"
-                           class="form-control" ng-model="productCreateAssignment.priceSchedule.MinQuantity" />
+<form class="row" name="CreateAssignmentForm" autocomplete="off" novalidate>
+    <div class="col-sm-7">
+        <h4>
+            Price Information
+        </h4>
+        <div class="form-horizontal">
+            <fieldset class="form-group">
+                <label for="ID" class="col-sm-3 control-label">Price ID:</label>
+                <div class="col-sm-9">
+                    <input id="ID" name="ID" type="text" placeholder="(Optional)" class="form-control" ng-model="productCreateAssignment.priceSchedule.ID"/>
                 </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label for="priceScheduleMaxQInput">Maximum Quantity</label>
-                    <input id="priceScheduleMaxQInput"
-                           ng-class="{'input-disabled': priceScheduleCreate.priceSchedule.RestrictedQuantity}"
-                           pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger"
-                           ng-disabled="productCreateAssignment.priceSchedule.RestrictedQuantity" type="number"
-                           class="form-control" ng-model="productCreateAssignment.priceSchedule.MaxQuantity" />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="Name" class="col-sm-3 control-label">Name:</label>
+                <div class="col-sm-9">
+                    <input id="Name" name="Name" type="text" class="form-control" ng-model="productCreateAssignment.priceSchedule.Name" required/>
                 </div>
-            </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="checkbox">
+                        <label for="ApplyTax">
+                            <input id="ApplyTax" name="ApplyTax" type="checkbox" ng-model="productCreateAssignment.priceSchedule.ApplyTax"> Apply Tax
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label for="ApplyShipping">
+                            <input id="ApplyShipping" name="ApplyShipping" type="checkbox" ng-model="productCreateAssignment.priceSchedule.ApplyShipping"> Apply Shipping
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="radio">
+                        <label for="OpenQuantity">
+                            <input id="OpenQuantity" name="OpenQuantity" type="radio" ng-model="productCreateAssignment.priceSchedule.RestrictedQuantity" ng-value="false"> Open Quantity
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label for="RestrictedQuantity">
+                            <input id="RestrictedQuantity" name="RestrictedQuantity" type="radio" ng-model="productCreateAssignment.priceSchedule.RestrictedQuantity" ng-value="true"> Restricted Quantity
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="MinQuantity" class="col-sm-3 control-label">Min Quantity:</label>
+                <div class="col-sm-9">
+                    <input id="MinQuantity" name="MinQuantity" type="text" class="form-control"
+                           ng-max="productCreateAssignment.priceSchedule.MaxQuantity"
+                           ng-disabled="productCreateAssignment.priceSchedule.RestrictedQuantity"
+                           pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger"
+                           ng-model="productCreateAssignment.priceSchedule.MinQuantity"/>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="MaxQuantity" class="col-sm-3 control-label">Max Quantity:</label>
+                <div class="col-sm-9">
+                    <input id="MaxQuantity" name="MaxQuantity" placeholder="(Optional)"  type="text" class="form-control"
+                           ng-min="productCreateAssignment.priceSchedule.MinQuantity"
+                           ng-disabled="productCreateAssignment.priceSchedule.RestrictedQuantity"
+                           pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger"
+                           ng-model="productCreateAssignment.priceSchedule.MaxQuantity"/>
+                </div>
+            </fieldset>
         </div>
-        <div class="form-group">
-            <label for="priceScheduleApplyShippingInput">
-                <input id="priceScheduleApplyShippingInput" type="checkbox" ng-model="productCreateAssignment.priceSchedule.ApplyShipping" />
-                Apply Shipping
-            </label>
-        </div>
-        <div class="form-group">
-            <label for="priceScheduleApplyTaxInput">
-                <input id="priceScheduleApplyTaxInput" type="checkbox" ng-model="productCreateAssignment.priceSchedule.ApplyTax" />
-                Apply Tax
-            </label>
-        </div>
-        <div class="form-group">
-            <label for="priceScheduleOpen">
-                <input id="priceScheduleOpen" type="radio" name="quantitySelection" ng-value="false"
-                       ng-model="productCreateAssignment.priceSchedule.RestrictedQuantity" />
-                Open Quantity Selection
-            </label>
-            <br />
-            <label for="priceScheduleRestricted">
-                <input id="priceScheduleRestricted" type="radio" name="quantitySelection" ng-value="true"
-                       ng-model="productCreateAssignment.priceSchedule.RestrictedQuantity" />
-                Restricted Quantity Selection
-            </label>
-        </div>
+
+
         <hr />
         <h4>Price Breaks</h4>
         <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label for="priceSchedulePBQInput">Quantity</label>
-                    <input id="priceSchedulePBQInput" type="number" pattern="^[0-9]*[1-9][0-9]*$"
-                           pattern-err-type="positiveInteger" class="form-control"
-                           ng-model="productCreateAssignment.quantity" />
-                </div>
+            <div class="form-group col-sm-5">
+                <label for="priceSchedulePBQInput">Quantity</label>
+                <input id="priceSchedulePBQInput" type="number" pattern="^[0-9]*[1-9][0-9]*$"
+                       pattern-err-type="positiveInteger" class="form-control"
+                       ng-model="productCreateAssignment.quantity" />
             </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label for="priceSchedulePBPInput">Price (each)</label>
-                    <input id="priceSchedulePBPInput" type="number" step="any" class="form-control"
-                           ng-model="productCreateAssignment.price" />
-                </div>
+            <div class="form-group col-sm-5">
+                <label for="priceSchedulePBPInput">Price (each)</label>
+                <input id="priceSchedulePBPInput" type="number" step="any" class="form-control"
+                       ng-model="productCreateAssignment.price" />
             </div>
-        </div>
-        <div class="form-group">
-            <button type="button" class="btn btn-default form-control addps"
-                    ng-disabled="!productCreateAssignment.price || !productCreateAssignment.quantity"
-                    ng-click="productCreateAssignment.addPriceBreak()">Add
-            </button>
+            <div class="form-group col-sm-2">
+                <br>
+                <button type="button" class="btn btn-default form-control addps"
+                        ng-disabled="!productCreateAssignment.price || !productCreateAssignment.quantity"
+                        ng-click="productCreateAssignment.addPriceBreak()"><i class="fa fa-plus-circle"></i> Add
+                </button>
+            </div>
         </div>
         <div class="form-group" ng-if="productCreateAssignment.priceSchedule.PriceBreaks.length">
             <div class="table-responsive">
@@ -130,9 +136,8 @@
             </div>
         </div>
     </div>
-    <hr>
-    <div>
-        <h4>Assignment</h4>
+    <div class="col-sm-5">
+        <h4>Availability</h4>
         <p class="text-muted">
             You can assign a product to an entire Buyer Company or specific User Groups. User Group assignments will take precedence over Buyer Company assignments.
         </p>
@@ -177,12 +182,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="pull-right">
         <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
         <button type="button" class="btn btn-primary" ng-click="productCreateAssignment.saveAssignment()"
                 ng-disabled="!(productCreateAssignment.selectedBuyer && productCreateAssignment.priceSchedule.Name && productCreateAssignment.priceSchedule.PriceBreaks.length )">
-            Save Assignment
+            Save New Price
         </button>
     </div>
 </form>
