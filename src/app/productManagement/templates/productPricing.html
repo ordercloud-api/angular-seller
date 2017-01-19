@@ -1,45 +1,42 @@
 <!--==== No Prices Defined ====-->
-<div class="well well-lg text-center" ng-if="!productPricing.listAssignments.length">
+<div class="well well-lg text-center" ng-if="productPricing.noPricesSet">
     This product does not have any prices set. <br>
     <a href="" ui-sref="^.createAssignment">Create one now</a>
 </div>
-
-<div class="row" ng-if="productPricing.listAssignments.length">
+<div class="row" ng-if="!productPricing.noPricesSet">
     <div class="col-sm-5">
 
         <!--==== Create New Assignment ====-->
-        <button class="btn btn-primary" ng-if="productPricing.listAssignments.length" ui-sref="^.createAssignment">
+        <button class="btn btn-primary" ui-sref="^.createAssignment">
             <i class="fa fa-plus-circle"></i> New Price
         </button>
         <br>
         <br>
 
         <!--==== Product Price Schedule List ====-->
-        <div ng-if="productPricing.listAssignments">
-
+        <div ng-repeat="assignment in productPricing.listAssignments"
+             ng-class="{'active':productPricing.selectedPrice.PriceSchedule.ID == assignment.PriceSchedule.ID}"
+             class="c-price-card"
+             ng-click="productPricing.selectPrice(this)">
             <!--==== Product Price Selection ====-->
-            <div ng-repeat="assignment in productPricing.listAssignments"
-                 ng-class="{'active':productPricing.selectedPrice.PriceSchedule.ID == assignment.PriceSchedule.ID}"
-                 class="c-price-card"
-                 ng-click="productPricing.selectPrice(this)">
-                <div class="c-price-card__info">
-                    <h5>{{assignment.PriceSchedule.Name}} <br>
-                        <small>{{'ID: ' + assignment.PriceSchedule.ID}}</small>
-                    </h5>
-                </div>
-                <div class="c-price-card__price">
-                    {{assignment.PriceSchedule.PriceBreaks[0].Price | currency}}
-                </div>
-                <div class="c-price-card__buyers">
-                    <small>Buyers</small>
-                    <br>
-                    {{assignment.Buyers.length}}
-                </div>
-                <div class="c-price-card__groups">
-                    <small>Groups</small>
-                    <br>
-                    {{assignment.UserGroups.length}}
-                </div>
+
+            <div class="c-price-card__info">
+                <h5>{{assignment.PriceSchedule.Name}} <br>
+                    <small>{{'ID: ' + assignment.PriceSchedule.ID}}</small>
+                </h5>
+            </div>
+            <div class="c-price-card__price">
+                {{assignment.PriceSchedule.PriceBreaks[0].Price | currency}}
+            </div>
+            <div class="c-price-card__buyers">
+                <small>Buyers</small>
+                <br>
+                {{assignment.Buyers.length}}
+            </div>
+            <div class="c-price-card__groups">
+                <small>Groups</small>
+                <br>
+                {{assignment.UserGroups.length}}
             </div>
         </div>
     </div>

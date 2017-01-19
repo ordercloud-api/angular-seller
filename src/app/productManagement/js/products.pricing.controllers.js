@@ -11,6 +11,8 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     vm.list = AssignmentList;
     vm.listAssignments = AssignmentData;
 
+    vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
+
     vm.selectPrice = function(scope) {
         vm.loadingPrice = ocProductsService.AssignmentDataDetail(vm.listAssignments, scope.assignment.PriceSchedule.ID)
             .then(function(data) {
@@ -59,6 +61,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                 vm.loadingPrice = OrderCloud.PriceSchedules.Delete(vm.selectedPrice.PriceSchedule.ID)
                     .then(function() {
                         delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
+                        vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
                         vm.selectedPrice = null;
                     })
             })
@@ -185,6 +188,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                         OrderCloud.PriceSchedules.Delete(key)
                             .then(function() {
                                 delete vm.listAssignments[key];
+                                vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
                             })
                     }
                 });
@@ -204,6 +208,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                     vm.availabilityLoading[scope.$index] = OrderCloud.PriceSchedules.Delete(vm.selectedPrice.PriceSchedule.ID)
                         .then(function() {
                             delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
+                            vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
                             vm.selectedPrice = null;
                         })
                 });
@@ -267,6 +272,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                             OrderCloud.PriceSchedules.Delete(key)
                                 .then(function() {
                                     delete vm.listAssignments[key];
+                                    vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
                                 })
                         }
                     });
@@ -323,6 +329,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                                     OrderCloud.PriceSchedules.Delete(key)
                                         .then(function() {
                                             delete vm.listAssignments[key];
+                                            vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
                                         })
                                 }
                             });
@@ -369,6 +376,7 @@ function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProduct
         MinQuantity: 1,
         OrderType: 'Standard'
     };
+
     vm.getBuyerUserGroups = getBuyerUserGroups;
     vm.saveAssignment = saveAssignment;
     vm.addPriceBreak = addPriceBreak;
