@@ -277,7 +277,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     };
 
     //====== Availability =======
-    vm.createAssignment = function() {
+    vm.createAssignment = function(scope) {
         var modalInstance = $uibModal.open({
             templateUrl: 'productManagement/templates/priceScheduleAssignment.modal.html',
             size: 'md',
@@ -309,20 +309,23 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                 assignment.Buyer.Assigned = false;
                 assignment.Buyer.UserGroups = [assignment.UserGroup];
                 angular.forEach(vm.listAssignments, function(val, key) {
-                    console.log(val);
-                    var index = val.UserGroups.indexOf(assignment.UserGroup.ID);
-                    console.log(index);
-                    if (index > -1) val.UserGroups.splice(index, 1);
+                    angular.forEach(val.UserGroups, function(group, index) {
+                        if (group.UserGroupID == assignment.UserGroup.ID && group.BuyerID == assignment.Buyer.ID) vm.listAssignments[key].UserGroups.splice(index, 1);
+                    });
                 });
+                if (vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups && vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups.length) {
+                    vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups.push({UserGroupID:assignment.UserGroup.ID, BuyerID:assignment.Buyer.ID});
+                } else {
+                    vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups = [{UserGroupID:assignment.UserGroup.ID, BuyerID:assignment.Buyer.ID}]
+                }
+                console.log('end of if was hit');
 
-                vm.listAssignments[assignment.PriceScheduleID].UserGroups.push(assignment.UserGroup.ID);
             } else {
                 assignment.Buyer.Assigned = true;
                 angular.forEach(vm.listAssignments, function(val, key) {
                     var index = val.Buyers.indexOf(assignment.Buyer.ID);
                     if (index > -1) val.Buyers.splice(index, 1);
                 });
-
                 vm.listAssignments[assignment.PriceScheduleID].Buyers.push(assignment.Buyer.ID);
             }
             vm.selectedPrice.Availability.push(assignment.Buyer);
@@ -372,7 +375,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
         });
 
         modalInstance.result.then(function(assignment) {
-            if (vm.selectedPrice.Availability[scope.$index].UserGroups && vm.selectedPrice.Availability[scope.$index].UserGroups.length) {
+            if (!scope.buyer.Assigned) {
                 vm.selectedPrice.Availability[scope.$index].UserGroups.push(assignment.UserGroup);
                 angular.forEach(vm.listAssignments, function(val, key) {
                     angular.forEach(val.UserGroups, function(group, index) {
@@ -381,21 +384,17 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                 });
                 vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups.push({UserGroupID:assignment.UserGroup.ID, BuyerID:scope.buyer.ID});
             } else {
-                //convert vm.scope.$index to Assigned:false
-            }
-            /*var existingBuyer = _.where(vm.selectedPrice.Availability, {ID: assignment.BuyerID});
-            if (existingBuyer) {
-                angular.forEach(vm.selectedPrice.Availability, function(buyer) {
-                    if (buyer.ID == assignment.Buyer.ID) {
-                        buyer.UserGroups.push(assignment.UserGroup);
-                    }
+                vm.selectedPrice.Availability[scope.$index].Assigned = false;
+                vm.selectedPrice.Availability[scope.$index].UserGroups = [assignment.UserGroup];
+                var existingBuyerIndex = vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].Buyers.indexOf(scope.buyer.ID);
+                if (existingBuyerIndex > -1) vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].Buyers.splice(existingBuyerIndex, 1);
+                angular.forEach(vm.listAssignments, function(val, key) {
+                    angular.forEach(val.UserGroups, function(group, index) {
+                        if (group.UserGroupID == assignment.UserGroup.ID) vm.listAssignments[key].UserGroups.splice(index, 1);
+                    });
                 });
+                vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups.push({UserGroupID: assignment.UserGroup.ID, BuyerID:scope.buyer.ID});
             }
-            else {
-                assignment.Buyer.Assigned = true;
-                if (assignment.UserGroup) assignment.Buyer.UserGroups = [assignment.UserGroup];
-                vm.data.Buyers.push(assignment.Buyer);
-            }*/
         });
     };
 
@@ -702,22 +701,30 @@ function PriceScheduleCreateAssignmentController($uibModalInstance, $stateParams
     };
 
     vm.confirm = function() {
-        vm.loading = {
-            message: 'Saving...'
-        };
-        var assignment = {
-            ProductID: $stateParams.productid,
-            PriceScheduleID: SelectedPrice.PriceSchedule.ID,
-            BuyerID: vm.selectedBuyer.ID
-        };
-        if (vm.selectedUserGroup) assignment.UserGroupID = vm.selectedUserGroup.ID;
-        vm.loading.promise = ocProductsService.CreateAssignment(assignment)
-            .then(function(data) {
-                $uibModalInstance.close({Buyer: vm.selectedBuyer, UserGroup: vm.selectedUserGroup, PriceScheduleID:SelectedPrice.PriceSchedule.ID});
-            })
-            .catch(function(ex) {
-                $uibModalInstance.dismiss();
-            });
+        if (vm.selectedBuyer.Assigned && vm.selectedUserGroup) {
+            OrderCloud.Products.DeleteAssignment($stateParams.productid, null, null, vm.selectedBuyer.ID)
+                .then(function() {
+                    saveAssignment();
+                })
+        } else {
+            saveAssignment();
+        }
+
+        function saveAssignment() {
+            var assignment = {
+                ProductID: $stateParams.productid,
+                PriceScheduleID: SelectedPrice.PriceSchedule.ID,
+                BuyerID: vm.selectedBuyer.ID
+            };
+            if (vm.selectedUserGroup) assignment.UserGroupID = vm.selectedUserGroup.ID;
+            vm.loading = ocProductsService.CreateAssignment(assignment)
+                .then(function(data) {
+                    $uibModalInstance.close({Buyer: vm.selectedBuyer, UserGroup: vm.selectedUserGroup, PriceScheduleID:SelectedPrice.PriceSchedule.ID});
+                })
+                .catch(function(ex) {
+                    $uibModalInstance.dismiss();
+                });
+        }
     };
 
     vm.cancel = function() {
