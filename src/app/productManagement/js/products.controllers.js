@@ -3,14 +3,13 @@ angular.module('orderCloud')
     .controller('ProductCreateCtrl', ProductCreateController)
     .controller('ProductDetailCtrl', ProductDetailController)
     .controller('ProductSpecsCtrl', ProductSpecsController)
-    .controller('ProductPricingCtrl', ProductPricingController)
-    .controller('PriceScheduleEditModalCtrl', PriceScheduleEditModalController)
+    .controller('ProductPricingCtrl', ProductPricingController)//controls opening of modals, active tabs, and setting/getting selected price
+    .controller('PriceScheduleEditModalCtrl', PriceScheduleEditModalController)//for editing basic price schedule information
     .controller('ProductShippingCtrl', ProductShippingController)
     .controller('ProductInventoryCtrl', ProductInventoryController)
-    .controller('ProductCreateAssignmentCtrl', ProductCreateAssignmentController)
-    .controller('PriceScheduleDetailCtrl', PriceScheduleDetailController)
-    .controller('PriceSchedulePriceBreakCtrl', PriceSchedulePriceBreakController)
-    .controller('PriceScheduleCreateAssignmentCtrl', PriceScheduleCreateAssignmentController)
+    .controller('ProductCreateAssignmentCtrl', ProductCreateAssignmentController)//for adding a new price to a product for a specific Buyer or UserGroup
+    .controller('PriceSchedulePriceBreakCtrl', PriceSchedulePriceBreakController)//for adding price breaks on the price detail page
+    .controller('PriceScheduleCreateAssignmentCtrl', PriceScheduleCreateAssignmentController)//for adding Buyers || UserGroup to a Product's Price Schedule
 ;
 
 function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, ProductList, Parameters) {
@@ -554,178 +553,6 @@ function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProduct
                 toastr.error('An error occurred while trying to save your product assignment', 'Error');
             });
     }
-}
-
-function PriceScheduleDetailController($stateParams, $uibModal, OrderCloud, ocProductsService, ocPatchModal, AssignmentDataDetail) {
-    var vm = this;
-    vm.data = AssignmentDataDetail;
-
-    var fields = {
-        'Name': {Key: 'Name', Label: 'Name', Required: true},
-        'ID': {Key: 'ID', Label: 'ID', Required: true},
-        'MaxQuantity': {Key: 'MaxQuantity', Label: 'Maximum Quantity', Required: true, Type: 'number'}
-    };
-
-    vm.editFields = function(properties) {
-        var propertiesList = _.filter(fields, function(field) { return properties.indexOf(field.Key) > -1});
-        ocPatchModal.Edit('Edit Price Schedule', vm.data.PriceSchedule, propertiesList, 'PriceSchedules', function(partial) {
-            return OrderCloud.PriceSchedules.Patch(vm.data.PriceSchedule.ID, partial)
-        }).then(function(result) {
-            vm.data.PriceSchedule = result;
-        });
-    };
-
-    vm.patchField = function(field) {
-        var partial = _.pick(vm.data.PriceSchedule, field);
-        OrderCloud.PriceSchedules.Patch(vm.data.PriceSchedule.ID, partial)
-            .then(function(data) {
-                vm.data.PriceSchedule = data;
-            });
-    };
-
-    vm.createPriceBreak = function() {
-        var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/templates/priceSchedulePriceBreak.modal.html',
-            size: 'md',
-            controller: 'PriceSchedulePriceBreakCtrl',
-            controllerAs: 'priceBreak',
-            resolve: {
-                PriceScheduleID: function() {
-                    return vm.data.PriceSchedule.ID;
-                }
-            }
-        });
-
-        modalInstance.result.then(function(priceSchedule) {
-            vm.data.PriceSchedule = priceSchedule;
-        });
-    };
-
-    vm.deletePriceBreak = function(scope) {
-        OrderCloud.PriceSchedules.DeletePriceBreak(vm.data.PriceSchedule.ID, scope.pb.Quantity)
-            .then(function() {
-                vm.data.PriceSchedule.PriceBreaks.splice(scope.$index, 1);
-            });
-    };
-
-    vm.buyerAssignmentChange = function(buyer) {
-        if (buyer.Assigned) {
-            ocProductsService.AssignBuyerRemoveUserGroups(buyer, $stateParams.productid, vm.data.PriceSchedule.ID)
-                .then(function(data) {
-                    buyer = data;
-                });
-        }
-        else {
-            OrderCloud.Products.DeleteAssignment($stateParams.productid, null, null, buyer.ID)
-                .then(function() {
-                    buyer.UserGroups = [];
-                });
-        }
-    };
-
-    vm.addUserGroupAssignment = function(buyer) {
-        var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/templates/priceScheduleAssignment.modal.html',
-            size: 'md',
-            controller: 'PriceScheduleCreateAssignmentCtrl',
-            controllerAs: 'priceScheduleAssignment',
-            resolve: {
-                Buyers: function() {
-                    return {Items: [buyer]};
-                },
-                SelectedBuyer: function() {
-                    return buyer;
-                },
-                BuyerUserGroups: function() {
-                    return OrderCloud.UserGroups.List(null, 1, 20, null, null, null, buyer.ID);
-                },
-                AssignedBuyers: function() {
-                    return null;
-                },
-                AssignedUserGroups: function() {
-                    return buyer.UserGroups;
-                }
-            }
-        });
-
-        modalInstance.result.then(function(assignment) {
-            var existingBuyer = _.where(vm.data.Buyers, {ID: assignment.BuyerID});
-            if (existingBuyer) {
-                angular.forEach(vm.data.Buyers, function(buyer) {
-                    if (buyer.ID == assignment.Buyer.ID) {
-                        buyer.UserGroups.push(assignment.UserGroup);
-                    }
-                });
-            }
-            else {
-                assignment.Buyer.Assigned = true;
-                if (assignment.UserGroup) assignment.Buyer.UserGroups = [assignment.UserGroup];
-                vm.data.Buyers.push(assignment.Buyer);
-            }
-        });
-    };
-
-    vm.deleteUserGroupAssignment = function(buyer, group) {
-        vm.loading = {
-            message: 'Saving...'
-        };
-        vm.loading = OrderCloud.Products.DeleteAssignment($stateParams.productid, null, group.ID, buyer.ID)
-            .then(function() {
-                angular.forEach(vm.data.Buyers, function(b) {
-                    if (b.ID == buyer.ID) {
-                        angular.forEach(b.UserGroups, function(g, index) {
-                            if (g.ID == group.ID) {
-                                b.UserGroups.splice(index, 1);
-                                if (!b.UserGroups.length) {
-                                    b.Assigned = true;
-                                    vm.buyerAssignmentChange(b);
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-    };
-
-    vm.createAssignment = function() {
-        var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/templates/priceScheduleAssignment.modal.html',
-            size: 'md',
-            controller: 'PriceScheduleCreateAssignmentCtrl',
-            controllerAs: 'priceScheduleAssignment',
-            resolve: {
-                Buyers: function() {
-                    return OrderCloud.Buyers.List(null, 1, 100);
-                },
-                SelectedBuyer: function() {
-                    return null;
-                },
-                BuyerUserGroups: function() {
-                    return null;
-                },
-                AssignedBuyers: function() {
-                    return vm.data.Buyers;
-                },
-                AssignedUserGroups: function() {
-                    return null;
-                }
-            }
-        });
-
-        modalInstance.result.then(function(assignment) {
-            assignment.Buyer.Assigned = true;
-            if (assignment.UserGroup) assignment.Buyer.UserGroups = [assignment.UserGroup];
-            vm.data.Buyers.push(assignment.Buyer);
-        });
-    };
-
-    vm.selectAllUserGroups = function(scope) {
-        _.map(scope.buyer.UserGroups, function(ug) { ug.selected = scope.buyer.allGroupsSelected });
-    };
-
-    vm.selectUserGroup = function(buyer, scope) {
-        if (!scope.userGroup.selected) buyer.allGroupsSelected = false;
-    };
 }
 
 function PriceSchedulePriceBreakController($uibModalInstance, OrderCloud, PriceScheduleID) {
