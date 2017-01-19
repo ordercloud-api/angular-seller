@@ -131,7 +131,7 @@ function ProductDetailController($rootScope, $exceptionHandler, $state, toastr, 
             message:'Are you sure you want to delete this product?'
             })
             .then(function(){
-                OrderCloud.Products.Delete(vm.productID)
+                OrderCloud.Products.Delete(SelectedProduct.ID)
                     .then(function() {
                         toastr.success('Product Deleted', 'Success');
                         $state.go('products', {}, {reload: true});

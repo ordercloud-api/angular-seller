@@ -1,5 +1,6 @@
 <div ng-if="!productSpecs.specs.Items.length" class="well text-center">
-    <b>There are no specs for this product. <a ng-click="productSpecs.createSpec(productDetail.product.ID)">Create</a> one now.</b>
+    This product does not have any specs. <br>
+    <a ng-click="productSpecs.createSpec(productDetail.product.ID)">Create one now</a>
 </div>
 <div class="row" ng-if="productSpecs.specs.Items.length">
     <div class="col-sm-5">
