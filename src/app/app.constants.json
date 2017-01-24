@@ -5,6 +5,5 @@
   "buyerid": "A",
   "catalogid": "SHARED",
   "environment": "prod",
-  "defaultstate": "home",
-  "anonymous": false
+  "defaultstate": "home"
 }

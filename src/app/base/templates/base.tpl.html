@@ -1,12 +1,12 @@
 <nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm offcanvas-xs" role="navigation">
     <a class="navmenu-brand hidden-xs hidden-sm" href="" ui-sref="home">{{application.name}}</a>
     <ul class="nav navmenu-nav">
-        <li ui-sref-active="active"><a ui-sref="adminUsers">Seller Users</a></li>
-        <li ui-sref-active="active"><a ui-sref="adminUserGroups">Seller User Groups</a></li>
-        <li ui-sref-active="active"><a ui-sref="adminAddresses">Seller Addresses</a></li>
+        <li ui-sref-active="active"><a ui-sref="adminUsers">Admin Users</a></li>
+        <li ui-sref-active="active"><a ui-sref="adminUserGroups">Admin User Groups</a></li>
+        <li ui-sref-active="active"><a ui-sref="adminAddresses">Admin Addresses</a></li>
         <li ui-sref-active="active"><a ui-sref="products">All Products</a></li>
         <li ui-sref-active="active"><a ui-sref="orders">All Orders</a></li>
-        <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}"><a ui-sref="buyers">Buyers</a></li>
+        <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}"><a ui-sref="buyers">Buyer Organizations</a></li>
         <li class="divider"></li>
         <li ui-sref-active="active"><a ui-sref="account">Account</a></li>
         <li ui-sref-active="active"><a ng-click="application.logout()">Log Out</a></li>

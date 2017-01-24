@@ -3,7 +3,7 @@ angular.module('orderCloud')
     .controller('CreateCategoryModalCtrl', CreateCategoryModalController)
     .controller('EditCategoryModalCtrl', EditCategoryModalController);
 
-function CategoryModalFactory($state, $exceptionHandler, OrderCloud, OrderCloudConfirm, $uibModal) {
+function CategoryModalFactory($state, $exceptionHandler, OrderCloud, ocConfirm, $uibModal) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -45,7 +45,9 @@ function CategoryModalFactory($state, $exceptionHandler, OrderCloud, OrderCloudC
     }
 
     function _delete(id, catalogid) {
-        return OrderCloudConfirm.Confirm('Are you sure you want to delete this category?')
+        return ocConfirm.Confirm({
+            message: 'Are you sure you want to delete this category?'
+            })
             .then(function() {
                 return OrderCloud.Categories.Delete(id, catalogid)
                     .then(function() {

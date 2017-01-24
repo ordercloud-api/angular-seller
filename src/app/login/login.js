@@ -6,6 +6,7 @@ angular.module('orderCloud')
         return function (scope, element) {
             $(element).submit(function(event) {
                 event.preventDefault();
+                $(document.activeElement).blur();
             });
         };
     })
@@ -22,12 +23,11 @@ function LoginConfig($stateProvider) {
     ;
 }
 
-function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, clientid, buyerid, anonymous) {
+function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, clientid, buyerid) {
     return {
         SendVerificationCode: _sendVerificationCode,
         ResetPassword: _resetPassword,
         RememberMe: _rememberMe,
-        AuthAnonymous: _authAnonymous,
         Logout: _logout
     };
 
@@ -71,20 +71,11 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, clienti
         return deferred.promise;
     }
 
-    function _authAnonymous() {
-        return OrderCloud.Auth.GetToken('')
-            .then(function(data) {
-                OrderCloud.BuyerID.Set(buyerid);
-                OrderCloud.Auth.SetToken(data.access_token);
-                $state.go('home');
-            })
-    }
-
     function _logout() {
         angular.forEach($cookies.getAll(), function(val, key) {
             $cookies.remove(key);
         });
-        $state.go(anonymous ? 'home' : 'login', {}, {reload: true});
+        $state.go('login', {}, {reload: true});
     }
 
     function _rememberMe() {
@@ -121,10 +112,6 @@ function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, Lo
     vm.rememberStatus = false;
 
     vm.submit = function() {
-        $('#Username').blur();
-        $('#Password').blur();
-        $('#Remember').blur();
-        $('#submit_login').blur();
         OrderCloud.Auth.GetToken(vm.credentials)
             .then(function(data) {
                 vm.rememberStatus ? OrderCloud.Refresh.SetToken(data['refresh_token']) : angular.noop();

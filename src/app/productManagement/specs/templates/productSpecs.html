@@ -1,0 +1,112 @@
+<div ng-if="!productSpecs.specs.Items.length" class="well text-center">
+    This product does not have any specs. <br>
+    <a ng-click="productSpecs.createSpec(productDetail.product.ID)">Create one now</a>
+</div>
+<div class="row" ng-if="productSpecs.specs.Items.length">
+    <div class="col-sm-5">
+        <script type="text/ng-template" id="specs_renderer.html">
+            <div class="tree-node tree-node-content" ng-class="{'selected-node': node.ID == catalogManagement.selectedCategory.ID}">
+                <p ng-click="productSpecs.specSelected(node)">{{node.Spec.Name}}</p>
+                <i ui-tree-handle class="fa fa-reorder text-muted"></i>
+            </div>
+        </script>
+        <section>
+            <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpec(productDetail.product.ID)">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                New Spec
+            </button>
+            <div ui-tree="productSpecs.treeOptions" id="spec-tree-root" data-drag-delay="200">
+                <ol ui-tree-nodes ng-model="productSpecs.specs.Items">
+                    <li ng-repeat="node in productSpecs.specs.Items" ui-tree-node ng-include="'specs_renderer.html'"></li>
+                </ol>
+            </div>
+        </section>
+    </div>
+    <div class="col-sm-7">
+        <div ng-if="!productSpecs.selectedSpec" class="well text-center">
+            Select a spec to view details
+        </div>
+        <div ng-if="productSpecs.selectedSpec">
+            <header>
+                <h3>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" ng-click="productSpecs.deleteSelectedSpec()"><i class="fa fa-trash text-danger"></i> Delete</button>
+                    </div>
+                    {{productSpecs.selectedSpec.Spec.Name}}
+                    <small>(ID: {{productSpecs.selectedSpec.Spec.ID}})</small>
+                </h3>
+            </header>
+            <form name="SelectedSpecForm" class="form-horizontal">
+                <fieldset class="form-group">
+                    <label for="SpecID" class="col-sm-3 control-label">ID</label>
+                    <div class="col-sm-9">
+                        <input id="SpecID" type="text" class="form-control" ng-model="productSpecs.selectedSpec.Spec.ID" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" required />
+                    </div>
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="SpecName" class="col-sm-3 control-label">Name</label>
+                    <div class="col-sm-9">
+                        <input id="SpecName" type="text" class="form-control" ng-model="productSpecs.selectedSpec.Spec.Name" required />
+                    </div>
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="DefaultValue" class="col-sm-3 control-label">Default Value</label>
+                    <div class="col-sm-9">
+                        <input id="DefaultValue" placeholder="(Optional)" type="text" class="form-control" ng-model="productSpecs.selectedSpec.DefaultValue" />
+                    </div>
+                </fieldset>
+                <fieldset class="form-group">
+                    <div class="col-sm-9 col-md-offset-3">
+                        <div class="checkbox">
+                            <label for="SpecRequired">
+                                <input id="SpecRequired" type="checkbox" ng-model="productSpecs.selectedSpec.Spec.Required"/>
+                                Required
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group">
+                    <div class="col-sm-9 col-md-offset-3">
+                        <div class="checkbox">
+                            <label for="AllowOpenText">
+                                <input id="AllowOpenText" type="checkbox" ng-model="productSpecs.selectedSpec.Spec.AllowOpenText"/>
+                                Allow Open Text
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+            <hr>
+            <div class="well text-center" ng-if="!productSpecs.selectedSpec.Options.length">
+                There are no options for this spec. <a ng-click="productSpecs.createSpecOption()">Create</a> one now.</b>
+            </div>
+            <div ng-if="productSpecs.selectedSpec.Options.length">
+                <header>
+                    <h4>
+                        Options
+                    </h4>
+                </header>
+                <script type="text/ng-template" id="spec_options_renderer.html">
+                    <div class="tree-node tree-node-content">
+                        <p ng-click="productSpecs.specOptionSelected(node)">
+                            {{node.Value}}
+                            <i class="fa fa-star" ng-if="node.DefaultOption"></i>
+                        </p>
+                        <i ui-tree-handle class="fa fa-reorder text-muted"></i>
+                    </div>
+                </script>
+                <section>
+                    <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpecOption()">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        New Option
+                    </button>
+                    <div ui-tree="productSpecs.specOptionsTreeOptions" id="spec-options-tree-root" data-drag-delay="200">
+                        <ol ui-tree-nodes ng-model="productSpecs.selectedSpec.Options">
+                            <li ng-repeat="node in productSpecs.selectedSpec.Options" ui-tree-node ng-include="'spec_options_renderer.html'"></li>
+                        </ol>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

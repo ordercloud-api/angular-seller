@@ -11,6 +11,10 @@ a[disabled] {
   pointer-events: none;
 }
 
+textarea {
+  resize:vertical;
+}
+
 .fa-circle {
   color:@gray-light;
   &.active {
@@ -24,4 +28,10 @@ a[disabled] {
 
 .navbar-right {
   margin-right:0; //Navbar-btn was not behaving as expected, so for now this will override bootstrap
+}
+
+.table {
+  > tbody > tr > td {
+    vertical-align: middle;
+  }
 }

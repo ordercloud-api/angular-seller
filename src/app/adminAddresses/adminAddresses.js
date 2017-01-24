@@ -12,7 +12,7 @@ function AdminAddressesConfig($stateProvider){
             templateUrl: 'adminAddresses/templates/adminAddresses.tpl.html',
             controller: 'AdminAddressesCtrl',
             controllerAs: 'adminAddresses',
-            url: '/adminaddresses?search&page&pageSize&searchOn&sortBy&filters',
+            url: '/addresses?search&page&pageSize&searchOn&sortBy&filters',
             data: {
                 componentName: 'Admin Addresses'
             },
@@ -65,9 +65,14 @@ function AdminAddressesController($state, $ocMedia, OrderCloud, OrderCloudParame
         $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
     };
 
-    //Reload the state with new search parameters & reset the page
+    //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        vm.filter(true);
+        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        vm.searchLoading = OrderCloud.AdminAddresses.List(vm.parameters.search, 1, vm.parameters.pageSize || 12)
+            .then(function(data) {
+                vm.list = data;
+                vm.searchResults = vm.parameters.search.length > 0;
+            })
     };
 
     //Clear the search parameters, reload the state & reset the page

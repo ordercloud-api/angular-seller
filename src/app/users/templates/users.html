@@ -7,9 +7,10 @@
                     <div ng-class="{'input-group':users.searchResults}">
                         <input type="search" ng-change="users.search()" ng-model-options="{debounce:1000}" placeholder="Search Users..." ng-model="users.parameters.search" class="form-control">
                         <span ng-if="users.searchResults" class="input-group-btn">
-                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="users.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="users.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
                         </span>
-                    </div></div>
+                    </div>
+                </div>
                 <div class="col-xs-3 col-md-2">
                     <button type="button" class="btn btn-block btn-primary" ng-click="users.createUser()"><i class="fa fa-plus-circle"></i> <span class="hidden-xs">New User</span> </button>
                 </div>

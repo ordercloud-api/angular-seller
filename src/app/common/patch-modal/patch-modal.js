@@ -9,13 +9,13 @@ function ocPatchModal($uibModal, $q) {
     };
 
     /**
+        title: an optional string to be rendered in the modal header
         model: full model of OrderCloud object. Ex: a full Address model
         properties: array of objects. Ex: [{Key: 'FirstName', Label: 'First Name', Required: true]]
-        resourceName: name of SDK Resource. Ex: Addresses
         patchFn: SDK Patch function with all params. Wrap in fn(partial) for promise.
             Ex: function(partial) { return OrderCloud.Addresses.Patch('123', partial, 'Buyer1') }
     **/
-    function _edit(model, properties, resourceName, patchFn) {
+    function _edit(title, model, properties, patchFn) {
         var deferred = $q.defer();
 
         var modalInstance = $uibModal.open({
@@ -24,14 +24,14 @@ function ocPatchModal($uibModal, $q) {
             controller: 'ocPatchModalCtrl',
             controllerAs: 'patchModal',
             resolve: {
+                Title: function() {
+                    return title;
+                },
                 Model: function() {
                     return model;
                 },
                 Properties: function() {
                     return properties;
-                },
-                ResourceName: function() {
-                    return resourceName;
                 },
                 PatchFn: function() {
                     return patchFn;
@@ -49,10 +49,11 @@ function ocPatchModal($uibModal, $q) {
     return service;
 }
 
-function ocPatchModalController($uibModalInstance, Model, Properties, ResourceName, PatchFn, OrderCloud) {
+function ocPatchModalController($uibModalInstance, Model, Properties, Title, PatchFn) {
     var vm = this;
     vm.model = angular.copy(Model);
     vm.properties = Properties;
+    vm.title = Title;
 
     vm.confirm = function() {
         vm.loading = {

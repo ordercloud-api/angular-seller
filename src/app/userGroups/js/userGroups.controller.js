@@ -83,8 +83,7 @@ function UserGroupsController($state, $uibModal, toastr, $ocMedia, OrderCloud, O
         $uibModal.open({
             templateUrl: 'userGroups/templates/userGroupCreate.modal.html',
             controller: 'UserGroupCreateModalCtrl',
-            controllerAs: 'userGroupCreateModal',
-            bindToController: true
+            controllerAs: 'userGroupCreateModal'
         }).result
             .then(function(data) {
                 toastr.success(data.Name + ' was created.', 'Success!');

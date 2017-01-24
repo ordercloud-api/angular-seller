@@ -1,0 +1,37 @@
+.c-price-card {
+  // add flex display to price card wrapper
+  // flex the product card to fill the grid item element
+  box-shadow:none;
+  display:flex;
+  flex-flow:row nowrap;
+  align-items:center;
+  border-bottom:1px solid @hr-border;
+  &:last-of-type {
+    margin-bottom:20px;
+  }
+
+  //.oc-flex-layout.flex-auto;
+  &__info {
+    flex-grow:1;
+    flex-basis:35%;
+  }
+  // flex the descrip to push icons to bottom of card
+  &__price {
+    flex:1;
+    font-size:1.4em;
+    color:@brand-primary;
+  }
+  &__groups,
+  &__buyers {
+    flex:1;
+    text-align:center;
+    color:@text-muted;
+  }
+  &.active {
+    border-bottom-color:@brand-primary;
+    color:@brand-primary;
+    .c-price-card__info small {
+      color: @brand-primary;
+    }
+  }
+}

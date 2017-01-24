@@ -1,0 +1,95 @@
+<nav class="navbar navbar-default navbar-unstacked">
+    <div class="container container-smooth">
+        <ul class="nav navbar-nav navbar-left">
+            <ul class="breadcrumb">
+                <li><a href="" ui-sref="products">All Products</a></li>
+                <li class="active">{{productDetail.productName}}</li>
+            </ul>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <button type="button" class="btn btn-primary btn-sm navbar-btn" ui-sref="products.create"><i class="fa fa-plus-circle"></i>
+                <span class="hidden-lg hidden-md">Product</span>
+                <span class=" hidden-xs hidden-sm">New Product</span>
+            </button>
+        </ul>
+    </div>
+</nav>
+<article>
+    <ul class="nav nav-tabs">
+        <li ng-class="{active:application.$state.is('productDetail')}">
+            <a href="" ui-sref="productDetail"><i class="fa fa-cube"></i> Product</a>
+        </li>
+        <li ui-sref-active="active">
+            <a href="" ui-sref=".specs"><i class="fa fa-edit"></i> Specs <span class="badge">{{productDetail.product.SpecCount || 0}}</span></a>
+        </li>
+        <li ng-class="{active:application.$state.includes('productDetail.pricing') || application.$state.is('productDetail.createAssignment')}">
+            <a href="" ui-sref=".pricing"><i class="fa fa-dollar"></i> Pricing</a>
+        </li>
+        <li ui-sref-active="active">
+            <a href="" ui-sref=".shipping"><i class="fa fa-truck"></i> Shipping</a>
+        </li>
+        <li ui-sref-active="active" ng-if="productDetail.inventoryEnabled">
+            <a href="" ui-sref=".inventory"><i class="fa fa-clipboard"></i> Inventory</a>
+        </li>
+    </ul>
+    <br>
+    <ui-view>
+        <div class="row">
+            <div class="col-sm-8">
+                <form name="productDetail.InfoForm" autocomplete="off" ng-submit="productDetail.updateProduct()" novalidate class="form-horizontal">
+                    <fieldset class="form-group">
+                        <label for="ProductID" class="col-sm-3 control-label">Product ID:</label>
+                        <div class="col-sm-9">
+                            <input id="ProductID" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" type="text" class="form-control" ng-model="productDetail.product.ID" required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="ProductName" class="col-sm-3 control-label">Name:</label>
+                        <div class="col-sm-9">
+                            <input id="ProductName" type="text" class="form-control" ng-model="productDetail.product.Name" required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="ProductDescription" class="col-sm-3 control-label">Description:</label>
+                        <div class="col-sm-9">
+                            <textarea rows="4" id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="productDetail.product.Description"></textarea>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier:</label>
+                        <div class="col-sm-9">
+                            <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="productDetail.product.QuantityMultiplier" required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label class="col-sm-3 control-label">Image:</label>
+                        <div class="col-sm-9">
+                            <oc-file-upload  model="productDetail.product" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="checkbox">
+                                <label for="InventoryEnabled">
+                                    <input id="InventoryEnabled" name="InventoryEnabled" type="checkbox" ng-model="productDetail.product.InventoryEnabled"> Inventory Enabled
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label for="ProductActive">
+                                    <input id="ProductActive" name="ProductActive" type="checkbox" ng-model="productDetail.product.Active"> Active
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="submit" cg-busy="productDetail.productUpdateLoading" class="btn btn-primary btn-block">Update Product Info</button>
+                        </div>
+                    </fieldset>
+                    <hr>
+                    <button type="button" class="btn btn-default btn-block" ng-click="productDetail.deleteProduct()"><i class="fa fa-trash-o text-danger"></i> Delete Product</button>
+                </form>
+            </div>
+        </div>
+    </ui-view>
+</article>

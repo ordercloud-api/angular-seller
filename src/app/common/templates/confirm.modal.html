@@ -1,0 +1,5 @@
+<div class="modal-body" ng-bind-html="confirmModal.message"></div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-primary" ng-click="confirmModal.confirm()">{{confirmModal.confirmText || 'Okay'}}</button>
+	<button type="button" class="btn btn-default" ng-click="confirmModal.cancel()">{{confirmModal.cancelText || 'Cancel'}}</button>
+</div>

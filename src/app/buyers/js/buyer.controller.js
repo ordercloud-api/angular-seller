@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCtrl', BuyerController)
 ;
 
-function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers, SelectedBuyer, OrderCloudConfirm){
+function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers, SelectedBuyer, ocConfirm){
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.settings = angular.copy(SelectedBuyer);
@@ -30,7 +30,9 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers
     };
 
     vm.deleteBuyer = function() {
-        OrderCloudConfirm.Confirm("Are you sure you want to delete this buyer organization and all of its related data?  <b>This action cannot be undone.</b>")
+        ocConfirm.Confirm({
+                message: "Are you sure you want to delete this buyer organization and all of its related data?  <b>This action cannot be undone.</b>"
+            })
             .then(function() {
                 OrderCloud.Buyers.Delete(vm.selectedBuyer.ID)
                     .then(function() {

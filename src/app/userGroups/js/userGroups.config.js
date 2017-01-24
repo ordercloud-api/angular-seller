@@ -30,7 +30,8 @@ function UserGroupsConfig($stateProvider) {
                     return OrderCloud.UserGroups.Get($stateParams.usergroupid, $stateParams.buyerid);
                 },
                 AssignedUsers: function($stateParams, OrderCloud) {
-                    return OrderCloud.Users.List($stateParams.usergroupid);
+                    return OrderCloud.Users.List($stateParams.usergroupid, null, null, null, null, null, null, $stateParams.buyerid);
+
                 }
             }
         })
