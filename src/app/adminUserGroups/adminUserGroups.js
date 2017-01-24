@@ -13,7 +13,7 @@ function AdminUserGroupsConfig($stateProvider) {
             templateUrl: 'adminUserGroups/templates/adminUserGroups.tpl.html',
             controller: 'AdminUserGroupsCtrl',
             controllerAs: 'adminUserGroups',
-            url: '/adminusergroups?search&page&pageSize&sortBy&searchOn&filters',
+            url: '/usergroups?search&page&pageSize&sortBy&searchOn&filters',
             data: {componentName: 'Admin User Groups'},
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {

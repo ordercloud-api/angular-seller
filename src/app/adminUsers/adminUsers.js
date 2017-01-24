@@ -12,7 +12,7 @@ function AdminUsersConfig($stateProvider) {
             templateUrl: 'adminUsers/templates/adminUsers.tpl.html',
             controller: 'AdminUsersCtrl',
             controllerAs: 'adminUsers',
-            url: '/adminusers?search&page&pageSize&searchOn&sortBy&filters',
+            url: '/users?search&page&pageSize&searchOn&sortBy&filters',
             data: {componentName: 'Admin Users'},
             resolve : {
                 Parameters: function($stateParams, OrderCloudParameters) {

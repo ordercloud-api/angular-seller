@@ -6,7 +6,7 @@ angular.module('orderCloud')
     .controller('PriceScheduleCreateAssignmentCtrl', PriceScheduleCreateAssignmentController)
 ;
 
-function ProductPricingController($q, $stateParams, $uibModal, toastr, AssignmentList, AssignmentData, ocProductsService, ocConfirm, OrderCloud) {
+function ProductPricingController($q, $stateParams, $uibModal, toastr, AssignmentList, AssignmentData, ocProductPricing, ocConfirm, OrderCloud) {
     var vm = this;
     vm.list = AssignmentList;
     vm.listAssignments = AssignmentData;
@@ -14,7 +14,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
 
     vm.selectPrice = function(scope) {
-        vm.loadingPrice = ocProductsService.AssignmentDataDetail(vm.listAssignments, scope.assignment.PriceSchedule.ID)
+        vm.loadingPrice = ocProductPricing.AssignmentDataDetail(vm.listAssignments, scope.assignment.PriceSchedule.ID)
             .then(function(data) {
                 vm.selectedPrice = scope.assignment;
                 vm.selectedPrice.PriceSchedule = data.PriceSchedule;
@@ -30,7 +30,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
 
     vm.editPrice = function() {
         $uibModal.open({
-            templateUrl: 'productManagement/templates/priceScheduleEdit.modal.html',
+            templateUrl: 'productManagement/productPricing/templates/priceScheduleEdit.modal.html',
             controller: 'PriceScheduleEditModalCtrl',
             controllerAs: 'priceScheduleEditModal',
             resolve: {
@@ -70,7 +70,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     //====== Price Breaks =======
     vm.createPriceBreak = function() {
         $uibModal.open({
-            templateUrl: 'productManagement/templates/priceSchedulePriceBreak.modal.html',
+            templateUrl: 'productManagement/productPricing/templates/priceSchedulePriceBreak.modal.html',
             size: 'md',
             controller: 'PriceSchedulePriceBreakCtrl',
             controllerAs: 'priceBreak',
@@ -142,7 +142,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     //====== Availability =======
     vm.createAssignment = function(scope) {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/templates/priceScheduleAssignment.modal.html',
+            templateUrl: 'productManagement/productPricing/templates/priceScheduleAssignment.modal.html',
             size: 'md',
             controller: 'PriceScheduleCreateAssignmentCtrl',
             controllerAs: 'priceScheduleAssignment',
@@ -239,7 +239,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
 
     vm.addUserGroupAssignment = function(scope) {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/templates/priceScheduleAssignment.modal.html',
+            templateUrl: 'productManagement/productPricing/templates/priceScheduleAssignment.modal.html',
             size: 'md',
             controller: 'PriceScheduleCreateAssignmentCtrl',
             controllerAs: 'priceScheduleAssignment',
@@ -365,7 +365,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     }
 }
 
-function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProductsService, SelectedProduct, Buyers, PriceBreak) {
+function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProductPricing, SelectedProduct, Buyers, PriceBreak) {
     var vm = this;
     vm.buyers = Buyers;
     vm.product = SelectedProduct;
@@ -398,7 +398,7 @@ function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProduct
     }
 
     function saveAssignment() {
-        ocProductsService.CreateNewPriceScheduleAndAssignments(vm.product, vm.priceSchedule, vm.selectedBuyer, vm.selectedUserGroups)
+        ocProductPricing.CreatePrice(vm.product, vm.priceSchedule, vm.selectedBuyer, vm.selectedUserGroups)
             .then(function(data) {
                 toastr.success('Price Created', 'Success');
                 $state.go('^.pricing', {pricescheduleid:data.PriceScheduleID});
@@ -444,7 +444,7 @@ function PriceSchedulePriceBreakController($uibModalInstance, OrderCloud, PriceS
     };
 }
 
-function PriceScheduleCreateAssignmentController($uibModalInstance, $stateParams, OrderCloud, ocProductsService, Buyers, SelectedBuyer, BuyerUserGroups, SelectedPrice, AssignedUserGroups) {
+function PriceScheduleCreateAssignmentController($uibModalInstance, $stateParams, OrderCloud, ocProductPricing, Buyers, SelectedBuyer, BuyerUserGroups, SelectedPrice, AssignedUserGroups) {
     var vm = this;
 
     vm.buyers = {Items: []};
@@ -499,7 +499,7 @@ function PriceScheduleCreateAssignmentController($uibModalInstance, $stateParams
                 BuyerID: vm.selectedBuyer.ID
             };
             if (vm.selectedUserGroup) assignment.UserGroupID = vm.selectedUserGroup.ID;
-            vm.loading = ocProductsService.CreateAssignment(assignment)
+            vm.loading = ocProductPricing.CreateAssignment(assignment)
                 .then(function(data) {
                     $uibModalInstance.close({Buyer: vm.selectedBuyer, UserGroup: vm.selectedUserGroup, PriceScheduleID:SelectedPrice.PriceSchedule.ID});
                 })

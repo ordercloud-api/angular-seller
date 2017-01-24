@@ -16,16 +16,34 @@
 <article>
     <div>
         <!--====== SEARCH/FILTERS ======-->
-        <form name="BuyersSearchForm">
-            <fieldset class="form-group">
-                <div ng-class="{'input-group':buyers.searchResults}">
-                    <input type="search" ng-change="buyers.search()" ng-model-options="{debounce:1000}" placeholder="Search buyers..." ng-model="buyers.parameters.search" class="form-control">
-                <span ng-if="buyers.searchResults" class="input-group-btn">
-                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="buyers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
-                </span>
-                </div>
-            </fieldset>
-        </form>
+        <div ng-if="!application.isTouchDevice">
+            <form name="BuyersSearchForm">
+                <fieldset class="form-group">
+                    <div ng-class="{'input-group':buyers.searchResults}">
+                        <input type="search" ng-change="buyers.search()" ng-model-options="{debounce:1000}" placeholder="Search buyers..." ng-model="buyers.parameters.search" class="form-control">
+                        <span ng-if="buyers.searchResults" class="input-group-btn">
+                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="buyers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                        </span>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <!--Touch devices-->
+        <div ng-if="application.isTouchDevice">
+            <form name="BuyersSearchForm" action="." pretty-submit ng-submit="buyers.search()">
+                <fieldset class="form-group">
+                    <div ng-class="{'input-group':buyers.searchResults}">
+                        <input type="search" placeholder="Search buyers..." ng-model="buyers.parameters.search" class="form-control">
+                        <span ng-if="buyers.searchResults" class="input-group-btn">
+                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="buyers.clearSearch()"><i class="fa fa-times"></i></button>
+                        </span>
+                    </div>
+                </fieldset>
+                <button type="submit" class="sr-only">Search</button>
+            </form>
+        </div>
+
         <div class="row" style="margin-top:15px;" uib-collapse="!buyers.showFilters">
             <div class="col-md-6 col-lg-4">
                 <div class="form-group" ng-if="application.$ocMedia('max-width:767px')">

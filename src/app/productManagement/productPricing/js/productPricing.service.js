@@ -1,19 +1,14 @@
 angular.module('orderCloud')
-    .factory('ocProductsService', ocProductsService)
+    .factory('ocProductPricing', ocProductPricingService)
 ;
 
-function ocProductsService($q, toastr, OrderCloud, ocConfirm, PriceBreak) {
+function ocProductPricingService($q, toastr, OrderCloud, ocConfirm, PriceBreak) {
     var service = {
         AssignmentList: _assignmentList,
         AssignmentData: _assignmentData,
         AssignmentDataDetail: _assignmentDataDetail,
-        AssignBuyerRemoveUserGroups: _assignBuyerRemoveUserGroups,
         CreateAssignment: _createAssignment,
-        CreateNewPriceScheduleAndAssignments: _createNewPriceScheduleAndAssignments,
-        ProductSpecsDetail: _productSpecsDetail,
-        UpdateSpecListOrder: _updateSpecListOrder,
-        UpdateSpecOptionsListOrder: _updateSpecOptionsListOrder,
-        UpdateInventory: _updateInventory
+        CreatePrice: _createPrice
     };
 
     function _assignmentList(productid, buyerid) {
@@ -166,24 +161,6 @@ function ocProductsService($q, toastr, OrderCloud, ocConfirm, PriceBreak) {
         return deferred.promise;
     }
 
-    //This method not only assigns the buyer company to the price schedule, but it removes any user group assignments under that buyer as well
-    function _assignBuyerRemoveUserGroups(buyer, productid, pricescheduleid) {
-        var deferred = $q.defer();
-
-        var queue = [];
-        angular.forEach(buyer.UserGroups, function(group) {
-            queue.push(OrderCloud.Products.DeleteAssignment(productid, null, group.ID, buyer.ID));
-        });
-        queue.push(OrderCloud.Products.SaveAssignment({BuyerID: buyer.ID, ProductID: productid, PriceScheduleID: pricescheduleid}));
-
-        $q.all(queue).then(function() {
-            buyer.UserGroups = [];
-            deferred.resolve(buyer);
-        });
-
-        return deferred.promise;
-    }
-
     function _createAssignment(assignment) {
         var deferred = $q.defer();
 
@@ -194,7 +171,7 @@ function ocProductsService($q, toastr, OrderCloud, ocConfirm, PriceBreak) {
             .catch(function(ex) {
                 if (ex.status == 409 && ex.data.Errors[0].ErrorCode == 'IdExists') {
                     ocConfirm.Confirm({
-                        message: 'Another price schedule is already assigned to your selected party. Would you like to replace that assignment?'
+                            message: 'Another price schedule is already assigned to your selected party. Would you like to replace that assignment?'
                         })
                         .then(function() {
                             OrderCloud.Products.DeleteAssignment(assignment.ProductID, null, assignment.UserGroupID, assignment.BuyerID)
@@ -215,19 +192,10 @@ function ocProductsService($q, toastr, OrderCloud, ocConfirm, PriceBreak) {
                 }
             });
 
-        /*ocConfirm.Confirm("Are you sure you want to delete this buyer organization and all of it's related data?  <b>This action cannot be undone.</b>")
-            .then(function() {
-                OrderCloud.Buyers.Delete(vm.selectedBuyer.ID)
-                    .then(function() {
-                        toastr.success(vm.selectedBuyer.Name + ' was deleted.', 'Success!');
-                        $state.go('buyers');
-                    })
-            })*/
-
         return deferred.promise;
     }
 
-    function _createNewPriceScheduleAndAssignments(product, priceSchedule, selectedBuyer, selectedUserGroups) {
+    function _createPrice(product, priceSchedule, selectedBuyer, selectedUserGroups) {
         var deferred = $q.defer();
 
         priceSchedule = PriceBreak.SetMinMax(priceSchedule);
@@ -266,146 +234,6 @@ function ocProductsService($q, toastr, OrderCloud, ocConfirm, PriceBreak) {
             })
             .catch(function (ex) {
                 deferred.reject(ex);
-            });
-
-        return deferred.promise;
-    }
-
-    function _productSpecsDetail(productid) {
-        var deferred = $q.defer();
-
-        OrderCloud.Specs.ListProductAssignments(null, productid, 1, 100)
-            .then(function(data) {
-                if (data.Items.length) {
-                    getSpecs(data);
-                } else {
-                    deferred.resolve(data);
-                }
-            });
-
-        function getSpecs(data) {
-            OrderCloud.Specs.List(null, null, null, null, null, {ID: _.pluck(data.Items, 'SpecID').join('|')})
-                .then(function(details) {
-                    getSpecOptions(data, details);
-                });
-        }
-
-        function getSpecOptions(data, details) {
-            var optionQueue = [];
-            angular.forEach(data.Items, function(specAssignment) {
-                specAssignment.Spec = _.where(details.Items, {ID: specAssignment.SpecID})[0];
-                if (specAssignment.Spec && specAssignment.Spec.OptionCount) {
-                    //OrderCloud.Specs.ListOptions(specAssignment.Spec.ID, null, 1, 100)
-                    optionQueue.push((function() {
-                        var d = $q.defer();
-
-                        OrderCloud.Specs.ListOptions(specAssignment.Spec.ID, null, 1, 100)
-                            .then(function(oData) {
-                                specAssignment.Options = oData.Items;
-                                _.map(specAssignment.Options, function(option) { option.DefaultOption = (specAssignment.DefaultOptionID == option.ID) });
-                                d.resolve();
-                            });
-
-                        return d.promise;
-                    })());
-                }
-            });
-
-            $q.all(optionQueue).then(function() {
-                deferred.resolve(data);
-            });
-        }
-
-        return deferred.promise;
-    }
-
-    function _updateSpecListOrder(event) {
-        var deferred = $q.defer();
-        var nodeList = event.source.nodesScope.$modelValue;
-        var queue = [];
-
-        angular.forEach(nodeList, function(node, index) {
-            queue.push((function() {
-                return OrderCloud.Specs.Patch(node.Spec.ID, {ListOrder: index});
-            }));
-        });
-
-        var queueIndex = 0;
-        function run(i) {
-            queue[i]().then(function() {
-                queueIndex++;
-                if (queueIndex < queue.length) {
-                    run(queueIndex);
-                }
-                else {
-                    deferred.resolve();
-                }
-            });
-        }
-        run(queueIndex);
-
-        return deferred.promise;
-    }
-
-    function _updateSpecOptionsListOrder(event, specID) {
-        var deferred = $q.defer();
-
-        var nodeList = event.source.nodesScope.$modelValue;
-        var queue = [];
-
-        angular.forEach(nodeList, function(node, index) {
-            queue.push((function() {
-                return OrderCloud.Specs.PatchOption(specID, node.ID, {ListOrder: index});
-            }));
-        });
-
-        var queueIndex = 0;
-        function run(i) {
-            queue[i]().then(function() {
-                queueIndex++;
-                if (queueIndex < queue.length) {
-                    run(queueIndex);
-                }
-                else {
-                    deferred.resolve();
-                }
-            });
-        }
-        run(queueIndex);
-
-        return deferred.promise;
-    }
-
-    function _updateInventory(product, inventory) {
-        var deferred = $q.defer();
-        var inventoryResult;
-        var queue = [];
-
-        var productPartial = _.pick(product, ['InventoryNotificationPoint', 'AllowOrderExceedInventory']);
-        queue.push(OrderCloud.Products.Patch(product.ID, productPartial));
-
-        queue.push((function() {
-            var d = $q.defer();
-
-            OrderCloud.Products.UpdateInventory(product.ID, inventory.Available)
-                .then(function(data) {
-                    inventoryResult = data;
-                    d.resolve();
-                })
-                .catch(function(ex) {
-                    inventoryResult = ex;
-                    d.reject();
-                });
-
-            return d.promise;
-        })());
-
-        $q.all(queue)
-            .then(function() {
-                deferred.resolve(inventoryResult);
-            })
-            .catch(function() {
-                deferred.reject(inventoryResult);
             });
 
         return deferred.promise;

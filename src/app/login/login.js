@@ -6,6 +6,7 @@ angular.module('orderCloud')
         return function (scope, element) {
             $(element).submit(function(event) {
                 event.preventDefault();
+                $(document.activeElement).blur();
             });
         };
     })
@@ -121,10 +122,6 @@ function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, Lo
     vm.rememberStatus = false;
 
     vm.submit = function() {
-        $('#Username').blur();
-        $('#Password').blur();
-        $('#Remember').blur();
-        $('#submit_login').blur();
         OrderCloud.Auth.GetToken(vm.credentials)
             .then(function(data) {
                 vm.rememberStatus ? OrderCloud.Refresh.SetToken(data['refresh_token']) : angular.noop();
