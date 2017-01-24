@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AppCtrl', AppController)
 ;
 
-function AppController($q, $rootScope, $state, $ocMedia, toastr, LoginService, appname, anonymous, defaultstate) {
+function AppController($q, $rootScope, $state, $ocMedia, toastr, LoginService, appname, defaultstate) {
     var vm = this;
     vm.name = appname;
     vm.$state = $state;
@@ -43,12 +43,7 @@ function AppController($q, $rootScope, $state, $ocMedia, toastr, LoginService, a
     });
 
     $rootScope.$on('OC:AccessInvalidOrExpired', function() {
-        if (anonymous) {
-            cleanLoadingIndicators();
-            LoginService.AuthAnonymous();
-        } else {
-            LoginService.RememberMe();
-        }
+        LoginService.RememberMe();
     });
 
     $rootScope.$on('OC:AccessForbidden', function(){
