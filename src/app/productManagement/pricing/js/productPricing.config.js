@@ -9,7 +9,7 @@ function ProductPricingConfig($stateProvider) {
             params: {
                 pricescheduleid: undefined
             },
-            templateUrl: 'productManagement/productPricing/templates/productPricing.html',
+            templateUrl: 'productManagement/pricing/templates/productPricing.html',
             controller: 'ProductPricingCtrl',
             controllerAs: 'productPricing',
             resolve : {
@@ -24,7 +24,7 @@ function ProductPricingConfig($stateProvider) {
         })
         .state('productDetail.createAssignment', {
             url: '/new-price',
-            templateUrl: 'productManagement/productPricing/templates/productCreateAssignment.html',
+            templateUrl: 'productManagement/pricing/templates/productCreateAssignment.html',
             controller: 'ProductCreateAssignmentCtrl',
             controllerAs: 'productCreateAssignment',
             resolve: {
@@ -35,7 +35,7 @@ function ProductPricingConfig($stateProvider) {
         })
         .state('productDetail.pricing.priceScheduleDetail', {
             url: '/:pricescheduleid',
-            templateUrl: 'productManagement/productPricing/templates/priceScheduleDetail.html',
+            templateUrl: 'productManagement/pricing/templates/priceScheduleDetail.html',
             controller: 'PriceScheduleDetailCtrl',
             controllerAs: 'priceScheduleDetail',
             resolve: {

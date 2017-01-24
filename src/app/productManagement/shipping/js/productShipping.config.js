@@ -6,7 +6,7 @@ function ProductShippingConfig($stateProvider) {
     $stateProvider
         .state('productDetail.shipping', {
             url: '/shipping',
-            templateUrl: 'productManagement/productShipping/templates/productShipping.html',
+            templateUrl: 'productManagement/shipping/templates/productShipping.html',
             controller: 'ProductShippingCtrl',
             controllerAs: 'productShipping',
             resolve: {

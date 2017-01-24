@@ -6,7 +6,7 @@ function ProductInventoryConfig($stateProvider) {
     $stateProvider
         .state('productDetail.inventory', {
             url: '/inventory',
-            templateUrl: 'productManagement/productInventory/templates/productInventory.html',
+            templateUrl: 'productManagement/inventory/templates/productInventory.html',
             controller: 'ProductInventoryCtrl',
             controllerAs: 'productInventory',
             resolve: {

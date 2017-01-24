@@ -30,7 +30,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
 
     vm.editPrice = function() {
         $uibModal.open({
-            templateUrl: 'productManagement/productPricing/templates/priceScheduleEdit.modal.html',
+            templateUrl: 'productManagement/pricing/templates/priceScheduleEdit.modal.html',
             controller: 'PriceScheduleEditModalCtrl',
             controllerAs: 'priceScheduleEditModal',
             resolve: {
@@ -70,7 +70,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     //====== Price Breaks =======
     vm.createPriceBreak = function() {
         $uibModal.open({
-            templateUrl: 'productManagement/productPricing/templates/priceSchedulePriceBreak.modal.html',
+            templateUrl: 'productManagement/pricing/templates/priceSchedulePriceBreak.modal.html',
             size: 'md',
             controller: 'PriceSchedulePriceBreakCtrl',
             controllerAs: 'priceBreak',
@@ -142,7 +142,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     //====== Availability =======
     vm.createAssignment = function(scope) {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/productPricing/templates/priceScheduleAssignment.modal.html',
+            templateUrl: 'productManagement/pricing/templates/priceScheduleAssignment.modal.html',
             size: 'md',
             controller: 'PriceScheduleCreateAssignmentCtrl',
             controllerAs: 'priceScheduleAssignment',
@@ -239,7 +239,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
 
     vm.addUserGroupAssignment = function(scope) {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/productPricing/templates/priceScheduleAssignment.modal.html',
+            templateUrl: 'productManagement/pricing/templates/priceScheduleAssignment.modal.html',
             size: 'md',
             controller: 'PriceScheduleCreateAssignmentCtrl',
             controllerAs: 'priceScheduleAssignment',

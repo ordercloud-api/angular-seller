@@ -29,7 +29,7 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
 
     function createSpec(productID) {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/productSpecs/templates/productSpecCreate.modal.html',
+            templateUrl: 'productManagement/specs/templates/productSpecCreate.modal.html',
             size: 'md',
             controller: 'ProductSpecCreateCtrl',
             controllerAs: 'productSpecCreate',
@@ -76,7 +76,7 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
 
     function createSpecOption() {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/productSpecs/templates/productSpecOptionCreate.modal.html',
+            templateUrl: 'productManagement/specs/templates/productSpecOptionCreate.modal.html',
             size: 'md',
             controller: 'ProductSpecOptionCreateCtrl',
             controllerAs: 'productSpecOptionCreate',
@@ -102,7 +102,7 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
 
     function specOptionSelected(node) {
         var modalInstance = $uibModal.open({
-            templateUrl: 'productManagement/productSpecs/templates/productSpecOptionEdit.modal.html',
+            templateUrl: 'productManagement/specs/templates/productSpecOptionEdit.modal.html',
             size: 'md',
             controller: 'ProductSpecOptionEditCtrl',
             controllerAs: 'productSpecOptionEdit',

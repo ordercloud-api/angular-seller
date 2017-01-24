@@ -6,7 +6,7 @@ function ProductSpecsConfig($stateProvider) {
     $stateProvider
         .state('productDetail.specs', {
             url: '/specs',
-            templateUrl: 'productManagement/productSpecs/templates/productSpecs.html',
+            templateUrl: 'productManagement/specs/templates/productSpecs.html',
             controller: 'ProductSpecsCtrl',
             controllerAs: 'productSpecs',
             resolve: {

@@ -7,7 +7,7 @@ function ProductDetailConfig($stateProvider) {
         .state('productDetail', {
             parent: 'base',
             url: '/products/:productid',
-            templateUrl: 'productManagement/productDetail/templates/productDetail.html',
+            templateUrl: 'productManagement/product/templates/productDetail.html',
             controller: 'ProductDetailCtrl',
             controllerAs: 'productDetail',
             resolve: {
