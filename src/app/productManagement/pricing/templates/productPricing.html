@@ -14,26 +14,26 @@
         <br>
 
         <!--==== Product Price Schedule List ====-->
-        <div class="l-price">
+        <div class="l-price-list">
             <div ng-repeat="assignment in productPricing.listAssignments"
                  ng-class="{'active':productPricing.selectedPrice.PriceSchedule.ID == assignment.PriceSchedule.ID}"
-                 class="c-price-card"
+                 class="c-price-list-item"
                  ng-click="productPricing.selectPrice(this)">
                 <!--==== Product Price Selection ====-->
 
-                <h5 class="c-price-card__info">
+                <h5 class="c-price-list-item__info">
                     {{assignment.PriceSchedule.Name}} <br>
                     <small>{{'ID: ' + assignment.PriceSchedule.ID}}</small>
                 </h5>
-                <div class="c-price-card__price">
+                <div class="c-price-list-item__price">
                     {{assignment.PriceSchedule.PriceBreaks[0].Price | currency}}
                 </div>
-                <div class="c-price-card__buyers">
+                <div class="c-price-list-item__buyers">
                     <small>Buyers</small>
                     <br>
                     {{assignment.Buyers.length}}
                 </div>
-                <div class="c-price-card__groups">
+                <div class="c-price-list-item__groups">
                     <small>Groups</small>
                     <br>
                     {{assignment.UserGroups.length}}
