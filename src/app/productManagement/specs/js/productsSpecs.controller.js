@@ -10,6 +10,7 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
     vm.specs = angular.copy(ProductSpecs);
     vm.selectedSpec = null;
     vm.createSpec = createSpec;
+    vm.editSelectedSpec = editSelectedSpec;
     vm.deleteSelectedSpec = deleteSelectedSpec;
     vm.specSelected = specSelected;
     vm.createSpecOption = createSpecOption;
@@ -45,6 +46,16 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
             vm.selectedSpec = assignment;
             $rootScope.$broadcast('ProductManagement:SpecCountChanged', 'increment');
         });
+    }
+
+    function editSelectedSpec() {
+        ocProductSpecs.EditSpec(vm.selectedSpec.Spec)
+            .then(function(updatedSpec) {
+                vm.specs.Items[_.indexOf(vm.specs.Items, vm.selectedSpec)] = updatedSpec;
+                vm.selectedSpec.Spec = updatedSpec;
+
+                console.log(updatedSpec)
+            })
     }
 
     function deleteSelectedSpec() {
