@@ -5,22 +5,23 @@
 <div class="row" ng-if="productSpecs.specs.Items.length">
     <div class="col-sm-5">
         <script type="text/ng-template" id="specs_renderer.html">
-            <div class="tree-node tree-node-content" ng-class="{'selected-node': node.SpecID == productSpecs.selectedSpec.SpecID}">
+            <div class="tree-node tree-node-content" ng-class="{'selected-node': node.Spec.ID == productSpecs.selectedSpec.Spec.ID}">
                 <p ng-click="productSpecs.specSelected(node)">{{node.Spec.Name}}</p>
                 <i ui-tree-handle class="fa fa-reorder text-muted"></i>
             </div>
         </script>
-        <section>
-            <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpec(productDetail.product.ID)">
-                <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                New Spec
-            </button>
-            <div ui-tree="productSpecs.specTreeOptions" id="spec-tree-root" data-drag-delay="200">
-                <ol ui-tree-nodes ng-model="productSpecs.specs.Items">
-                    <li ng-repeat="node in productSpecs.specs.Items" ui-tree-node ng-include="'specs_renderer.html'"></li>
-                </ol>
-            </div>
-        </section>
+        <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpec(productDetail.product.ID)">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            New Spec
+        </button>
+        <br>
+        <br>
+
+        <div ui-tree="productSpecs.specTreeOptions" id="spec-tree-root" data-drag-delay="200">
+            <ol ui-tree-nodes ng-model="productSpecs.specs.Items">
+                <li ng-repeat="node in productSpecs.specs.Items track by $index" ui-tree-node ng-include="'specs_renderer.html'"></li>
+            </ol>
+        </div>
     </div>
     <div class="col-sm-7">
         <div ng-if="!productSpecs.selectedSpec" class="well text-center">
@@ -52,76 +53,41 @@
                     <b>Default Value:</b> <code>{{productSpecs.selectedSpec.Spec.DefaultValue || 'null'}}</code>
                 </h5>
             </header>
-            <!--<form name="SelectedSpecForm" class="form-horizontal">
-                <fieldset class="form-group">
-                    <label for="SpecID" class="col-sm-3 control-label">ID</label>
-                    <div class="col-sm-9">
-                        <input id="SpecID" type="text" class="form-control" ng-model="productSpecs.selectedSpec.Spec.ID" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" required />
-                    </div>
-                </fieldset>
-                <fieldset class="form-group">
-                    <label for="SpecName" class="col-sm-3 control-label">Name</label>
-                    <div class="col-sm-9">
-                        <input id="SpecName" type="text" class="form-control" ng-model="productSpecs.selectedSpec.Spec.Name" required />
-                    </div>
-                </fieldset>
-                <fieldset class="form-group">
-                    <label for="DefaultValue" class="col-sm-3 control-label">Default Value</label>
-                    <div class="col-sm-9">
-                        <input id="DefaultValue" placeholder="(Optional)" type="text" class="form-control" ng-model="productSpecs.selectedSpec.DefaultValue" />
-                    </div>
-                </fieldset>
-                <fieldset class="form-group">
-                    <div class="col-sm-9 col-md-offset-3">
-                        <div class="checkbox">
-                            <label for="SpecRequired">
-                                <input id="SpecRequired" type="checkbox" ng-model="productSpecs.selectedSpec.Spec.Required"/>
-                                Required
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset class="form-group">
-                    <div class="col-sm-9 col-md-offset-3">
-                        <div class="checkbox">
-                            <label for="AllowOpenText">
-                                <input id="AllowOpenText" type="checkbox" ng-model="productSpecs.selectedSpec.Spec.AllowOpenText"/>
-                                Allow Open Text
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>-->
-            <hr>
             <div class="well text-center" ng-if="!productSpecs.selectedSpec.Options.length">
                 There are no options for this spec. <a ng-click="productSpecs.createSpecOption()">Create</a> one now.</b>
             </div>
             <div ng-if="productSpecs.selectedSpec.Options.length">
-                <header>
-                    <h4>
-                        Options
-                    </h4>
-                </header>
+                <h4 class="page-header">
+                    Options
+                </h4>
                 <script type="text/ng-template" id="spec_options_renderer.html">
-                    <div class="tree-node tree-node-content">
-                        <p ng-click="productSpecs.specOptionSelected(node)">
+                    <div class="tree-node tree-node-content" cg-busy="node.loading">
+                        <i class="fa fa-trash-o text-danger" ng-click="productSpecs.deleteSpecOption(node)"></i>
+                        <p>
                             {{node.Value}}
-                            <i class="fa fa-star" ng-if="node.DefaultOption"></i>
+                            <small ng-if="node.PriceMarkupType != 'NoMarkup'" ng-class="{'text-success':node.PriceMarkup > 0, 'text-warning': node.PriceMarkup < 0}">
+                                {{(node.PriceMarkup > 0 ? '+' : '') + (node.PriceMarkupType == 'Percentage' ? node.PriceMarkup : (node.PriceMarkup | currency))}}<span ng-if="node.PriceMarkupType == 'Percentage'">% / line</span>
+                                <span ng-if="node.PriceMarkupType == 'AmountTotal'">/ line</span>
+                                <span ng-if="node.PriceMarkupType == 'AmountPerQuantity'">/ unit</span>
+                            </small>
                         </p>
+                        <small ng-if="node.DefaultOption" class="text-primary">DEFAULT OPTION</small>
+                        <i class="fa fa-edit text-primary" ng-click="productSpecs.specOptionSelected(node)"></i>
                         <i ui-tree-handle class="fa fa-reorder text-muted"></i>
                     </div>
                 </script>
-                <section>
-                    <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpecOption()">
-                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                        New Option
-                    </button>
-                    <div ui-tree="productSpecs.specOptionsTreeOptions" id="spec-options-tree-root" data-drag-delay="200">
-                        <ol ui-tree-nodes ng-model="productSpecs.selectedSpec.Options">
-                            <li ng-repeat="node in productSpecs.selectedSpec.Options" ui-tree-node ng-include="'spec_options_renderer.html'"></li>
-                        </ol>
-                    </div>
-                </section>
+                <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpecOption()">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    New Option
+                </button>
+                <br>
+                <br>
+
+                <div ui-tree="productSpecs.specOptionsTreeOptions" id="spec-options-tree-root" data-drag-delay="200">
+                    <ol ui-tree-nodes ng-model="productSpecs.selectedSpec.Options">
+                        <li ng-repeat="node in productSpecs.selectedSpec.Options" ui-tree-node ng-include="'spec_options_renderer.html'"></li>
+                    </ol>
+                </div>
             </div>
         </div>
     </div>

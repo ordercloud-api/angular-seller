@@ -15,11 +15,14 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
     vm.specSelected = specSelected;
     vm.createSpecOption = createSpecOption;
     vm.specOptionSelected = specOptionSelected;
+    vm.deleteSpecOption = deleteSpecOption;
 
-    //TODO: Update Selected Spec after listOrder change (do this on Catalog Management as well)
     vm.specTreeOptions = {
         dropped: function(event) {
-            ocProductSpecs.UpdateSpecListOrder(event);
+            ocProductSpecs.UpdateSpecListOrder(event)
+                .then(function() {
+                    vm.selectedSpec = null;
+                })
         }
     };
 
@@ -52,7 +55,8 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
     function editSelectedSpec() {
         ocProductSpecs.EditSpec(vm.selectedSpec.Spec)
             .then(function(updatedSpec) {
-                vm.specs.Items[_.indexOf(vm.specs.Items, vm.selectedSpec)] = updatedSpec;
+                vm.specs.Items[_.indexOf(vm.specs.Items, vm.selectedSpec)].Spec = updatedSpec;
+                vm.specs.Items[_.indexOf(vm.specs.Items, vm.selectedSpec)].SpecID = updatedSpec.ID;
                 vm.selectedSpec.Spec = updatedSpec;
             })
     }
@@ -101,7 +105,11 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
         });
 
         modalInstance.result.then(function(specOption) {
-            vm.selectedSpec.Options.push(specOption);
+            if (vm.selectedSpec.Options) {
+                vm.selectedSpec.Options.push(specOption);
+            } else {
+                vm.selectedSpec.Options = [specOption];
+            }
             angular.forEach(vm.selectedSpec.Options, function(option, index) {
                 if (option.ID != specOption.ID) {
                     vm.selectedSpec.Options[index].DefaultOption = specOption.DefaultOption ? false : option.DefaultOption;
@@ -130,27 +138,33 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
         });
 
         modalInstance.result.then(function(specOption) {
-            if (specOption.Removed) {
-                var specOptionIndex = 0;
-                angular.forEach(vm.selectedSpec.Options, function(option, index) {
-                    if (option.ID == specOption.ID) {
-                        specOptionIndex = index;
-                    }
-                });
-                vm.selectedSpec.Options.splice(specOptionIndex, 1);
-            }
-            else {
-                angular.forEach(vm.selectedSpec.Options, function(option, index) {
-                    if (option.ID == specOption.OriginalID) {
-                        vm.selectedSpec.Options[index] = specOption;
-                    }
-                    else {
-                        vm.selectedSpec.Options[index].DefaultOption = specOption.DefaultOption ? false : option.DefaultOption;
-                    }
-                });
-            }
+            angular.forEach(vm.selectedSpec.Options, function(option, index) {
+                if (option.ID == specOption.OriginalID) {
+                    vm.selectedSpec.Options[index] = specOption;
+                }
+                else {
+                    vm.selectedSpec.Options[index].DefaultOption = specOption.DefaultOption ? false : option.DefaultOption;
+                }
+            });
         });
     }
+
+
+    function deleteSpecOption(node) {
+        ocConfirm.Confirm({message: 'Are you sure you want to delete this spec option?', confirmText: 'Yes', cancelText:'No'})
+            .then(function() {
+                node.loading = OrderCloud.Specs.DeleteOption(vm.selectedSpec.Spec.ID, node.ID)
+                    .then(function() {
+                        var specOptionIndex = 0;
+                        angular.forEach(vm.selectedSpec.Options, function(option, index) {
+                            if (option.ID == node.ID) {
+                                specOptionIndex = index;
+                            }
+                        });
+                        vm.selectedSpec.Options.splice(specOptionIndex, 1);
+                    });
+            });
+    };
 }
 
 function ProductSpecCreateController($uibModalInstance, toastr, OrderCloud, ProductID) {
@@ -173,7 +187,7 @@ function ProductSpecCreateController($uibModalInstance, toastr, OrderCloud, Prod
     };
 }
 
-function ProductSpecOptionCreateController($uibModalInstance, toastr, OrderCloud, ProductID, SpecID) {
+function ProductSpecOptionCreateController($uibModalInstance, OrderCloud, ProductID, SpecID) {
     var vm = this;
     vm.markupTypes = [
         {Label: 'None', Value: 'NoMarkup'},
@@ -182,13 +196,17 @@ function ProductSpecOptionCreateController($uibModalInstance, toastr, OrderCloud
         {Label: 'Percentage of line total', Value: 'Percentage'}
     ];
 
+    vm.specOption = {
+        PriceMarkupType: 'NoMarkup'
+    };
+
     vm.submit = function() {
         vm.loading = OrderCloud.Specs.CreateOption(SpecID, vm.specOption)
             .then(function(data) {
                 if (vm.specOption.DefaultOption) {
-                    OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: SpecID, DefaultOptionID: data.ID})
+                    return OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: SpecID, DefaultOptionID: data.ID})
                         .then(function() {
-                            data.DefaultOption = false;
+                            data.DefaultOption = true;
                             $uibModalInstance.close(data);
                         });
                 }
@@ -204,7 +222,7 @@ function ProductSpecOptionCreateController($uibModalInstance, toastr, OrderCloud
     };
 }
 
-function ProductSpecOptionEditController($uibModalInstance, OrderCloud, ocConfirm, ProductID, SpecID, SpecOption) {
+function ProductSpecOptionEditController($uibModalInstance, OrderCloud, ProductID, SpecID, SpecOption) {
     var vm = this;
     vm.specOption = angular.copy(SpecOption);
     vm.specOptionValue = angular.copy(SpecOption.Value);
@@ -220,7 +238,7 @@ function ProductSpecOptionEditController($uibModalInstance, OrderCloud, ocConfir
         vm.loading = OrderCloud.Specs.PatchOption(SpecID, SpecOption.ID, partial)
             .then(function(data) {
                 if (vm.specOption.DefaultOption && (vm.specOption.DefaultOption != SpecOption.DefaultOption)) {
-                    OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: SpecID, DefaultOptionID: data.ID})
+                    return OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: SpecID, DefaultOptionID: data.ID})
                         .then(function() {
                             data.DefaultOption = true;
                             data.OriginalID = SpecOption.ID;
@@ -232,17 +250,6 @@ function ProductSpecOptionEditController($uibModalInstance, OrderCloud, ocConfir
                     data.OriginalID = SpecOption.ID;
                     $uibModalInstance.close(data);
                 }
-            });
-    };
-
-    vm.deleteSpecOption = function() {
-        ocConfirm.Confirm({message: 'Are you sure you want to delete this spec option?'})
-            .then(function() {
-                OrderCloud.Specs.DeleteOption(SpecID, vm.specOption.ID)
-                    .then(function() {
-                        SpecOption.Removed = true;
-                        $uibModalInstance.close(SpecOption);
-                    });
             });
     };
 
