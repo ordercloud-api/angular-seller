@@ -53,8 +53,6 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
             .then(function(updatedSpec) {
                 vm.specs.Items[_.indexOf(vm.specs.Items, vm.selectedSpec)] = updatedSpec;
                 vm.selectedSpec.Spec = updatedSpec;
-
-                console.log(updatedSpec)
             })
     }
 
