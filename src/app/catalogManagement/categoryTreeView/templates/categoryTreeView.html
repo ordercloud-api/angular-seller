@@ -20,6 +20,9 @@
         <i class="fa fa-plus-circle" aria-hidden="true"></i>
         New Category
     </button>
+    <br>
+    <br>
+
     <div ui-tree="categoryTree.treeOptions" id="tree-root" data-drag-delay="200">
         <ol ui-tree-nodes ng-model="categoryTree.tree">
             <li ng-repeat="node in categoryTree.tree" ui-tree-node ng-include="'nodes_renderer.html'"></li>

@@ -1,48 +1,44 @@
 <form name="ProductSpecOptionCreateModalForm" ng-submit="productSpecOptionCreate.submit()" class="form-horizontal" autocomplete="off" novalidate cg-busy="productSpecOptionCreate.loading">
     <div class="modal-header">
         <button type="button" class="close" aria-label="Close" ng-click="productSpecOptionCreate.cancel()"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title">Create Spec Option</h3>
+        <h3 class="modal-title">New Spec Option</h3>
     </div>
     <div class="modal-body">
         <fieldset class="form-group">
-            <label for="SpecOptionID" class="col-sm-3 control-label">ID:</label>
+            <label for="OptionID" class="col-sm-3 control-label">ID:</label>
             <div class="col-sm-9">
-                <input id="SpecOptionID" placeholder="(Optional)" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="productSpecOptionCreate.specOption.ID" />
+                <input id="OptionID" name="ID" placeholder="(Optional)" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="productSpecOptionCreate.specOption.ID" />
             </div>
         </fieldset>
         <fieldset class="form-group">
-            <label for="SpecOptionValue" class="col-sm-3 control-label">Value:</label>
+            <label for="OptionValue" class="col-sm-3 control-label">Value:</label>
             <div class="col-sm-9">
-                <input id="SpecOptionValue" type="text" class="form-control" ng-model="productSpecOptionCreate.specOption.Value" required />
+                <input id="OptionValue" name="Value" type="text" class="form-control" ng-model="productSpecOptionCreate.specOption.Value" required />
             </div>
         </fieldset>
         <fieldset class="form-group">
-            <label for="SpecOptionMarkupType" class="col-sm-3 control-label">Markup Type:</label>
+            <label for="OptionPriceMarkupType" class="col-sm-3 control-label">Markup Type:</label>
             <div class="col-sm-9">
-                <select id="SpecOptionMarkupType" class="form-control" ng-model="productSpecOptionCreate.specOption.PriceMarkupType" ng-options="markupType.Value as markupType.Label for markupType in productSpecOptionCreate.markupTypes"></select>
+                <select id="OptionPriceMarkupType" name="PriceMarkupType" class="form-control" ng-model="productSpecOptionCreate.specOption.PriceMarkupType" ng-options="markupType.Value as markupType.Label for markupType in productSpecOptionCreate.markupTypes"></select>
             </div>
         </fieldset>
-        <fieldset class="form-group" ng-if="productSpecCreate.specOption.PriceMarkupType != 'NoMarkup'">
-            <label for="SpecOptionMarkup" class="col-sm-3 control-label">Markup:</label>
+        <fieldset class="form-group" uib-collapse="productSpecOptionCreate.specOption.PriceMarkupType == 'NoMarkup'">
+            <label for="OptionPriceMarkup" class="col-sm-3 control-label">Markup:</label>
             <div class="col-sm-9">
-                <input id="SpecOptionMarkup" type="number" class="form-control" ng-model="productSpecOptionCreate.specOption.PriceMarkup" />
+                <input id="OptionPriceMarkup" name="PriceMarkup" type="number" class="form-control" ng-model="productSpecOptionCreate.specOption.PriceMarkup" ng-required="productSpecOptionCreate.specOption.PriceMarkupType != 'NoMarkup'"/>
             </div>
         </fieldset>
         <fieldset class="form-group">
             <div class="col-sm-9 col-md-offset-3">
                 <div class="checkbox">
-                    <label for="IsOpenText">
-                        <input id="IsOpenText" type="checkbox" ng-model="productSpecOptionCreate.specOption.IsOpenText"/>
+                    <label for="OptionIsOpenText">
+                        <input id="OptionIsOpenText" name="IsOpenText" type="checkbox" ng-model="productSpecOptionCreate.specOption.IsOpenText"/>
                         Open Text
                     </label>
                 </div>
-            </div>
-        </fieldset>
-        <fieldset class="form-group">
-            <div class="col-sm-9 col-md-offset-3">
                 <div class="checkbox">
-                    <label for="DefaultOption">
-                        <input id="DefaultOption" type="checkbox" ng-model="productSpecOptionCreate.specOption.DefaultOption"/>
+                    <label for="OptionDefaultOption">
+                        <input id="OptionDefaultOption" name="DefaultOption" type="checkbox" ng-model="productSpecOptionCreate.specOption.DefaultOption"/>
                         Default Option
                     </label>
                 </div>

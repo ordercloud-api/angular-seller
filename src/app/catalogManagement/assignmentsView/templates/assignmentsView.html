@@ -47,7 +47,7 @@
                     This category does not contain any products.
                 </div>
                 <!--Product Assignment List-->
-                <div ng-if="catalogAssignments.products.Items.length">
+                <div class="table-responsive panel panel-default" ng-if="catalogAssignments.products.Items.length">
                     <table class="table table-hover">
                         <thead>
                         <tr>
@@ -58,7 +58,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="product in catalogAssignments.products.Items">
-                            <th scope="row"><a href="" ui-sref="products.detail({productid: product.ID})">{{product.ID}}</a> <i class="fa fa-external-link text-muted"></i></th>
+                            <th scope="row"><a href="" ui-sref="productDetail({productid: product.ID})">{{product.ID}}</a> <i class="fa fa-external-link text-muted"></i></th>
                             <td data-title="Name">{{product.Name}}</td>
                             <td class="text-right">
                                 <button type="button" class="btn btn-xs btn-default" uib-tooltip="Remove" tooltip-placement="left" ng-click="catalogAssignments.deleteAssignment(product)"><i class="fa fa-times text-danger"></i></button>
@@ -131,8 +131,8 @@
                 <div class="well text-center" ng-if="!catalogAssignments.userGroups.Items && catalogAssignments.assignmentType === 'userGroups'">
                     This category is not assigned to any user groups.
                 </div>
-                <div ng-if="catalogAssignments.userGroups.Items && catalogAssignments.assignmentType === 'userGroups'">
-                    <table class="table table-hover oc-table-responsive">
+                <div class="table-responsive panel panel-default" ng-if="catalogAssignments.userGroups.Items && catalogAssignments.assignmentType === 'userGroups'">
+                    <table class="table table-hover">
                         <thead>
                         <tr>
                             <th scope="col">User Group ID</th>

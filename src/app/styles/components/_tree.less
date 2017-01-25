@@ -15,18 +15,20 @@
   }
 }
 
+.angular-ui-tree {
+  .panel;
+  .panel-default;
+}
+
 .tree-node {
-  //background: @well-bg;
-  border-bottom: 1px solid @well-border;
+  border-bottom: 1px solid @panel-default-border;
   color: @text-color;
-  //border-radius:@border-radius-base;
   transition:all 200ms ease-in-out;
   &.inactive-node {
     background-color: @state-warning-bg;
     border-color: @state-warning-border;
   }
   &.selected-node {
-    //background-color:lighten(@brand-primary, 10);
     color:@brand-primary;
     border-color:@brand-primary;
     .fa-folder,
@@ -38,7 +40,6 @@
 
 .tree-node-content {
   padding:0.3em;
-  //margin-bottom: 10px;
   display:flex;
   flex-flow:row nowrap;
   justify-content: flex-start;
@@ -51,7 +52,6 @@
     margin:0;
   }
   i.fa {
-    color:@text-muted;
     padding:10px;
     width:30px;
     text-align:center;

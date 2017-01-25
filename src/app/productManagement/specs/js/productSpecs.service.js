@@ -2,11 +2,12 @@ angular.module('orderCloud')
     .factory('ocProductSpecs', ocProductsSpecsService)
 ;
 
-function ocProductsSpecsService($q, OrderCloud) {
+function ocProductsSpecsService($q, $uibModal, OrderCloud) {
     var service = {
         ProductSpecsDetail: _productSpecsDetail,
         UpdateSpecListOrder: _updateSpecListOrder,
-        UpdateSpecOptionsListOrder: _updateSpecOptionsListOrder
+        UpdateSpecOptionsListOrder: _updateSpecOptionsListOrder,
+        EditSpec: _editSpec
     };
 
     function _productSpecsDetail(productid) {
@@ -112,6 +113,19 @@ function ocProductsSpecsService($q, OrderCloud) {
         run(queueIndex);
 
         return deferred.promise;
+    }
+
+    function _editSpec(spec) {
+        return $uibModal.open({
+            templateUrl: 'productManagement/specs/templates/productSpecEdit.modal.html',
+            controller: 'ProductSpecEditModalCtrl',
+            controllerAs: 'productSpecEditModal',
+            resolve: {
+                SelectedSpec: function() {
+                    return spec;
+                }
+            }
+        }).result
     }
 
     return service;
