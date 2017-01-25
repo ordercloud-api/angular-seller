@@ -18,6 +18,8 @@
 .angular-ui-tree {
   .panel;
   .panel-default;
+  border-bottom-width:0;
+  overflow:hidden;
 }
 
 .tree-node {
@@ -29,11 +31,11 @@
     border-color: @state-warning-border;
   }
   &.selected-node {
-    color:@brand-primary;
-    border-color:@brand-primary;
+    color:@link-color;
+    border-color:@link-color;
     .fa-folder,
     .fa-folder-open {
-      color:@brand-primary;
+      color:@link-color;
     }
   }
 }

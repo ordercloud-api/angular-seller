@@ -4,12 +4,6 @@
 </div>
 <div class="row" ng-if="productSpecs.specs.Items.length">
     <div class="col-sm-5">
-        <script type="text/ng-template" id="specs_renderer.html">
-            <div class="tree-node tree-node-content" ng-class="{'selected-node': node.Spec.ID == productSpecs.selectedSpec.Spec.ID}">
-                <p ng-click="productSpecs.specSelected(node)">{{node.Spec.Name}}</p>
-                <i ui-tree-handle class="fa fa-reorder text-muted"></i>
-            </div>
-        </script>
         <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpec(productDetail.product.ID)">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
             New Spec
@@ -17,9 +11,15 @@
         <br>
         <br>
 
+        <script type="text/ng-template" id="specs_renderer.html">
+            <div class="tree-node tree-node-content" ng-class="{'selected-node': node.Spec.ID == productSpecs.selectedSpec.Spec.ID}">
+                <p ng-click="productSpecs.specSelected(node)">{{node.Spec.Name}}</p>
+                <i ui-tree-handle class="fa fa-reorder text-muted"></i>
+            </div>
+        </script>
         <div ui-tree="productSpecs.specTreeOptions" id="spec-tree-root" data-drag-delay="200">
             <ol ui-tree-nodes ng-model="productSpecs.specs.Items">
-                <li ng-repeat="node in productSpecs.specs.Items track by $index" ui-tree-node ng-include="'specs_renderer.html'"></li>
+                <li ng-repeat="node in productSpecs.specs.Items" ui-tree-node ng-include="'specs_renderer.html'"></li>
             </ol>
         </div>
     </div>
@@ -60,6 +60,14 @@
                 <h4 class="page-header">
                     Options
                 </h4>
+
+                <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpecOption()">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    New Option
+                </button>
+                <br>
+                <br>
+
                 <script type="text/ng-template" id="spec_options_renderer.html">
                     <div class="tree-node tree-node-content" cg-busy="node.loading">
                         <i class="fa fa-trash-o text-danger" ng-click="productSpecs.deleteSpecOption(node)"></i>
@@ -76,13 +84,6 @@
                         <i ui-tree-handle class="fa fa-reorder text-muted"></i>
                     </div>
                 </script>
-                <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpecOption()">
-                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                    New Option
-                </button>
-                <br>
-                <br>
-
                 <div ui-tree="productSpecs.specOptionsTreeOptions" id="spec-options-tree-root" data-drag-delay="200">
                     <ol ui-tree-nodes ng-model="productSpecs.selectedSpec.Options">
                         <li ng-repeat="node in productSpecs.selectedSpec.Options" ui-tree-node ng-include="'spec_options_renderer.html'"></li>
