@@ -16,6 +16,7 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
     vm.createSpecOption = createSpecOption;
     vm.specOptionSelected = specOptionSelected;
 
+    //TODO: Update Selected Spec after listOrder change (do this on Catalog Management as well)
     vm.specTreeOptions = {
         dropped: function(event) {
             ocProductSpecs.UpdateSpecListOrder(event);

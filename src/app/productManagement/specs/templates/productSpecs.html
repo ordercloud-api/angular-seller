@@ -15,7 +15,7 @@
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 New Spec
             </button>
-            <div ui-tree="productSpecs.treeOptions" id="spec-tree-root" data-drag-delay="200">
+            <div ui-tree="productSpecs.specTreeOptions" id="spec-tree-root" data-drag-delay="200">
                 <ol ui-tree-nodes ng-model="productSpecs.specs.Items">
                     <li ng-repeat="node in productSpecs.specs.Items" ui-tree-node ng-include="'specs_renderer.html'"></li>
                 </ol>
