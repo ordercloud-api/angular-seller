@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
     config = require('../../gulp.config'),
-    browserSync = require('browser-sync').get('oc-server'),
     del = require('del'),
     less = require('gulp-less'),
     autoprefixer = require('gulp-autoprefixer'),
@@ -14,7 +13,10 @@ gulp.task('clean:styles', function() {
     return del(config.build + '**/*.css');
 });
 
-gulp.task('styles', ['clean:styles'], function() {
+gulp.task('styles', ['clean:styles'], StylesFunction);
+
+function StylesFunction() {
+    var browserSync = require('browser-sync').get('oc-server');
     return gulp
         .src([].concat(
             mainBowerFiles({
@@ -25,7 +27,8 @@ gulp.task('styles', ['clean:styles'], function() {
                             "./dist/js/jasny-bootstrap.js",
                             "./less/jasny-bootstrap.less"
                         ]
-                    }
+                    },
+                    'bootswatch': config.checkBootswatchTheme()
                 }
             }),
             './src/app/styles/main.less'
@@ -38,4 +41,6 @@ gulp.task('styles', ['clean:styles'], function() {
         .pipe(sourcemaps.write('../maps'))
         .pipe(gulp.dest(config.build + config.appCss))
         .pipe(browserSync.stream());
-});
+}
+
+module.exports = StylesFunction;

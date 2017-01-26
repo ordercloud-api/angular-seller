@@ -28,7 +28,8 @@ gulp.task('app-css', ['clean:app-css'], function() {
                             "./dist/js/jasny-bootstrap.js",
                             "./less/jasny-bootstrap.less"
                         ]
-                    }
+                    },
+                    'bootswatch': config.checkBootswatchTheme()
                 }
             }),
             './src/app/styles/main.less'
