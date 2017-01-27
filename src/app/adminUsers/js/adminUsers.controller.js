@@ -88,8 +88,8 @@ function AdminUsersController($state, $uibModal, toastr, $ocMedia, OrderCloud, O
             bindToController: true
         }).result
             .then(function(data) {
-                if (data.update) vm.list.Items[scope.$index] = data.update;
-                toastr.success(data.update.Username + ' was updated.', 'Success!');
+                vm.list.Items[scope.$index] = data;
+                toastr.success(data.Username + ' was updated.', 'Success!');
             })
     };
 
@@ -100,8 +100,8 @@ function AdminUsersController($state, $uibModal, toastr, $ocMedia, OrderCloud, O
             controllerAs: 'adminUserCreateModal'
         }).result
             .then(function(data) {
-                if (data.update) vm.list.Items.unshift(data.update);
-                toastr.success(data.update.Username + ' was created.', 'Success!');
+                vm.list.Items.push(data);
+                toastr.success(data.Username + ' was created.', 'Success!');
             })
     }
 }

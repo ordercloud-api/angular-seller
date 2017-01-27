@@ -20,7 +20,7 @@ function AdminUserEditModalController($exceptionHandler, $uibModalInstance, Orde
         vm.loading = {backdrop:false};
         vm.loading.promise = OrderCloud.AdminUsers.Update(vm.user.ID, vm.userCopy)
             .then(function(data) {
-                $uibModalInstance.close({update:data});
+                $uibModalInstance.close(data);
             })
             .catch(function(ex) {
                 $exceptionHandler(ex)
