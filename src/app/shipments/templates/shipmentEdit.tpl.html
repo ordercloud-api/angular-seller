@@ -133,7 +133,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="li in shipmentEdit.shipment.Items track by $index">
-                        <td class="text-center"><a class="fa fa-trash text-danger" ng-click="shipmentEdit.deleteLineItem($index)"></a></td>
+                        <td class="text-center"><a class="fa fa-trash" ng-click="shipmentEdit.deleteLineItem($index)"></a></td>
                         <td>{{li.LineItemID}}</td>
                         <td class="text-center"><input type="number" class="form-control" ng-model="li.QuantityShipped" min="1" max="{{li.Quantity}}"/></td>
                     </tr>
@@ -146,6 +146,6 @@
         <button type="submit" class="btn btn-primary" ng-disabled="ShipmentEditForm.$invalid">Save</button>
         <button type="button" class="btn btn-default" ng-click="shipmentEdit.unselectOrder()" ng-if="shipmentEdit.OrderSelected">Unselect Order</button>
         <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
-        <button type="button" class="btn btn-default" ng-click="shipmentEdit.Delete()"><i class="fa fa-trash text-danger"></i></button>
+        <button type="button" class="btn btn-default" ng-click="shipmentEdit.Delete()"><i class="fa fa-trash"></i></button>
     </div>
 </form>

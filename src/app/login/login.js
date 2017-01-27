@@ -2,14 +2,6 @@ angular.module('orderCloud')
     .config(LoginConfig)
     .factory('LoginService', LoginService)
     .controller('LoginCtrl', LoginController)
-    .directive('prettySubmit', function () {
-        return function (scope, element) {
-            $(element).submit(function(event) {
-                event.preventDefault();
-                $(document.activeElement).blur();
-            });
-        };
-    })
 ;
 
 function LoginConfig($stateProvider) {

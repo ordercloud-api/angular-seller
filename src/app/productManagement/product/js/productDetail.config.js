@@ -6,7 +6,7 @@ function ProductDetailConfig($stateProvider) {
     $stateProvider
         .state('productDetail', {
             parent: 'base',
-            url: '/products/:productid',
+            url: '/product/:productid',
             templateUrl: 'productManagement/product/templates/productDetail.html',
             controller: 'ProductDetailCtrl',
             controllerAs: 'productDetail',

@@ -5,13 +5,13 @@
         </h4>
         <div class="form-horizontal">
             <fieldset class="form-group">
-                <label for="ID" class="col-sm-3 control-label">Price ID:</label>
+                <label for="ID" class="col-sm-3 control-label">Price ID</label>
                 <div class="col-sm-9">
                     <input id="ID" name="ID" type="text" placeholder="(Optional)" class="form-control" ng-model="productCreateAssignment.priceSchedule.ID"/>
                 </div>
             </fieldset>
             <fieldset class="form-group">
-                <label for="Name" class="col-sm-3 control-label">Name:</label>
+                <label for="Name" class="col-sm-3 control-label">Name</label>
                 <div class="col-sm-9">
                     <input id="Name" name="Name" type="text" class="form-control" ng-model="productCreateAssignment.priceSchedule.Name" required/>
                 </div>
@@ -45,7 +45,7 @@
                 </div>
             </fieldset>
             <fieldset class="form-group">
-                <label for="MinQuantity" class="col-sm-3 control-label">Min Quantity:</label>
+                <label for="MinQuantity" class="col-sm-3 control-label">Min Quantity</label>
                 <div class="col-sm-9">
                     <input id="MinQuantity" name="MinQuantity" type="text" class="form-control"
                            ng-max="productCreateAssignment.priceSchedule.MaxQuantity"
@@ -55,7 +55,7 @@
                 </div>
             </fieldset>
             <fieldset class="form-group">
-                <label for="MaxQuantity" class="col-sm-3 control-label">Max Quantity:</label>
+                <label for="MaxQuantity" class="col-sm-3 control-label">Max Quantity</label>
                 <div class="col-sm-9">
                     <input id="MaxQuantity" name="MaxQuantity" placeholder="(Optional)"  type="text" class="form-control"
                            ng-min="productCreateAssignment.priceSchedule.MinQuantity"
@@ -126,7 +126,7 @@
                                     {{pricebreak.Price | currency}}
                                 </td>
                                 <td class="text-center">
-                                    <a class="fa fa-trash text-danger" ng-click="productCreateAssignment.deletePriceBreak(productCreateAssignment.priceSchedule, $index)"></a>
+                                    <a class="fa fa-trash" ng-click="productCreateAssignment.deletePriceBreak(productCreateAssignment.priceSchedule, $index)"></a>
                                 </td>
                             </tr>
                             </tbody>

@@ -32,29 +32,33 @@
                 <h3>
                     <div class="pull-right">
                         <button type="button" class="btn btn-default" ng-click="productSpecs.editSelectedSpec()"><i class="fa fa-edit"></i> Edit</button>
-                        <button type="button" class="btn btn-default" ng-click="productSpecs.deleteSelectedSpec()"><i class="fa fa-trash text-danger"></i> Delete</button>
+                        <button type="button" class="btn btn-danger" ng-click="productSpecs.deleteSelectedSpec()"><i class="fa fa-trash"></i> Delete</button>
                     </div>
                     {{productSpecs.selectedSpec.Spec.Name}}
                     <small>(ID: {{productSpecs.selectedSpec.Spec.ID}})</small>
                 </h3>
-                <h5 class="text-primary" ng-if="productSpecs.selectedSpec.Spec.Required">
-                    <b><i class="fa fa-star"></i> Required</b>
-                </h5>
-                <h5 class="text-warning" ng-if="!productSpecs.selectedSpec.Spec.Required">
-                    <b><i class="fa fa-star-o"></i> Optional</b>
-                </h5>
-                <h5 class="text-primary" ng-if="productSpecs.selectedSpec.Spec.AllowOpenText">
-                    <b><i class="fa fa-pencil-square"></i> Open Text Enabled</b>
-                </h5>
-                <h5 class="text-warning" ng-if="!productSpecs.selectedSpec.Spec.AllowOpenText">
-                    <b><i class="fa fa-times"></i> Open Text Disabled</b>
-                </h5>
-                <h5>
-                    <b>Default Value:</b> <code>{{productSpecs.selectedSpec.Spec.DefaultValue || 'null'}}</code>
-                </h5>
+                <b class="text-primary" ng-if="productSpecs.selectedSpec.Spec.Required">
+                    <i class="fa fa-star"></i> Required <br>
+                </b>
+                <b class="text-warning" ng-if="!productSpecs.selectedSpec.Spec.Required">
+                    <i class="fa fa-star-o"></i> Optional <br>
+                </b>
+                <b class="text-primary" ng-if="productSpecs.selectedSpec.Spec.AllowOpenText">
+                    <i class="fa fa-pencil-square"></i> Open Text Enabled <br>
+                </b>
+                <b class="text-warning" ng-if="!productSpecs.selectedSpec.Spec.AllowOpenText">
+                    <i class="fa fa-times"></i> Open Text Disabled <br>
+                </b>
+                <span ng-if="productSpecs.selectedSpec.Spec.DefaultValue">
+                    <b class="text-muted">Default Value:</b> <code>{{productSpecs.selectedSpec.Spec.DefaultValue}}</code>
+                    <br>
+                </span>
             </header>
-            <div class="well text-center" ng-if="!productSpecs.selectedSpec.Options.length">
-                There are no options for this spec. <a ng-click="productSpecs.createSpecOption()">Create</a> one now.</b>
+            <div ng-if="!productSpecs.selectedSpec.Options.length">
+                <hr>
+                <div class="well text-center">
+                    There are no options for this spec. <a ng-click="productSpecs.createSpecOption()">Create</a> one now.</b>
+                </div>
             </div>
             <div ng-if="productSpecs.selectedSpec.Options.length">
                 <h4 class="page-header">

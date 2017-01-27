@@ -14,43 +14,43 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-1">Order ID:</label>
+            <label class="col-sm-1">Order ID</label>
             <div class="col-sm-11">
                 {{ordersDetail.order.ID}}
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-1">Date {{ordersDetail.order.DateSubmitted ? 'Submitted' : 'Created'}}:</label>
+            <label class="col-sm-1">Date {{ordersDetail.order.DateSubmitted ? 'Submitted' : 'Created'}}</label>
             <div class="col-sm-11">
                 {{(ordersDetail.order.DateSubmitted || ordersDetail.order.DateCreated) | date:'medium'}}
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-1">Created By:</label>
+            <label class="col-sm-1">Created By</label>
             <div class="col-sm-11">
                 {{ordersDetail.order.FromUserFirstName + ' ' + ordersDetail.order.FromUserLastName}}
             </div>
         </div>
         <div class="form-group" ng-if="ordersDetail.order.PaymentMethod">
-            <label class="col-sm-1">Payment Method:</label>
+            <label class="col-sm-1">Payment Method</label>
             <div class="col-sm-11">
                 {{ordersDetail.order.PaymentMethod | paymentmethods}}
             </div>
         </div>
         <div class="form-group" ng-if="['CreditCard', 'SpendingAccount'].indexOf(ordersDetail.order.PaymentMethod) > -1">
-            <label class="col-sm-1">{{ordersDetail.order.PaymentMethod == 'CreditCard' ? 'Credit Card' : 'Spending Account'}}:</label>
+            <label class="col-sm-1">{{ordersDetail.order.PaymentMethod == 'CreditCard' ? 'Credit Card' : 'Spending Account'}}</label>
             <div class="col-sm-11">
                 {{ordersDetail.order.PaymentMethod == 'CreditCard' ? (ordersDetail.order.CreditCard.CardType + ' ' + ordersDetail.order.CreditCard.PartialAccountNumber) : ordersDetail.order.SpendingAccount.Name}}
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-1">Status:</label>
+            <label class="col-sm-1">Status</label>
             <div class="col-sm-11">
                 {{ordersDetail.order.Status}}
             </div>
         </div>
         <div class="form-group" ng-if="ordersDetail.order.BillingAddress">
-            <label class="col-sm-1">Bill To:</label>
+            <label class="col-sm-1">Bill To</label>
             <div class="col-sm-11">
                 <span ng-if="ordersDetail.order.BillingAddress.CompanyName">{{ordersDetail.order.BillingAddress.CompanyName}}<br /></span>
                 <span ng-if="ordersDetail.order.BillingAddress.FirstName || ordersDetail.order.BillingAddress.LastName">{{ordersDetail.order.BillingAddress.FirstName + ' ' + ordersDetail.order.BillingAddress.LastName}}<br /></span>
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="form-group" ng-if="ordersDetail.order.ShippingAddress">
-            <label class="col-sm-1">Ship To:</label>
+            <label class="col-sm-1">Ship To</label>
             <div class="col-sm-11">
                 <span ng-if="ordersDetail.order.ShippingAddress.CompanyName">{{ordersDetail.order.ShippingAddress.CompanyName}}<br /></span>
                 <span ng-if="ordersDetail.order.ShippingAddress.FirstName || ordersDetail.order.ShippingAddress.LastName">{{ordersDetail.order.ShippingAddress.FirstName + ' ' + ordersDetail.order.ShippingAddress.LastName}}<br /></span>
@@ -70,13 +70,13 @@
             </div>
         </div>
         <div class="form-group" ng-if="ordersDetail.order.CostCenter">
-            <label class="col-sm-1">Cost Center:</label>
+            <label class="col-sm-1">Cost Center</label>
             <div class="col-sm-11">
                 {{ordersDetail.order.CostCenter}}
             </div>
         </div>
         <div class="form-group" ng-if="ordersDetail.order.Comments">
-            <label class="col-sm-1">Comments:</label>
+            <label class="col-sm-1">Comments</label>
             <div class="col-sm-11">
                 {{ordersDetail.order.Comments}}
             </div>
@@ -147,7 +147,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2">Total:</label>
+            <label class="col-sm-2">Total</label>
             <div class="col-sm-10">
                 {{ordersDetail.order.Total | currency}}
             </div>

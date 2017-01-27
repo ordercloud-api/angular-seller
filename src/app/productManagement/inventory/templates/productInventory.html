@@ -5,13 +5,13 @@
         </div>
         <form name="productInventory.ProductInventoryForm" ng-submit="productInventory.updateProductInventory(productDetail.product)" autocomplete="off" novalidate class="form-horizontal">
             <fieldset class="form-group">
-                <label for="InventoryNotificationPoint" class="col-sm-3 control-label">Notification Point:</label>
+                <label for="InventoryNotificationPoint" class="col-sm-3 control-label">Notification Point</label>
                 <div class="col-sm-9">
                     <input id="InventoryNotificationPoint" type="number" class="form-control" min="1" ng-model="productDetail.product.InventoryNotificationPoint" />
                 </div>
             </fieldset>
             <fieldset class="form-group">
-                <label for="AvailableInventory" class="col-sm-3 control-label">Inventory:</label>
+                <label for="AvailableInventory" class="col-sm-3 control-label">Inventory</label>
                 <div class="col-sm-9">
                     <input id="AvailableInventory" type="number" class="form-control" ng-model="productInventory.inventory.Available" ng-min="productDetail.product.AllowOrderExceedInventory ? 0 : productInventory.inventory.Reserved" required />
                     <p class="help-block">{{productInventory.inventory.Reserved}} of {{productInventory.inventoryAvailable}} are reserved</p>

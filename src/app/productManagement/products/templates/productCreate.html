@@ -1,42 +1,36 @@
-<nav class="navbar navbar-default navbar-unstacked">
-    <div class="container container-smooth">
-        <ul class="nav navbar-nav navbar-left">
-            <ul class="navbar-breadcrumb">
-                <li><a href="" ui-sref="products">All Products</a></li>
-                <li class="active">Create New Product</li>
-            </ul>
-        </ul>
-    </div>
-</nav>
+<ul class="breadcrumb">
+    <li><a href="" ui-sref="products">All Products</a></li>
+    <li class="active">Create New Product</li>
+</ul>
 <div class="row">
     <div class="col-md-7">
         <form name="productCreate.form" autocomplete="off" ng-submit="productCreate.submit()" novalidate class="form-horizontal">
             <fieldset class="form-group">
-                <label for="ProductID" class="col-sm-3 control-label">Product ID:</label>
+                <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
                 <div class="col-sm-9">
                     <input id="ProductID" pattern="([A-Za-z0-9\-\_]+)" placeholder="(Optional)" pattern-err-type="ID_Name" type="text" class="form-control" ng-model="productCreate.product.ID" required>
                 </div>
             </fieldset>
             <fieldset class="form-group">
-                <label for="ProductName" class="col-sm-3 control-label">Name:</label>
+                <label for="ProductName" class="col-sm-3 control-label">Name</label>
                 <div class="col-sm-9">
                     <input id="ProductName" type="text" class="form-control" ng-model="productCreate.product.Name" required>
                 </div>
             </fieldset>
             <fieldset class="form-group">
-                <label for="ProductDescription" class="col-sm-3 control-label">Description:</label>
+                <label for="ProductDescription" class="col-sm-3 control-label">Description</label>
                 <div class="col-sm-9">
                     <textarea rows="4" id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="productCreate.product.Description"></textarea>
                 </div>
             </fieldset>
             <fieldset class="form-group">
-                <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier:</label>
+                <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier</label>
                 <div class="col-sm-9">
                     <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="productCreate.product.QuantityMultiplier" required>
                 </div>
             </fieldset>
             <fieldset class="form-group">
-                <label class="col-sm-3 control-label">Image:</label>
+                <label class="col-sm-3 control-label">Image</label>
                 <div class="col-sm-9">
                     <oc-file-upload  model="productCreate.product" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
                 </div>
