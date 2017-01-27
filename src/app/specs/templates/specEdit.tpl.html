@@ -105,7 +105,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="specOpts in specEdit.Options track by $index">
-                        <td class="text-center"><a class="fa fa-trash text-danger" ng-click="specEdit.deleteSpecOpt($index)"></a></td>
+                        <td class="text-center"><a class="fa fa-trash" ng-click="specEdit.deleteSpecOpt($index)"></a></td>
                         <td>{{specOpts.ID}}</td>
                         <td>{{specOpts.Value}}</td>
                         <td>{{specOpts.PriceMarkupType}}</td>
@@ -139,6 +139,6 @@
     <div class="form-group">
         <button type="submit" ng-click="specEdit.Submit()" class="btn btn-primary" ng-disabled="specEditForm.$invalid">Save</button>
         <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
-        <button ng-click="specEdit.Delete()" class="btn btn-default"><i class="fa fa-trash text-danger" aria-hidden="true"></i></button>
+        <button ng-click="specEdit.Delete()" class="btn btn-default"><i class="fa fa-trash" aria-hidden="true"></i></button>
     </div>
 </form>

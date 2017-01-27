@@ -1,78 +1,67 @@
-<nav class="navbar navbar-default navbar-unstacked">
-    <div class="container container-smooth">
-        <ul class="nav navbar-nav navbar-left">
-            <ul class="navbar-breadcrumb">
-                <li class="active" ui-sref="buyers">Buyers</li>
-            </ul>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <button type="button" class="btn btn-primary btn-sm navbar-btn" ng-click="buyers.createBuyer()"><i class="fa fa-plus-circle"></i>
-                <span class="hidden-lg hidden-md">Buyer</span>
-                <span class=" hidden-xs hidden-sm">New Buyer Organization</span>
-            </button>
-        </ul>
-    </div>
-</nav>
 <article>
-    <div>
-        <!--====== SEARCH/FILTERS ======-->
-        <div ng-if="!application.isTouchDevice">
-            <form name="BuyersSearchForm">
-                <fieldset class="form-group">
-                    <div ng-class="{'input-group':buyers.searchResults}">
-                        <input type="search" ng-change="buyers.search()" ng-model-options="{debounce:1000}" placeholder="Search buyers..." ng-model="buyers.parameters.search" class="form-control">
-                        <span ng-if="buyers.searchResults" class="input-group-btn">
-                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="buyers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
-                        </span>
-                    </div>
-                </fieldset>
-            </form>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">
+            Buyer Organizations
+        </h3>
+        <!--====== CREATE ======-->
+        <div class="l-page-header__btns">
+            <button type="button" class="btn btn-primary btn-block" ng-click="buyers.createBuyer()"><i class="fa fa-plus-circle"></i>
+                New Buyer
+            </button>
         </div>
+    </header>
 
-        <!--Touch devices-->
-        <div ng-if="application.isTouchDevice">
-            <form name="BuyersSearchForm" action="." pretty-submit ng-submit="buyers.search()">
-                <fieldset class="form-group">
-                    <div ng-class="{'input-group':buyers.searchResults}">
-                        <input type="search" placeholder="Search buyers..." ng-model="buyers.parameters.search" class="form-control">
-                        <span ng-if="buyers.searchResults" class="input-group-btn">
-                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="buyers.clearSearch()"><i class="fa fa-times"></i></button>
-                        </span>
-                    </div>
-                </fieldset>
-                <button type="submit" class="sr-only">Search</button>
-            </form>
-        </div>
-
-        <div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
-            <label>Sort By:</label>
-            <div ng-class="{'input-group':buyers.sortSelection}">
-                <select placeholder="Sort" class="form-control" ng-model="buyers.sortSelection" ng-change="buyers.updateSort()">
-                    <option value="">None</option>
-                    <option value="ID">ID</option>
-                    <option value="Name">Name</option>
-                </select>
-                <div ng-if="buyers.sortSelection" class="input-group-btn">
-                    <button class="btn btn-default" ng-click="buyers.reverseSort()">
-                        <i class="fa fa-sort"></i>
-                    </button>
-                </div>
-
+    <!--====== SEARCH ======-->
+    <form name="BuyersSearchForm" pretty-submit>
+        <fieldset class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input type="search" ng-change="buyers.search()" ng-model-options="{debounce:1000}" placeholder="Search buyers..." ng-model="buyers.parameters.search" class="form-control">
+                <span ng-if="buyers.searchResults" class="input-group-btn">
+                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="buyers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                </span>
             </div>
-        </div>
+        </fieldset>
+    </form>
 
-        <!--====== LIST ======-->
-        <div cg-busy="buyers.searchLoading">
-            <div class="no-matches" ng-if="!buyers.list.Items.length">
-                <b>No matches found.</b>
+    <!-- Commented out until API supports sorting for buyers -->
+    <!--<div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
+        <label>Sort By</label>
+        <div ng-class="{'input-group':buyers.sortSelection}">
+            <select placeholder="Sort" class="form-control" ng-model="buyers.sortSelection" ng-change="buyers.updateSort()">
+                <option value="">None</option>
+                <option value="ID">ID</option>
+                <option value="Name">Name</option>
+            </select>
+            <div ng-if="buyers.sortSelection" class="input-group-btn">
+                <button class="btn btn-default" ng-click="buyers.reverseSort()">
+                    <i class="fa fa-sort"></i>
+                </button>
             </div>
-            <div ng-if="buyers.list.Items.length">
-                <b class="pull-right">{{(application.$ocMedia('min-width:768px') ? buyers.list.Meta.ItemRange[0] : '1') + ' - ' +
+
+        </div>
+    </div>-->
+
+    <!--====== LIST ======-->
+    <div cg-busy="buyers.searchLoading">
+        <div class="no-matches" ng-if="!buyers.list.Items.length">
+            <b>No matches found.</b>
+        </div>
+        <div ng-if="buyers.list.Items.length">
+            <!--<div class="text-right">
+                <b>{{(application.$ocMedia('min-width:768px') ? buyers.list.Meta.ItemRange[0] : '1') + ' - ' +
                     buyers.list.Meta.ItemRange[1] + ' of ' + buyers.list.Meta.TotalCount + ' results'}}</b>
-                <table class="table table-hover table-condensed oc-table-responsive">
+            </div>-->
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <colgroup>
+                        <col style="width:20%">
+                    </colgroup>
                     <thead>
                     <tr>
-                        <th scope="col">
+                        <th>
                             <!-- Commented out until API supports sorting for buyers -->
                             <!-- <a href="#" role="button" ng-click="buyers.updateSort('ID')"> -->
                             ID
@@ -80,7 +69,7 @@
                             <i class="fa fa-caret-up" ng-show="buyers.parameters.sortBy == '!ID'"></i>
                             <!-- </a> -->
                         </th>
-                        <th scope="col">
+                        <th>
                             <!-- Commented out until API supports sorting for buyers -->
                             <!-- <a href="#" role="button" ng-click="buyers.updateSort('Name')"> -->
                             Name
@@ -88,33 +77,36 @@
                             <i class="fa fa-caret-up" ng-show="buyers.parameters.sortBy == '!Name'"></i>
                             <!-- </a> -->
                         </th>
-                        <th class="text-center" scope="col">
+                        <th colspan="2">
                             Active
                         </th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="buyer in buyers.list.Items">
-                        <th scope="row">{{buyer.ID}}</th>
-                        <td data-title="Name"><a href="" ui-sref="buyer.settings({buyerid:buyer.ID})"><b>{{buyer.Name}}</b></a></td>
-                        <td class="text-center" data-title="Active">
+                        <td><a href="" ui-sref="buyer.settings({buyerid:buyer.ID})">{{buyer.ID}}</a></td>
+                        <td>{{buyer.Name}}</td>
+                        <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':buyer.Active}"></i>
+                        </td>
+                        <td class="actions-cell">
+                            <button ui-sref="buyer.settings({buyerid:buyer.ID})" class="btn btn-default btn-xs btn-block">View Buyer</button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && buyers.list.Meta.TotalPages > 1">
-                    <uib-pagination boundary-links="buyers.list.Meta.TotalPages > 5" max-size="5"
-                                    total-items="buyers.list.Meta.TotalCount" items-per-page="buyers.list.Meta.PageSize"
-                                    ng-model="buyers.list.Meta.Page" ng-change="buyers.pageChanged()"></uib-pagination>
-                </div>
-                <button type="button"
-                        ng-if="application.$ocMedia('max-width:767px')"
-                        class="btn btn-default btn-block btn-lg"
-                        ng-show="buyers.list.Meta.Page < buyers.list.Meta.TotalPages"
-                        ng-click="buyers.loadMore()">Load More
-                </button>
             </div>
+            <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && buyers.list.Meta.TotalPages > 1">
+                <uib-pagination boundary-links="buyers.list.Meta.TotalPages > 5" max-size="5"
+                                total-items="buyers.list.Meta.TotalCount" items-per-page="buyers.list.Meta.PageSize"
+                                ng-model="buyers.list.Meta.Page" ng-change="buyers.pageChanged()"></uib-pagination>
+            </div>
+            <button type="button"
+                    ng-if="application.$ocMedia('max-width:767px')"
+                    class="btn btn-default btn-block btn-lg"
+                    ng-show="buyers.list.Meta.Page < buyers.list.Meta.TotalPages"
+                    ng-click="buyers.loadMore()">Load More
+            </button>
         </div>
     </div>
 </article>

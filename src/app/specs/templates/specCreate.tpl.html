@@ -105,7 +105,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="specOpts in specCreate.Options track by $index">
-                        <td class="text-center"><a class="fa fa-trash text-danger" ng-click="specCreate.deleteSpecOpt($index)"></a></td>
+                        <td class="text-center"><a class="fa fa-trash" ng-click="specCreate.deleteSpecOpt($index)"></a></td>
                         <td>{{specOpts.ID}}</td>
                         <td>{{specOpts.Value}}</td>
                         <td>{{specOpts.PriceMarkupType}}</td>

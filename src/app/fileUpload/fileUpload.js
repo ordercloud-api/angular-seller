@@ -55,6 +55,7 @@ function fileReader($q) {
 }
 
 function ordercloudFileUpload($parse, FileReader, FilesService) {
+    //TODO: accept keyName param for choosing which xp[{key}] the image URL will save to
     var directive = {
         scope: {
             model: '=',

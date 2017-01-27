@@ -101,7 +101,7 @@
                         <tbody>
                         <tr ng-repeat="pricebreak in priceScheduleCreate.priceSchedule.PriceBreaks | orderBy: 'Quantity' track by $index">
                             <td class="text-center">
-                                <a class="fa fa-trash text-danger" ng-click="priceScheduleCreate.deletePriceBreak(priceScheduleCreate.priceSchedule, $index)"></a>
+                                <a class="fa fa-trash" ng-click="priceScheduleCreate.deletePriceBreak(priceScheduleCreate.priceSchedule, $index)"></a>
                             </td>
                             <td ng-if="priceScheduleCreate.priceSchedule.RestrictedQuantity">{{pricebreak.Quantity}}</td>
                             <td ng-if="!priceScheduleCreate.priceSchedule.RestrictedQuantity">{{pricebreak.displayQuantity}} </td>

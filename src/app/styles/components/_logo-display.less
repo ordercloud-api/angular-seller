@@ -1,0 +1,22 @@
+@oc-logo-display-width:70px;
+
+.c-logo-display {
+  border-radius:50%;
+  position:relative;
+  height:@oc-logo-display-width;
+  width:@oc-logo-display-width;
+  background-color:white;
+  padding:@padding-small-vertical;
+  border:3px solid @thumbnail-border;
+  > div[role="img"] {
+    border-radius:50%;
+    background-repeat:no-repeat;
+    background-size:contain;
+    background-position:center;
+    position:absolute;
+    left:2px;
+    right:2px;
+    top:2px;
+    bottom:2px;
+  }
+}

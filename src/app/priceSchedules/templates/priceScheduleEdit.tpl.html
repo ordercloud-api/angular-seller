@@ -102,7 +102,7 @@
                         <tbody>
                         <tr ng-repeat="pricebreak in priceScheduleEdit.priceSchedule.PriceBreaks track by $index">
                             <td class="text-center">
-                                <a class="fa fa-trash text-danger" ng-click="priceScheduleEdit.deletePriceBreak(priceScheduleEdit.priceSchedule, $index)"></a>
+                                <a class="fa fa-trash" ng-click="priceScheduleEdit.deletePriceBreak(priceScheduleEdit.priceSchedule, $index)"></a>
                             </td>
                             <td ng-if="priceScheduleEdit.priceSchedule.RestrictedQuantity">{{pricebreak.Quantity}}</td>
                             <td ng-if="!priceScheduleEdit.priceSchedule.RestrictedQuantity">{{pricebreak.displayQuantity}} </td>
@@ -118,6 +118,6 @@
     <div class="form-group">
         <button type="submit" class="btn btn-primary" ng-disabled="PriceScheduleEditForm.$invalid || !priceScheduleEdit.priceSchedule.PriceBreaks.length">Save</button>
         <button type="button" class="btn btn-default" ui-sref="^">Cancel</button>
-        <button type="button" class="btn btn-default" ng-click="priceScheduleEdit.Delete()"><i class="fa fa-trash text-danger"></i></button>
+        <button type="button" class="btn btn-danger" ng-click="priceScheduleEdit.Delete()"><i class="fa fa-trash"></i></button>
     </div>
 </form>
