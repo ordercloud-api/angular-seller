@@ -13,8 +13,6 @@ function AdminUserCreateModalController($exceptionHandler, $uibModalInstance, $s
         vm.loading.promise = OrderCloud.AdminUsers.Create(vm.user)
             .then(function(data) {
                 $uibModalInstance.close(data);
-                toastr.success('User Created', 'Success');
-                $state.go('users', {}, {reload: true});
             })
             .catch(function(ex) {
                 $exceptionHandler(ex)
