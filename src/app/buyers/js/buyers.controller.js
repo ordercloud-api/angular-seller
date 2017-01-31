@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('BuyersCtrl', BuyersController);
 
-function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderCloudParameters, Parameters, BuyerList) {
+function BuyersController($q, $filter, $state, $ocMedia, toastr, ocBuyers, ocConfirm, OrderCloud, OrderCloudParameters, Parameters, BuyerList) {
     var vm = this;
     vm.list = BuyerList;
     vm.parameters = Parameters;
@@ -85,6 +85,66 @@ function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderC
                 toastr.success(data.Name + ' was created.', 'Success!');
                 $state.go('buyer.settings', {buyerid: data.ID});
             })
+    };
+
+    vm.allItemsSelected = false;
+    vm.selectAllItems = function() {
+        _.map(vm.list.Items, function(i) { i.selected = vm.allItemsSelected });
+        vm.selectedCount = vm.allItemsSelected ? vm.list.Items.length : 0;
+    };
+
+    vm.selectItem = function(scope) {
+        if (!scope.buyer.selected) vm.allItemsSelected = false;
+        vm.selectedCount = $filter('filter')(vm.list.Items, {'selected':true}).length;
+    };
+
+    vm.deleteSelected = function() {
+        ocConfirm.Confirm({
+                'message': 'Are you sure you want to delete the selected buyer organizations and all of it\'s data? <br> <b>This action cannot be undone.</b>',
+                'confirmText': 'Delete ' + vm.selectedCount + (vm.selectedCount == 1 ? ' buyer' : ' buyers')
+            })
+            .then(function() {
+                return run();
+            });
+
+        function run() {
+            var df = $q.defer(),
+                successCount = 0,
+                deleteQueue = [];
+
+            angular.forEach(vm.list.Items, function(item) {
+                if (item.selected) {
+                    deleteQueue.push((function() {
+                        var d = $q.defer();
+
+                        OrderCloud.Buyers.Delete(item.ID)
+                            .then(function() {
+                                successCount++;
+                                vm.list.Items = _.without(vm.list.Items, item);
+                                vm.list.Meta.TotalCount--;
+                                vm.list.Meta.ItemRange[1]--;
+                                d.resolve();
+                            })
+                            .catch(function() {
+                                d.resolve();
+                            });
+
+                        return d.promise;
+                    })())
+                }
+            });
+
+            vm.searchLoading = $q.all(deleteQueue)
+                .then(function() {
+                    toastr.success(successCount + (successCount == 1 ? ' buyer was deleted' : ' buyers were deleted'), 'Success!');
+                    vm.selectedCount = deleteQueue.length - successCount;
+                    vm.allItemsSelected = false;
+                    if (!vm.list.Items.length) vm.filter(true);
+                    df.resolve();
+                });
+
+            return df.promise;
+        }
     }
 }
 

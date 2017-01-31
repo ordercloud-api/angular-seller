@@ -17,7 +17,7 @@ function BuyersService($uibModal) {
                 vm.updateValidity = updateValidity;
 
                 function updateValidity() {
-                    if (vm.form.buyerIDinput.$error['Buyer.UnavailableID']) vm.form.buyerIDinput.$setValidity('Buyer.UnavailableID', true);
+                    if (vm.form.ID.$error['Buyer.UnavailableID']) vm.form.ID.$setValidity('Buyer.UnavailableID', true);
                 }
 
                 function submit() {
@@ -27,8 +27,8 @@ function BuyersService($uibModal) {
                         })
                         .catch(function(ex) {
                             if (ex.status == 409) {
-                                vm.form.buyerIDinput.$setValidity('Buyer.UnavailableID', false);
-                                vm.form.buyerIDinput.$$element[0].focus();
+                                vm.form.ID.$setValidity('Buyer.UnavailableID', false);
+                                vm.form.ID.$$element[0].focus();
                             } else {
                                 $exceptionHandler(ex);
                             }

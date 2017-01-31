@@ -24,7 +24,7 @@
         <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('users')}">
             <a ui-sref="users({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-user"></i> Users</a>
         </li>
-        <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('userGroups')}">
+        <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('userGroups') || application.$state.includes('userGroup')}">
             <a ui-sref="userGroups({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-users"></i> User Groups</a>
         </li>
         <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('addresses')}">
@@ -33,10 +33,13 @@
         <li role="presentation" class="hidden-xs hidden-sm hidden-md" ng-class="{active: application.$state.includes('paymentMethods')}">
             <a ui-sref="paymentMethods({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-dollar"></i> Payment Methods</a>
         </li>
-        <li role="presentation" class="hidden-xs hidden-sm hidden-md" ng-class="{active: application.$state.includes('promotions')}">
+        <!--<li role="presentation" class="hidden-xs hidden-sm hidden-md" ng-class="{active: application.$state.includes('approvalRules')}">
+            <a ui-sref="approvalRules({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-check-square-o"></i> Approval Rules</a>
+        </li>-->
+<!--        <li role="presentation" class="hidden-xs hidden-sm hidden-md" ng-class="{active: application.$state.includes('promotions')}">
             <a ui-sref="promotions({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-bullhorn"></i> Promotions</a>
-        </li>
-        <li role="presentation" class="hidden-lg" uib-dropdown>
+        </li>-->
+        <li role="presentation" uib-dropdown>
             <a uib-dropdown-toggle>More <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown-menu-right" uib-dropdown-menu>
                 <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('users')}">
@@ -48,10 +51,13 @@
                 <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('addresses')}">
                     <a ui-sref="addresses({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-map-marker"></i> Addresses</a>
                 </li>
-                <li role="presentation" class="visible-xs visible-sm visible-md" ng-class="{active: application.$state.includes('paymentMethods')}">
+                <li role="presentation" class="hidden-lg" ng-class="{active: application.$state.includes('paymentMethods')}">
                     <a ui-sref="paymentMethods({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-dollar"></i> Payment Methods</a>
                 </li>
-                <li role="presentation" class="visible-xs visible-sm visible-md" ng-class="{active: application.$state.includes('promotions')}">
+                <li role="presentation" ng-class="{active: application.$state.includes('approvalRules')}">
+                    <a ui-sref="approvalRules({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-check-square-o"></i> Approval Rules</a>
+                </li>
+                <li role="presentation" ng-class="{active: application.$state.includes('promotions')}">
                     <a ui-sref="promotions({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-bullhorn"></i> Promotions</a>
                 </li>
             </ul>
