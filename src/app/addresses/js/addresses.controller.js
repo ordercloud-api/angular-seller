@@ -1,8 +1,8 @@
 angular.module('orderCloud')
-    .controller('AdminAddressesCtrl', AdminAddressesController)
+    .controller('AddressesCtrl', AddressesController)
 ;
 
-function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toastr, ocConfirm, OrderCloud, OrderCloudParameters, AddressList, Parameters){
+function AddressesController($q, $state, $stateParams, $filter, $uibModal, $ocMedia, toastr, ocConfirm, OrderCloud, OrderCloudParameters, AddressList, Parameters){
     var vm = this;
     vm.list = AddressList;
     vm.parameters = Parameters;
@@ -23,7 +23,7 @@ function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toas
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
         $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.AdminAddresses.List(vm.parameters.search, 1, vm.parameters.pageSize || 12)
+        vm.searchLoading = OrderCloud.Addresses.List(vm.parameters.search, 1, vm.parameters.pageSize || 12)
             .then(function(data) {
                 vm.list = data;
                 vm.searchResults = vm.parameters.search.length > 0;
@@ -74,7 +74,7 @@ function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toas
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.AdminAddresses.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.filters)
+        return OrderCloud.Addresses.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.filters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -83,11 +83,16 @@ function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toas
 
     vm.editAddress = function(scope) {
         $uibModal.open({
-            templateUrl: 'adminAddresses/templates/adminAddressEdit.modal.html',
-            controller: 'AdminAddressEditModalCtrl',
-            controllerAs: 'adminAddressEditModal',
+            templateUrl: 'addresses/templates/addressEdit.modal.html',
+            controller: 'AddressEditModalCtrl',
+            controllerAs: 'addressEditModal',
             scope: scope,
-            bindToController: true
+            bindToController: true,
+            resolve: {
+                SelectedBuyerID: function() {
+                    return $stateParams.buyerid;
+                }
+            }
         }).result
             .then(function(updatedAddress) {
                 vm.list.Items[scope.$index] = updatedAddress;
@@ -97,9 +102,14 @@ function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toas
 
     vm.createAddress = function() {
         $uibModal.open({
-            templateUrl: 'adminAddresses/templates/adminAddressCreate.modal.html',
-            controller: 'AdminAddressCreateModalCtrl',
-            controllerAs: 'adminAddressCreateModal'
+            templateUrl: 'addresses/templates/addressCreate.modal.html',
+            controller: 'AddressCreateModalCtrl',
+            controllerAs: 'addressCreateModal',
+            resolve: {
+                SelectedBuyerID: function() {
+                    return $stateParams.buyerid;
+                }
+            }
         }).result
             .then(function(newAddress) {
                 if (newAddress) vm.list.Items.push(newAddress);
@@ -114,7 +124,7 @@ function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toas
     };
 
     vm.selectItem = function(scope) {
-        if (!scope.adminAddress.selected) vm.allItemsSelected = false;
+        if (!scope.address.selected) vm.allItemsSelected = false;
         vm.selectedCount = $filter('filter')(vm.list.Items, {'selected':true}).length;
     };
 
@@ -137,7 +147,7 @@ function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toas
                     deleteQueue.push((function() {
                         var d = $q.defer();
 
-                        OrderCloud.AdminAddresses.Delete(item.ID)
+                        OrderCloud.Addresses.Delete(item.ID)
                             .then(function() {
                                 successCount++;
                                 vm.list.Items = _.without(vm.list.Items, item);

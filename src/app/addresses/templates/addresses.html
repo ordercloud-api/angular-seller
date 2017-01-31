@@ -1,0 +1,139 @@
+<article ui-view>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">
+            Addresses
+        </h3>
+        <!--====== CREATE ======-->
+        <div class="l-page-header__btns">
+            <button type="button" class="btn btn-primary btn-block" ng-click="addresses.createAddress()"><i class="fa fa-plus-circle"></i>
+                New Address
+            </button>
+        </div>
+    </header>
+
+    <!--====== SEARCH/FILTERS ======-->
+    <form name="addresses.searchForm" pretty-submit>
+        <fieldset class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                <input type="search" ng-change="addresses.search()" ng-model-options="{debounce:1000}" placeholder="Search addresses..." ng-model="addresses.parameters.search" class="form-control">
+                <span ng-if="addresses.searchResults" class="input-group-btn">
+                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="addresses.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                </span>
+            </div>
+        </fieldset>
+    </form>
+
+    <!--Sort may not be needed now that tables are using .table-responsive-->
+    <!--<div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
+        <label>Sort By</label>
+        <div ng-class="{'input-group':addresses.sortSelection}">
+            <select placeholder="Sort" class="form-control" ng-model="addresses.sortSelection"
+                    ng-change="addresses.updateSort()">
+                <option value="">None</option>
+                <option value="ID">ID</option>
+                <option value="AddressName">Name</option>
+                <option value="Street1">Address</option>
+            </select>
+            <div ng-if="addresses.sortSelection" class="input-group-btn">
+                <button class="btn btn-default" ng-click="addresses.reverseSort()">
+                    <i class="fa fa-sort"></i>
+                </button>
+            </div>
+        </div>
+    </div>-->
+
+    <!--====== LIST ======-->
+    <div cg-busy="addresses.searchLoading">
+        <div class="no-matches" ng-if="!addresses.list.Items.length">
+            <b>No matches found.</b>
+        </div>
+        <div ng-if="addresses.list.Items.length">
+            <div class="row">
+                <div class="col-xs-6">
+                    <button ng-if="addresses.selectedCount" class="btn btn-danger btn-xs" ng-click="addresses.deleteSelected()">
+                        <i class="fa fa-trash"></i> Delete {{addresses.selectedCount == 1 ? "Address" : (addresses.selectedCount + " Addresses")}}
+                    </button>
+                </div>
+                <div class="col-xs-6">
+                    <p class="text-right">{{(application.$ocMedia('min-width:768px') ? addresses.list.Meta.ItemRange[0] : '1') + ' - ' +
+                        addresses.list.Meta.ItemRange[1] + ' of ' + addresses.list.Meta.TotalCount + ' results'}}</p>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <colgroup>
+                        <col>
+                        <col style="width:18%;">
+                        <col style="width:18%;">
+                        <col style="width:46%;">
+                        <col style="width:18%;">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th class="text-center">
+                            <input type="checkbox" ng-model="addresses.allItemsSelected" ng-change="addresses.selectAllItems()" />
+                        </th>
+                        <th ng-click="addresses.updateSort('ID')">
+                            ID
+                            <i class="fa fa-caret-down" ng-show="addresses.parameters.sortBy == 'ID'"></i>
+                            <i class="fa fa-caret-up" ng-show="addresses.parameters.sortBy == '!ID'"></i>
+                        </th>
+                        <th ng-click="addresses.updateSort('AddressName')">
+                            Name
+                            <i class="fa fa-caret-down" ng-show="addresses.parameters.sortBy == 'AddressName'"></i>
+                            <i class="fa fa-caret-up" ng-show="addresses.parameters.sortBy == '!AddressName'"></i>
+                        </th>
+                        <th ng-click="addresses.updateSort('Street1')">
+                            Address
+                            <i class="fa fa-caret-down" ng-show="addresses.parameters.sortBy == 'Street1'"></i>
+                            <i class="fa fa-caret-up" ng-show="addresses.parameters.sortBy == '!Street1'"></i>
+                        </th>
+                        <th colspan="2">
+                            Phone
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="address in addresses.list.Items">
+                        <td class="text-center">
+                            <input type="checkbox" ng-model="address.selected" ng-change="addresses.selectItem(this)"/>
+                        </td>
+                        <td><a href="" ng-click="addresses.editAddress(this)">{{address.ID}}</a></td>
+                        <td>
+                            {{address.AddressName}}
+                            <em class="text-muted" ng-if="!address.AddressName">None</em>
+                        </td>
+                        <td>{{address | address}} <br ng-if="application.$ocMedia('max-width:767px')"> {{address.City + ', ' + address.State + ' ' +
+                            address.Zip}}
+                        </td>
+                        <td>
+                            {{address.Phone}}
+                            <em class="text-muted" ng-if="!address.Phone">None</em>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-default btn-block btn-xs" ng-click="addresses.editAddress(this)">Edit</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <uib-pagination class="pagination-sm pull-right"
+                            ng-if="application.$ocMedia('min-width:768px') && addresses.list.Meta.TotalPages > 1"
+                            total-items="addresses.list.Meta.TotalCount"
+                            items-per-page="addresses.list.Meta.PageSize"
+                            max-size="5"
+                            boundary-links="addresses.list.Meta.TotalPages > 5"
+                            ng-model="addresses.list.Meta.Page"
+                            ng-change="addresses.pageChanged()">
+            </uib-pagination>
+            <button type="button"
+                    ng-if="application.$ocMedia('max-width:767px')"
+                    class="btn btn-default btn-block btn-lg"
+                    ng-show="addresses.list.Meta.Page < addresses.list.Meta.TotalPages"
+                    ng-click="addresses.loadMore()">Load More
+            </button>
+        </div>
+    </div>
+
+</article>
