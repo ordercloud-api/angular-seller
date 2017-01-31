@@ -1,3 +1,4 @@
+/*
 angular.module('orderCloud')
     .config(AdminUserGroupsConfig)
     .controller('AdminUserGroupsCtrl', AdminUserGroupsController)
@@ -10,7 +11,7 @@ function AdminUserGroupsConfig($stateProvider) {
     $stateProvider
         .state('adminUserGroups', {
             parent: 'base',
-            templateUrl: 'adminUserGroups/templates/adminUserGroups.tpl.html',
+            templateUrl: 'adminUserGroups/templates/adminUserGroups.html',
             controller: 'AdminUserGroupsCtrl',
             controllerAs: 'adminUserGroups',
             url: '/usergroups?search&page&pageSize&sortBy&searchOn&filters',
@@ -216,3 +217,4 @@ function AdminUserGroupAssignController($scope, toastr, OrderCloud, Assignments,
         return Paging.Paging(vm.list, 'AdminUsers', vm.assignments, AssignmentFunc);
     }
 }
+*/
