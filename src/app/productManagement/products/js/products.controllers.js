@@ -3,7 +3,7 @@ angular.module('orderCloud')
     .controller('ProductCreateCtrl', ProductCreateController)
 ;
 
-function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, ProductList, Parameters) {
+function ProductsController($q, $filter, $state, toastr, $ocMedia, ocConfirm, OrderCloud, OrderCloudParameters, ProductList, Parameters) {
     var vm = this;
     vm.list = ProductList;
     //Set parameters
@@ -81,6 +81,66 @@ function ProductsController($state, $ocMedia, OrderCloud, OrderCloudParameters, 
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
             });
+    }
+
+    vm.allItemsSelected = false;
+    vm.selectAllItems = function() {
+        _.map(vm.list.Items, function(a) { a.selected = vm.allItemsSelected });
+        vm.selectedCount = vm.allItemsSelected ? vm.list.Items.length : 0;
+    };
+
+    vm.selectItem = function(scope) {
+        if (!scope.product.selected) vm.allItemsSelected = false;
+        vm.selectedCount = $filter('filter')(vm.list.Items, {'selected':true}).length;
+    };
+
+    vm.deleteSelected = function() {
+        ocConfirm.Confirm({
+                'message': 'Are you sure you want to delete the selected products? <br> <b>This action cannot be undone.</b>',
+                'confirmText': 'Delete ' + vm.selectedCount + (vm.selectedCount == 1 ? ' product' : ' products')
+            })
+            .then(function() {
+                return run();
+            });
+
+        function run() {
+            var df = $q.defer(),
+                successCount = 0,
+                deleteQueue = [];
+
+            angular.forEach(vm.list.Items, function(item) {
+                if (item.selected) {
+                    deleteQueue.push((function() {
+                        var d = $q.defer();
+
+                        OrderCloud.Products.Delete(item.ID)
+                            .then(function() {
+                                successCount++;
+                                vm.list.Items = _.without(vm.list.Items, item);
+                                vm.list.Meta.TotalCount--;
+                                vm.list.Meta.ItemRange[1]--;
+                                d.resolve();
+                            })
+                            .catch(function() {
+                                d.resolve();
+                            });
+
+                        return d.promise;
+                    })())
+                }
+            });
+
+            vm.searchLoading = $q.all(deleteQueue)
+                .then(function() {
+                    toastr.success(successCount + (successCount == 1 ? ' product was deleted' : ' products were deleted'), 'Success!');
+                    vm.selectedCount = 0;
+                    vm.allItemsSelected = false;
+                    if (!vm.list.Items.length) vm.filter(true);
+                    df.resolve();
+                });
+
+            return df.promise;
+        }
     }
 }
 
