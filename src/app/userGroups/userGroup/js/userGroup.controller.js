@@ -1,22 +1,11 @@
 angular.module('orderCloud')
-    .controller('UserGroupDetailCtrl', UserGroupDetailController)
+    .controller('UserGroupCtrl', UserGroupController)
     .factory('ocUserGroups', OCUserGroupsService)
 ;
 
-function UserGroupDetailController($stateParams, SelectedUserGroup, AssignedUsers, OrderCloud) {
+function UserGroupController(SelectedUserGroup) {
     var vm = this;
     vm.group = SelectedUserGroup;
-    vm.users = AssignedUsers;
-
-    vm.userList = [];
-    vm.onOpenUserSelect = function(isOpen) {
-        if (isOpen && !vm.userList.length) {
-            OrderCloud.Users.List(null, null, null, null, null, null, null, $stateParams.buyerid)
-                .then(function(data) {
-                    vm.userList = data.Items;
-                });
-        }
-    }
 }
 
 function OCUserGroupsService(OrderCloud) {

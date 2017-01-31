@@ -1,0 +1,120 @@
+<header class="l-page-header">
+    <h3 class="l-page-header__title">
+        Member Users
+    </h3>
+    <!--====== CREATE ======-->
+    <div class="l-page-header__btns">
+        <button type="button" class="btn btn-primary btn-block" ng-click="userGroupMembers.addUser()"><i class="fa fa-plus-circle"></i>
+            Add User
+        </button>
+    </div>
+</header>
+<!--====== SEARCH/FILTERS ======-->
+<form name="userGroupMembers.searchForm" pretty-submit>
+    <fieldset class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-search"></i>
+            </span>
+            <input type="search" ng-change="userGroupMembers.search()" ng-model-options="{debounce:1000}" placeholder="Search member users..." ng-model="userGroupMembers.parameters.search" class="form-control">
+            <span ng-if="users.searchResults" class="input-group-btn">
+                <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="userGroupMembers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+            </span>
+        </div>
+    </fieldset>
+</form>
+
+<div cg-busy="userGroupMembers.searchLoading">
+    <div class="no-matches" ng-if="!userGroupMembers.list.Items.length">
+        <b>No matches found.</b>
+    </div>
+    <div ng-if="userGroupMembers.list.Items.length">
+        <div class="row">
+            <div class="col-xs-6">
+                <button ng-if="userGroupMembers.selectedCount" class="btn btn-danger btn-xs" ng-click="userGroupMembers.deleteSelected()">
+                    <i class="fa fa-times"></i> Remove {{userGroupMembers.selectedCount == 1 ? " User" : (userGroupMembers.selectedCount + " Users")}}
+                </button>
+            </div>
+            <div class="col-xs-6">
+                <p class="text-right">{{(application.$ocMedia('min-width:768px') ? userGroupMembers.list.Meta.ItemRange[0] : '1') + ' - ' +
+                    userGroupMembers.list.Meta.ItemRange[1] + ' of ' + userGroupMembers.list.Meta.TotalCount + ' results'}}</p>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <colgroup>
+                    <col>
+                    <col style="width:20%">
+                    <col style="width:80%">
+                    <!--<col style="width:15%">
+                    <col style="width:15%">
+                    <col style="width:30%">-->
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="text-center">
+                        <input type="checkbox" ng-model="userGroupMembers.allItemsSelected" ng-change="userGroupMembers.selectAllItems()" />
+                    </th>
+                    <!--<th ng-click="userGroupMembers.updateSort('ID')">
+                        ID
+                        <i class="fa fa-caret-down" ng-show="userGroupMembers.parameters.sortBy == 'ID'"></i>
+                        <i class="fa fa-caret-up" ng-show="userGroupMembers.parameters.sortBy == '!ID'"></i>
+                    </th>-->
+                    <th ng-click="userGroupMembers.updateSort('Username')">
+                        Username
+                        <i class="fa fa-caret-down" ng-show="userGroupMembers.parameters.sortBy == 'Username'"></i>
+                        <i class="fa fa-caret-up" ng-show="userGroupMembers.parameters.sortBy == '!Username'"></i>
+                    </th>
+                    <!--<th ng-click="userGroupMembers.updateSort('FirstName')">
+                        First Name
+                        <i class="fa fa-caret-down" ng-show="userGroupMembers.parameters.sortBy == 'FirstName'"></i>
+                        <i class="fa fa-caret-up" ng-show="userGroupMembers.parameters.sortBy == '!FirstName'"></i>
+                    </th>
+                    <th ng-click="userGroupMembers.updateSort('LastName')">
+                        Last Name
+                        <i class="fa fa-caret-down" ng-show="userGroupMembers.parameters.sortBy == 'LastName'"></i>
+                        <i class="fa fa-caret-up" ng-show="userGroupMembers.parameters.sortBy == '!LastName'"></i>
+                    </th>-->
+                    <th ng-click="userGroupMembers.updateSort('Email')">
+                        Email
+                        <i class="fa fa-caret-down" ng-show="userGroupMembers.parameters.sortBy == 'Email'"></i>
+                        <i class="fa fa-caret-up" ng-show="userGroupMembers.parameters.sortBy == '!Email'"></i>
+                    </th>
+                    <!--<th>
+                        Active
+                    </th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in userGroupMembers.list.Items">
+                    <td class="text-center">
+                        <input type="checkbox" ng-model="user.selected" ng-change="userGroupMembers.selectItem(this)"/>
+                    </td>
+                    <!--<td>
+                        <a href="">{{user.ID}}</a>
+                    </td>-->
+                    <td>{{user.Username}}</td>
+                    <!--<td>{{user.FirstName}}</td>
+                    <td>{{user.LastName}}</td>-->
+                    <td>{{user.Email}}</td>
+                    <!--<td class="text-center"><i class="fa fa-circle" ng-class="{active:user.Active}"></i></td>-->
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <uib-pagination class="pagination-sm pull-right"
+                        ng-if="application.$ocMedia('min-width:768px') && users.list.Meta.TotalPages > 1"
+                        total-items="users.list.Meta.TotalCount"
+                        items-per-page="users.list.Meta.PageSize"
+                        max-size="5"
+                        boundary-links="users.list.Meta.TotalPages > 5"
+                        ng-model="users.list.Meta.Page"
+                        ng-change="users.pageChanged()">
+        </uib-pagination>
+        <button type="button"
+                ng-if="application.$ocMedia('max-width:767px')"
+                class="btn btn-default btn-block btn-lg"
+                ng-show="users.list.Meta.Page < users.list.Meta.TotalPages"
+                ng-click="users.loadMore()">Load More</button>
+    </div>
+</div>
