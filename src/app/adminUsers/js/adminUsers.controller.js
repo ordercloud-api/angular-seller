@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUsersCtrl', AdminUsersController)
 ;
 
-function AdminUsersController($state, $uibModal, toastr, $ocMedia, OrderCloud, OrderCloudParameters, AdminUsersList, Parameters) {
+function AdminUsersController($q, $filter, $state, $uibModal, toastr, $ocMedia, ocConfirm, OrderCloud, OrderCloudParameters, AdminUsersList, Parameters) {
     var vm = this;
     vm.list = AdminUsersList;
     vm.parameters = Parameters;
@@ -103,5 +103,65 @@ function AdminUsersController($state, $uibModal, toastr, $ocMedia, OrderCloud, O
                 vm.list.Items.push(data);
                 toastr.success(data.Username + ' was created.', 'Success!');
             })
+    };
+
+    vm.allItemsSelected = false;
+    vm.selectAllItems = function() {
+        _.map(vm.list.Items, function(a) { a.selected = vm.allItemsSelected });
+        vm.selectedCount = vm.allItemsSelected ? vm.list.Items.length : 0;
+    };
+
+    vm.selectItem = function(scope) {
+        if (!scope.user.selected) vm.allItemsSelected = false;
+        vm.selectedCount = $filter('filter')(vm.list.Items, {'selected':true}).length;
+    };
+
+    vm.deleteSelected = function() {
+        ocConfirm.Confirm({
+                'message': 'Are you sure you want to delete the selected admin users? <br> <b>This action cannot be undone.</b>',
+                'confirmText': 'Delete ' + vm.selectedCount + (vm.selectedCount == 1 ? ' admin user' : ' admin users')
+            })
+            .then(function() {
+                return run();
+            });
+
+        function run() {
+            var df = $q.defer(),
+                successCount = 0,
+                deleteQueue = [];
+
+            angular.forEach(vm.list.Items, function(item) {
+                if (item.selected) {
+                    deleteQueue.push((function() {
+                        var d = $q.defer();
+
+                        OrderCloud.AdminUsers.Delete(item.ID)
+                            .then(function() {
+                                successCount++;
+                                vm.list.Items = _.without(vm.list.Items, item);
+                                vm.list.Meta.TotalCount--;
+                                vm.list.Meta.ItemRange[1]--;
+                                d.resolve();
+                            })
+                            .catch(function() {
+                                d.resolve();
+                            });
+
+                        return d.promise;
+                    })())
+                }
+            });
+
+            vm.searchLoading = $q.all(deleteQueue)
+                .then(function() {
+                    toastr.success(successCount + (successCount == 1 ? ' admin user was deleted' : ' admin users were deleted'), 'Success!');
+                    vm.selectedCount = 0;
+                    vm.allItemsSelected = false;
+                    if (!vm.list.Items.length) vm.filter(true);
+                    df.resolve();
+                });
+
+            return df.promise;
+        }
     }
 }
