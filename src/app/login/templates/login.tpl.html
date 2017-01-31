@@ -1,25 +1,34 @@
 <main class="login" ng-switch="login.form">
-    <div class="panel panel-default" ng-switch-when="login">
-        <form class="panel-body" name="LoginForm" ng-submit="login.submit()" pretty-submit>
-            <h1 class="text-center">Login</h1>
-            <div class="form-group">
-                <label for="Username">Username</label>
-                <input id="Username" type="text" class="form-control" autocapitalize="off" autocorrect="off" autocomplete="off" ng-model="login.credentials.Username" ng-required="true" />
-            </div>
-            <div class="form-group">
-                <label for="Password">Password</label>
-                <input type="password" class="form-control" id="Password" ng-model="login.credentials.Password" ng-required="true" />
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="Remember" ng-model="login.rememberStatus">
-                    Remember Me
-                </label>
-            </div>
-            <button id="submit_login" type="submit" class="btn btn-primary" ng-disabled="LoginForm.$invalid">Submit</button>
-            <a id="forgot_password" class="btn btn-link" ng-click="login.setForm('forgot')">Forgot Password?</a> <!--TODO: should this be functional in the Seed Project?-->
-        </form>
+    <div ng-switch-when="login">
+        <div class="panel panel-default">
+            <form class="panel-body" name="LoginForm" ng-submit="login.submit()" pretty-submit>
+                <h1 class="text-center">Login</h1>
+                <div class="form-group">
+                    <label for="Username" class="sr-only">Username</label>
+                    <input id="Username" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autocomplete="off" ng-model="login.credentials.Username" ng-required="true" />
+                </div>
+                <div class="form-group">
+                    <label for="Password" class="sr-only">Password</label>
+                    <input type="password" class="form-control" placeholder="Password" id="Password" ng-model="login.credentials.Password" ng-required="true" />
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label for="Remember">
+                            <input type="checkbox" id="Remember" ng-model="login.rememberStatus">
+                            Remember Me
+                        </label>
+                    </div>
+                </div>
+                <button id="submit_login" type="submit" class="btn btn-primary btn-block" ng-disabled="LoginForm.$invalid">Submit</button>
+
+            </form>
+        </div>
+        <div class="text-center">
+            <a id="forgot_password" ng-click="login.setForm('forgot')">Forgot Password?</a>
+        </div>
     </div>
+
     <div class="panel panel-default" ng-switch-when="forgot">
         <form class="panel-body" name="ForgotPasswordForm" ng-submit="login.forgotPassword()">
             <h1 class="text-center">Forgot Password</h1>
