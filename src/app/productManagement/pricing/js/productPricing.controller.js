@@ -365,7 +365,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     }
 }
 
-function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProductPricing, SelectedProduct, Buyers, PriceBreak) {
+function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProductPricing, SelectedProduct, Buyers) {
     var vm = this;
     vm.buyers = Buyers;
     vm.product = SelectedProduct;
@@ -380,11 +380,11 @@ function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProduct
     vm.getBuyerUserGroups = getBuyerUserGroups;
     vm.saveAssignment = saveAssignment;
     vm.addPriceBreak = addPriceBreak;
-    vm.deletePriceBreak = PriceBreak.DeletePriceBreak;
+    vm.deletePriceBreak = ocProductPricing.PriceBreaks.Delete;
     vm.assignAtUserGroupLevel = false;
 
     function addPriceBreak() {
-        PriceBreak.AddPriceBreak(vm.priceSchedule, vm.price, vm.quantity);
+        ocProductPricing.PriceBreaks.Create(vm.priceSchedule, vm.price, vm.quantity);
         vm.quantity = null;
         vm.price = null;
     }
