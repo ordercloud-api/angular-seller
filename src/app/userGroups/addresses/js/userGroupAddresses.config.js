@@ -1,11 +1,10 @@
 angular.module('orderCloud')
-    .config(AddressesConfig)
+    .config(UserGroupAddressesConfig)
 ;
 
-function AddressesConfig($stateProvider){
+function UserGroupAddressesConfig($stateProvider){
     $stateProvider
-        .state('addresses', {
-            parent: 'buyer',
+        .state('userGroup.addresses', {
             templateUrl: 'addresses/templates/addresses.html',
             controller: 'AddressesCtrl',
             controllerAs: 'addresses',
@@ -15,7 +14,7 @@ function AddressesConfig($stateProvider){
                     return OrderCloudParameters.Get($stateParams);
                 },
                 CurrentAssignments: function($q, ocAddresses, $stateParams) {
-                    return ocAddresses.Assignments.Get('company', $stateParams.buyerid);
+                    return ocAddresses.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);
                 },
                 AddressList: function(ocAddresses, OrderCloud, Parameters, CurrentAssignments) {
                     return OrderCloud.Addresses.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
@@ -25,8 +24,7 @@ function AddressesConfig($stateProvider){
                 }
             }
         })
-        .state('address', {
-            parent: 'buyer',
+        .state('userGroup.address', {
             params: {
                 addressModel: undefined
             },

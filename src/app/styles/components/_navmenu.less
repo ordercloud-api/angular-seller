@@ -3,7 +3,7 @@
 //
 // Setting default navmenu color variables back to bootstrap navbar colors
 // -------------------------------------------------------------
-
+@navmenu-width:220px;
 //== Navmenu
 @navmenu-default-color:             @navbar-default-link-color;
 @navmenu-default-bg:                @navbar-default-bg;
@@ -41,6 +41,12 @@
 @navmenu-inverse-link-disabled-bg:           @navbar-inverse-link-disabled-bg;
 
 // Inverted navmenu brand label
-@navmenu-inverse-brand-color:                @navbar-default-brand-color;
-@navmenu-inverse-brand-hover-color:          @navbar-default-brand-hover-color;
-@navmenu-inverse-brand-hover-bg:             @navbar-default-brand-hover-bg;
+@navmenu-inverse-brand-color:                @navbar-inverse-brand-color;
+@navmenu-inverse-brand-hover-color:          @navbar-inverse-brand-hover-color;
+@navmenu-inverse-brand-hover-bg:             @navbar-inverse-brand-hover-bg;
+
+.navmenu.navmenu-inline {
+  width:auto;
+  max-width:100%;
+  margin-bottom:@grid-gutter-width;
+}

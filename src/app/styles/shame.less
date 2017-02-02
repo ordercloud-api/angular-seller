@@ -1,5 +1,6 @@
 [ui-sref],
-[ng-click]{
+[ng-click],
+[uib-dropdown-toggle]{
   cursor: pointer;
 }
 
@@ -26,10 +27,18 @@ textarea {
   margin-left:0;
 }
 
+.label[ng-repeat] {
+  margin-right:3px;
+  display:inline-block;
+}
+
 .table {
   > thead > tr > th {
     &[ng-click] {
       color:@link-color; //show sortable th as a link
+    }
+    .checkbox {
+      margin:0;
     }
   }
   > tbody > tr > td {
@@ -37,12 +46,12 @@ textarea {
   }
 }
 
-li {
-  &,
-  a {
-    > i:not(.fa-caret-down) {
-      width:1.2em;
-      text-align:center;
-    }
+li,
+li a,
+.list-group-item {
+  > i:not(.fa-caret-down) {
+    width:1em;
+    text-align:center;
+    margin-right:3px;
   }
 }

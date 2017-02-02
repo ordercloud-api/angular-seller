@@ -1,4 +1,4 @@
-<article ui-view>
+<article>
     <header class="l-page-header">
         <h3 class="l-page-header__title">
             Addresses
@@ -11,7 +11,7 @@
         </div>
     </header>
 
-    <!--====== SEARCH/FILTERS ======-->
+    <!--====== SEARCH ======-->
     <form name="addresses.searchForm" pretty-submit>
         <fieldset class="form-group">
             <div class="input-group">
@@ -24,25 +24,6 @@
         </fieldset>
     </form>
 
-    <!--Sort may not be needed now that tables are using .table-responsive-->
-    <!--<div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
-        <label>Sort By</label>
-        <div ng-class="{'input-group':addresses.sortSelection}">
-            <select placeholder="Sort" class="form-control" ng-model="addresses.sortSelection"
-                    ng-change="addresses.updateSort()">
-                <option value="">None</option>
-                <option value="ID">ID</option>
-                <option value="AddressName">Name</option>
-                <option value="Street1">Address</option>
-            </select>
-            <div ng-if="addresses.sortSelection" class="input-group-btn">
-                <button class="btn btn-default" ng-click="addresses.reverseSort()">
-                    <i class="fa fa-sort"></i>
-                </button>
-            </div>
-        </div>
-    </div>-->
-
     <!--====== LIST ======-->
     <div cg-busy="addresses.searchLoading">
         <div class="no-matches" ng-if="!addresses.list.Items.length">
@@ -51,8 +32,8 @@
         <div ng-if="addresses.list.Items.length">
             <div class="row">
                 <div class="col-xs-6">
-                    <button ng-if="addresses.selectedCount" class="btn btn-danger btn-xs" ng-click="addresses.deleteSelected()">
-                        <i class="fa fa-trash"></i> Delete {{addresses.selectedCount == 1 ? "Address" : (addresses.selectedCount + " Addresses")}}
+                    <button ng-if="addresses.changedAssignments.length" ng-click="addresses.updateAssignments()" class="btn btn-primary btn-xs">
+                        Update Assignments
                     </button>
                 </div>
                 <div class="col-xs-6">
@@ -61,18 +42,22 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-striped table-bordered l-address-table" ng-class="{'l-address-table__usergroup':addresses.userGroupID}">
                     <colgroup>
                         <col>
-                        <col style="width:18%;">
-                        <col style="width:18%;">
-                        <col style="width:46%;">
-                        <col style="width:18%;">
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
                     </colgroup>
                     <thead>
                     <tr>
-                        <th class="text-center">
-                            <input type="checkbox" ng-model="addresses.allItemsSelected" ng-change="addresses.selectAllItems()" />
+                        <th class="text-center" ng-click="addresses.selectAllItems('shipping')">
+                            Shipping
+                        </th>
+                        <th class="text-center" ng-click="addresses.selectAllItems('billing')">
+                            Billing
                         </th>
                         <th ng-click="addresses.updateSort('ID')">
                             ID
@@ -89,30 +74,26 @@
                             <i class="fa fa-caret-down" ng-show="addresses.parameters.sortBy == 'Street1'"></i>
                             <i class="fa fa-caret-up" ng-show="addresses.parameters.sortBy == '!Street1'"></i>
                         </th>
-                        <th colspan="2">
-                            Phone
-                        </th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="address in addresses.list.Items">
-                        <td class="text-center">
-                            <input type="checkbox" ng-model="address.selected" ng-change="addresses.selectItem(this)"/>
-                        </td>
-                        <td><a href="" ng-click="addresses.editAddress(this)">{{address.ID}}</a></td>
+                        <th class="text-center">
+                            <input type="checkbox" ng-model="address.shipping" ng-change="addresses.selectItem(this, 'shipping')" />
+                        </th>
+                        <th class="text-center">
+                            <input type="checkbox" ng-model="address.billing" ng-change="addresses.selectItem(this, 'billing')" />
+                        </th>
+                        <td>{{address.ID}}</td>
                         <td>
-                            {{address.AddressName}}
-                            <em class="text-muted" ng-if="!address.AddressName">None</em>
+                            <a href="" ng-click="addresses.editAddress(this)">{{address.AddressName}}</a>
                         </td>
                         <td>{{address | address}} <br ng-if="application.$ocMedia('max-width:767px')"> {{address.City + ', ' + address.State + ' ' +
                             address.Zip}}
                         </td>
                         <td>
-                            {{address.Phone}}
-                            <em class="text-muted" ng-if="!address.Phone">None</em>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-default btn-block btn-xs" ng-click="addresses.editAddress(this)">Edit</button>
+                            <button type="button" class="btn btn-danger btn-block btn-xs" ng-click="addresses.deleteAddress(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                         </td>
                     </tr>
                     </tbody>

@@ -13,7 +13,7 @@ function FilesService($q) {
         Delete: _delete
     };
 
-    AWS.config.region = 'us-east-1';
+    AWS.config.region = 'us-west-2';
     AWS.config.update({ accessKeyId: 'AKIAJDDM5ZWWOIH4AZZQ', secretAccessKey: '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' });
 
     function randomString() {

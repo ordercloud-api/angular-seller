@@ -10,7 +10,6 @@ function OrderCloudConfirmService($uibModal) {
 
     function _confirm(options) {
         return $uibModal.open({
-            animation:false,
             backdrop:'static',
             templateUrl: 'common/templates/confirm.modal.html',
             controller: 'ConfirmModalCtrl',

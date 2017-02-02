@@ -6,5 +6,5 @@
   "catalogid": "SHARED",
   "environment": "prod",
   "defaultstate": "home",
-  "bootswatchtheme": null
+  "bootswatchtheme": "lumen"
 }

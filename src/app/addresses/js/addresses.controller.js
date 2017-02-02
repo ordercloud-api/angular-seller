@@ -2,15 +2,13 @@ angular.module('orderCloud')
     .controller('AddressesCtrl', AddressesController)
 ;
 
-function AddressesController($q, $state, $stateParams, $filter, $uibModal, $ocMedia, toastr, ocConfirm, OrderCloud, OrderCloudParameters, AddressList, Parameters){
+function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, toastr, OrderCloud, OrderCloudParameters, ocConfirm, ocAddresses, CurrentAssignments, AddressList, Parameters){
     var vm = this;
     vm.list = AddressList;
     vm.parameters = Parameters;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
-
-    //Check if filters are applied
-    vm.filtersApplied = vm.parameters.filters || vm.parameters.from || vm.parameters.to || ($ocMedia('max-width:767px') && vm.sortSelection); //Sort By is a filter on mobile devices
-    vm.showFilters = vm.filtersApplied;
+    vm.changedAssignments = [];
+    vm.userGroupID = $stateParams.usergroupid;
 
     //Check if search was used
     vm.searchResults = Parameters.search && Parameters.search.length > 0;
@@ -25,7 +23,8 @@ function AddressesController($q, $state, $stateParams, $filter, $uibModal, $ocMe
         $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.Addresses.List(vm.parameters.search, 1, vm.parameters.pageSize || 12)
             .then(function(data) {
-                vm.list = data;
+                vm.changedAssignments = [];
+                vm.list = ocAddresses.Assignments.Map(CurrentAssignments, data);
                 vm.searchResults = vm.parameters.search.length > 0;
             })
     };
@@ -61,12 +60,6 @@ function AddressesController($q, $state, $stateParams, $filter, $uibModal, $ocMe
         vm.filter(false);
     };
 
-    //Used on mobile devices
-    vm.reverseSort = function() {
-        Parameters.sortBy.indexOf('!') == 0 ? vm.parameters.sortBy = Parameters.sortBy.split('!')[1] : vm.parameters.sortBy = '!' + Parameters.sortBy;
-        vm.filter(false);
-    };
-
     //Reload the state with the incremented page parameter
     vm.pageChanged = function() {
         $state.go('.', {page:vm.list.Meta.Page});
@@ -76,105 +69,103 @@ function AddressesController($q, $state, $stateParams, $filter, $uibModal, $ocMe
     vm.loadMore = function() {
         return OrderCloud.Addresses.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.filters)
             .then(function(data) {
-                vm.list.Items = vm.list.Items.concat(data.Items);
-                vm.list.Meta = data.Meta;
+                var mappedData = ocAddresses.Assignments.Map(CurrentAssignments, data);
+                vm.list.Items = vm.list.Items.concat(mappedData.Items);
+                vm.list.Meta = mappedData.Meta;
+            });
+    };
+
+    vm.createAddress = function() {
+        ocAddresses.Create($stateParams.buyerid)
+            .then(function(newAddress) {
+                vm.list.Items.push(newAddress);
+                vm.list.Meta.TotalCount++;
+                vm.list.Meta.ItemRange[1]++;
+                toastr.success(newAddress.AddressName + ' was created.', 'Success!');
             });
     };
 
     vm.editAddress = function(scope) {
-        $uibModal.open({
-            templateUrl: 'addresses/templates/addressEdit.modal.html',
-            controller: 'AddressEditModalCtrl',
-            controllerAs: 'addressEditModal',
-            scope: scope,
-            bindToController: true,
-            resolve: {
-                SelectedBuyerID: function() {
-                    return $stateParams.buyerid;
-                }
-            }
-        }).result
+        ocAddresses.Edit(scope.address, $stateParams.buyerid)
             .then(function(updatedAddress) {
+
+                updatedAddress.shipping = vm.list.Items[scope.$index].shipping;
+                updatedAddress.billing = vm.list.Items[scope.$index].billing;
+                updatedAddress.userGroupID = vm.list.Items[scope.$index].userGroupID;
                 vm.list.Items[scope.$index] = updatedAddress;
+                if (updatedAddress.ID != scope.address.ID) {
+                    _.map(CurrentAssignments, function(assignment) {
+                        if (assignment.AddressID == scope.address.ID) assignment.AddressID = updatedAddress.ID;
+                        return assignment;
+                    });
+                    vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
+                }
                 toastr.success(updatedAddress.AddressName + ' was updated.', 'Success!');
             })
     };
 
-    vm.createAddress = function() {
-        $uibModal.open({
-            templateUrl: 'addresses/templates/addressCreate.modal.html',
-            controller: 'AddressCreateModalCtrl',
-            controllerAs: 'addressCreateModal',
-            resolve: {
-                SelectedBuyerID: function() {
-                    return $stateParams.buyerid;
-                }
-            }
-        }).result
-            .then(function(newAddress) {
-                if (newAddress) vm.list.Items.push(newAddress);
-                toastr.success(newAddress.AddressName + ' was created.', 'Success!');
+    vm.deleteAddress = function(scope) {
+        ocConfirm.Confirm({message:'Are you sure you want to delete this address? <br> <b>This action cannot be undone.</b>', confirmText: 'Yes, delete this address', cancelText:'Cancel'})
+            .then(function() {
+                vm.loading = OrderCloud.Addresses.Delete(scope.address.ID, $stateParams.buyerid)
+                    .then(function() {
+                        toastr.success(scope.address.AddressName + ' was deleted.', 'Success!');
+                        vm.list.Items.splice(scope.$index, 1);
+                        vm.list.Meta.TotalCount--;
+                        vm.list.Meta.ItemRange[1]--;
+                        vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
+                    })
+                    .catch(function(ex) {
+                        $exceptionHandler(ex);
+                    })
+            })
+    };
+
+    vm.updateAssignments = function() {
+        vm.searchLoading = ocAddresses.Assignments.Update(CurrentAssignments, vm.changedAssignments, $stateParams.buyerid)
+            .then(function(data) {
+                angular.forEach(data.Errors, function(ex) {
+                    $exceptionHandler(ex);
+                });
+                CurrentAssignments = data.UpdatedAssignments;
+                vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
             })
     };
 
     vm.allItemsSelected = false;
-    vm.selectAllItems = function() {
-        _.map(vm.list.Items, function(a) { a.selected = vm.allItemsSelected });
-        vm.selectedCount = vm.allItemsSelected ? vm.list.Items.length : 0;
-    };
-
-    vm.selectItem = function(scope) {
-        if (!scope.address.selected) vm.allItemsSelected = false;
-        vm.selectedCount = $filter('filter')(vm.list.Items, {'selected':true}).length;
-    };
-
-    vm.deleteSelected = function() {
-        ocConfirm.Confirm({
-            'message': 'Are you sure you want to delete the selected admin addresses? <br> <b>This action cannot be undone.</b>',
-            'confirmText': 'Delete ' + vm.selectedCount + (vm.selectedCount == 1 ? ' admin address' : ' admin addresses')
-        })
-            .then(function() {
-                return run();
-            });
-
-        function run() {
-            var df = $q.defer(),
-                successCount = 0,
-                deleteQueue = [];
-
-            angular.forEach(vm.list.Items, function(item) {
-                if (item.selected) {
-                    deleteQueue.push((function() {
-                        var d = $q.defer();
-
-                        OrderCloud.Addresses.Delete(item.ID)
-                            .then(function() {
-                                successCount++;
-                                vm.list.Items = _.without(vm.list.Items, item);
-                                vm.list.Meta.TotalCount--;
-                                vm.list.Meta.ItemRange[1]--;
-                                d.resolve();
-                            })
-                            .catch(function() {
-                                d.resolve();
-                            });
-
-                        return d.promise;
-                    })())
-                }
-            });
-
-            vm.searchLoading = $q.all(deleteQueue)
-                .then(function() {
-                    toastr.success(successCount + (successCount == 1 ? ' admin address was deleted' : ' admin addresses were deleted'), 'Success!');
-                    vm.selectedCount = 0;
-                    vm.allItemsSelected = false;
-                    if (!vm.list.Items.length) vm.filter(true);
-                    df.resolve();
-                });
-
-            return df.promise;
+    vm.selectAllItems = function(type) {
+        switch(type) {
+            case 'shipping':
+                vm.allShippingSelected = !vm.allShippingSelected;
+                _.map(vm.list.Items, function(a) { a.shipping = vm.allShippingSelected });
+                vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
+                //select for shipping
+                break;
+            case 'billing':
+                vm.allBillingSelected = !vm.allBillingSelected;
+                _.map(vm.list.Items, function(a) { a.billing = vm.allBillingSelected });
+                vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
+                //select for billing
+                break;
+            default:
+                break;
         }
-    }
+    };
 
+    vm.selectItem = function(scope, type) {
+        switch(type) {
+            case 'shipping':
+                if (!scope.address.shipping) vm.allShippingSelected = false;
+                vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
+                //select for shipping
+                break;
+            case 'billing':
+                if (!scope.address.billing) vm.allBillingSelected = false;
+                vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
+                //select for billing
+                break;
+            default:
+                break;
+        }
+    };
 }

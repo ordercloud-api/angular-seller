@@ -74,21 +74,21 @@ function UserGroupMembersController($q, $filter, $state, $stateParams, $uibModal
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
             });
     };
 
-    vm.addUser = function() {
+    vm.addUser = function(group) {
         $uibModal.open({
             templateUrl: 'userGroups/members/templates/userGroupMembersCreate.modal.html',
             controller: 'UserGroupMembersCreateModalCtrl',
             controllerAs: 'userGroupMembersCreateModal',
             resolve: {
                 SelectedUserGroup: function() {
-                    return SelectedUserGroup;
+                    return group;
                 },
                 SelectedBuyerID: function() {
                     return $stateParams.buyerid;
@@ -99,7 +99,10 @@ function UserGroupMembersController($q, $filter, $state, $stateParams, $uibModal
             }
         }).result
             .then(function(newMembers) {
-                console.log(newMembers);
+                vm.list.Items = vm.list.Items.concat(newMembers);
+                vm.list.Meta.TotalCount = vm.list.Meta.TotalCount + newMembers.length;
+                vm.list.Meta.ItemRange[1] = vm.list.Meta.ItemRange[1] + newMembers.length;
+                toastr.success(newMembers.length + (newMembers.length == 1 ? ' was ' : ' were ') + 'added to ' + SelectedUserGroup.Name);
             })
     };
 
@@ -114,10 +117,10 @@ function UserGroupMembersController($q, $filter, $state, $stateParams, $uibModal
         vm.selectedCount = $filter('filter')(vm.list.Items, {'selected':true}).length;
     };
 
-    vm.deleteSelected = function() {
+    vm.removeSelected = function() {
         ocConfirm.Confirm({
-                'message': 'Are you sure you want to delete the selected buyer users? <br> <b>This action cannot be undone.</b>',
-                'confirmText': 'Delete ' + vm.selectedCount + (vm.selectedCount == 1 ? ' buyer user' : ' buyer users')
+                'message': 'Are you sure you want to remove the selected users from this group?',
+                'confirmText': 'Remove ' + vm.selectedCount + (vm.selectedCount == 1 ? ' user' : ' users')
             })
             .then(function() {
                 return run();
@@ -126,14 +129,14 @@ function UserGroupMembersController($q, $filter, $state, $stateParams, $uibModal
         function run() {
             var df = $q.defer(),
                 successCount = 0,
-                deleteQueue = [];
+                removeQueue = [];
 
             angular.forEach(vm.list.Items, function(item) {
                 if (item.selected) {
-                    deleteQueue.push((function() {
+                    removeQueue.push((function() {
                         var d = $q.defer();
 
-                        OrderCloud.Users.Delete(item.ID, $stateParams.buyerid)
+                        OrderCloud.UserGroups.DeleteUserAssignment(SelectedUserGroup.ID, item.ID, $stateParams.buyerid)
                             .then(function() {
                                 successCount++;
                                 vm.list.Items = _.without(vm.list.Items, item);
@@ -150,9 +153,9 @@ function UserGroupMembersController($q, $filter, $state, $stateParams, $uibModal
                 }
             });
 
-            vm.searchLoading = $q.all(deleteQueue)
+            vm.searchLoading = $q.all(removeQueue)
                 .then(function() {
-                    toastr.success(successCount + (successCount == 1 ? ' buyer user was deleted' : ' buyer users were deleted'), 'Success!');
+                    toastr.success(successCount + (successCount == 1 ? ' user was removed' : ' users were removed'), 'Success!');
                     vm.selectedCount = 0;
                     vm.allItemsSelected = false;
                     if (!vm.list.Items.length) vm.filter(true);

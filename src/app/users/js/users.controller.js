@@ -2,15 +2,11 @@ angular.module('orderCloud')
     .controller('UsersCtrl', UsersController)
 ;
 
-function UsersController($q, $filter, $state, $stateParams, $uibModal, toastr, ocConfirm, $ocMedia, OrderCloud, OrderCloudParameters, UserList, Parameters) {
+function UsersController($exceptionHandler, $state, $stateParams, toastr, $ocMedia, OrderCloud, ocUsers, OrderCloudParameters, UserList, Parameters) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
-
-    //Check if filters are applied
-    vm.filtersApplied = vm.parameters.filters || vm.parameters.from || vm.parameters.to || ($ocMedia('max-width:767px') && vm.sortSelection); //Sort by is a filter on mobile devices
-    vm.showFilters = vm.filtersApplied;
 
     //Check if search was used
     vm.searchResults = Parameters.search && Parameters.search.length > 0;
@@ -61,12 +57,6 @@ function UsersController($q, $filter, $state, $stateParams, $uibModal, toastr, o
         vm.filter(false);
     };
 
-    //Used on mobile devices
-    vm.reverseSort = function() {
-        Parameters.sortBy.indexOf('!') == 0 ? vm.parameters.sortBy = Parameters.sortBy.split('!')[1] : vm.parameters.sortBy = '!' + Parameters.sortBy;
-        vm.filter(false);
-    };
-
     //Reload the state with the incremented page parameter
     vm.pageChanged = function() {
         $state.go('.', {page:vm.list.Meta.Page});
@@ -74,7 +64,7 @@ function UsersController($q, $filter, $state, $stateParams, $uibModal, toastr, o
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -82,89 +72,33 @@ function UsersController($q, $filter, $state, $stateParams, $uibModal, toastr, o
     };
 
     vm.editUser = function(scope) {
-        $uibModal.open({
-            templateUrl: 'users/templates/userEdit.modal.html',
-            controller: 'UserEditModalCtrl',
-            controllerAs: 'userEditModal',
-            scope: scope,
-            bindToController: true
-        }).result
-            .then(function(data) {
-                if (data.update) vm.list.Items[scope.$index] = data.update;
-                toastr.success(data.update.Username + ' was updated.', 'Success!');
+        ocUsers.Edit(scope.user, $stateParams.buyerid)
+            .then(function(updatedUser) {
+                vm.list.Items[scope.$index] = updatedUser;
+                toastr.success(updatedUser.Username + ' was updated.', 'Success!');
             })
     };
 
     vm.createUser = function() {
-        $uibModal.open({
-            templateUrl: 'users/templates/userCreate.modal.html',
-            controller: 'UserCreateModalCtrl',
-            controllerAs: 'userCreateModal',
-            bindToController: true
-        }).result
-            .then(function(data) {
-                if (data.update) vm.list.Items.unshift(data.update);
-                toastr.success(data.update.Username + ' was created.', 'Success!');
+        ocUsers.Create($stateParams.buyerid)
+            .then(function(newUser) {
+                vm.list.Items.push(newUser);
+                vm.list.Meta.TotalCount++;
+                vm.list.Meta.ItemRange[1]++;
+                toastr.success(newUser.Username + ' was created.', 'Success!');
             })
     };
 
-    vm.allItemsSelected = false;
-    vm.selectAllItems = function() {
-        _.map(vm.list.Items, function(i) { i.selected = vm.allItemsSelected });
-        vm.selectedCount = vm.allItemsSelected ? vm.list.Items.length : 0;
-    };
-
-    vm.selectItem = function(scope) {
-        if (!scope.user.selected) vm.allItemsSelected = false;
-        vm.selectedCount = $filter('filter')(vm.list.Items, {'selected':true}).length;
-    };
-
-    vm.deleteSelected = function() {
-        ocConfirm.Confirm({
-                'message': 'Are you sure you want to delete the selected buyer users? <br> <b>This action cannot be undone.</b>',
-                'confirmText': 'Delete ' + vm.selectedCount + (vm.selectedCount == 1 ? ' buyer user' : ' buyer users')
-            })
+    vm.deleteUser = function(scope) {
+        ocUsers.Delete(scope.user, $stateParams.buyerid)
             .then(function() {
-                return run();
+                toastr.success(scope.user.Username + ' was deleted.', 'Success!');
+                vm.list.Items.splice(scope.$index, 1);
+                vm.list.Meta.TotalCount--;
+                vm.list.Meta.ItemRange[1]--;
+            })
+            .catch(function(ex) {
+                $exceptionHandler(ex);
             });
-
-        function run() {
-            var df = $q.defer(),
-                successCount = 0,
-                deleteQueue = [];
-
-            angular.forEach(vm.list.Items, function(item) {
-                if (item.selected) {
-                    deleteQueue.push((function() {
-                        var d = $q.defer();
-
-                        OrderCloud.Users.Delete(item.ID, $stateParams.buyerid)
-                            .then(function() {
-                                successCount++;
-                                vm.list.Items = _.without(vm.list.Items, item);
-                                vm.list.Meta.TotalCount--;
-                                vm.list.Meta.ItemRange[1]--;
-                                d.resolve();
-                            })
-                            .catch(function() {
-                                d.resolve();
-                            });
-
-                        return d.promise;
-                    })())
-                }
-            });
-
-            vm.searchLoading = $q.all(deleteQueue)
-                .then(function() {
-                    toastr.success(successCount + (successCount == 1 ? ' buyer user was deleted' : ' buyer users were deleted'), 'Success!');
-                    vm.selectedCount = 0;
-                    vm.allItemsSelected = false;
-                    if (!vm.list.Items.length) vm.filter(true);
-                    df.resolve();
-                });
-
-            return df.promise;
-        }
-    }
+    };
 }

@@ -4,8 +4,8 @@
     </h3>
     <!--====== CREATE ======-->
     <div class="l-page-header__btns">
-        <button type="button" class="btn btn-primary btn-block" ng-click="userGroupMembers.addUser()"><i class="fa fa-plus-circle"></i>
-            Add User
+        <button type="button" class="btn btn-primary btn-block" ng-click="userGroupMembers.addUser(userGroup.group)"><i class="fa fa-plus-circle"></i>
+            Add Users
         </button>
     </div>
 </header>
@@ -31,7 +31,7 @@
     <div ng-if="userGroupMembers.list.Items.length">
         <div class="row">
             <div class="col-xs-6">
-                <button ng-if="userGroupMembers.selectedCount" class="btn btn-danger btn-xs" ng-click="userGroupMembers.deleteSelected()">
+                <button ng-if="userGroupMembers.selectedCount" class="btn btn-danger btn-xs" ng-click="userGroupMembers.removeSelected()">
                     <i class="fa fa-times"></i> Remove {{userGroupMembers.selectedCount == 1 ? " User" : (userGroupMembers.selectedCount + " Users")}}
                 </button>
             </div>
