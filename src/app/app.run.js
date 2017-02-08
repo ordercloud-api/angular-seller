@@ -5,7 +5,6 @@ angular.module('orderCloud')
 function AppRun($rootScope, $exceptionHandler, ocStateLoading, defaultstate, defaultErrorMessageResolver) {
     $rootScope.$on('$stateChangeStart', function(e, toState) {
         var parent = toState.parent || toState.name.split('.')[0];
-        console.log(parent);
         ocStateLoading.Start(parent);
     });
 
