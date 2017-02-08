@@ -12,11 +12,11 @@
     </header>
 
     <!--====== SEARCH/FILTERS ======-->
-    <form name="AddressesSearchForm">
+    <form name="adminAddresses.searchForm" pretty-submit>
         <fieldset class="form-group">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                <input type="search" ng-change="adminAddresses.search()" ng-model-options="{debounce:1000}" placeholder="Search addresses..." ng-model="adminAddresses.parameters.search" class="form-control">
+                <input type="search" ng-change="adminAddresses.search()" ng-model-options="{debounce:1000}" placeholder="Search admin addresses..." ng-model="adminAddresses.parameters.search" class="form-control">
                 <span ng-if="adminAddresses.searchResults" class="input-group-btn">
                     <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="adminAddresses.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
                 </span>
@@ -24,37 +24,30 @@
         </fieldset>
     </form>
 
-    <!--Sort may not be needed now that tables are using .table-responsive-->
-    <!--<div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
-        <label>Sort By</label>
-        <div ng-class="{'input-group':adminAddresses.sortSelection}">
-            <select placeholder="Sort" class="form-control" ng-model="adminAddresses.sortSelection"
-                    ng-change="adminAddresses.updateSort()">
-                <option value="">None</option>
-                <option value="ID">ID</option>
-                <option value="AddressName">Name</option>
-                <option value="Street1">Address</option>
-            </select>
-            <div ng-if="adminAddresses.sortSelection" class="input-group-btn">
-                <button class="btn btn-default" ng-click="adminAddresses.reverseSort()">
-                    <i class="fa fa-sort"></i>
-                </button>
-            </div>
-        </div>
-    </div>-->
-
     <!--====== LIST ======-->
     <div cg-busy="adminAddresses.searchLoading">
         <div class="no-matches" ng-if="!adminAddresses.list.Items.length">
             <b>No matches found.</b>
         </div>
         <div ng-if="adminAddresses.list.Items.length">
-<!--            <b class="pull-right">{{(application.$ocMedia('min-width:768px') ? adminAddresses.list.Meta.ItemRange[0] : '1') + ' - ' +
-                adminAddresses.list.Meta.ItemRange[1] + ' of ' + adminAddresses.list.Meta.TotalCount + ' results'}}</b>-->
+            <div class="row">
+                <div class="col-xs-6">
+                    <button ng-if="adminAddresses.selectedCount" class="btn btn-danger btn-xs" ng-click="adminAddresses.deleteSelected()">
+                        <i class="fa fa-trash"></i> Delete {{adminAddresses.selectedCount == 1 ? "Address" : (adminAddresses.selectedCount + " Addresses")}}
+                    </button>
+                </div>
+                <div class="col-xs-6">
+                    <p class="text-right">{{(application.$ocMedia('min-width:768px') ? adminAddresses.list.Meta.ItemRange[0] : '1') + ' - ' +
+                        adminAddresses.list.Meta.ItemRange[1] + ' of ' + adminAddresses.list.Meta.TotalCount + ' results'}}</p>
+                </div>
+            </div>
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-striped table-bordered l-adminaddress-table">
                     <colgroup>
-                        <col style="width:20%;">
+                        <col>
+                        <col>
+                        <col>
+                        <col>
                     </colgroup>
                     <thead>
                     <tr>
@@ -73,37 +66,36 @@
                             <i class="fa fa-caret-down" ng-show="adminAddresses.parameters.sortBy == 'Street1'"></i>
                             <i class="fa fa-caret-up" ng-show="adminAddresses.parameters.sortBy == '!Street1'"></i>
                         </th>
-                        <th colspan="2">
-                            Phone
-                        </th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="adminAddress in adminAddresses.list.Items">
-                        <td><a href="" ng-click="adminAddresses.editAddress(this)">{{adminAddress.ID}}</a></td>
+                        <td>{{adminAddress.ID}}</td>
                         <td>
-                            {{adminAddress.AddressName}}
-                            <em class="text-muted" ng-if="!adminAddress.AddressName">None</em>
+                            <a href="" ng-click="adminAddresses.editAddress(this)">{{adminAddress.AddressName}}</a>
                         </td>
                         <td>{{adminAddress | address}} <br ng-if="application.$ocMedia('max-width:767px')"> {{adminAddress.City + ', ' + adminAddress.State + ' ' +
                             adminAddress.Zip}}
                         </td>
                         <td>
-                            {{adminAddress.Phone}}
-                            <em class="text-muted" ng-if="!adminAddress.Phone">None</em>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-default btn-block btn-xs" ng-click="adminAddresses.editAddress(this)">Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="adminAddresses.deleteAddress(this)">
+                                <i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span>
+                            </button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && adminAddresses.list.Meta.TotalPages > 1">
-                <uib-pagination boundary-links="adminAddresses.list.Meta.TotalPages > 5" max-size="5"
-                                total-items="adminAddresses.list.Meta.TotalCount" items-per-page="adminAddresses.list.Meta.PageSize"
-                                ng-model="adminAddresses.list.Meta.Page" ng-change="adminAddresses.pageChanged()"></uib-pagination>
-            </div>
+            <uib-pagination class="pagination-sm pull-right"
+                            ng-if="application.$ocMedia('min-width:768px') && adminAddresses.list.Meta.TotalPages > 1"
+                            total-items="adminAddresses.list.Meta.TotalCount"
+                            items-per-page="adminAddresses.list.Meta.PageSize"
+                            max-size="5"
+                            boundary-links="adminAddresses.list.Meta.TotalPages > 5"
+                            ng-model="adminAddresses.list.Meta.Page"
+                            ng-change="adminAddresses.pageChanged()">
+            </uib-pagination>
             <button type="button"
                     ng-if="application.$ocMedia('max-width:767px')"
                     class="btn btn-default btn-block btn-lg"

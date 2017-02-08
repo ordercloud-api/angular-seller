@@ -90,7 +90,7 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, clienti
     }
 }
 
-function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, LoginService, buyerid) {
+function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, LoginService) {
     var vm = this;
     vm.credentials = {
         Username: null,
@@ -107,7 +107,6 @@ function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, Lo
         OrderCloud.Auth.GetToken(vm.credentials)
             .then(function(data) {
                 vm.rememberStatus ? OrderCloud.Refresh.SetToken(data['refresh_token']) : angular.noop();
-                OrderCloud.BuyerID.Set(buyerid);
                 OrderCloud.Auth.SetToken(data['access_token']);
                 $state.go('home');
             })

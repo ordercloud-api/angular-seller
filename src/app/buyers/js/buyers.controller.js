@@ -1,15 +1,11 @@
 angular.module('orderCloud')
     .controller('BuyersCtrl', BuyersController);
 
-function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderCloudParameters, Parameters, BuyerList) {
+function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderCloud, OrderCloudParameters, Parameters, BuyerList) {
     var vm = this;
     vm.list = BuyerList;
     vm.parameters = Parameters;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
-
-    //Check if filters are applied
-    vm.filtersApplied = vm.parameters.filters || ($ocMedia('max-width:767px') && vm.sortSelection); //Sort by is a filter on mobile devices
-    vm.showFilters = vm.filtersApplied;
 
     //Check if search was used
     vm.searchResults = Parameters.search && Parameters.search.length > 0;
@@ -36,13 +32,6 @@ function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderC
         vm.filter(true);
     };
 
-    //Clear relevant filters, reload the state & reset the page
-    vm.clearFilters = function() {
-        vm.parameters.filters = null;
-        $ocMedia('max-width:767px') ? vm.parameters.sortBy = null : angular.noop(); //Clear out sort by on mobile devices
-        vm.filter(true);
-    };
-
     //Conditionally set, reverse, remove the sortBy parameter & reload the state
     vm.updateSort = function(value) {
         value ? angular.noop() : value = vm.sortSelection;
@@ -56,12 +45,6 @@ function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderC
             default:
                 vm.parameters.sortBy = value;
         }
-        vm.filter(false);
-    };
-
-    //Used on mobile devices
-    vm.reverseSort = function() {
-        Parameters.sortBy.indexOf('!') == 0 ? vm.parameters.sortBy = Parameters.sortBy.split('!')[1] : vm.parameters.sortBy = '!' + Parameters.sortBy;
         vm.filter(false);
     };
 
@@ -84,6 +67,19 @@ function BuyersController($state, $ocMedia, toastr, ocBuyers, OrderCloud, OrderC
             .then(function(data) {
                 toastr.success(data.Name + ' was created.', 'Success!');
                 $state.go('buyer.settings', {buyerid: data.ID});
+            })
+    };
+
+    vm.deleteBuyer = function(scope) {
+        ocBuyers.Delete(scope.buyer)
+            .then(function() {
+                vm.list.Items.splice(scope.$index, 1);
+                vm.list.Meta.TotalCount--;
+                vm.list.Meta.ItemRange[1]--;
+                toastr.success(scope.buyer.Name + ' was deleted.', 'Success!');
+            })
+            .catch(function(ex) {
+                $exceptionHandler(ex);
             })
     }
 }

@@ -1,5 +1,6 @@
 [ui-sref],
-[ng-click]{
+[ng-click],
+[uib-dropdown-toggle]{
   cursor: pointer;
 }
 
@@ -18,8 +19,17 @@ textarea {
   }
 }
 
+.pagination {
+  margin-top:0;
+}
+
 .container-smooth {
   margin-left:0;
+}
+
+.label[ng-repeat] {
+  margin-right:3px;
+  display:inline-block;
 }
 
 .table {
@@ -27,17 +37,21 @@ textarea {
     &[ng-click] {
       color:@link-color; //show sortable th as a link
     }
+    .checkbox {
+      margin:0;
+    }
   }
   > tbody > tr > td {
     vertical-align: middle;
   }
 }
 
-li {
-  &,
-  a {
-    > i:not(.fa-caret-down) {
-      width:20px;
-    }
+li,
+li a,
+.list-group-item {
+  > i:not(.fa-caret-down) {
+    width:1em;
+    text-align:center;
+    margin-right:3px;
   }
 }

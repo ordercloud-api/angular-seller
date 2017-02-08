@@ -9,7 +9,7 @@ function AdminAddressesConfig($stateProvider){
             templateUrl: 'adminAddresses/templates/adminAddresses.html',
             controller: 'AdminAddressesCtrl',
             controllerAs: 'adminAddresses',
-            url: '/addresses?search&page&pageSize&searchOn&sortBy&filters',
+            url: '/admin-addresses?search&page&pageSize&searchOn&sortBy&filters',
             data: {
                 componentName: 'Admin Addresses'
             },
@@ -18,7 +18,7 @@ function AdminAddressesConfig($stateProvider){
                     return OrderCloudParameters.Get($stateParams);
                 },
                 AddressList: function(OrderCloud, Parameters) {
-                    return OrderCloud.AdminAddresses.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.AdminAddresses.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
                 }
             }
         })

@@ -9,6 +9,7 @@
     margin-top:0;
   }
   &__title {
+    transition:font-size 200ms ease-in-out;
     font-size:@font-size-h4;
   }
   &-xs { //modifier to unstack the page-header on screens < @screen-xs-max
@@ -26,8 +27,8 @@
     }
   }
   @media(min-width:@screen-sm-min) {
+    align-items:center;
     flex-direction:row;
-    align-items:flex-end;
     > :not(:last-child) {
       margin-right:@grid-gutter-width
     }
