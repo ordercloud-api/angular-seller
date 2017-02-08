@@ -62,17 +62,14 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered l-buyer-table">
                     <colgroup>
                         <col>
-                        <col style="width:20%">
-                        <col style="width:80%">
+                        <col>
+                        <col>
                     </colgroup>
                     <thead>
                     <tr>
-                        <th class="text-center">
-                            <input type="checkbox" ng-model="buyers.allItemsSelected" ng-change="buyers.selectAllItems()" />
-                        </th>
                         <th>
                             <!-- Commented out until API supports sorting for buyers -->
                             <!-- <a href="#" role="button" ng-click="buyers.updateSort('ID')"> -->
@@ -89,23 +86,21 @@
                             <i class="fa fa-caret-up" ng-show="buyers.parameters.sortBy == '!Name'"></i>
                             <!-- </a> -->
                         </th>
-                        <th colspan="2">
+                        <th>
                             Active
                         </th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="buyer in buyers.list.Items">
-                        <td class="text-center">
-                            <input type="checkbox" ng-model="buyer.selected" ng-change="buyers.selectItem(this)"/>
-                        </td>
-                        <td><a href="" ui-sref="buyer.settings({buyerid:buyer.ID})">{{buyer.ID}}</a></td>
-                        <td>{{buyer.Name}}</td>
+                        <td>{{buyer.ID}}</td>
+                        <td><a href="" ui-sref="buyer.settings({buyerid:buyer.ID})">{{buyer.Name}}</a></td>
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':buyer.Active}"></i>
                         </td>
                         <td>
-                            <button ui-sref="buyer.settings({buyerid:buyer.ID})" class="btn btn-default btn-xs btn-block">View Buyer</button>
+                            <button class="btn btn-danger btn-xs" ng-click="buyers.deleteBuyer(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                         </td>
                     </tr>
                     </tbody>

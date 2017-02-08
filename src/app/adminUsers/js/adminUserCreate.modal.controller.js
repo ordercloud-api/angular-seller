@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUserCreateModalCtrl', AdminUserCreateModalController)
 ;
 
-function AdminUserCreateModalController($exceptionHandler, $uibModalInstance, $state, toastr, OrderCloud) {
+function AdminUserCreateModalController($exceptionHandler, $uibModalInstance, OrderCloud) {
     var vm = this;
     vm.user = {Email: '', Password: '', Active: false};
 

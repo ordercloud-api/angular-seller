@@ -2,15 +2,11 @@ angular.module('orderCloud')
     .controller('AdminAddressesCtrl', AdminAddressesController)
 ;
 
-function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toastr, ocConfirm, OrderCloud, OrderCloudParameters, AddressList, Parameters){
+function AdminAddressesController($state, toastr, OrderCloud, ocAdminAddresses, OrderCloudParameters, AddressList, Parameters){
     var vm = this;
     vm.list = AddressList;
     vm.parameters = Parameters;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
-
-    //Check if filters are applied
-    vm.filtersApplied = vm.parameters.filters || vm.parameters.from || vm.parameters.to || ($ocMedia('max-width:767px') && vm.sortSelection); //Sort By is a filter on mobile devices
-    vm.showFilters = vm.filtersApplied;
 
     //Check if search was used
     vm.searchResults = Parameters.search && Parameters.search.length > 0;
@@ -36,15 +32,6 @@ function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toas
         vm.filter(true);
     };
 
-    //Clear relevant filters, reload the state & reset the page
-    vm.clearFilters = function() {
-        vm.parameters.filters = null;
-        vm.parameters.from = null;
-        vm.parameters.to = null;
-        $ocMedia('max-width: 767px') ? vm.parameters.sortBy = null : angular.noop(); //Clear sort by on mobile devices
-        vm.filter(true);
-    };
-
     //Conditionally set, reverse, remove the sortBy parameters & reload the state
     vm.updateSort = function(value) {
         value ? angular.noop() : value = vm.sortSelection;
@@ -58,12 +45,6 @@ function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toas
             default:
                 vm.parameters.sortBy = value;
         }
-        vm.filter(false);
-    };
-
-    //Used on mobile devices
-    vm.reverseSort = function() {
-        Parameters.sortBy.indexOf('!') == 0 ? vm.parameters.sortBy = Parameters.sortBy.split('!')[1] : vm.parameters.sortBy = '!' + Parameters.sortBy;
         vm.filter(false);
     };
 
@@ -81,90 +62,31 @@ function AdminAddressesController($q, $state, $filter, $uibModal, $ocMedia, toas
             });
     };
 
+    vm.createAddress = function() {
+        ocAdminAddresses.Create()
+            .then(function(newAddress) {
+                vm.list.Items.push(newAddress);
+                vm.list.Meta.TotalCount++;
+                vm.list.Meta.ItemRange[1]++;
+                toastr.success(newAddress.AddressName + ' was created.', 'Success!');
+            });
+    };
+
     vm.editAddress = function(scope) {
-        $uibModal.open({
-            templateUrl: 'adminAddresses/templates/adminAddressEdit.modal.html',
-            controller: 'AdminAddressEditModalCtrl',
-            controllerAs: 'adminAddressEditModal',
-            scope: scope,
-            bindToController: true
-        }).result
+        ocAdminAddresses.Edit(scope.adminAddress)
             .then(function(updatedAddress) {
                 vm.list.Items[scope.$index] = updatedAddress;
                 toastr.success(updatedAddress.AddressName + ' was updated.', 'Success!');
-            })
+            });
     };
 
-    vm.createAddress = function() {
-        $uibModal.open({
-            templateUrl: 'adminAddresses/templates/adminAddressCreate.modal.html',
-            controller: 'AdminAddressCreateModalCtrl',
-            controllerAs: 'adminAddressCreateModal'
-        }).result
-            .then(function(newAddress) {
-                if (newAddress) vm.list.Items.push(newAddress);
-                toastr.success(newAddress.AddressName + ' was created.', 'Success!');
-            })
-    };
-
-    vm.allItemsSelected = false;
-    vm.selectAllItems = function() {
-        _.map(vm.list.Items, function(a) { a.selected = vm.allItemsSelected });
-        vm.selectedCount = vm.allItemsSelected ? vm.list.Items.length : 0;
-    };
-
-    vm.selectItem = function(scope) {
-        if (!scope.adminAddress.selected) vm.allItemsSelected = false;
-        vm.selectedCount = $filter('filter')(vm.list.Items, {'selected':true}).length;
-    };
-
-    vm.deleteSelected = function() {
-        ocConfirm.Confirm({
-            'message': 'Are you sure you want to delete the selected admin addresses? <br> <b>This action cannot be undone.</b>',
-            'confirmText': 'Delete ' + vm.selectedCount + (vm.selectedCount == 1 ? ' admin address' : ' admin addresses')
-        })
+    vm.deleteAddress = function(scope) {
+        ocAdminAddresses.Delete(scope.adminAddress)
             .then(function() {
-                return run();
-            });
-
-        function run() {
-            var df = $q.defer(),
-                successCount = 0,
-                deleteQueue = [];
-
-            angular.forEach(vm.list.Items, function(item) {
-                if (item.selected) {
-                    deleteQueue.push((function() {
-                        var d = $q.defer();
-
-                        OrderCloud.AdminAddresses.Delete(item.ID)
-                            .then(function() {
-                                successCount++;
-                                vm.list.Items = _.without(vm.list.Items, item);
-                                vm.list.Meta.TotalCount--;
-                                vm.list.Meta.ItemRange[1]--;
-                                d.resolve();
-                            })
-                            .catch(function() {
-                                d.resolve();
-                            });
-
-                        return d.promise;
-                    })())
-                }
-            });
-
-            vm.searchLoading = $q.all(deleteQueue)
-                .then(function() {
-                    toastr.success(successCount + (successCount == 1 ? ' admin address was deleted' : ' admin addresses were deleted'), 'Success!');
-                    vm.selectedCount = 0;
-                    vm.allItemsSelected = false;
-                    if (!vm.list.Items.length) vm.filter(true);
-                    df.resolve();
-                });
-
-            return df.promise;
-        }
+                vm.list.Items.splice(scope.$index, 1);
+                vm.list.Meta.TotalCount--;
+                vm.list.Meta.ItemRange[1]--;
+                toastr.success(scope.adminAddress.AddressName + ' was deleted.', 'Success!');
+            })
     }
-
 }

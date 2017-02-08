@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AddressesCtrl', AddressesController)
 ;
 
-function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, toastr, OrderCloud, OrderCloudParameters, ocConfirm, ocAddresses, CurrentAssignments, AddressList, Parameters){
+function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, toastr, OrderCloud, OrderCloudParameters, ocAddresses, CurrentAssignments, AddressList, Parameters){
     var vm = this;
     vm.list = AddressList;
     vm.parameters = Parameters;
@@ -88,7 +88,6 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
     vm.editAddress = function(scope) {
         ocAddresses.Edit(scope.address, $stateParams.buyerid)
             .then(function(updatedAddress) {
-
                 updatedAddress.shipping = vm.list.Items[scope.$index].shipping;
                 updatedAddress.billing = vm.list.Items[scope.$index].billing;
                 updatedAddress.userGroupID = vm.list.Items[scope.$index].userGroupID;
@@ -105,20 +104,14 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
     };
 
     vm.deleteAddress = function(scope) {
-        ocConfirm.Confirm({message:'Are you sure you want to delete this address? <br> <b>This action cannot be undone.</b>', confirmText: 'Yes, delete this address', cancelText:'Cancel'})
+        ocAddresses.Delete(scope.address, $stateParams.buyerid)
             .then(function() {
-                vm.loading = OrderCloud.Addresses.Delete(scope.address.ID, $stateParams.buyerid)
-                    .then(function() {
-                        toastr.success(scope.address.AddressName + ' was deleted.', 'Success!');
-                        vm.list.Items.splice(scope.$index, 1);
-                        vm.list.Meta.TotalCount--;
-                        vm.list.Meta.ItemRange[1]--;
-                        vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
-                    })
-                    .catch(function(ex) {
-                        $exceptionHandler(ex);
-                    })
-            })
+                vm.list.Items.splice(scope.$index, 1);
+                vm.list.Meta.TotalCount--;
+                vm.list.Meta.ItemRange[1]--;
+                toastr.success(scope.address.AddressName + ' was deleted.', 'Success!');
+                vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
+            });
     };
 
     vm.updateAssignments = function() {

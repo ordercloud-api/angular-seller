@@ -2,7 +2,7 @@
     <a class="navmenu-brand hidden-xs hidden-sm" href="" ui-sref="home">{{application.name}}</a>
     <ul class="nav navmenu-nav">
         <li ui-sref-active="active"><a ui-sref="adminUsers">Admin Users</a></li>
-        <li ui-sref-active="active"><a ui-sref="adminUserGroups">Admin User Groups</a></li>
+        <li ng-class="{active: application.$state.is('adminUserGroups') || application.$state.includes('adminUserGroup')}"><a ui-sref="adminUserGroups">Admin User Groups</a></li>
         <li ui-sref-active="active"><a ui-sref="adminAddresses">Admin Addresses</a></li>
         <li ui-sref-active="active"><a ui-sref="products">All Products</a></li>
         <li ui-sref-active="active"><a ui-sref="orders">All Orders</a></li>

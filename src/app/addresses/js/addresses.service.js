@@ -2,10 +2,11 @@ angular.module('orderCloud')
     .factory('ocAddresses', OrderCloudAddresses)
 ;
 
-function OrderCloudAddresses($q, $uibModal, OrderCloud) {
+function OrderCloudAddresses($q, $uibModal, ocConfirm, OrderCloud) {
     var service = {
         Create: _create,
         Edit: _edit,
+        Delete: _delete,
         Assignments: {
             Get: _getAssignments,
             Map: _mapAssignments,
@@ -42,6 +43,13 @@ function OrderCloudAddresses($q, $uibModal, OrderCloud) {
                 }
             }
         }).result
+    }
+
+    function _delete(address, buyerid) {
+        return ocConfirm.Confirm({message:'Are you sure you want to delete this address? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete this address', cancelText:'Cancel'})
+            .then(function() {
+                return OrderCloud.Addresses.Delete(address.ID, buyerid)
+            })
     }
 
     function _getAssignments(level, buyerid, usergroupid) {

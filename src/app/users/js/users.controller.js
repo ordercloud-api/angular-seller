@@ -19,7 +19,7 @@ function UsersController($exceptionHandler, $state, $stateParams, toastr, $ocMed
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
         $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.Users.List(vm.parameters.userGroupID, vm.parameters.search, 1, vm.parameters.pageSize || 12, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
+        vm.searchLoading = OrderCloud.Users.List(null, vm.parameters.search, 1, vm.parameters.pageSize || 12, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
                 vm.list = data;
                 vm.searchResults = vm.parameters.search.length > 0;
@@ -64,7 +64,7 @@ function UsersController($exceptionHandler, $state, $stateParams, toastr, $ocMed
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        return OrderCloud.Users.List(null, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -97,8 +97,5 @@ function UsersController($exceptionHandler, $state, $stateParams, toastr, $ocMed
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
             })
-            .catch(function(ex) {
-                $exceptionHandler(ex);
-            });
     };
 }

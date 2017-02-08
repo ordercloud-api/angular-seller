@@ -9,7 +9,6 @@ function BuyerCreateModalController($uibModalInstance, $exceptionHandler, OrderC
     vm.updateValidity = updateValidity;
 
     function updateValidity() {
-        console.log(vm.form);
         if (vm.form.ID.$error['Buyer.UnavailableID']) vm.form.ID.$setValidity('Buyer.UnavailableID', true);
     }
 

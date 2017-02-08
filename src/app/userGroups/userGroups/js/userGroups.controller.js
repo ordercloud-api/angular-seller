@@ -2,15 +2,11 @@ angular.module('orderCloud')
     .controller('UserGroupsCtrl', UserGroupsController)
 ;
 
-function UserGroupsController($q, $filter, $state, $stateParams, $uibModal, toastr, $ocMedia, ocConfirm, OrderCloud, OrderCloudParameters, UserGroupList, Parameters) {
+function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderCloud, OrderCloudParameters, UserGroupList, Parameters) {
     var vm = this;
     vm.list = UserGroupList;
     vm.parameters = Parameters;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
-
-    //Check if filters are applied
-    vm.filtersApplied = vm.parameters.filters || ($ocMedia('max-width:767px') && vm.sortSelection); //Sort by is a filter on mobile devices
-    vm.showFilters = vm.filtersApplied;
 
     //Check if search was used
     vm.searchResults = Parameters.search && Parameters.search.length > 0;
@@ -36,13 +32,6 @@ function UserGroupsController($q, $filter, $state, $stateParams, $uibModal, toas
         vm.filter(true);
     };
 
-    //Clear relevant filters, reload the state & reset the page
-    vm.clearFilters = function() {
-        vm.parameters.filters = null;
-        $ocMedia('max-width:767px') ? vm.parameters.sortBy = null : angular.noop(); //Clear out sort by on mobile devices
-        vm.filter(true);
-    };
-
     //Conditionally set, reverse, remove the sortBy parameter & reload the state
     vm.updateSort = function(value) {
         value ? angular.noop() : value = vm.sortSelection;
@@ -56,12 +45,6 @@ function UserGroupsController($q, $filter, $state, $stateParams, $uibModal, toas
             default:
                 vm.parameters.sortBy = value;
         }
-        vm.filter(false);
-    };
-
-    //Used on mobile devices
-    vm.reverseSort = function() {
-        Parameters.sortBy.indexOf('!') == 0 ? vm.parameters.sortBy = Parameters.sortBy.split('!')[1] : vm.parameters.sortBy = '!' + Parameters.sortBy;
         vm.filter(false);
     };
 
@@ -80,74 +63,20 @@ function UserGroupsController($q, $filter, $state, $stateParams, $uibModal, toas
     };
 
     vm.createGroup = function() {
-        $uibModal.open({
-            templateUrl: 'userGroups/userGroups/templates/userGroupCreate.modal.html',
-            controller: 'UserGroupCreateModalCtrl',
-            controllerAs: 'userGroupCreateModal'
-        }).result
-            .then(function(data) {
-                toastr.success(data.Name + ' was created.', 'Success!');
-                $state.go('userGroup.detail', {usergroupid:data.ID});
+        ocUserGroups.Create($stateParams.buyerid)
+            .then(function(newUserGroup) {
+                toastr.success(newUserGroup.Name + ' was created.', 'Success!');
+                $state.go('userGroup.detail', {usergroupid:newUserGroup.ID});
             })
     };
 
-    vm.allItemsSelected = false;
-    vm.selectAllItems = function() {
-        _.map(vm.list.Items, function(i) { i.selected = vm.allItemsSelected });
-        vm.selectedCount = vm.allItemsSelected ? vm.list.Items.length : 0;
-    };
-
-    vm.selectItem = function(scope) {
-        if (!scope.userGroup.selected) vm.allItemsSelected = false;
-        vm.selectedCount = $filter('filter')(vm.list.Items, {'selected':true}).length;
-    };
-
-    vm.deleteSelected = function() {
-        ocConfirm.Confirm({
-                'message': 'Are you sure you want to delete the selected user groups and all their assignments? <br> <b>This action cannot be undone.</b>',
-                'confirmText': 'Delete ' + vm.selectedCount + (vm.selectedCount == 1 ? ' user group' : ' user groups')
-            })
+    vm.deleteGroup = function(scope) {
+        ocUserGroups.Delete(scope.userGroup, $stateParams.buyerid)
             .then(function() {
-                return run();
-            });
-
-        function run() {
-            var df = $q.defer(),
-                successCount = 0,
-                deleteQueue = [];
-
-            angular.forEach(vm.list.Items, function(item) {
-                if (item.selected) {
-                    deleteQueue.push((function() {
-                        var d = $q.defer();
-
-                        OrderCloud.UserGroups.Delete(item.ID, $stateParams.buyerid)
-                            .then(function() {
-                                successCount++;
-                                vm.list.Items = _.without(vm.list.Items, item);
-                                vm.list.Meta.TotalCount--;
-                                vm.list.Meta.ItemRange[1]--;
-                                d.resolve();
-                            })
-                            .catch(function() {
-                                d.resolve();
-                            });
-
-                        return d.promise;
-                    })())
-                }
-            });
-
-            vm.searchLoading = $q.all(deleteQueue)
-                .then(function() {
-                    toastr.success(successCount + (successCount == 1 ? ' user group was deleted' : ' user groups were deleted'), 'Success!');
-                    vm.selectedCount = 0;
-                    vm.allItemsSelected = false;
-                    if (!vm.list.Items.length) vm.filter(true);
-                    df.resolve();
-                });
-
-            return df.promise;
-        }
-    }
+                toastr.success(scope.userGroup.Name + ' was deleted.', 'Success!');
+                vm.list.Items.splice(scope.$index, 1);
+                vm.list.Meta.TotalCount--;
+                vm.list.Meta.ItemRange[1]--;
+            })
+    };
 }

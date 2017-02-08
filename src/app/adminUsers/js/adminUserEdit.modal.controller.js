@@ -2,13 +2,11 @@ angular.module('orderCloud')
     .controller('AdminUserEditModalCtrl', AdminUserEditModalController)
 ;
 
-
-function AdminUserEditModalController($exceptionHandler, $uibModalInstance, OrderCloud) {
+function AdminUserEditModalController($exceptionHandler, $uibModalInstance, OrderCloud, SelectedUser) {
     var vm = this;
-
-    vm.username = angular.copy(vm.user.Username);
-    vm.fullName = vm.user.FirstName ? (vm.user.FirstName + (vm.user.LastName ? ' ' + vm.user.LastName : '')) : (vm.user.LastName ? vm.user.LastName : null);
-    vm.userCopy = angular.copy(vm.user);
+    vm.user = angular.copy(SelectedUser);
+    vm.username = SelectedUser.Username;
+    vm.fullName = SelectedUser.FirstName ? (SelectedUser.FirstName + (SelectedUser.LastName ? ' ' + SelectedUser.LastName : '')) : (SelectedUser.LastName ? SelectedUser.LastName : null);
 
     if (vm.user.TermsAccepted != null) {
         vm.TermsAccepted = true;
@@ -18,7 +16,7 @@ function AdminUserEditModalController($exceptionHandler, $uibModalInstance, Orde
         var today = new Date();
         vm.user.TermsAccepted = today;
         vm.loading = {backdrop:false};
-        vm.loading.promise = OrderCloud.AdminUsers.Update(vm.user.ID, vm.userCopy)
+        vm.loading.promise = OrderCloud.AdminUsers.Update(vm.user.ID, vm.user)
             .then(function(data) {
                 $uibModalInstance.close(data);
             })
