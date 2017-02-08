@@ -30,7 +30,7 @@ function PromotionsConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 PromotionList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Promotions.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.Promotions.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
                 }
             }
         })

@@ -16,7 +16,7 @@ function ProductsConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 ProductList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Products.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.Products.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
                 }
             }
         })

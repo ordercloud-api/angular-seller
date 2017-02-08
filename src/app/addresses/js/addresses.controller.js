@@ -21,7 +21,7 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
         $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.Addresses.List(vm.parameters.search, 1, vm.parameters.pageSize || 12)
+        vm.searchLoading = OrderCloud.Addresses.List(vm.parameters.search, 1, vm.parameters.pageSize)
             .then(function(data) {
                 vm.changedAssignments = [];
                 vm.list = ocAddresses.Assignments.Map(CurrentAssignments, data);

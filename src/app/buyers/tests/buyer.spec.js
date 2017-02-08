@@ -32,7 +32,7 @@ describe('Component: Buyers', function() {
         }));
         it('should resolve BuyersList', inject(function($injector, Parameters) {
             $injector.invoke(state.resolve.BuyerList);
-            expect(oc.Buyers.List).toHaveBeenCalledWith(Parameters.search, Parameters.page, Parameters.pageSize || 12);
+            expect(oc.Buyers.List).toHaveBeenCalledWith(Parameters.search, Parameters.page, Parameters.pageSize);
         }));
     });
 

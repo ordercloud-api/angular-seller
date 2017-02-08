@@ -15,7 +15,7 @@ function AdminUserGroupsConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 AdminUserGroupList: function(OrderCloud, Parameters) {
-                    return OrderCloud.AdminUserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.AdminUserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
                 }
             }
         })
