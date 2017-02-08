@@ -6,13 +6,13 @@ function OrderConfig($stateProvider) {
     $stateProvider
         .state('order', {
             parent: 'base',
-            url: '/order/:orderid',
+            url: '/order/:buyerid/:orderid',
             templateUrl: 'orderManagement/order/templates/order.html',
             controller: 'OrderCtrl',
             controllerAs: 'order',
             resolve: {
                 SelectedOrder: function($stateParams, OrderCloud) {
-                    return OrderCloud.Orders.Get($stateParams.orderid);
+                    return OrderCloud.Orders.Get($stateParams.orderid, $stateParams.buyerid);
                 }
             }
         })

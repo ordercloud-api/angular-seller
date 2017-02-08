@@ -6,7 +6,7 @@ function OrdersConfig($stateProvider) {
     $stateProvider
         .state('orders', {
             parent: 'base',
-            url: '/orders?buyerID&from&to&search&page&pageSize&searchOn&sortBy&filters',
+            url: '/orders?buyerID&fromDate&toDate&search&page&pageSize&searchOn&sortBy&filters',
             templateUrl: 'orderManagement/orders/templates/orders.html',
             controller: 'OrdersCtrl',
             controllerAs: 'orders',
@@ -14,8 +14,11 @@ function OrdersConfig($stateProvider) {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
                 },
-                OrderList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Orders.ListIncoming(Parameters.from, Parameters.to, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerID);
+                OrderList: function(ocOrdersService, OrderCloud, Parameters) {
+                    return ocOrdersService.List(Parameters);
+                },
+                BuyerCompanies: function(OrderCloud) {
+                    return OrderCloud.Buyers.List(null, 1, 100);
                 }
             }
         })

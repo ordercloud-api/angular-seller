@@ -2,11 +2,23 @@ angular.module('orderCloud')
     .controller('OrdersCtrl', OrdersController)
 ;
 
-function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, Parameters, OrderList) {
+function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, ocOrdersService, Parameters, OrderList, BuyerCompanies) {
     var vm = this;
+    if (Parameters.fromDate) Parameters.fromDate = new Date(Parameters.fromDate);
+    if (Parameters.toDate) Parameters.toDate = new Date(Parameters.toDate);
+    delete Parameters.filters.DateSubmitted;
     vm.parameters = Parameters;
     vm.list = OrderList;
+    vm.buyerCompanies = BuyerCompanies;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
+
+    vm.orderStatuses = [
+        {Value: 'Open', Name: 'Open'},
+        {Value: 'AwaitingApproval', Name: 'Awaiting Approval'},
+        {Value: 'Completed', Name: 'Completed'},
+        {Value: 'Declined', Name: 'Declined'},
+        {Value: 'Open', Name: 'Open'}
+    ];
 
     //Check if filters are applied
     vm.filtersApplied = vm.parameters.filters || ($ocMedia('max-width:767px') && vm.sortSelection); //Sort by is a filter on mobile devices
@@ -20,10 +32,15 @@ function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, Pa
         $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
     };
 
+    vm.toggleFilters = function() {
+        vm.showFilters = !vm.showFilters;
+    };
+
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
         $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.Orders.ListIncoming(Parameters.from, Parameters.to, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerID)
+        vm.parameters.pageSize = Parameters.pageSize || 12;
+        vm.searchLoading = ocOrdersService.List(vm.parameters)
             .then(function(data) {
                 vm.list = data;
                 vm.searchResults = vm.parameters.search.length > 0;
@@ -73,11 +90,19 @@ function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, Pa
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        //return OrderCloud.Buyers.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
-        return OrderCloud.Orders.ListIncoming(Parameters.from, Parameters.to, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerID)
+        vm.parameters.page = vm.list.Meta.Page + 1;
+        vm.parameters.pageSize = vm.list.Meta.PageSize;
+        return ocOrdersService.List(vm.parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
+            });
+    };
+
+    vm.searchBuyerCompanies = function(search) {
+        return OrderCloud.Buyers.List(search, 1, 100)
+            .then(function(data){
+                vm.buyerCompanies = data;
             });
     };
 }

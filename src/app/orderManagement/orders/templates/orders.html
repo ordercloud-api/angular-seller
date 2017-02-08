@@ -20,16 +20,49 @@
         </fieldset>
     </form>
 
+    <!--====== FILTERS ======-->
+    <form name="OrdersFiltersForm">
+        <div class="row">
+            <div class="col-sm-3 form-group">
+                <label for="Status">Status</label>
+                <select id="Status" class="form-control" ng-model="orders.parameters.filters.status" ng-options="status.Value as status.Name for status in orders.orderStatuses" ng-change="orders.filter(true)">
+                    <option value="">All</option>
+                </select>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="BuyerCompany">Buyer Company</label>
+                <ui-select id="BuyerCompany" ng-model="orders.parameters.filters.FromCompanyID" close-on-select="true" ng-change="orders.filter(true)">
+                    <ui-select-match placeholder="Search buyer companies...">
+                        <span ng-bind-html="$select.selected.Name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="buyer.ID as buyer in (orders.buyerCompanies.Items | filter: $select.search) track by $index" refresh="orders.searchBuyerCompanies($select.search)" refresh-delay="300">
+                        <span ng-bind-html="buyer.Name"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="FromDate">From Date</label>
+                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orders.parameters.fromDate" ng-blur="orders.filter(true)">
+                <input id="FromDate" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orders.parameters.fromDate" uib-datepicker-popup datepicker-options="{maxDate:orders.parameters.toDate}" is-open="fromDate.open" ng-change="orders.filter(true)" ng-click="fromDate.open = !fromDate.open">
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="ToDate">To Date</label>
+                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orders.parameters.toDate" ng-blur="orders.filter(true)">
+                <input id="ToDate" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orders.parameters.toDate" uib-datepicker-popup datepicker-options="{minDate:orders.parameters.fromDate}" is-open="toDate.open" ng-change="orders.filter(true)" ng-click="toDate.open = !toDate.open">
+            </div>
+        </div>
+    </form>
+
     <!--====== LIST ======-->
     <div cg-busy="orders.searchLoading">
         <div class="no-matches" ng-if="!orders.list.Items.length">
             <b>No matches found.</b>
         </div>
         <div ng-if="orders.list.Items.length">
-            <!--<div class="text-right">
-                <b>{{(application.$ocMedia('min-width:768px') ? buyers.list.Meta.ItemRange[0] : '1') + ' - ' +
-                    buyers.list.Meta.ItemRange[1] + ' of ' + buyers.list.Meta.TotalCount + ' results'}}</b>
-            </div>-->
+            <div class="text-right">
+                <p>{{(application.$ocMedia('min-width:768px') ? orders.list.Meta.ItemRange[0] : '1') + ' - ' +
+                    orders.list.Meta.ItemRange[1] + ' of ' + orders.list.Meta.TotalCount + ' results'}}</p>
+            </div>
             <div class="table-responsive">
                 <table class="table table-hover table-bordered">
                     <colgroup>
@@ -53,20 +86,45 @@
                         </th>
                         <th>
                             <a href="#" role="button" ng-click="orders.updateSort('DateSubmitted')">
-                                Date
+                                Received
                                 <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'DateSubmitted'"></i>
                                 <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!DateSubmitted'"></i>
                             </a>
                         </th>
+                        <th>
+                            <a href="#" role="button" ng-click="orders.updateSort('FromCompanyID')">
+                                Buyer Company
+                                <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'FromCompanyID'"></i>
+                                <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!FromCompanyID'"></i>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="#" role="button" ng-click="order.updateSort('FromUserFirstName')">
+                                Submitted By
+                                <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'FromUserFirstName'"></i>
+                                <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!FromUserFirstName'"></i>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="#" role="button" ng-click="orders.updateSort('Subtotal')">
+                                Subtotal
+                                <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'Subtotal'"></i>
+                                <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!Subtotal'"></i>
+                            </a>
+                        </th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="order in orders.list.Items">
-                        <td><a href="" ui-sref="buyer.settings({buyerid:buyer.ID})">{{order.ID}}</a></td>
+                        <td><a href="" ui-sref="order({buyerid: order.FromCompanyID, orderid: order.ID})">{{order.ID}}</a></td>
                         <td>{{order.Status}}</td>
                         <td>{{(order.DateSubmitted || order.DateCreated) | date:'short'}}</td>
+                        <td>{{order.FromCompany.Name}}</td>
+                        <td>{{order.FromUserFirstName + ' ' + order.FromUserLastName}}</td>
+                        <td>{{order.Subtotal | currency}}</td>
                         <td class="actions-cell">
-                            <button ui-sref="order({orderid:order.ID})" class="btn btn-default btn-xs btn-block">View Order</button>
+                            <button ui-sref="order({buyerid: order.FromCompanyID, orderid: order.ID})" class="btn btn-default btn-xs btn-block">View Order</button>
                         </td>
                     </tr>
                     </tbody>

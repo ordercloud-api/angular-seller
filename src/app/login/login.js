@@ -76,7 +76,7 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, clienti
         if (availableRefreshToken) {
             OrderCloud.Refresh.GetToken(availableRefreshToken)
                 .then(function(data) {
-                    OrderCloud.BuyerID.Set(buyerid);
+                    //OrderCloud.BuyerID.Set(buyerid);
                     OrderCloud.Auth.SetToken(data.access_token);
                     $state.go('home');
                 })
