@@ -2,7 +2,22 @@ angular.module('orderCloud')
     .run(AppRun)
 ;
 
-function AppRun(defaultErrorMessageResolver) {
+function AppRun($rootScope, $exceptionHandler, ocStateLoading, defaultstate, defaultErrorMessageResolver) {
+    $rootScope.$on('$stateChangeStart', function(e, toState) {
+        var parent = toState.parent || toState.name.split('.')[0];
+        console.log(parent);
+        ocStateLoading.Start(parent);
+    });
+
+    $rootScope.$on('$stateChangeSuccess', function() {
+        ocStateLoading.End();
+    });
+
+    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+        if (toState.name == defaultstate) event.preventDefault(); //prevent infinite loop when error occurs on default state (otherwise in Routing config)
+        $exceptionHandler(error);
+        ocStateLoading.End();
+    });
 
     //Set Custom Error Messages for angular-auto-validate      --- http://jonsamwell.github.io/angular-auto-validate/ ---
     defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {

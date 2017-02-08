@@ -47,7 +47,7 @@
         </li>
     </ul>
     <br>
-    <div ui-view cg-busy="application.stateLoading.productDetail">
+    <div ui-view cg-busy="application.stateLoading('productDetail')">
         <div class="row">
             <div class="col-sm-8">
                 <form name="productDetail.InfoForm" autocomplete="off" ng-submit="productDetail.updateProduct()" novalidate class="form-horizontal">

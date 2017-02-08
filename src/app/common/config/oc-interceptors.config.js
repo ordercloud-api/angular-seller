@@ -1,14 +1,14 @@
 angular.module('orderCloud')
     .config(function($httpProvider) {
         //HTTP Interceptor for OrderCloud Authentication
-        $httpProvider.interceptors.push(function($q, $rootScope) {
+        $httpProvider.interceptors.push(function($q, $injector) {
             return {
                 'responseError': function(rejection) {
                     if (rejection.config.url.indexOf('ordercloud.io') > -1 && rejection.status == 401) {
-                        $rootScope.$broadcast('OC:AccessInvalidOrExpired'); //Trigger RememberMe || AuthAnonymous in AppCtrl
+                        $injector.get('LoginService').RememberMe();
                     }
                     if (rejection.config.url.indexOf('ordercloud.io') > -1 && rejection.status == 403){
-                        $rootScope.$broadcast('OC:AccessForbidden'); //Trigger warning toastr message for insufficient permissions
+                        $injector.get('toastr').warning('You do not have permission to do this.');
                     }
                     return $q.reject(rejection);
                 }
