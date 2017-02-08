@@ -10,7 +10,7 @@ angular.module('orderCloud')
 function CreditCardsConfig($stateProvider) {
     $stateProvider
         .state('creditCards', {
-            parent: 'base',
+            parent: 'buyer',
             templateUrl: 'creditCards/templates/creditCards.tpl.html',
             controller: 'CreditCardsCtrl',
             controllerAs: 'creditCards',
@@ -21,7 +21,7 @@ function CreditCardsConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 CreditCardList: function(OrderCloud, Parameters) {
-                    return OrderCloud.CreditCards.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy);
+                    return OrderCloud.CreditCards.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
                 }
             }
         })

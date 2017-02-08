@@ -11,7 +11,7 @@ angular.module('orderCloud')
 function SpendingAccountsConfig($stateProvider) {
 	$stateProvider
 		.state('spendingAccounts', {
-			parent: 'base',
+			parent: 'buyer',
 			templateUrl: 'spendingAccounts/templates/spendingAccounts.tpl.html',
 			controller: 'SpendingAccountsCtrl',
 			controllerAs: 'spendingAccounts',
@@ -24,7 +24,7 @@ function SpendingAccountsConfig($stateProvider) {
 				SpendingAccountList: function(OrderCloud, Parameters) {
 					var parameters = angular.copy(Parameters);
 					parameters.filters ? parameters.filters.RedemptionCode = '!*' : parameters.filters = {RedemptionCode: '!*'};
-					return OrderCloud.SpendingAccounts.List(parameters.search, parameters.page, parameters.pageSize, parameters.searchOn, parameters.sortBy, parameters.filters);
+					return OrderCloud.SpendingAccounts.List(parameters.search, parameters.page, parameters.pageSize, parameters.searchOn, parameters.sortBy, parameters.filters, parameters.buyerid);
 				}
 			}
 		})

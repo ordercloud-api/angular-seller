@@ -6,10 +6,10 @@ function UserGroupsConfig($stateProvider) {
     $stateProvider
         .state('userGroups', {
             parent: 'buyer',
+            url: '/user-groups?search&page&pageSize&searchOn&sortBy&filters',
             templateUrl: 'userGroups/userGroups/templates/userGroups.html',
             controller: 'UserGroupsCtrl',
             controllerAs: 'userGroups',
-            url: '/user-groups?search&page&pageSize&searchOn&sortBy&filters',
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);

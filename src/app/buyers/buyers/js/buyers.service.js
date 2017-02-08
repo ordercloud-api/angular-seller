@@ -10,7 +10,7 @@ function BuyersService($uibModal, ocConfirm, OrderCloud) {
 
     function _create() {
         return $uibModal.open({
-            templateUrl: 'buyers/templates/buyerCreate.modal.html',
+            templateUrl: 'buyers/buyers/templates/buyerCreate.modal.html',
             controller: 'BuyerCreateModalCtrl',
             controllerAs: 'buyerCreateModal',
             bindToController: true

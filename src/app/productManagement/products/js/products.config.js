@@ -9,7 +9,7 @@ function ProductsConfig($stateProvider) {
             templateUrl: 'productManagement/products/templates/products.html',
             controller: 'ProductsCtrl',
             controllerAs: 'products',
-            url: '/products?from&to&search&page&pageSize&searchOn&sortBy&filters',
+            url: '/products?search&page&pageSize&searchOn&sortBy&filters',
             data: {componentName: 'Products'},
             resolve: {
                 Parameters: function($stateParams, OrderCloudParameters) {
