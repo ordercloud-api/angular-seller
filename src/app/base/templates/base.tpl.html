@@ -4,8 +4,8 @@
         <li ui-sref-active="active"><a ui-sref="adminUsers">Admin Users</a></li>
         <li ng-class="{active: application.$state.is('adminUserGroups') || application.$state.includes('adminUserGroup')}"><a ui-sref="adminUserGroups">Admin User Groups</a></li>
         <li ui-sref-active="active"><a ui-sref="adminAddresses">Admin Addresses</a></li>
-        <li ui-sref-active="active"><a ui-sref="products">All Products</a></li>
-        <li ui-sref-active="active"><a ui-sref="orders">All Orders</a></li>
+        <li ui-sref-active="active"><a ui-sref="products">Product Management</a></li>
+        <li ui-sref-active="active"><a ui-sref="orders">Order Management</a></li>
         <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}"><a ui-sref="buyers">Buyer Organizations</a></li>
         <li class="divider"></li>
         <li ui-sref-active="active"><a ui-sref="account">Account</a></li>
@@ -24,4 +24,4 @@
         </div>
     </div>
 </nav>
-<main ui-view class="container container-smooth" cg-busy="application.stateLoading"></main>
+<main ui-view class="container container-smooth" cg-busy="application.stateLoading.base"></main>

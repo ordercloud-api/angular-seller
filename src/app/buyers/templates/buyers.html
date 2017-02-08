@@ -26,24 +26,6 @@
         </fieldset>
     </form>
 
-    <!-- Commented out until API supports sorting for buyers -->
-    <!--<div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
-        <label>Sort By</label>
-        <div ng-class="{'input-group':buyers.sortSelection}">
-            <select placeholder="Sort" class="form-control" ng-model="buyers.sortSelection" ng-change="buyers.updateSort()">
-                <option value="">None</option>
-                <option value="ID">ID</option>
-                <option value="Name">Name</option>
-            </select>
-            <div ng-if="buyers.sortSelection" class="input-group-btn">
-                <button class="btn btn-default" ng-click="buyers.reverseSort()">
-                    <i class="fa fa-sort"></i>
-                </button>
-            </div>
-
-        </div>
-    </div>-->
-
     <!--====== LIST ======-->
     <div cg-busy="buyers.searchLoading">
         <div class="no-matches" ng-if="!buyers.list.Items.length">
@@ -62,7 +44,7 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-bordered l-buyer-table">
+                <table class="table table-striped table-bordered l-buyer-table">
                     <colgroup>
                         <col>
                         <col>

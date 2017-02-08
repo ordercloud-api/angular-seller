@@ -47,7 +47,7 @@
         </li>
     </ul>
     <br>
-    <ui-view>
+    <div ui-view cg-busy="application.stateLoading.productDetail">
         <div class="row">
             <div class="col-sm-8">
                 <form name="productDetail.InfoForm" autocomplete="off" ng-submit="productDetail.updateProduct()" novalidate class="form-horizontal">
@@ -105,5 +105,5 @@
                 </form>
             </div>
         </div>
-    </ui-view>
+    </div>
 </article>

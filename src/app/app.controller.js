@@ -7,10 +7,14 @@ function AppController($q, $rootScope, $state, $ocMedia, toastr, LoginService, a
     vm.name = appname;
     vm.$state = $state;
     vm.$ocMedia = $ocMedia;
-    vm.stateLoading = undefined;
+    vm.stateLoading = {};
 
     function cleanLoadingIndicators() {
-        if (vm.stateLoading && vm.stateLoading.promise && !vm.stateLoading.promise.$cgBusyFulfilled) vm.stateLoading.resolve(); //resolve leftover loading promises
+        angular.forEach(vm.stateLoading, function(val, key) {
+            if (vm.stateLoading[key].promise && !vm.stateLoading[key].promise.$cgBusyFulfilled) {
+                vm.stateLoading[key].resolve();
+            } //resolve leftover loading promises
+        })
     }
 
     //Detect if the app was loaded on a touch device with relatively good certainty
@@ -27,9 +31,8 @@ function AppController($q, $rootScope, $state, $ocMedia, toastr, LoginService, a
 
     $rootScope.$on('$stateChangeStart', function(e, toState) {
         cleanLoadingIndicators();
-        var defer = $q.defer();
-        if (toState.data) defer.message = toState.data.loadingMessage;
-        vm.stateLoading = defer;
+        var parent = toState.parent || toState.name.split('.')[0];
+        vm.stateLoading[parent] = $q.defer();
     });
 
     $rootScope.$on('$stateChangeSuccess', function() {
