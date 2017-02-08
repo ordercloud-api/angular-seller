@@ -21,7 +21,7 @@ function CreditCardsConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 CreditCardList: function(OrderCloud, Parameters) {
-                    return OrderCloud.CreditCards.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy);
+                    return OrderCloud.CreditCards.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy);
                 }
             }
         })
@@ -62,7 +62,7 @@ function CreditCardsConfig($stateProvider) {
                     return OrderCloud.CreditCards.Get($stateParams.creditcardid);
                 },
                 UserGroupList: function(OrderCloud, Parameters) {
-                    return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
                 }
             }
         })

@@ -22,7 +22,7 @@ function SecurityProfilesConfig($stateProvider){
                     return OrderCloudParameters.Get($stateParams);
                 },
             SecurityProfilesList: function(OrderCloud, Parameters) {
-                    return OrderCloud.SecurityProfiles.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy);
+                    return OrderCloud.SecurityProfiles.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy);
                 }
 		}
 	})
@@ -51,7 +51,7 @@ function SecurityProfilesConfig($stateProvider){
                 return OrderCloudParameters.Get($stateParams);
             },
             AssignmentList: function($stateParams, OrderCloud, Parameters){
-                return OrderCloud.SecurityProfiles.ListAssignments($stateParams.securityprofileid, Parameters.userID, Parameters.userGroupID, Parameters.level, Parameters.page, Parameters.pageSize || 12, Parameters.buyerID)
+                return OrderCloud.SecurityProfiles.ListAssignments($stateParams.securityprofileid, Parameters.userID, Parameters.userGroupID, Parameters.level, Parameters.page, Parameters.pageSize, Parameters.buyerID)
             }
         }
     })

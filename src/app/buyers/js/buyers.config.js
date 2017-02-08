@@ -15,7 +15,7 @@ function BuyerConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 BuyerList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Buyers.List(Parameters.search, Parameters.page, Parameters.pageSize || 12/*, Parameters.searchOn, Parameters.sortBy, Parameters.filters*/);
+                    return OrderCloud.Buyers.List(Parameters.search, Parameters.page, Parameters.pageSize/*, Parameters.searchOn, Parameters.sortBy, Parameters.filters*/);
                     //Commenting out params that don't exist yet in the API
                 }
             }

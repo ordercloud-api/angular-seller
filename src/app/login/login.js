@@ -104,7 +104,7 @@ function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, Lo
     vm.rememberStatus = false;
 
     vm.submit = function() {
-        OrderCloud.Auth.GetToken(vm.credentials)
+        vm.loading = OrderCloud.Auth.GetToken(vm.credentials)
             .then(function(data) {
                 vm.rememberStatus ? OrderCloud.Refresh.SetToken(data['refresh_token']) : angular.noop();
                 OrderCloud.Auth.SetToken(data['access_token']);
@@ -116,7 +116,7 @@ function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, Lo
     };
 
     vm.forgotPassword = function() {
-        LoginService.SendVerificationCode(vm.credentials.Email)
+        vm.loading = LoginService.SendVerificationCode(vm.credentials.Email)
             .then(function() {
                 vm.setForm('verificationCodeSuccess');
                 vm.credentials.Email = null;
@@ -127,7 +127,7 @@ function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, Lo
     };
 
     vm.resetPassword = function() {
-        LoginService.ResetPassword(vm.credentials, vm.token)
+        vm.loading = LoginService.ResetPassword(vm.credentials, vm.token)
             .then(function() {
                 vm.setForm('resetSuccess');
                 vm.token = null;
