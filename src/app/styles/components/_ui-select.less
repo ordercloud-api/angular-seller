@@ -1,6 +1,15 @@
 .ui-select-multiple.ui-select-bootstrap {
-  padding-top:@padding-base-vertical -1px;
+  min-height: @input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+  padding: (@padding-base-vertical - 1px) @padding-base-horizontal @padding-base-vertical;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  &.ng-not-empty {
+    padding-bottom:@padding-base-vertical - 2px;
+    input.ui-select-search {
+      width:auto !important;
+    }
+  }
   input.ui-select-search {
-    margin-bottom:6px;
+    margin-bottom:0;
   }
 }

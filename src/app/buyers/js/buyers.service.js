@@ -2,46 +2,27 @@ angular.module('orderCloud')
     .factory('ocBuyers', BuyersService)
 ;
 
-function BuyersService($uibModal) {
+function BuyersService($uibModal, ocConfirm, OrderCloud) {
     var service = {
-        Create: _create
+        Create: _create,
+        Delete: _delete
     };
 
     function _create() {
         return $uibModal.open({
             templateUrl: 'buyers/templates/buyerCreate.modal.html',
-            controller: function($uibModalInstance, $exceptionHandler, OrderCloud) {
-                var vm = this;
-                vm.submit = submit;
-                vm.cancel = cancel;
-                vm.updateValidity = updateValidity;
-
-                function updateValidity() {
-                    if (vm.form.buyerIDinput.$error['Buyer.UnavailableID']) vm.form.buyerIDinput.$setValidity('Buyer.UnavailableID', true);
-                }
-
-                function submit() {
-                    vm.loading = OrderCloud.Buyers.Create(vm.buyer)
-                        .then(function(data) {
-                            $uibModalInstance.close(data);
-                        })
-                        .catch(function(ex) {
-                            if (ex.status == 409) {
-                                vm.form.buyerIDinput.$setValidity('Buyer.UnavailableID', false);
-                                vm.form.buyerIDinput.$$element[0].focus();
-                            } else {
-                                $exceptionHandler(ex);
-                            }
-                        });
-                }
-
-                function cancel() {
-                    $uibModalInstance.dismiss();
-                }
-            },
+            controller: 'BuyerCreateModalCtrl',
             controllerAs: 'buyerCreateModal',
             bindToController: true
         }).result
+    }
+
+
+    function _delete(buyer) {
+        return ocConfirm.Confirm({message:'Are you sure you want to delete ' + buyer.Name + ' and all of it\'s data? <br/> <b>This action cannot be undone.</b>', confirmText: 'Delete this buyer', cancelText: 'Cancel'})
+            .then(function() {
+                return OrderCloud.Buyers.Delete(buyer.ID)
+            })
     }
 
     return service;

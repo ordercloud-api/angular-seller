@@ -49,14 +49,30 @@
             <b>No matches found.</b>
         </div>
         <div ng-if="products.list.Items.length">
-            <!--<div class="text-right"><b>{{(application.$ocMedia('min-width:768px') ? products.list.Meta.ItemRange[0] : '1') + ' - ' +  products.list.Meta.ItemRange[1] + ' of ' + products.list.Meta.TotalCount + ' results'}}</b></div>-->
+            <div class="row">
+                <div class="col-xs-6">
+                    <button ng-if="products.selectedCount" class="btn btn-danger btn-xs" ng-click="products.deleteSelected()">
+                        <i class="fa fa-trash"></i> Delete {{products.selectedCount == 1 ? "Product" : (products.selectedCount + " Products")}}
+                    </button>
+                </div>
+                <div class="col-xs-6">
+                    <p class="text-right">{{(application.$ocMedia('min-width:768px') ? products.list.Meta.ItemRange[0] : '1') + ' - ' +
+                        products.list.Meta.ItemRange[1] + ' of ' + products.list.Meta.TotalCount + ' results'}}</p>
+                </div>
+            </div>
+
             <div class="table-responsive">
                 <table class="table table-hover table-bordered">
                     <colgroup>
+                        <col>
                         <col style="width:20%">
+                        <col style="width:80%">
                     </colgroup>
                     <thead>
                     <tr>
+                        <th class="text-center">
+                            <input type="checkbox" ng-model="products.allItemsSelected" ng-change="products.selectAllItems()" />
+                        </th>
                         <th ng-click="products.updateSort('ID')">
                             ID
                             <i class="fa fa-caret-down" ng-show="products.parameters.sortBy == 'ID'"></i>
@@ -72,6 +88,9 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="product in products.list.Items">
+                        <td class="text-center">
+                            <input type="checkbox" ng-model="product.selected" ng-change="products.selectItem(this)"/>
+                        </td>
                         <td>
                             <a href="" ui-sref="productDetail({productid:product.ID})">{{product.ID}}</a>
                         </td>
