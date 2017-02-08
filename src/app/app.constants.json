@@ -1,6 +1,6 @@
 {
   "appname": "Angular Admin",
-  "scope": "FullAccess",
+  "scope": "ProductAdmin ProductAssignmentAdmin InventoryAdmin BuyerAdmin CatalogAdmin CategoryAdmin AddressAdmin CostCenterAdmin PromotionAdmin CreditCardAdmin MessageConfigAssignmentAdmin PriceScheduleAdmin OrderAdmin SpendingAccountAdmin BuyerUserAdmin UserGroupAdmin ApprovalRuleAdmin PermissionAdmin AdminUserAdmin AdminUserGroupAdmin MeAdmin MeXpAdmin",
   "clientid": "D89E2196-CC75-4312-A4A9-67E4CC4BEDFB",
   "buyerid": "A",
   "catalogid": "SHARED",

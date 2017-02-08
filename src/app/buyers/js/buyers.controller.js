@@ -18,7 +18,7 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderClou
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
         $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.Buyers.List(vm.parameters.search, 1, vm.parameters.pageSize || 12)
+        vm.searchLoading = OrderCloud.Buyers.List(vm.parameters.search, 1, vm.parameters.pageSize)
             .then(function(data) {
                 vm.list = data;
                 vm.searchResults = vm.parameters.search.length > 0;

@@ -24,7 +24,7 @@ function GiftCardsConfig($stateProvider) {
                 GiftCardList: function(OrderCloud, Parameters) {
                     var parameters = angular.copy(Parameters);
                     parameters.filters ? parameters.filters.RedemptionCode = '*': parameters.filters = {RedemptionCode :'*'};
-                    return OrderCloud.SpendingAccounts.List(parameters.search, parameters.page, parameters.pageSize || 12, parameters.searchOn, parameters.sortBy, parameters.filters);
+                    return OrderCloud.SpendingAccounts.List(parameters.search, parameters.page, parameters.pageSize, parameters.searchOn, parameters.sortBy, parameters.filters);
                 }
             }
         })

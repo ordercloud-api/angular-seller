@@ -20,7 +20,7 @@ function CostCentersConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 CostCentersList: function(OrderCloud, Parameters) {
-                    return OrderCloud.CostCenters.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.CostCenters.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
                 }
             }
         })

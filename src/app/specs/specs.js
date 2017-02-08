@@ -30,7 +30,7 @@ function SpecsConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 SpecList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Specs.List(Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.Specs.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
                 }
             }
         })
