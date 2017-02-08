@@ -77,7 +77,7 @@
                     <tbody>
                     <tr ng-repeat="buyer in buyers.list.Items">
                         <td>{{buyer.ID}}</td>
-                        <td><a href="" ui-sref="buyer.settings({buyerid:buyer.ID})">{{buyer.Name}}</a></td>
+                        <td><a href="" ui-sref="buyer({buyerid:buyer.ID})">{{buyer.Name}}</a></td>
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':buyer.Active}"></i>
                         </td>

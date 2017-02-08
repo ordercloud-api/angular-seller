@@ -11,20 +11,11 @@ function BaseConfig($stateProvider) {
         controller: 'BaseCtrl',
         controllerAs: 'base',
         resolve: {
-            CurrentUser: function($q, $state, OrderCloud) {
-                var dfd = $q.defer();
-                OrderCloud.Me.Get()
-                    .then(function(data) {
-                        dfd.resolve(data);
-                    })
+            CurrentUser: function($q, $state, OrderCloud, LoginService) {
+                return OrderCloud.Me.Get()
                     .catch(function(){
-                        OrderCloud.Auth.RemoveToken();
-                        OrderCloud.Auth.RemoveImpersonationToken();
-                        OrderCloud.BuyerID.Set(null);
-                        $state.go('login');
-                        dfd.resolve();
+                        LoginService.Logout();
                     });
-                return dfd.promise;
             }
         }
     });
