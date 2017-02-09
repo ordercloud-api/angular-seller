@@ -1,1 +1,21 @@
-<div>Payments</div>
+<div cg-busy="application.stateLoading('payments')">
+    <!--====== PAYMENT LIST ======-->
+    <div ng-repeat="payment in orderPayments.list.Items">
+        <oc-order-payments-credit-card payment="payment" ng-if="payment.Type == 'CreditCard'"></oc-order-payments-credit-card>
+        <oc-order-payments-spending-account payment="payment" ng-if="payment.Type == 'SpendingAccount'"></oc-order-payments-spending-account>
+        <oc-order-payments-purchase-order payment="payment" ng-if="payment.Type == 'PurchaseOrder'"></oc-order-payments-purchase-order>
+    </div>
+
+    <!--====== PAYMENTS PAGINATION ======-->
+    <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && orderPayments.list.Meta.TotalPages > 1">
+        <uib-pagination boundary-links="orderPayments.list.Meta.TotalPages > 5" max-size="5"
+                        total-items="orderPayments.list.Meta.TotalCount" items-per-page="orderPayments.list.Meta.PageSize"
+                        ng-model="orderPayments.list.Meta.Page" ng-change="orderPayments.pageChanged()"></uib-pagination>
+    </div>
+    <button type="button"
+            ng-if="application.$ocMedia('max-width:767px')"
+            class="btn btn-default btn-block btn-lg"
+            ng-show="orderPayments.list.Meta.Page < orderPayments.list.Meta.TotalPages"
+            ng-click="orderPayments.loadMore()">Load More
+    </button>
+</div>

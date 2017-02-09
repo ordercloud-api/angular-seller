@@ -8,7 +8,12 @@ function OrderPaymentsConfig($stateProvider) {
             url: '/payments',
             templateUrl: 'orderManagement/payments/templates/orderPayments.html',
             controller: 'OrderPaymentsCtrl',
-            controllerAs: 'orderPayments'
+            controllerAs: 'orderPayments',
+            resolve: {
+                OrderPayments: function($stateParams, ocOrderPaymentsService) {
+                    return ocOrderPaymentsService.List($stateParams.orderid, $stateParams.buyerid, 1, null);
+                }
+            }
         })
     ;
 }

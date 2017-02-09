@@ -29,7 +29,7 @@
             <div class="panel-body">
                 <div>
                     <b>Date {{orderDetail.order.DateSubmitted ? 'Submitted' : 'Created'}}: </b> {{(orderDetail.order.DateSubmitted || orderDetail.order.DateCreated) | date:'medium'}} <br>
-                    <b>Status: </b> {{orderDetail.order.Status == 'Completed' ? 'Paid' : orderDetail.order.Status}} <br>
+                    <b>Status: </b> {{orderDetail.order.Status | humanize}} <br>
                     <b>Buyer Company: </b> {{orderDetail.order.FromCompany.Name}} <br>
                     <b>Created By: </b> {{orderDetail.order.FromUserFirstName + ' ' + orderDetail.order.FromUserLastName}} <br>
                     <div ng-if="orderDetail.order.Comments">
