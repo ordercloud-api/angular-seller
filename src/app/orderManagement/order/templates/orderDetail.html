@@ -1,0 +1,122 @@
+<ul class="breadcrumb">
+    <li><a href="" ui-sref="orders">All Orders</a></li>
+    <li class="active">{{orderDetail.order.ID}}</li>
+</ul>
+<article>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">
+            <span class="text-muted">Order:</span> {{orderDetail.order.ID}}
+        </h3>
+    </header>
+    <ul class="nav nav-tabs">
+        <li ng-class="{active: application.$state.is('orderDetail')}">
+            <a href="" ui-sref="orderDetail"><i class="fa fa-cube"></i> <span>Details</span></a>
+        </li>
+        <li ui-sref-active="active">
+            <a href="" ui-sref=".payments"><i class="fa fa-dollar"></i> Payments</a>
+        </li>
+        <li ui-sref-active="active">
+            <a href="" ui-sref=".shipments"><i class="fa fa-truck"></i> Shipments</a>
+        </li>
+        <li ui-sref-active="active">
+            <a href="" ui-sref=".approvals"><i class="fa fa-check-square-o"></i> Approvals</a>
+        </li>
+    </ul>
+    <br>
+    <div ui-view cg-busy="application.stateLoading('orderDetail')">
+        <!--====== ORDER DETAILS ======-->
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div>
+                    <b>Date {{orderDetail.order.DateSubmitted ? 'Submitted' : 'Created'}}: </b> {{(orderDetail.order.DateSubmitted || orderDetail.order.DateCreated) | date:'medium'}} <br>
+                    <b>Status: </b> {{orderDetail.order.Status == 'Completed' ? 'Paid' : orderDetail.order.Status}} <br>
+                    <b>Buyer Company: </b> {{orderDetail.order.FromCompany.Name}} <br>
+                    <b>Created By: </b> {{orderDetail.order.FromUserFirstName + ' ' + orderDetail.order.FromUserLastName}} <br>
+                    <div ng-if="orderDetail.order.Comments">
+                        <b>Comments: </b> {{orderDetail.order.Comments}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6" ng-if="orderDetail.order.ShippingAddressID">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Shipping Address</h4>
+                        <div ng-bind-html="orderDetail.lineItems.Items[0].ShippingAddress | address:'full'"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6" ng-if="orderDetail.order.BillingAddressID">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Billing Address</h4>
+                        <div ng-bind-html="orderDetail.order.BillingAddress | address:'full'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--====== LINE ITEM LIST ======-->
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th ng-if="!orderDetail.order.ShippingAddressID">Shipping Address</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Line Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="lineItem in orderDetail.lineItems.Items">
+                        <td><a href="#" ng-click="orderDetail.editLineItem(lineItem)"><i class="fa fa-edit"></i> {{lineItem.ID}}</a></td>
+                        <td>
+                            <span>{{lineItem.Product.Name}}</span>
+                            <small class="text-muted">({{lineItem.Product.ID}})</small>
+                            <ul ng-if="lineItem.Specs.length > 0">
+                                <li ng-repeat="spec in lineItem.Specs">
+                                    <small>{{spec.Name}}:</small>
+                                    <small>{{spec.Value}}</small>
+                                </li>
+                            </ul>
+                        </td>
+                        <td ng-if="!orderDetail.order.ShippingAddressID">{{lineItem.ShippingAddress | address}}</td>
+                        <td>{{lineItem.Quantity}}</td>
+                        <td>{{lineItem.UnitPrice | currency}}</td>
+                        <td>{{lineItem.LineTotal | currency}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!--====== LINE ITEM PAGINATION ======-->
+        <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && orderDetail.lineItems.Meta.TotalPages > 1">
+            <uib-pagination boundary-links="orderDetail.lineItems.Meta.TotalPages > 5" max-size="5"
+                            total-items="orderDetail.lineItems.Meta.TotalCount" items-per-page="orderDetail.lineItems.Meta.PageSize"
+                            ng-model="orderDetail.lineItems.Meta.Page" ng-change="orderDetail.pageChanged()"></uib-pagination>
+        </div>
+        <button type="button"
+                ng-if="application.$ocMedia('max-width:767px')"
+                class="btn btn-default btn-block btn-lg"
+                ng-show="orderDetail.lineItems.Meta.Page < orderDetail.lineItems.Meta.TotalPages"
+                ng-click="orderDetail.loadMore()">Load More
+        </button>
+
+        <!-- Monetary Order Details-->
+        <div class="row">
+            <div class="col-sm-offset-8 col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <span>Subtotal</span> <span class="pull-right">{{orderDetail.order.Subtotal | currency}}</span> <br>
+                        <span>Shipping</span> <span class="pull-right">{{orderDetail.order.ShippingCost | currency}}</span> <br>
+                        <span>Tax</span> <span class="pull-right">{{orderDetail.order.TaxCost | currency}}</span> <br>
+                        <b>Total <span class="pull-right">{{orderDetail.order.Total | currency}}</span></b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

@@ -28,10 +28,10 @@ function OrderCloudOrdersService($q, $filter, OrderCloud) {
 
         OrderCloud.Orders.ListIncoming(null, null, parameters.search, parameters.page, parameters.pageSize, parameters.searchOn, parameters.sortBy, showSubmittedOnly, parameters.buyerID)
             .then(function(data) {
-                gatherBuyers(data);
+                gatherBuyerCompanies(data);
             });
 
-        function gatherBuyers(data) {
+        function gatherBuyerCompanies(data) {
             var buyerIDs = _.uniq(_.pluck(data.Items, 'FromCompanyID'));
             OrderCloud.Buyers.List(null, 1, 100, null, null, {ID: buyerIDs.join('|')})
                 .then(function(buyerData) {
