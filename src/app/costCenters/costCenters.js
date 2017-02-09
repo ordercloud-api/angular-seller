@@ -9,7 +9,7 @@ angular.module('orderCloud')
 function CostCentersConfig($stateProvider) {
     $stateProvider
         .state('costCenters', {
-            parent: 'base',
+            parent: 'buyer',
             templateUrl: 'costCenters/templates/costCenters.tpl.html',
             controller: 'CostCentersCtrl',
             controllerAs: 'costCenters',
@@ -20,7 +20,7 @@ function CostCentersConfig($stateProvider) {
                     return OrderCloudParameters.Get($stateParams);
                 },
                 CostCentersList: function(OrderCloud, Parameters) {
-                    return OrderCloud.CostCenters.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                    return OrderCloud.CostCenters.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
                 }
             }
         })
