@@ -8,7 +8,12 @@ function OrderApprovalsConfig($stateProvider) {
             url: '/approvals',
             templateUrl: 'orderManagement/approvals/templates/orderApprovals.html',
             controller: 'OrderApprovalsCtrl',
-            controllerAs: 'orderApprovals'
+            controllerAs: 'orderApprovals',
+            resolve: {
+                OrderApprovals: function($stateParams, ocOrderApprovalsService) {
+                    return ocOrderApprovalsService.List($stateParams.orderid, $stateParams.buyerid, 1, 100);
+                }
+            }
         })
     ;
 }

@@ -115,7 +115,7 @@
                     <tbody>
                         <tr ng-repeat="order in orders.list.Items">
                             <td><a href="" ui-sref="orderDetail({buyerid: order.FromCompanyID, orderid: order.ID})">{{order.ID}}</a></td>
-                            <td>{{order.Status}}</td>
+                            <td>{{order.Status | humanize}}</td>
                             <td>{{(order.DateSubmitted || order.DateCreated) | date:'short'}}</td>
                             <td>{{order.FromCompany.Name}}</td>
                             <td>{{order.FromUserFirstName + ' ' + order.FromUserLastName}}</td>

@@ -1,1 +1,88 @@
-<div>Approvals</div>
+<div cg-busy="application.stateLoading('approvals')">
+    <!--====== PAYMENT LIST ======-->
+    <div ng-if="orderApprovals.list.Items.length">
+        <div class="table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Pending'}).length">
+            <h4>Pending Approvals</h4>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Approving User Group</th>
+                    <th>Date Created</th>
+                    <th>Approval Rule Name</th>
+                    <th>Approval Rule Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="approval in orderApprovals.list.Items| filter:{Status:'Pending'}">
+                    <td>{{approval.ApprovingUserGroup.Name}}</td>
+                    <td>{{approval.DateCreated | date:'short'}}</td>
+                    <td>{{approval.ApprovalRule.Name}}</td>
+                    <td>{{approval.ApprovalRule.Description}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Approved'}).length">
+            <h4>Approved</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Approving User</th>
+                        <th>Date Approved</th>
+                        <th>Comments</th>
+                        <th>Approval Rule Name</th>
+                        <th>Approval Rule Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="approval in orderApprovals.list.Items| filter:{Status:'Approved'}">
+                        <td>{{approval.ApproverUserName}}</td>
+                        <td>{{approval.DateCompleted | date:'short'}}</td>
+                        <td>{{approval.Comments}}</td>
+                        <td>{{approval.ApprovalRule.Name}}</td>
+                        <td>{{approval.ApprovalRule.Description}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Declined'}).length">
+            <h4>Declined</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Approving User</th>
+                        <th>Date Declined</th>
+                        <th>Comments</th>
+                        <th>Approval Rule Name</th>
+                        <th>Approval Rule Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="approval in orderApprovals.list.Items| filter:{Status:'Declined'}">
+                        <td>{{approval.ApproverUserName}}</td>
+                        <td>{{approval.DateCompleted | date:'short'}}</td>
+                        <td>{{approval.Comments}}</td>
+                        <td>{{approval.ApprovalRule.Name}}</td>
+                        <td>{{approval.ApprovalRule.Description}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div ng-if="!orderApprovals.list.Items.length" class="well text-center">
+        This order does not have any approvals. <br>
+    </div>
+
+    <!--====== Approvals PAGINATION ======-->
+    <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && orderApprovals.list.Meta.TotalPages > 1">
+        <uib-pagination boundary-links="orderApprovals.list.Meta.TotalPages > 5" max-size="5"
+                        total-items="orderApprovals.list.Meta.TotalCount" items-per-page="orderApprovals.list.Meta.PageSize"
+                        ng-model="orderApprovals.list.Meta.Page" ng-change="orderApprovals.pageChanged()"></uib-pagination>
+    </div>
+    <button type="button"
+            ng-if="application.$ocMedia('max-width:767px')"
+            class="btn btn-default btn-block btn-lg"
+            ng-show="orderApprovals.list.Meta.Page < orderApprovals.list.Meta.TotalPages"
+            ng-click="orderApprovals.loadMore()">Load More
+    </button>
+</div>

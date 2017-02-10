@@ -16,8 +16,7 @@ function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, oc
         {Value: 'Open', Name: 'Open'},
         {Value: 'AwaitingApproval', Name: 'Awaiting Approval'},
         {Value: 'Completed', Name: 'Completed'},
-        {Value: 'Declined', Name: 'Declined'},
-        {Value: 'Open', Name: 'Open'}
+        {Value: 'Declined', Name: 'Declined'}
     ];
 
     //Check if filters are applied
