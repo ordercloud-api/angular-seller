@@ -1,14 +1,14 @@
-angular.module('orderCloud')
+/*angular.module('orderCloud')
     .config(OrdersConfig)
     .controller('OrdersCtrl', OrdersController)
     .controller('OrdersDetailCtrl', OrdersDetailController)
     .controller('OrdersDetailLineItemCtrl', OrdersDetailLineItemController)
     .factory('OrdersFactory', OrdersFactory)
     .filter('paymentmethods', paymentmethods)
-;
+;*/
 
 function OrdersConfig($stateProvider) {
-    $stateProvider
+    /*$stateProvider
         .state('orders', {
             parent: 'base',
             templateUrl: 'orders/templates/orders.tpl.html',
@@ -50,7 +50,7 @@ function OrdersConfig($stateProvider) {
                 }
             }
         })
-    ;
+    ;*/
 }
 
 function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, UserType, OrderList, Parameters) {

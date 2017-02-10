@@ -1,0 +1,72 @@
+<div cg-busy="application.stateLoading('payments')">
+    <!--====== PAYMENT LIST ======-->
+    <div class="table-responsive" ng-if="orderPayments.list.Items.length">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Details</th>
+                <th>Date Created</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="payment in orderPayments.list.Items">
+                <td>{{payment.ID}}</td>
+                <td>{{payment.Type | humanize}} </td>
+                <td>
+                    <div ng-if="!payment.Details">No details available</div>
+                    <div ng-if="payment.Details">
+                        <div ng-if="payment.Type == 'CreditCard'">
+                            <b>{{payment.Details.CardholderName}}</b>
+                            <div>
+                                <span><i class="fa fa-lg {{payment.Details.CardType | faCreditCard}}"></i></span>
+                                <small>{{'XXXX-XXXX-XXXX-' + payment.Details.PartialAccountNumber}}</small><br>
+                                <small class="text-muted">Expires On: {{payment.Details.ExpirationDate | date:'MM/yy'}}</small><br>
+                                <small class="text-muted">({{payment.CreditCardID}})</small>
+                            </div>
+                        </div>
+                        <div ng-if="payment.Type == 'SpendingAccount'">
+                            <b>{{payment.Details.Name}}</b>
+                            <div class="text-muted">
+                                <small>({{payment.SpendingAccountID}})</small><br>
+                                <small ng-if="payment.Details.StartDate && payment.Details.EndDate">
+                                    Lifetime: {{payment.Details.StartDate | date:'shortDate'}} - {{payment.Details.EndDate | date :'shortDate'}}
+                                </small>
+                                <small ng-if="payment.Details.StartDate && !payment.Details.EndDate">
+                                    Made Available On: {{payment.Details.StartDate | date:'shortDate'}}
+                                </small>
+                                <small ng-if="!payment.Details.StartDate && payment.Details.EndDate">
+                                    Expires On: {{payment.Details.EndDate | date :'shortDate'}}
+                                </small>
+                            </div>
+                        </div>
+                        <div ng-if="payment.Type == 'PurchaseOrder'">
+                            <b>PO Number:</b> {{payment.Details.PONumber}}
+                        </div>
+                    </div>
+                </td>
+                <td>{{payment.DateCreated | date:'short'}}</td>
+                <td>{{payment.Amount | currency}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="!orderPayments.list.Items.length" class="well text-center">
+        This order does not have any payments. <br>
+    </div>
+
+    <!--====== PAYMENTS PAGINATION ======-->
+    <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && orderPayments.list.Meta.TotalPages > 1">
+        <uib-pagination boundary-links="orderPayments.list.Meta.TotalPages > 5" max-size="5"
+                        total-items="orderPayments.list.Meta.TotalCount" items-per-page="orderPayments.list.Meta.PageSize"
+                        ng-model="orderPayments.list.Meta.Page" ng-change="orderPayments.pageChanged()"></uib-pagination>
+    </div>
+    <button type="button"
+            ng-if="application.$ocMedia('max-width:767px')"
+            class="btn btn-default btn-block btn-lg"
+            ng-show="orderPayments.list.Meta.Page < orderPayments.list.Meta.TotalPages"
+            ng-click="orderPayments.loadMore()">Load More
+    </button>
+</div>
