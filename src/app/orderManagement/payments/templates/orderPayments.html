@@ -1,5 +1,8 @@
 <div cg-busy="application.stateLoading('payments')">
     <!--====== PAYMENT LIST ======-->
+    <div ng-if="!orderPayments.list.Items.length" class="well text-center">
+        This order does not have any payments. <br>
+    </div>
     <div ng-repeat="payment in orderPayments.list.Items">
         <oc-order-payments-credit-card payment="payment" ng-if="payment.Type == 'CreditCard'"></oc-order-payments-credit-card>
         <oc-order-payments-spending-account payment="payment" ng-if="payment.Type == 'SpendingAccount'"></oc-order-payments-spending-account>
