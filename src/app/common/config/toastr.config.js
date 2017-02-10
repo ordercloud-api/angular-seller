@@ -10,8 +10,8 @@ angular.module('orderCloud')
 			progressBar:true,
 			tapToClose:true,
 			target: 'body',
-			extendedTimeOut: 0,
-			timeOut: 0,
+			extendedTimeOut: 1000,
+			timeOut: 4000,
 			iconClasses: {
 				error: 'alert-danger',
 				info: 'alert-info',
