@@ -5,8 +5,8 @@
 </header>
 
 <form name="userGroupSecurity.form">
-    <fieldset ng-repeat="profile in userGroupSecurity.profiles">
-        <div class="checkbox">
+    <fieldset class="form-group">
+        <div class="checkbox" ng-repeat="profile in userGroupSecurity.profiles">
             <label for="{{profile.ID}}">
                 <input type="checkbox" id="{{profile.ID}}" name="{{profile.ID}}" ng-model="profile.selected" ng-change="userGroupSecurity.updateAssignment(this, userGroup.group.ID)">
                 <b ng-if="profile.selected">{{profile.Name}}</b> <span ng-if="!profile.selected">{{profile.Name}}</span>

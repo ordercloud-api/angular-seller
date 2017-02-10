@@ -33,7 +33,9 @@
         <li role="presentation" class="hidden-xs hidden-sm hidden-md" ng-class="{active: application.$state.includes('creditCards')}">
             <a ui-sref="creditCards({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-credit-card"></i> Credit Cards</a>
         </li>
-        <li role="presentation" uib-dropdown>
+        <li role="presentation"  ng-class="{active:
+            application.$state.is('spendingAccounts') || application.$state.is('costCenters')}"
+            uib-dropdown>
             <a uib-dropdown-toggle>More <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown-menu-right" uib-dropdown-menu>
                 <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('users')}">
