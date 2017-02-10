@@ -22,7 +22,7 @@ function OrderShipmentsConfig($stateProvider) {
             controllerAs: 'orderShipmentsCreate',
             resolve: {
                 ShipmentLineItems: function($stateParams, ocOrderShipmentsService) {
-                    return ocOrderShipmentsService.ListLineItems($stateParams.orderid, $stateParams.buyerid);
+                    return ocOrderShipmentsService.ListLineItems($stateParams.orderid, $stateParams.buyerid, 1, 2);
                 }
             }
         })

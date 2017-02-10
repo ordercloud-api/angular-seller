@@ -2,11 +2,14 @@ angular.module('orderCloud')
     .factory('ocOrderShipmentsService', OrderCloudOrderShipmentsService)
 ;
 
-function OrderCloudOrderShipmentsService($q, OrderCloud) {
+function OrderCloudOrderShipmentsService($q, $uibModal, OrderCloud) {
     var service = {
         List: _list,
         ListLineItems: _listLineItems,
-        Create: _create
+        Create: _create,
+        Edit: _edit,
+        CreateItems: _createItems,
+        EditItem: _editItem
     };
 
     function _list(orderID, buyerID, page, pageSize) {
@@ -27,8 +30,17 @@ function OrderCloudOrderShipmentsService($q, OrderCloud) {
                         });
                     });
 
-                    deferred.resolve(data);
+                    analyzeShippingAddresses(data);
                 });
+        }
+
+        function analyzeShippingAddresses(data) {
+            angular.forEach(data.Items, function(shipment) {
+                var shippingAddressCount = _.uniq(_.map(shipment.Items, function(item) { return (item.LineItem.ShippingAddress ? (item.LineItem.ShippingAddress.ID ? item.LineItem.ShippingAddress.ID : item.LineItem.ShippingAddress.Street1) : item.LineItem.ShippingAddressID) })).length;
+                shipment.ShippingAddress = (shippingAddressCount == 1) ? shipment.Items[0].LineItem.ShippingAddress : null;
+            });
+
+            deferred.resolve(data);
         }
 
         return deferred.promise;
@@ -56,11 +68,12 @@ function OrderCloudOrderShipmentsService($q, OrderCloud) {
 
     function _create(shipment, lineItems, orderID, buyerID) {
         var deferred = $q.defer();
+        var shipmentModel = angular.copy(shipment);
 
-        shipment.Items = [];
+        shipmentModel.Items = [];
         angular.forEach(lineItems, function(lineItem) {
              if (lineItem.Selected && lineItem.ShipQuantity && lineItem.ShipQuantity > 0) {
-                 shipment.Items.push({
+                 shipmentModel.Items.push({
                      LineItemID: lineItem.ID,
                      OrderID: orderID,
                      QuantityShipped: lineItem.ShipQuantity
@@ -68,12 +81,73 @@ function OrderCloudOrderShipmentsService($q, OrderCloud) {
              }
         });
 
-        OrderCloud.Shipments.Create(shipment, buyerID)
+        if (shipmentModel.DateShipped && (typeof shipmentModel.DateShipped.getDate == 'function')) shipmentModel.DateShipped = shipmentModel.DateShipped.toISOString();
+        if (shipmentModel.DateDelivered && (typeof shipmentModel.DateDelivered.getDate == 'function')) shipmentModel.DateDelivered = shipmentModel.DateDelivered.toISOString();
+
+        OrderCloud.Shipments.Create(shipmentModel, buyerID)
             .then(function(data) {
                 deferred.resolve(data);
             });
 
         return deferred.promise;
+    }
+
+    function _edit(shipment, buyerID) {
+        return $uibModal.open({
+            templateUrl: 'orderManagement/shipments/templates/orderShipmentsEdit.modal.html',
+            controller: 'OrderShipmentsEditCtrl',
+            controllerAs: 'orderShipmentsEdit',
+            resolve: {
+                OrderShipment: function() {
+                    return shipment;
+                },
+                BuyerID: function() {
+                    return buyerID;
+                }
+            }
+        }).result
+    }
+
+    function _createItems(shipment, orderID, buyerID) {
+        return $uibModal.open({
+            templateUrl: 'orderManagement/shipments/templates/orderShipmentsCreateItem.modal.html',
+            size: 'lg',
+            controller: 'OrderShipmentsCreateItemsCtrl',
+            controllerAs: 'orderShipmentsCreateItems',
+            resolve: {
+                ShipmentLineItems: function(ocOrderShipmentsService) {
+                    return ocOrderShipmentsService.ListLineItems(orderID, buyerID);
+                },
+                Shipment: function() {
+                    return shipment;
+                },
+                OrderID: function() {
+                    return orderID;
+                },
+                BuyerID: function() {
+                    return buyerID;
+                }
+            }
+        }).result
+    }
+
+    function _editItem(item, shipmentID, buyerID) {
+        return $uibModal.open({
+            templateUrl: 'orderManagement/shipments/templates/orderShipmentsEditItem.modal.html',
+            controller: 'OrderShipmentsEditItemCtrl',
+            controllerAs: 'orderShipmentsEditItem',
+            resolve: {
+                ShipmentItem: function() {
+                    return item;
+                },
+                ShipmentID: function() {
+                    return shipmentID;
+                },
+                BuyerID: function() {
+                    return buyerID;
+                }
+            }
+        }).result
     }
 
     return service;

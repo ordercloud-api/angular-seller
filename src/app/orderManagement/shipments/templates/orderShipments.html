@@ -48,42 +48,60 @@
                     <div class="panel-body">
                         <b>Shipper: </b> {{orderShipments.selectedShipment.Shipper}} <br>
                         <b>Tracking Number: </b> {{orderShipments.selectedShipment.TrackingNumber}} <br>
-                        <b>Date Shipped: </b> {{orderShipments.selectedShipment.DateShipped | date:'short'}} <br>
-                        <b>Date Delivered: </b> {{orderShipments.selectedShipment.DateDelivered | date:'short'}} <br>
+                        <b>Date Shipped: </b> {{orderShipments.selectedShipment.DateShipped | date:'shortDate'}} <br>
+                        <b>Date Delivered: </b> {{orderShipments.selectedShipment.DateDelivered | date:'shortDate'}} <br>
                         <b>Cost: </b> {{orderShipments.selectedShipment.Cost | currency}}
                     </div>
                 </div>
-                <div class="panel panel-default" ng-if="orderShipments.selectedShipment.Items.length">
+                <div class="panel panel-default" ng-if="orderShipments.selectedShipment.ShippingAddress">
                     <div class="panel-body">
                         <h4>Shipping Address</h4>
-                        <div ng-bind-html="orderShipments.selectedShipment.Items[0].LineItem.ShippingAddress | address:'full'"></div>
+                        <div ng-bind-html="orderShipments.selectedShipment.ShippingAddress | address:'full'"></div>
                     </div>
                 </div>
-                <div class="table-responsive" ng-if="orderShipments.selectedShipment.Items.length">
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Line Item ID</th>
-                            <th>Quantity Shipped</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="item in orderShipments.selectedShipment.Items" ng-if="item.OrderID == orderShipments.orderID">
-                            <td>{{item.LineItem.Product.Name}} <small class="text-muted">({{item.LineItem.Product.ID}})</small></td>
-                            <td>{{item.LineItem.ID}}</td>
-                            <td>{{item.QuantityShipped + ' of ' + item.LineItem.Quantity}}</td>
-                            <td class="actions-cell">
-                                <button class="btn btn-default btn-xs btn-block" ng-click="orderShipments.editShipmentItem(item)">Edit</button>
-                            </td>
-                            <td class="actions-cell">
-                                <button class="btn btn-danger btn-xs btn-block" ng-click="orderShipments.deleteShipmentItem(item)">Delete</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div ng-if="orderShipments.selectedShipment.Items.length">
+                    <div class="text-right">
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="orderShipments.createShipmentItems()">
+                            <i class="fa fa-plus-circle"></i>
+                            Add Items
+                        </button>
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Line Item ID</th>
+                                <th>Quantity Shipped</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat-start="item in orderShipments.selectedShipment.Items" ng-if="item.OrderID == orderShipments.orderID">
+                                <td rowspan="{{orderShipments.selectedShipment.ShippingAddress ? 1 : 2}}">
+                                    {{item.LineItem.Product.Name}} <small class="text-muted">({{item.LineItem.Product.ID}})</small>
+                                </td>
+                                <td>{{item.LineItem.ID}}</td>
+                                <td>{{item.QuantityShipped + ' of ' + item.LineItem.Quantity}}</td>
+                                <td class="actions-cell" rowspan="{{orderShipments.selectedShipment.ShippingAddress ? 1 : 2}}">
+                                    <button class="btn btn-default btn-xs btn-block" ng-click="orderShipments.editShipmentItem(item)">Edit</button>
+                                </td>
+                                <td class="actions-cell" rowspan="{{orderShipments.selectedShipment.ShippingAddress ? 1 : 2}}">
+                                    <button class="btn btn-danger btn-xs btn-block" ng-click="orderShipments.deleteShipmentItem(item)">Delete</button>
+                                </td>
+                            </tr>
+                            <tr ng-repeat-end ng-if="!orderShipments.selectedShipment.ShippingAddress">
+                                <td colspan="2">{{item.LineItem.ShippingAddress | address:'fullOneLine'}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div ng-if="!orderShipments.selectedShipment.Items.length" class="well text-center">
+                    This shipment does not have any items. <br>
+                    <a ng-click="orderShipments.createShipmentItems()">Create one now</a>
                 </div>
             </div>
         </div>

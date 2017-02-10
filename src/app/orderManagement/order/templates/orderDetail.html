@@ -5,7 +5,8 @@
 <article>
     <header class="l-page-header">
         <h3 class="l-page-header__title">
-            <span class="text-muted">Order:</span> {{orderDetail.order.ID}}
+            <small class="pull-right">Submitted on {{orderDetail.order.DateSubmitted | date}}</small>
+            <span class="text-muted">Order:</span> {{orderDetail.order.ID}} <br>
         </h3>
     </header>
     <ul class="nav nav-tabs">

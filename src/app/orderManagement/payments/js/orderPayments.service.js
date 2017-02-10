@@ -49,6 +49,14 @@ function OrderCloudOrderPaymentsService($q, OrderCloud) {
                                 d.resolve();
                             });
                     }
+                    else if (payment.Type == 'PurchaseOrder') {
+                        if (payment.xp && payment.xp.PONumber) {
+                            payment.Details = {
+                                PONumber: payment.xp.PONumber
+                            };
+                        }
+                        d.resolve();
+                    }
                     else {
                         d.resolve();
                     }
