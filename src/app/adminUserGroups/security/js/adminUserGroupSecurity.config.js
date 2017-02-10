@@ -6,18 +6,21 @@ function AdminUserGroupSecurityConfig($stateProvider) {
     $stateProvider
         .state('adminUserGroup.security', {
             url: '/security',
-            templateUrl: 'adminUserGroups/security/templates/adminUserGroupSecurity.html',
-            controller: 'AdminUserGroupSecurityCtrl',
-            controllerAs: 'adminUserGroupSecurity',
+            templateUrl: 'security/templates/security.html',
+            controller: 'SecurityCtrl',
+            controllerAs: 'security',
             resolve: {
-                Parameters: function(OrderCloudParameters, $stateParams) {
-                    return OrderCloudParameters.Get($stateParams);
+                Assignments: function($stateParams, OrderCloud) {
+                    return OrderCloud.SecurityProfiles.ListAssignments(null, null, $stateParams.adminusergroupid, 'group', null, 100, null);
                 },
-                AvailableProfiles: function($q, OrderCloud) {
-                    return OrderCloud.SecurityProfiles.List(null, null, 100, null, null, {IsDevProfile:false});
-                },
-                Assignments: function(Parameters, OrderCloud) {
-                    return OrderCloud.SecurityProfiles.ListAssignments(null, null, Parameters.adminusergroupid, null, null, 100);
+                AvailableProfiles: function($q, OrderCloud, Assignments) {
+                    return OrderCloud.SecurityProfiles.List(null, null, 100, null, null, {IsDevProfile:false})
+                        .then(function(data) {
+                            return _.map(data.Items, function(sp) {
+                                sp.selected = _.pluck((Assignments.Items), 'SecurityProfileID').indexOf(sp.ID) > -1;
+                                return sp;
+                            });
+                        });
                 }
             }
         })

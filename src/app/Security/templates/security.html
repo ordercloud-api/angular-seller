@@ -1,0 +1,21 @@
+<header class="l-page-header">
+    <h3 class="l-page-header__title">
+        Security Profiles
+    </h3>
+</header>
+<div ng-if="security.isAdmin" class="alert alert-warning">
+    <i class="fa fa-warning pull-left" style="margin-top:12px;margin-right:15px;"></i>
+    Upon first load and after a page refresh, these assignments will <b>not reflect the actual assignments in the API</b>.
+    <br>
+    Until we have a way to list admin company level security profile assignments this issue will persist.
+</div>
+<form name="security.form">
+    <fieldset class="form-group">
+        <div class="checkbox" ng-repeat="profile in security.profiles">
+            <label for="{{profile.ID}}">
+                <input type="checkbox" id="{{profile.ID}}" name="{{profile.ID}}" ng-model="profile.selected" ng-change="security.updateAssignment(this, userGroup.group.ID)">
+                <b ng-if="profile.selected">{{profile.Name}}</b> <span ng-if="!profile.selected">{{profile.Name}}</span>
+            </label>
+        </div>
+    </fieldset>
+</form>

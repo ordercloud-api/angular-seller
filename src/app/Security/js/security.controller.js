@@ -1,22 +1,22 @@
 angular.module('orderCloud')
-    .controller('AdminUserGroupSecurityCtrl', AdminUserGroupSecurityController)
+    .controller('SecurityCtrl', SecurityController)
 ;
 
-function AdminUserGroupSecurityController($exceptionHandler, $stateParams, toastr, AvailableProfiles, Assignments, OrderCloud) {
+function SecurityController($exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, OrderCloud) {
     var vm = this;
-
-    console.log(Assignments);
-
-    vm.profiles = _.map(AvailableProfiles.Items, function(profile) {
-        profile.selected = _.pluck(Assignments.Items, 'SecurityProfileID').indexOf(profile.ID) > -1;
-        return profile;
-    });
+    vm.assignments = Assignments;
+    vm.profiles = AvailableProfiles;
+    vm.buyerid = $stateParams.buyerid;
+    vm.usergroupid = $stateParams.usergroupid;
+    vm.adminusergroupid = $stateParams.adminusergroupid;
+    vm.isAdmin = !(vm.buyerid || vm.usergroupid || vm.adminusergroupid);
 
     vm.updateAssignment = function(scope) {
         if (scope.profile.selected) {
             OrderCloud.SecurityProfiles.SaveAssignment({
                 SecurityProfileID: scope.profile.ID,
-                UserGroupID: $stateParams.adminusergroupid
+                BuyerID: $stateParams.buyerid,
+                UserGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
             })
                 .then(function() {
                     toastr.success(scope.profile.Name + ' was enabled.', 'Success!');
@@ -26,7 +26,7 @@ function AdminUserGroupSecurityController($exceptionHandler, $stateParams, toast
                     $exceptionHandler(ex);
                 });
         } else {
-            OrderCloud.SecurityProfiles.DeleteAssignment(scope.profile.ID, null, $stateParams.adminusergroupid)
+            OrderCloud.SecurityProfiles.DeleteAssignment(scope.profile.ID, null, $stateParams.usergroupid || $stateParams.adminusergroupid, $stateParams.buyerid)
                 .then(function() {
                     toastr.success(scope.profile.Name + ' was disabled.', 'Success!');
                 })
