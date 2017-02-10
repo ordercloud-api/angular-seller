@@ -26,7 +26,17 @@ function OrderController($stateParams, OrderCloud, ocOrderDetailService, Selecte
     vm.editLineItem = function(lineItem) {
         ocOrderDetailService.EditLineItem(vm.order.FromCompanyID, vm.order.ID, lineItem)
             .then(function(data) {
-                console.log(data);
+                var itemIndex = 0;
+                angular.forEach(vm.lineItems.Items, function(item, index) {
+                    if (item.ID == data.OriginalID) {
+                        itemIndex = index;
+                    }
+                });
+                vm.lineItems.Items[itemIndex] = data;
+                OrderCloud.Orders.Get($stateParams.orderid, $stateParams.buyerid)
+                    .then(function(orderData) {
+                        vm.order = angular.extend(vm.order, _.pick(orderData, ['Subtotal', 'TaxCost', 'ShippingCost', 'Total']));
+                    });
             });
     };
 }

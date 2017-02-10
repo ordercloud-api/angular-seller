@@ -17,6 +17,7 @@ function OrderLineItemEditModalController($uibModalInstance, OrderCloud, BuyerID
         if (partial.DateNeeded) partial.DateNeeded = new Date(partial.DateNeeded);
         vm.loading = OrderCloud.LineItems.Patch(OrderID, originalLineItemID, partial, BuyerID)
             .then(function(data) {
+                data.OriginalID = originalLineItemID;
                 $uibModalInstance.close(data);
             })
             .catch(function(ex) {

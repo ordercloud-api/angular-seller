@@ -1,5 +1,32 @@
 <form name="orderShipmentsCreate.form" ng-submit="orderShipmentsCreate.submit()" autocomplete="off" novalidate>
     <div class="row">
+        <div class="col-sm-4">
+            <fieldset class="form-group">
+                <label for="shipmentShipper">Shipper</label>
+                <input id="shipmentShipper" type="text" name="Shipper" class="form-control" ng-model="orderShipmentsCreate.shipment.Shipper" />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="shipmentTrackingNumber">Tracking Number</label>
+                <input id="shipmentTrackingNumber" type="text" name="TrackingNumber" class="form-control" ng-model="orderShipmentsCreate.shipment.TrackingNumber" />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="shipmentCost">Cost</label>
+                <input id="shipmentCost" type="number" name="Cost" class="form-control" ng-model="orderShipmentsCreate.shipment.Cost" />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="shipmentDateShipped">Date Shipped</label>
+                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderShipmentsCreate.shipment.DateShipped">
+                <input id="shipmentDateShipped" name="DateShipped" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderShipmentsCreate.shipment.DateShipped" uib-datepicker-popup="MM/dd/yyyy" is-open="dateShipped.open" ng-click="dateShipped.open = !dateShipped.open">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="shipmentDateDelivered">Date Delivered</label>
+                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderShipmentsCreate.shipment.DateDelivered">
+                <input id="shipmentDateDelivered" name="DateDelivered" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderShipmentsCreate.shipment.DateDelivered" uib-datepicker-popup="MM/dd/yyyy" is-open="dateDelivered.open" ng-click="dateDelivered.open = !dateDelivered.open">
+            </fieldset>
+            <fieldset class="form-group">
+                <button type="submit" class="btn btn-primary btn-block" ng-disabled="orderShipmentsCreate.form.$invalid">Save Shipment</button>
+            </fieldset>
+        </div>
         <div class="col-sm-8">
             <!--====== LINE ITEM LIST ======-->
             <div class="table-responsive">
@@ -45,33 +72,6 @@
                     ng-show="orderShipmentsCreate.lineItems.Meta.Page < orderShipmentsCreate.lineItems.Meta.TotalPages"
                     ng-click="orderShipmentsCreate.loadMore()">Load More
             </button>
-        </div>
-        <div class="col-sm-4">
-            <fieldset class="form-group">
-                <label for="shipmentShipper">Shipper</label>
-                <input id="shipmentShipper" type="text" name="Shipper" class="form-control" ng-model="orderShipmentsCreate.shipment.Shipper" />
-            </fieldset>
-            <fieldset class="form-group">
-                <label for="shipmentTrackingNumber">Tracking Number</label>
-                <input id="shipmentTrackingNumber" type="text" name="TrackingNumber" class="form-control" ng-model="orderShipmentsCreate.shipment.TrackingNumber" />
-            </fieldset>
-            <fieldset class="form-group">
-                <label for="shipmentCost">Cost</label>
-                <input id="shipmentCost" type="number" name="Cost" class="form-control" ng-model="orderShipmentsCreate.shipment.Cost" />
-            </fieldset>
-            <fieldset class="form-group">
-                <label for="shipmentDateShipped">Date Shipped</label>
-                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderShipmentsCreate.shipment.DateShipped">
-                <input id="shipmentDateShipped" name="DateShipped" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderShipmentsCreate.shipment.DateShipped" uib-datepicker-popup="MM/dd/yyyy" is-open="dateShipped.open" ng-click="dateShipped.open = !dateShipped.open">
-            </fieldset>
-            <fieldset class="form-group">
-                <label for="shipmentDateDelivered">Date Delivered</label>
-                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderShipmentsCreate.shipment.DateDelivered">
-                <input id="shipmentDateDelivered" name="DateDelivered" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderShipmentsCreate.shipment.DateDelivered" uib-datepicker-popup="MM/dd/yyyy" is-open="dateDelivered.open" ng-click="dateDelivered.open = !dateDelivered.open">
-            </fieldset>
-            <fieldset class="form-group">
-                <button type="submit" class="btn btn-primary btn-block" ng-disabled="orderShipmentsCreate.form.$invalid">Save Shipment</button>
-            </fieldset>
         </div>
     </div>
 </form>
