@@ -18,6 +18,9 @@
         <li role="presentation" ng-class="{active: application.$state.is('buyer')}">
             <a ui-sref="buyer"><i class="fa fa-cog"></i> Settings</a>
         </li>
+        <li role="presentation" ui-sref-active="active">
+            <a ui-sref="buyerSecurity"><i class="fa fa-lock"></i> Security</a>
+        </li>
         <li role="presentation" ng-class="{active: application.$state.includes('catalogManagement')}">
             <a ui-sref="catalogManagement({ search: '', sortBy: ''})"><i class="fa fa-sitemap"></i> Catalog</a>
         </li>
