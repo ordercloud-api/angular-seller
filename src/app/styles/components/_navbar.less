@@ -1,10 +1,19 @@
-.navbar.navmenu-on-canvas {
-  left:@navmenu-width;
+.navbar {
+  &.navmenu-on-canvas {
+    .navmenu-offset(@navmenu-width);
+  }
+  &.icon-navmenu-on-canvas {
+    .navmenu-offset(@icon-navmenu-width);
+  }
+}
+
+.navmenu-offset(@offset) {
+  left:@offset;
   @media(max-width:@screen-xs-max) {
     &-xs {
       &.navbar-fixed-top,
       &.navbar-fixed-bottom {
-        left:@navmenu-width;
+        left:@offset;
       }
     }
   }
@@ -12,7 +21,7 @@
     &-sm {
       &.navbar-fixed-top,
       &.navbar-fixed-bottom {
-        left:@navmenu-width;
+        left:@offset;
       }
     }
   }
@@ -20,7 +29,7 @@
     &-md {
       &.navbar-fixed-top,
       &.navbar-fixed-bottom {
-        left:@navmenu-width;
+        left:@offset;
       }
     }
   }
@@ -28,7 +37,7 @@
     &-lg {
       &.navbar-fixed-top,
       &.navbar-fixed-bottom {
-        left:@navmenu-width;
+        left:@offset;
       }
     }
   }

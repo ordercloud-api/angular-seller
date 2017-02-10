@@ -1,15 +1,20 @@
 <nav id="myNavmenu" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-sm offcanvas-xs" role="navigation">
     <a class="navmenu-brand hidden-xs hidden-sm" href="" ui-sref="home">{{application.name}}</a>
     <ul class="nav navmenu-nav">
-        <li ui-sref-active="active"><a ui-sref="adminUsers">Admin Users</a></li>
-        <li ng-class="{active: application.$state.is('adminUserGroups') || application.$state.includes('adminUserGroup')}"><a ui-sref="adminUserGroups">Admin User Groups</a></li>
-        <li ui-sref-active="active"><a ui-sref="adminAddresses">Admin Addresses</a></li>
-        <li ui-sref-active="active"><a ui-sref="products">Product Management</a></li>
-        <li ui-sref-active="active"><a ui-sref="orders">Order Management</a></li>
-        <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}"><a ui-sref="buyers">Buyer Organizations</a></li>
-        <li class="divider"></li>
-        <li ui-sref-active="active"><a ui-sref="account">Account</a></li>
-        <li ui-sref-active="active"><a ng-click="application.logout()">Log Out</a></li>
+
+        <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}">
+            <a ui-sref="buyers"><i class="fa fa-tags"></i> Buyer Organizations</a>
+        </li>
+        <li ui-sref-active="active"><a ui-sref="products"><i class="fa fa-cube"></i> Product Management</a></li>
+        <li ui-sref-active="active"><a ui-sref="orders"><i class="fa fa-inbox"></i> Order Management</a></li>
+        <li ui-sref-active="active"><a ui-sref="adminUsers"><i class="fa fa-user"></i> Admin Users</a></li>
+        <li ng-class="{active: application.$state.is('adminUserGroups') || application.$state.includes('adminUserGroup')}">
+            <a ui-sref="adminUserGroups"><i class="fa fa-users"></i> Admin User Groups</a>
+        </li>
+        <li ui-sref-active="active"><a ui-sref="adminAddresses"><i class="fa fa-map-marker"></i> Admin Addresses</a></li>
+        <li ui-sref-active="active"><a ui-sref="security"><i class="fa fa-lock"></i> Security</a></li>
+        <li ui-sref-active="active"><a ui-sref="account"><i class="fa fa-user-circle-o"></i> Account</a></li>
+        <li ui-sref-active="active"><a ng-click="application.logout()"><i class="fa fa-power-off"></i> Log Out</a></li>
     </ul>
 </nav>
 <nav class="navbar navbar-default navbar-unstacked navbar-fixed-top navmenu-on-canvas-lg navmenu-on-canvas-md" ng-if="application.$ocMedia('max-width:991px')">

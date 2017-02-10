@@ -107,6 +107,8 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
 
                 changedCheck();
                 selectedCheck();
+
+                toastr.success('User assignments updated.', 'Success!');
             })
     };
 
