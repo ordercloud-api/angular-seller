@@ -1,0 +1,118 @@
+<header class="l-page-header">
+    <h3 class="l-page-header__title">
+        Spending Accounts
+    </h3>
+    <!--====== CREATE ======-->
+    <div class="l-page-header__btns">
+        <button type="button" class="btn btn-primary btn-block" ng-click="spendingAccounts.createSpendingAccount()"><i class="fa fa-plus-circle"></i>
+            New Spending Account
+        </button>
+    </div>
+</header>
+<!--====== SEARCH/FILTERS ======-->
+<form name="spendingAccounts.searchForm" pretty-submit>
+    <fieldset class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-search"></i>
+            </span>
+            <input type="search" ng-change="spendingAccounts.search()" ng-model-options="{debounce:1000}" placeholder="Search spendingAccounts..." ng-model="spendingAccounts.parameters.search" class="form-control">
+            <span ng-if="spendingAccounts.searchResults" class="input-group-btn">
+                <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="spendingAccounts.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+            </span>
+        </div>
+    </fieldset>
+</form>
+
+<div cg-busy="spendingAccounts.searchLoading">
+    <div class="no-matches" ng-if="!spendingAccounts.list.Items.length">
+        <b>No matches found.</b>
+    </div>
+    <div ng-if="spendingAccounts.list.Items.length">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="btn-group" ng-if="spendingAccounts.changedAssignments.length">
+                    <button class="btn btn-primary btn-xs" ng-click="spendingAccounts.updateAssignments()">
+                        Update Assignments
+                    </button>
+                    <button class="btn btn-default btn-xs" ng-click="spendingAccounts.resetAssignments()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <p class="text-right">{{(application.$ocMedia('min-width:768px') ? spendingAccounts.list.Meta.ItemRange[0] : '1') + ' - ' +
+                    spendingAccounts.list.Meta.ItemRange[1] + ' of ' + spendingAccounts.list.Meta.TotalCount + ' results'}}</p>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" ng-class="{'l-spendingaccount-table__usergroup': spendingAccounts.userGroupID, 'l-spendingaccount-table': !spendingAccounts.userGroupID}">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="text-center" ng-click="spendingAccounts.selectAllItems()">
+                        Assign
+                    </th>
+                    <th ng-click="spendingAccounts.updateSort('ID')">
+                        ID
+                        <i class="fa fa-caret-down" ng-show="spendingAccounts.parameters.sortBy == 'ID'"></i>
+                        <i class="fa fa-caret-up" ng-show="spendingAccounts.parameters.sortBy == '!ID'"></i>
+                    </th>
+                    <th ng-click="spendingAccounts.updateSort('Name')">
+                        Name
+                        <i class="fa fa-caret-down" ng-show="spendingAccounts.parameters.sortBy == 'Name'"></i>
+                        <i class="fa fa-caret-up" ng-show="spendingAccounts.parameters.sortBy == '!Name'"></i>
+                    </th>
+                    <th>
+                        Balance
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="spendingAccount in spendingAccounts.list.Items">
+                    <td class="text-center">
+                        <input type="checkbox" ng-model="spendingAccount.Assigned" ng-change="spendingAccounts.selectItem(this)"/>
+                    </td>
+                    <td>{{spendingAccount.ID}}</td>
+                    <td><a href="" ng-click="spendingAccounts.editSpendingAccount(this)">{{spendingAccount.Name}}</a></td>
+                    <td>{{spendingAccount.Balance | currency}}</td>
+                    <td>{{spendingAccount.StartDate | date}} <em ng-if="!spendingAccount.StartDate" class="text-muted">None</em></td>
+                    <td>{{spendingAccount.EndDate | date}} <em ng-if="!spendingAccount.EndDate" class="text-muted">None</em></td>
+                    <td>
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="spendingAccounts.deleteSpendingAccount(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <uib-pagination class="pagination-sm pull-right"
+                        ng-if="application.$ocMedia('min-width:768px') && spendingAccounts.list.Meta.TotalPages > 1"
+                        total-items="spendingAccounts.list.Meta.TotalCount"
+                        items-per-page="spendingAccounts.list.Meta.PageSize"
+                        max-size="5"
+                        boundary-links="spendingAccounts.list.Meta.TotalPages > 5"
+                        ng-model="spendingAccounts.list.Meta.Page"
+                        ng-change="spendingAccounts.pageChanged()">
+        </uib-pagination>
+        <button type="button"
+                ng-if="application.$ocMedia('max-width:767px')"
+                class="btn btn-default btn-block btn-lg"
+                ng-show="spendingAccounts.list.Meta.Page < spendingAccounts.list.Meta.TotalPages"
+                ng-click="spendingAccounts.loadMore()">Load More</button>
+    </div>
+</div>
