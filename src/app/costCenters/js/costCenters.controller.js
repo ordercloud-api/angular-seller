@@ -1,10 +1,10 @@
 angular.module('orderCloud')
-    .controller('SpendingAccountsCtrl', SpendingAccountsController)
+    .controller('CostCentersCtrl', CostCentersController)
 ;
 
-function SpendingAccountsController($exceptionHandler, $state, $stateParams, toastr, OrderCloud, OrderCloudParameters, ocSpendingAccounts, CurrentAssignments, SpendingAccountList, Parameters) {
+function CostCentersController($exceptionHandler, $state, $stateParams, toastr, OrderCloud, OrderCloudParameters, ocCostCenters, CurrentAssignments, CostCentersList, Parameters) {
     var vm = this;
-    vm.list = SpendingAccountList;
+    vm.list = CostCentersList;
     vm.parameters = Parameters;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
     vm.userGroupID = $stateParams.usergroupid;
@@ -20,9 +20,9 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
         $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.SpendingAccounts.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
+        vm.searchLoading = OrderCloud.CostCenters.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
-                vm.list = ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);
+                vm.list = ocCostCenters.Assignments.Map(CurrentAssignments, data);
                 vm.searchResults = vm.parameters.search.length > 0;
 
                 selectedCheck();
@@ -58,7 +58,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.SpendingAccounts.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        return OrderCloud.CostCenters.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -72,7 +72,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
     }
 
     function changedCheck() {
-        vm.changedAssignments = ocSpendingAccounts.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
+        vm.changedAssignments = ocCostCenters.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
     }
 
     selectedCheck();
@@ -85,21 +85,21 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
     };
 
     vm.selectItem = function(scope) {
-        if (!scope.spendingAccount.Assigned) vm.allItemsSelected = false;
+        if (!scope.costCenter.Assigned) vm.allItemsSelected = false;
         vm.selectedCount = _.where(vm.list.Items, {Assigned:true}).length;
 
         changedCheck();
     };
 
     vm.resetAssignments = function() {
-        vm.list = ocSpendingAccounts.Assignments.Map(CurrentAssignments, vm.list);
+        vm.list = ocCostCenters.Assignments.Map(CurrentAssignments, vm.list);
         vm.changedAssignments = [];
 
         selectedCheck();
     };
 
     vm.updateAssignments = function() {
-        vm.searchLoading = ocSpendingAccounts.Assignments.Update(CurrentAssignments, vm.changedAssignments, $stateParams.buyerid)
+        vm.searchLoading = ocCostCenters.Assignments.Update(CurrentAssignments, vm.changedAssignments, $stateParams.buyerid)
             .then(function(data) {
                 angular.forEach(data.Errors, function(ex) {
                     $exceptionHandler(ex);
@@ -109,33 +109,33 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('Spending account assignments updated.', 'Success!');
+                toastr.success('Cost center assignments updated.', 'Success!');
             })
     };
 
-    vm.createSpendingAccount = function() {
-        ocSpendingAccounts.Create($stateParams.buyerid)
-            .then(function(newSpendingAccount) {
+    vm.createCostCenter = function() {
+        ocCostCenters.Create($stateParams.buyerid)
+            .then(function(newCostCenter) {
                 if ($stateParams.usergroupid) {
                     var newAssignment = {
-                        SpendingAccountID: newSpendingAccount.ID,
+                        CostCenterID: newCostCenter.ID,
                         UserGroupID: $stateParams.usergroupid
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = OrderCloud.SpendingAccounts.SaveAssignment(newAssignment, $stateParams.buyerid)
+                    vm.searchLoading = OrderCloud.CostCenters.SaveAssignment(newAssignment, $stateParams.buyerid)
                         .then(function() {
-                            newSpendingAccount.Assigned = true;
+                            newCostCenter.Assigned = true;
                             CurrentAssignments.push(newAssignment);
-                            _updateList(newSpendingAccount);
+                            _updateList(newCostCenter);
                         })
                         .catch(function() {
-                            newSpendingAccount.Assigned = false;
-                            _updateList(newSpendingAccount);
+                            newCostCenter.Assigned = false;
+                            _updateList(newCostCenter);
                         });
                 } else {
-                    newSpendingAccount.Assigned = false;
-                    _updateList(newSpendingAccount);
+                    newCostCenter.Assigned = false;
+                    _updateList(newCostCenter);
                 }
             });
 
@@ -147,27 +147,27 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
         }
     };
 
-    vm.editSpendingAccount = function(scope) {
-        ocSpendingAccounts.Edit(scope.spendingAccount, $stateParams.buyerid)
-            .then(function(updatedSpendingAccount) {
-                updatedSpendingAccount.Assigned = vm.list.Items[scope.$index].Assigned;
-                vm.list.Items[scope.$index] = updatedSpendingAccount;
-                if (updatedSpendingAccount.ID != scope.spendingAccount.ID) {
+    vm.editCostCenter = function(scope) {
+        ocCostCenters.Edit(scope.costCenter, $stateParams.buyerid)
+            .then(function(updatedCostCenter) {
+                updatedCostCenter.Assigned = vm.list.Items[scope.$index].Assigned;
+                vm.list.Items[scope.$index] = updatedCostCenter;
+                if (updatedCostCenter.ID != scope.costCenter.ID) {
                     _.map(CurrentAssignments, function(assignment) {
-                        if (assignment.SpendingAccountID == scope.spendingAccount.ID) assignment.SpendingAccountID = updatedSpendingAccount.ID;
+                        if (assignment.CostCenterID == scope.costCenter.ID) assignment.CostCenterID = updatedCostCenter.ID;
                         return assignment;
                     });
 
                     changedCheck();
                 }
-                toastr.success(updatedSpendingAccount.Name + ' was updated.', 'Success!');
+                toastr.success(updatedCostCenter.Name + ' was updated.', 'Success!');
             })
     };
 
-    vm.deleteSpendingAccount = function(scope) {
-        ocSpendingAccounts.Delete(scope.spendingAccount, $stateParams.buyerid)
+    vm.deleteCostCenter = function(scope) {
+        ocCostCenters.Delete(scope.costCenter, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.spendingAccount.Name + ' was deleted.', 'Success!');
+                toastr.success(scope.costCenter.Name + ' was deleted.', 'Success!');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
