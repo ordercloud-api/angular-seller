@@ -24,22 +24,4 @@ function UserGroupAddressesConfig($stateProvider){
                 }
             }
         })
-        .state('userGroup.address', {
-            params: {
-                addressModel: undefined
-            },
-            url: '/addresses/:addressid',
-            templateUrl: 'addresses/templates/address.html',
-            controller: 'AddressCtrl',
-            controllerAs: 'address',
-            resolve: {
-                SelectedAddress: function($stateParams, OrderCloud) {
-                    if ($stateParams.addressModel) {
-                        return $stateParams.addressModel;
-                    } else {
-                        return OrderCloud.Addresses.Get($stateParams.addressid, $stateParams.buyerid);
-                    }
-                }
-            }
-        })
 }
