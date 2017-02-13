@@ -10,6 +10,11 @@ function ProductCreateModalController($uibModalInstance, OrderCloud) {
 
     vm.submit = submit;
     vm.cancel = cancel;
+    vm.patchImage = patchImage;
+
+    function patchImage(imageXP){
+        return OrderCloud.Products.Patch(vm.product.ID, imageXP);
+    }
 
     function submit() {
         vm.loading = OrderCloud.Products.Create(vm.product)
