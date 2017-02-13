@@ -1,0 +1,56 @@
+<form name="productCreateModal.form" autocomplete="off" ng-submit="productCreateModal.submit()" novalidate class="form-horizontal" cg-busy="productCreateModal.loading">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="productCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title">Create New Product</h3>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
+            <div class="col-sm-9">
+                <input id="ProductID" pattern="([A-Za-z0-9\-\_]+)" placeholder="(Optional)" pattern-err-type="ID_Name" type="text" class="form-control" ng-model="productCreateModal.product.ID" required>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="ProductName" class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+                <input id="ProductName" type="text" class="form-control" ng-model="productCreateModal.product.Name" required>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="ProductDescription" class="col-sm-3 control-label">Description</label>
+            <div class="col-sm-9">
+                <textarea rows="4" id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="productCreateModal.product.Description"></textarea>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier</label>
+            <div class="col-sm-9">
+                <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="productCreateModal.product.QuantityMultiplier" required>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label">Image</label>
+            <div class="col-sm-9">
+                <oc-file-upload  model="productCreateModal.product" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <div class="checkbox">
+                    <label for="InventoryEnabled">
+                        <input id="InventoryEnabled" name="InventoryEnabled" type="checkbox" ng-model="productCreateModal.product.InventoryEnabled"> Inventory Enabled
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label for="ProductActive">
+                        <input id="ProductActive" name="ProductActive" type="checkbox" ng-model="productCreateModal.product.Active"> Active
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    
+    <div class="modal-footer">
+        <button type="submit" cg-busy="productCreateModal.productUpdateLoading" ng-disabled="productCreateModal.form.$invalid" class="btn btn-primary btn-block">Save Product</button>
+    </div>
+</form>

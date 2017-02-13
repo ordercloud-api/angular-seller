@@ -5,7 +5,7 @@
         </h3>
         <!--====== CREATE ======-->
         <div class="l-page-header__btns">
-            <button type="button" class="btn btn-primary btn-block" ui-sref="products.create"><i class="fa fa-plus-circle"></i>
+            <button type="button" class="btn btn-primary btn-block" ng-click="products.createProduct()"><i class="fa fa-plus-circle"></i>
                 New Product
             </button>
         </div>
@@ -26,23 +26,6 @@
         </fieldset>
     </form>
 
-    <!--Sort may not be needed now that tables are using .table-respon-->
-    <!--<div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
-        <label>Sort By</label>
-        <div ng-class="{'input-group':products.sortSelection}">
-            <select placeholder="Sort" class="form-control" ng-model="products.sortSelection" ng-change="products.updateSort()">
-                <option value="">None</option>
-                <option value="ID">ID</option>
-                <option value="Name">Name</option>
-            </select>
-            <div ng-if="products.sortSelection" class="input-group-btn">
-                <button class="btn btn-default" ng-click="products.reverseSort()">
-                    <i class="fa fa-sort"></i>
-                </button>
-            </div>
-        </div>
-    </div>-->
-
     <!--====== LIST ======-->
     <div cg-busy="products.searchLoading">
         <div class="no-matches" ng-if="!products.list.Items.length">
@@ -50,29 +33,22 @@
         </div>
         <div ng-if="products.list.Items.length">
             <div class="row">
-                <div class="col-xs-6">
-                    <button ng-if="products.selectedCount" class="btn btn-danger btn-xs" ng-click="products.deleteSelected()">
-                        <i class="fa fa-trash"></i> Delete {{products.selectedCount == 1 ? "Product" : (products.selectedCount + " Products")}}
-                    </button>
-                </div>
-                <div class="col-xs-6">
+                <div class="col-xs-6 col-xs-offset-6">
                     <p class="text-right">{{(application.$ocMedia('min-width:768px') ? products.list.Meta.ItemRange[0] : '1') + ' - ' +
                         products.list.Meta.ItemRange[1] + ' of ' + products.list.Meta.TotalCount + ' results'}}</p>
                 </div>
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered l-product-table">
                     <colgroup>
                         <col>
-                        <col style="width:20%">
-                        <col style="width:80%">
+                        <col>
+                        <col>
+                        <col>
                     </colgroup>
                     <thead>
                     <tr>
-                        <th class="text-center">
-                            <input type="checkbox" ng-model="products.allItemsSelected" ng-change="products.selectAllItems()" />
-                        </th>
                         <th ng-click="products.updateSort('ID')">
                             ID
                             <i class="fa fa-caret-down" ng-show="products.parameters.sortBy == 'ID'"></i>
@@ -83,23 +59,19 @@
                             <i class="fa fa-caret-down" ng-show="products.parameters.sortBy == 'Name'"></i>
                             <i class="fa fa-caret-up" ng-show="products.parameters.sortBy == '!Name'"></i>
                         </th>
-                        <th colspan="2">Active</th>
+                        <th>Active</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="product in products.list.Items">
-                        <td class="text-center">
-                            <input type="checkbox" ng-model="product.selected" ng-change="products.selectItem(this)"/>
-                        </td>
-                        <td>
-                            <a href="" ui-sref="productDetail({productid:product.ID})">{{product.ID}}</a>
-                        </td>
-                        <td>{{product.Name}}</td>
+                        <td>{{product.ID}}</td>
+                        <td><a href="" ui-sref="productDetail({productid:product.ID})">{{product.Name}}</a></td>
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':product.Active}"></i>
                         </td>
-                        <td class="actions-cell">
-                            <button ui-sref="productDetail({productid:product.ID})" class="btn btn-default btn-xs btn-block">View Product</button>
+                        <td>
+                            <button ng-click="products.deleteProduct(this)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                         </td>
                     </tr>
                     </tbody>

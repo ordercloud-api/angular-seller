@@ -20,11 +20,5 @@ function ProductsConfig($stateProvider) {
                 }
             }
         })
-        .state('products.create', {
-            url: '/create',
-            templateUrl: 'productManagement/products/templates/productCreate.html',
-            controller: 'ProductCreateCtrl',
-            controllerAs: 'productCreate'
-        })
     ;
 }
