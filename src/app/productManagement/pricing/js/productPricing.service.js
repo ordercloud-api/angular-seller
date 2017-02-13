@@ -17,10 +17,8 @@ function ocProductPricingService($q, toastr, OrderCloud, ocConfirm) {
         }
     };
 
-    function _assignmentList(productid, buyerid) {
+    function _assignmentList(productid) {
         var deferred = $q.defer();
-
-        OrderCloud.BuyerID.Set(undefined);
 
         var page = 1;
         var pageSize = 100;
@@ -40,13 +38,11 @@ function ocProductPricingService($q, toastr, OrderCloud, ocConfirm) {
                                 assignments.Items = [].concat(assignments.Items, result.Items);
                                 assignments.Meta = result.Meta;
                             });
-                            OrderCloud.BuyerID.Set(buyerid);
                             assignments.buyerlist = _.uniq(_.pluck(assignments.Items, 'BuyerID'));
 
                             deferred.resolve(assignments);
                         });
                 } else{
-                    OrderCloud.BuyerID.Set(buyerid);
                     assignments.buyerlist = _.uniq(_.pluck(assignments.Items, 'BuyerID'));
                     deferred.resolve(assignments);
                 }
