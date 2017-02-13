@@ -68,6 +68,11 @@ function CreateCategoryModalController($state, $exceptionHandler, $uibModalInsta
     vm.category.ParentID = ParentID;
     vm.category.Active = true;
     vm.catalogid = CatalogID;
+    vm.patchImage = patchImage;
+
+    function patchImage(imageXP){
+       return OrderCloud.Categories.Patch(vm.category.ID, {xp: imageXP});
+    }
 
     vm.cancel = function(){
         $uibModalInstance.dismiss();
@@ -94,7 +99,12 @@ function EditCategoryModalController($state, $exceptionHandler, $uibModalInstanc
     originalcategoryID = angular.copy(SelectedCategory.ID);
     vm.category = SelectedCategory;
     vm.catalogid = CatalogID;
+    vm.patchImage = patchImage;
 
+    function patchImage(imageXP){
+       return OrderCloud.Categories.Patch(vm.category.ID, {xp: imageXP});
+    }
+    
     vm.cancel = function(){
         $uibModalInstance.dismiss();
     };
