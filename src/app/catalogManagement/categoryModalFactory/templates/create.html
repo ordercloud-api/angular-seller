@@ -32,6 +32,12 @@
                 </div>
             </div>
         </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label">Image</label>
+            <div class="col-sm-9">
+                <oc-file-upload  model="createCategory.category" label="Image:" patch="createCategory.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+            </div>
+        </fieldset>
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-primary btn-block" ng-disabled="CategoryCreateForm.$invalid">Save</button>

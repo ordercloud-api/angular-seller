@@ -9,6 +9,11 @@ function ProductDetailController($rootScope, $exceptionHandler, $state, toastr, 
     vm.inventoryEnabled = angular.copy(SelectedProduct.InventoryEnabled);
     vm.updateProduct = updateProduct;
     vm.deleteProduct = deleteProduct;
+    vm.patchImage = patchImage;
+
+    function patchImage(imageXP){
+       return OrderCloud.Products.Patch(vm.product.ID, {xp: imageXP});
+    }
 
     function updateProduct() {
         var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'InventoryEnabled']);
