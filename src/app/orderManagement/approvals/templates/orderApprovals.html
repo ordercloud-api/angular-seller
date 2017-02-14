@@ -1,7 +1,7 @@
 <div cg-busy="application.stateLoading('approvals')">
     <!--====== PAYMENT LIST ======-->
     <div ng-if="orderApprovals.list.Items.length">
-        <div class="table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Pending'}).length">
+        <div class="panel panel-default table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Pending'}).length">
             <h4>Pending Approvals</h4>
             <table class="table table-bordered">
                 <thead>
@@ -22,7 +22,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Approved'}).length">
+        <div class="panel panel-default table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Approved'}).length">
             <h4>Approved</h4>
             <table class="table table-bordered">
                 <thead>
@@ -45,7 +45,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Declined'}).length">
+        <div class="panel panel-default table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Declined'}).length">
             <h4>Declined</h4>
             <table class="table table-bordered">
                 <thead>
