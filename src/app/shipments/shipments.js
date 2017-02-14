@@ -15,8 +15,8 @@ function ShipmentsConfig($stateProvider) {
             url: '/shipments?search&page&pageSize&searchOn&sortBy&filters',
             data: {componentName: 'Shipments'},
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 ShipmentList: function(OrderCloud, Parameters) {
                     return OrderCloud.Shipments.List(Parameters.orderID, Parameters.search, Parameters.page, Parameters.pageSize);
@@ -52,7 +52,7 @@ function ShipmentsConfig($stateProvider) {
     ;
 }
 
-function ShipmentsController($state, $ocMedia, OrderCloud, OrderCloudParameters, ShipmentList, Parameters) {
+function ShipmentsController($state, $ocMedia, OrderCloud, ocParameters, ShipmentList, Parameters) {
     var vm = this;
     vm.list = ShipmentList;
     vm.parameters = Parameters;
@@ -67,7 +67,7 @@ function ShipmentsController($state, $ocMedia, OrderCloud, OrderCloudParameters,
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page

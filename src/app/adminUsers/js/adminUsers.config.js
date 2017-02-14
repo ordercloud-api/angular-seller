@@ -11,8 +11,8 @@ function AdminUsersConfig($stateProvider) {
             controllerAs: 'adminUsers',
             url: '/admin-users?search&page&pageSize&searchOn&sortBy&filters',
             resolve : {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 AdminUsersList: function(OrderCloud, Parameters) {
                     return OrderCloud.AdminUsers.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);

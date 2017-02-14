@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductsCtrl', ProductsController)
 ;
 
-function ProductsController($state, toastr, OrderCloud, OrderCloudParameters, ocProducts, ProductList, Parameters) {
+function ProductsController($state, toastr, OrderCloud, ocParameters, ocProducts, ProductList, Parameters) {
     var vm = this;
     vm.list = ProductList;
     //Set parameters
@@ -20,11 +20,11 @@ function ProductsController($state, toastr, OrderCloud, OrderCloudParameters, oc
     vm.updateSort = updateSort; //Conditionally set, reverse, remove the sortBy parameter & reload the state
 
     function filter(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     }
 
     function search() {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.Products.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters)
             .then(function(data) {
                 vm.list = data;

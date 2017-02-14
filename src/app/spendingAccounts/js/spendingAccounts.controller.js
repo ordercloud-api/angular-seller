@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('SpendingAccountsCtrl', SpendingAccountsController)
 ;
 
-function SpendingAccountsController($exceptionHandler, $state, $stateParams, toastr, OrderCloud, OrderCloudParameters, ocSpendingAccounts, CurrentAssignments, SpendingAccountList, Parameters) {
+function SpendingAccountsController($exceptionHandler, $state, $stateParams, toastr, OrderCloud, ocParameters, ocSpendingAccounts, CurrentAssignments, SpendingAccountList, Parameters) {
     var vm = this;
     vm.list = SpendingAccountList;
     vm.parameters = Parameters;
@@ -14,12 +14,12 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.SpendingAccounts.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
                 vm.list = ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);

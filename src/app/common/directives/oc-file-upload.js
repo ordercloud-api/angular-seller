@@ -1,60 +1,8 @@
 angular.module('orderCloud')
-    .factory('FileReader', fileReader)
     .directive('ocFileUpload', ordercloudFileUpload)
 ;
 
-function fileReader($q) {
-    var service = {
-        ReadAsDataUrl: _readAsDataURL
-    };
-
-    function onLoad(reader, deferred, scope) {
-        return function() {
-            scope.$apply(function() {
-                deferred.resolve(reader);
-            });
-        };
-    }
-
-    function onError(reader, deferred, scope) {
-        return function() {
-            scope.$apply(function() {
-                deferred.reject(reader);
-            });
-        };
-    }
-
-    function onProgress(reader, scope) {
-        return function(event) {
-            scope.$broadcast('fileProgress',
-                {
-                    total: event.total,
-                    loaded: event.loaded
-                });
-        };
-    }
-
-    function getReader(deferred, scope) {
-        var reader = new FileReader();
-        reader.onload = onLoad(reader, deferred, scope);
-        reader.onerror = onError(reader, deferred, scope);
-        reader.onprogress = onProgress(reader, scope);
-        return reader;
-    }
-
-    function _readAsDataURL(file, scope) {
-        var deferred = $q.defer();
-
-        var reader = getReader(deferred, scope);
-        reader.readAsDataURL(file);
-
-        return deferred.promise;
-    }
-
-    return service;
-}
-
-function ordercloudFileUpload($parse, FileReader, FilesService) {
+function ordercloudFileUpload($parse, ocFileReader, ocFilesService) {
     //TODO: accept keyName param for choosing which xp[{key}] the image URL will save to
     var directive = {
         scope: {
@@ -64,7 +12,7 @@ function ordercloudFileUpload($parse, FileReader, FilesService) {
             patch: '&'
         },
         restrict: 'E',
-        templateUrl: 'fileUpload/templates/fileUpload.tpl.html',
+        templateUrl: 'common/templates/fileUpload.html',
         replace: true,
         link: link
     };
@@ -83,7 +31,7 @@ function ordercloudFileUpload($parse, FileReader, FilesService) {
         };
 
         function afterSelection(file, fileName) {
-            FilesService.Upload(file, fileName)
+            ocFilesService.Upload(file, fileName)
                 .then(function(fileData) {
                     if (!scope.model.xp) scope.model.xp = {};
                     scope.model.xp.image = {};
@@ -127,7 +75,7 @@ function ordercloudFileUpload($parse, FileReader, FilesService) {
                     }
                     if (valid) {
                         scope.$apply(function() {
-                            FileReader.ReadAsDataUrl(event.target.files[0], scope)
+                            ocFileReader.ReadAsDataUrl(event.target.files[0], scope)
                                 .then(function() {
                                     afterSelection(event.target.files[0], fileName);
                                 });

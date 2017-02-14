@@ -21,14 +21,14 @@ describe('Component: Buyers', function() {
 
     describe('State: buyers', function() {
         var state;
-        beforeEach(inject(function($state, OrderCloudParameters) {
+        beforeEach(inject(function($state, ocParameters) {
             state = $state.get('buyers');
-            spyOn(OrderCloudParameters, 'Get');
+            spyOn(ocParameters, 'Get');
             spyOn(oc.Buyers, 'List');
         }));
-        it('should resolve Parameters', inject(function($injector, OrderCloudParameters, $stateParams){
+        it('should resolve Parameters', inject(function($injector, ocParameters, $stateParams){
             $injector.invoke(state.resolve.Parameters);
-            expect(OrderCloudParameters.Get).toHaveBeenCalledWith($stateParams);
+            expect(ocParameters.Get).toHaveBeenCalledWith($stateParams);
         }));
         it('should resolve BuyersList', inject(function($injector, Parameters) {
             $injector.invoke(state.resolve.BuyerList);
@@ -73,9 +73,9 @@ describe('Component: Buyers', function() {
             spyOn($state, 'go');
         }));
         describe('filter', function() {
-            it('should refresh the page with the filter parameters', inject(function($state, OrderCloudParameters) {
+            it('should refresh the page with the filter parameters', inject(function($state, ocParameters) {
                 buyerCtrl.filter();
-                expect($state.go).toHaveBeenCalledWith('.', OrderCloudParameters.Create(parameters));
+                expect($state.go).toHaveBeenCalledWith('.', ocParameters.Create(parameters));
             }));
         });
         describe('search', function() {

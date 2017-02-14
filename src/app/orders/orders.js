@@ -20,8 +20,8 @@ function OrdersConfig($stateProvider) {
                 UserType: function(OrderCloud) {
                     return JSON.parse(atob(OrderCloud.Auth.ReadToken().split('.')[1])).usrtype;
                 },
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 OrderList: function(OrderCloud, Parameters, UserType) {
                     return OrderCloud.Orders[UserType == 'admin' ? 'ListIncoming' : 'ListOutgoing'](Parameters.from, Parameters.to, Parameters.search, Parameters.page, Parameters.pageSize || 12, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
@@ -53,7 +53,7 @@ function OrdersConfig($stateProvider) {
     ;*/
 }
 
-function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, UserType, OrderList, Parameters) {
+function OrdersController($state, $ocMedia, OrderCloud, ocParameters, UserType, OrderList, Parameters) {
     var vm = this;
     vm.list = OrderList;
     vm.parameters = Parameters;
@@ -68,7 +68,7 @@ function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, Us
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page

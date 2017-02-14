@@ -12,8 +12,8 @@ function ProductsConfig($stateProvider) {
             url: '/products?search&page&pageSize&searchOn&sortBy&filters',
             data: {componentName: 'Products'},
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 ProductList: function(OrderCloud, Parameters) {
                     return OrderCloud.Products.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);

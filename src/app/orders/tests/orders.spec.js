@@ -111,15 +111,15 @@ describe('Component: Orders', function() {
 
     describe('State: orders', function() {
         var state;
-        beforeEach(inject(function($state, OrderCloudParameters) {
+        beforeEach(inject(function($state, ocParameters) {
             state = $state.get('orders');
-            spyOn(OrderCloudParameters, 'Get').and.returnValue(null);
+            spyOn(ocParameters, 'Get').and.returnValue(null);
             spyOn(oc.Auth, 'ReadToken').and.returnValue('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3IiOiJDT05OT1JfSk9ITlNPTiIsImNpZCI6ImY1NjdjZTQ2LTNjMjQtNDZiZS1hOWM5LTMyN2ZhYmFkZWJiMyIsImltcCI6ImMxIiwidXNydHlwZSI6ImJ1eWVyIiwicm9sZSI6IkZ1bGxBY2Nlc3MiLCJpc3MiOiJodHRwczovL2F1dGgub3JkZXJjbG91ZC5pbyIsImF1ZCI6Imh0dHBzOi8vYXBpLm9yZGVyY2xvdWQuaW8iLCJleHAiOjE0NTQ5NzI2MDgsIm5iZiI6MTQ1NDk2OTAwOH0.RmWy4hoDzSLaWmlY3pxkOZ3OC2ZTRgzmpiEu_SN8YMk');
             spyOn(oc.Orders, 'ListOutgoing').and.returnValue(null);
         }));
-        it('should resolve Parameters', inject(function($injector, OrderCloudParameters){
+        it('should resolve Parameters', inject(function($injector, ocParameters){
             $injector.invoke(state.resolve.Parameters);
-            expect(OrderCloudParameters.Get).toHaveBeenCalled();
+            expect(ocParameters.Get).toHaveBeenCalled();
         }));
         it('should resolve UserType', inject(function($injector) {
             var userType = $injector.invoke(state.resolve.UserType);

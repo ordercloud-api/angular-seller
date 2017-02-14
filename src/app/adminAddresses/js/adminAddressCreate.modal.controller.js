@@ -2,13 +2,13 @@ angular.module('orderCloud')
     .controller('AdminAddressCreateModalCtrl', AdminAddressCreateModalController)
 ;
 
-function AdminAddressCreateModalController($uibModalInstance, $exceptionHandler, $scope, OrderCloud, OCGeography){
+function AdminAddressCreateModalController($uibModalInstance, $exceptionHandler, $scope, OrderCloud, ocGeography){
     var vm = this;
     vm.adminAddress = {
         Country: 'US' // this is to default 'create' addresses to the country US
     };
-    vm.countries = OCGeography.Countries;
-    vm.states = OCGeography.States;
+    vm.countries = ocGeography.Countries;
+    vm.states = ocGeography.States;
 
     $scope.$watch(function() {
         return vm.adminAddress.Country

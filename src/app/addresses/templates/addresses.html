@@ -79,12 +79,12 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="address in addresses.list.Items">
-                        <th class="text-center">
+                        <td class="text-center">
                             <input type="checkbox" ng-model="address.shipping" ng-change="addresses.selectItem(this, 'shipping')" />
-                        </th>
-                        <th class="text-center">
+                        </td>
+                        <td class="text-center">
                             <input type="checkbox" ng-model="address.billing" ng-change="addresses.selectItem(this, 'billing')" />
-                        </th>
+                        </td>
                         <td>{{address.ID}}</td>
                         <td>
                             <a href="" ng-click="addresses.editAddress(this)">{{address.AddressName}}</a>

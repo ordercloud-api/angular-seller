@@ -24,14 +24,14 @@ describe('Component: CreditCards', function() {
 
     describe('State: creditCards', function() {
         var state;
-        beforeEach(inject(function($state, OrderCloudParameters) {
+        beforeEach(inject(function($state, ocParameters) {
             state = $state.get('creditCards');
-            spyOn(OrderCloudParameters, 'Get').and.returnValue(null);
+            spyOn(ocParameters, 'Get').and.returnValue(null);
             spyOn(oc.CreditCards, 'List').and.returnValue(null);
         }));
-        it('should resolve Parameters', inject(function($injector, OrderCloudParameters){
+        it('should resolve Parameters', inject(function($injector, ocParameters){
             $injector.invoke(state.resolve.Parameters);
-            expect(OrderCloudParameters.Get).toHaveBeenCalled();
+            expect(ocParameters.Get).toHaveBeenCalled();
         }));
         it('should resolve CreditCardList', inject(function($injector) {
             $injector.invoke(state.resolve.CreditCardList);

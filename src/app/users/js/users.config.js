@@ -11,8 +11,8 @@ function UsersConfig($stateProvider) {
             controllerAs: 'users',
             url: '/users?userGroupID&search&page&pageSize&searchOn&sortBy&filters',
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 UserList: function(OrderCloud, Parameters) {
                     return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);

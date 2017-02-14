@@ -10,8 +10,8 @@ function UserGroupUsersConfig($stateProvider) {
             controller: 'UserGroupUsersCtrl',
             controllerAs: 'userGroupUsers',
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 CurrentAssignments: function($stateParams, ocUsers) {
                     return ocUsers.Assignments.Get($stateParams.buyerid, $stateParams.usergroupid);

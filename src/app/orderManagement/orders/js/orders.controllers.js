@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('OrdersCtrl', OrdersController)
 ;
 
-function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, ocOrdersService, Parameters, OrderList, BuyerCompanies) {
+function OrdersController($state, $ocMedia, OrderCloud, ocParameters, ocOrdersService, Parameters, OrderList, BuyerCompanies) {
     var vm = this;
     if (Parameters.fromDate) Parameters.fromDate = new Date(Parameters.fromDate);
     if (Parameters.toDate) Parameters.toDate = new Date(Parameters.toDate);
@@ -28,7 +28,7 @@ function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, oc
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     vm.toggleFilters = function() {
@@ -37,7 +37,7 @@ function OrdersController($state, $ocMedia, OrderCloud, OrderCloudParameters, oc
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.parameters.pageSize = Parameters.pageSize || 12;
         vm.searchLoading = ocOrdersService.List(vm.parameters)
             .then(function(data) {

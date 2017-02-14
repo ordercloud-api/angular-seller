@@ -1,24 +1,8 @@
-angular.module('ordercloud-address', [])
-    .directive('ordercloudAddressForm', AddressFormDirective)
-    .factory('OCGeography', OCGeography)
+angular.module('orderCloud')
+    .factory('ocGeography', OrderCloudGeography)
 ;
 
-function AddressFormDirective(OCGeography) {
-    return {
-        restrict: 'E',
-        scope: {
-            address: '=',
-            isbilling: '='
-        },
-        templateUrl: 'common/address/templates/address.form.tpl.html',
-        link: function(scope) {
-            scope.countries = OCGeography.Countries;
-            scope.states = OCGeography.States;
-        }
-    };
-}
-
-function OCGeography() {
+function OrderCloudGeography() {
     var _countries = [
         { "label": "United States of America", "value": "US"},
         { "label": "Afghanistan", "value": "AF"},

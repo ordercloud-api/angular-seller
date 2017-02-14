@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserGroupsCtrl', UserGroupsController)
 ;
 
-function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderCloud, OrderCloudParameters, UserGroupList, Parameters) {
+function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderCloud, ocParameters, UserGroupList, Parameters) {
     var vm = this;
     vm.list = UserGroupList;
     vm.parameters = Parameters;
@@ -13,12 +13,12 @@ function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderC
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.UserGroups.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
                 vm.list = data;

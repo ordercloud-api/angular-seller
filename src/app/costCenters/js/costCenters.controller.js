@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CostCentersCtrl', CostCentersController)
 ;
 
-function CostCentersController($exceptionHandler, $state, $stateParams, toastr, OrderCloud, OrderCloudParameters, ocCostCenters, CurrentAssignments, CostCentersList, Parameters) {
+function CostCentersController($exceptionHandler, $state, $stateParams, toastr, OrderCloud, ocParameters, ocCostCenters, CurrentAssignments, CostCentersList, Parameters) {
     var vm = this;
     vm.list = CostCentersList;
     vm.parameters = Parameters;
@@ -14,12 +14,12 @@ function CostCentersController($exceptionHandler, $state, $stateParams, toastr, 
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.CostCenters.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
                 vm.list = ocCostCenters.Assignments.Map(CurrentAssignments, data);

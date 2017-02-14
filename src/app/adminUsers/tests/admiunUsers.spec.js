@@ -24,16 +24,16 @@ describe('Component: AdminUsers', function() {
 
     describe('State: adminUsers', function() {
         var state;
-        beforeEach(inject(function($state, OrderCloudParameters) {
+        beforeEach(inject(function($state, ocParameters) {
             state = $state.get('adminUsers');
             var defer = q.defer();
             defer.resolve();
-            spyOn(OrderCloudParameters, 'Get').and.returnValue(null);
+            spyOn(ocParameters, 'Get').and.returnValue(null);
             spyOn(oc.AdminUsers, 'List').and.returnValue(defer.promise);
         }));
-        it('should resolve Parameters', inject(function($injector, OrderCloudParameters){
+        it('should resolve Parameters', inject(function($injector, ocParameters){
             $injector.invoke(state.resolve.Parameters);
-            expect(OrderCloudParameters.Get).toHaveBeenCalled();
+            expect(ocParameters.Get).toHaveBeenCalled();
         }));
         it('should resolve AdminUserList', inject(function($injector) {
             $injector.invoke(state.resolve.AdminUsersList);

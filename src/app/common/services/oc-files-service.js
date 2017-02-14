@@ -3,10 +3,10 @@
 // for this implementation the s3 keys are stored here in this service. Consideration of securing those credentials should be take for future usage
 
 angular.module('orderCloud')
-    .factory('FilesService', FilesService)
+    .factory('ocFilesService', OrderCloudFilesService)
 ;
 
-function FilesService($q) {
+function OrderCloudFilesService($q) {
     var service = {
         Get: _get,
         Upload: _upload,

@@ -18,8 +18,8 @@ function GiftCardsConfig($stateProvider) {
             url: '/giftcards?search&page&pageSize&searchOn&sortBy&filters',
             data: {componentName: 'Gift Cards'},
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 GiftCardList: function(OrderCloud, Parameters) {
                     var parameters = angular.copy(Parameters);
@@ -92,7 +92,7 @@ function GiftCardsConfig($stateProvider) {
     ;
 }
 
-function GiftCardsController ($state, $ocMedia, OrderCloud, OrderCloudParameters, GiftCardList, TrackSearch, Parameters) {
+function GiftCardsController ($state, $ocMedia, OrderCloud, ocParameters, GiftCardList, TrackSearch, Parameters) {
     var vm = this;
     vm.list = GiftCardList;
     vm.parameters = Parameters;
@@ -122,7 +122,7 @@ function GiftCardsController ($state, $ocMedia, OrderCloud, OrderCloudParameters
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page

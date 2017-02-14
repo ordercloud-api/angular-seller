@@ -21,14 +21,14 @@ describe('Component: CostCenters', function() {
 
     describe('State: costCenters', function() {
         var state;
-        beforeEach(inject(function($state, OrderCloudParameters) {
+        beforeEach(inject(function($state, ocParameters) {
             state = $state.get('costCenters');
-            spyOn(OrderCloudParameters, 'Get').and.returnValue(null);
+            spyOn(ocParameters, 'Get').and.returnValue(null);
             spyOn(oc.CostCenters, 'List').and.returnValue(null);
         }));
-        it('should resolve Parameters', inject(function($injector, OrderCloudParameters) {
+        it('should resolve Parameters', inject(function($injector, ocParameters) {
             $injector.invoke(state.resolve.Parameters);
-            expect(OrderCloudParameters.Get).toHaveBeenCalled();
+            expect(ocParameters.Get).toHaveBeenCalled();
         }));
         it('should resolve CostCenterList', inject(function($injector) {
             $injector.invoke(state.resolve.CostCentersList);
