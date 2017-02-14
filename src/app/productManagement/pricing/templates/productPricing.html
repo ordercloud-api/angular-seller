@@ -113,37 +113,35 @@
                 <button class="btn btn-primary" ng-click="productPricing.createPriceBreak()"><i class="fa fa-plus-circle"></i> Price Break</button>
                 <br>
                 <br>
-                <div class="panel panel-default">
-                    <div class="table-responsive">
-                        <table class="table table-condensed table-hover table-bordered">
-                            <colgroup>
-                                <col style="width:45px;">
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th class="text-center">
-                                    <input type="checkbox" ng-model="productPricing.selectedPrice.PriceSchedule.allPriceBreaksSelected"
-                                           ng-change="productPricing.selectAllPriceBreaks(productPricing.selectedPrice.PriceSchedule)">
-                                </th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="pricebreak in productPricing.selectedPrice.PriceSchedule.PriceBreaks | orderBy: 'Quantity' track by $index">
-                                <td class="text-center">
-                                    <input type="checkbox" ng-model="pricebreak.selected" ng-change="productPricing.selectPriceBreak(productPricing.selectedPrice.PriceSchedule, this)">
-                                </td>
-                                <td>
-                                    {{pricebreak.Quantity}}
-                                </td>
-                                <td>
-                                    {{pricebreak.Price | currency}}
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="panel panel-default table-responsive">
+                    <table class="table table-condensed table-striped table-bordered">
+                        <colgroup>
+                            <col style="width:45px;">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="text-center">
+                                <input type="checkbox" ng-model="productPricing.selectedPrice.PriceSchedule.allPriceBreaksSelected"
+                                       ng-change="productPricing.selectAllPriceBreaks(productPricing.selectedPrice.PriceSchedule)">
+                            </th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="pricebreak in productPricing.selectedPrice.PriceSchedule.PriceBreaks | orderBy: 'Quantity' track by $index">
+                            <td class="text-center">
+                                <input type="checkbox" ng-model="pricebreak.selected" ng-change="productPricing.selectPriceBreak(productPricing.selectedPrice.PriceSchedule, this)">
+                            </td>
+                            <td>
+                                {{pricebreak.Quantity}}
+                            </td>
+                            <td>
+                                {{pricebreak.Price | currency}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -176,7 +174,7 @@
                         <p class="small text-center text-muted" style="margin-top:15px; margin-bottom:0;" ng-if="buyer.Assigned">This price is assigned to the entire buyer organization.</p>
                     </div>
                     <div class="table-responsive" ng-if="!buyer.Assigned">
-                        <table class="table table-condensed table-hover table-bordered">
+                        <table class="table table-condensed table-striped table-bordered">
                             <colgroup>
                                 <col style="width:45px;">
                             </colgroup>
@@ -195,7 +193,7 @@
                                     <input type="checkbox" ng-model="userGroup.selected" ng-change="productPricing.selectUserGroup(buyer, this)">
                                 </td>
                                 <td>
-                                    <a href="" ui-sref="userGroups.detail({buyerid:buyer.ID, usergroupid:userGroup.ID})">{{userGroup.ID}}</a>
+                                    <a href="" ui-sref="userGroup({buyerid:buyer.ID, usergroupid:userGroup.ID})">{{userGroup.ID}}</a>
                                 </td>
                                 <td>{{userGroup.Name}}</td>
                             </tr>
