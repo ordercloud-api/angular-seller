@@ -11,8 +11,8 @@ function BuyersConfig($stateProvider) {
             controller: 'BuyersCtrl',
             controllerAs: 'buyers',
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 BuyerList: function(OrderCloud, Parameters) {
                     return OrderCloud.Buyers.List(Parameters.search, Parameters.page, Parameters.pageSize);

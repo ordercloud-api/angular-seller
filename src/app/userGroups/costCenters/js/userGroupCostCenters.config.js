@@ -11,8 +11,8 @@ function UserGroupCostCentersConfig($stateProvider) {
             url: '/costcenters?search&page&pageSize&searchOn&sortBy&filters',
             data: {componentName: 'Cost Centers'},
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 CurrentAssignments: function($q, ocCostCenters, $stateParams) {
                     return ocCostCenters.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);

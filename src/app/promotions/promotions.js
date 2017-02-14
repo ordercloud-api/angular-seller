@@ -26,8 +26,8 @@ function PromotionsConfig($stateProvider) {
             url: '/promotions?search&page&pageSize&searchOn&sortBy&filters',
             data: {componentName: 'Promotions'},
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 PromotionList: function(OrderCloud, Parameters) {
                     return OrderCloud.Promotions.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
@@ -97,7 +97,7 @@ function PromotionsConfig($stateProvider) {
     ;
 }
 
-function PromotionsController($state, $ocMedia, OrderCloud, OrderCloudParameters, PromotionList, Parameters) {
+function PromotionsController($state, $ocMedia, OrderCloud, ocParameters, PromotionList, Parameters) {
     var vm = this;
     vm.list = PromotionList;
     vm.parameters = Parameters;
@@ -112,7 +112,7 @@ function PromotionsController($state, $ocMedia, OrderCloud, OrderCloudParameters
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page

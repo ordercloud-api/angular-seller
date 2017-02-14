@@ -11,8 +11,8 @@ function AddressesConfig($stateProvider){
             controllerAs: 'addresses',
             url: '/addresses?search&page&pageSize&searchOn&sortBy&filters',
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 CurrentAssignments: function($q, ocAddresses, $stateParams) {
                     return ocAddresses.Assignments.Get('company', $stateParams.buyerid);

@@ -10,8 +10,8 @@ function UserGroupSpendingAccountsConfig($stateProvider){
             controllerAs: 'spendingAccounts',
             url: '/spending-accounts?search&page&pageSize&searchOn&sortBy&filters',
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 CurrentAssignments: function($q, ocSpendingAccounts, $stateParams) {
                     return ocSpendingAccounts.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);

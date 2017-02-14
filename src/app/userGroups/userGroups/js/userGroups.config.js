@@ -11,8 +11,8 @@ function UserGroupsConfig($stateProvider) {
             controller: 'UserGroupsCtrl',
             controllerAs: 'userGroups',
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 UserGroupList: function(OrderCloud, Parameters) {
                     return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);

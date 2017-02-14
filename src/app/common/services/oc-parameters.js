@@ -1,5 +1,5 @@
 angular.module('orderCloud')
-	.factory('OrderCloudParameters', OrderCloudParametersService)
+	.factory('ocParameters', OrderCloudParametersService)
 ;
 
 function OrderCloudParametersService($filter) {

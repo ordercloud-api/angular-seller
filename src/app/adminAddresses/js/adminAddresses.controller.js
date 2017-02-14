@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminAddressesCtrl', AdminAddressesController)
 ;
 
-function AdminAddressesController($state, toastr, OrderCloud, ocAdminAddresses, OrderCloudParameters, AddressList, Parameters){
+function AdminAddressesController($state, toastr, OrderCloud, ocAdminAddresses, ocParameters, AddressList, Parameters){
     var vm = this;
     vm.list = AddressList;
     vm.parameters = Parameters;
@@ -13,12 +13,12 @@ function AdminAddressesController($state, toastr, OrderCloud, ocAdminAddresses, 
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.AdminAddresses.List(vm.parameters.search, 1, vm.parameters.pageSize)
             .then(function(data) {
                 vm.list = data;

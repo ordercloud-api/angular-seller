@@ -17,8 +17,8 @@ function CreditCardsConfig($stateProvider) {
             url: '/creditcards?from&to&search&page&pageSize&searchOn&sortBy&filters',
             data: {componentName: 'Credit Cards'},
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 CreditCardList: function(OrderCloud, Parameters) {
                     return OrderCloud.CreditCards.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
@@ -55,8 +55,8 @@ function CreditCardsConfig($stateProvider) {
                 AssignedUserGroups: function($stateParams, OrderCloud) {
                     return OrderCloud.CreditCards.ListAssignments($stateParams.creditcardid);
                 },
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams, 1);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams, 1);
                 },
                 SelectedCreditCard: function($stateParams, OrderCloud) {
                     return OrderCloud.CreditCards.Get($stateParams.creditcardid);
@@ -69,7 +69,7 @@ function CreditCardsConfig($stateProvider) {
     ;
 }
 
-function CreditCardsController($state, $ocMedia, OrderCloud, OrderCloudParameters, CreditCardList, Parameters) {
+function CreditCardsController($state, $ocMedia, OrderCloud, ocParameters, CreditCardList, Parameters) {
     var vm = this;
     vm.list = CreditCardList;
     vm.parameters = Parameters;
@@ -84,7 +84,7 @@ function CreditCardsController($state, $ocMedia, OrderCloud, OrderCloudParameter
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page
@@ -259,7 +259,7 @@ function CreditCardCreateController($exceptionHandler, $state, toastr, OrderClou
 
 }
 
-function CreditCardAssignController($scope, $state, $ocMedia, toastr, OrderCloud, Assignments, Paging, OrderCloudParameters, Buyer, UserGroupList, AssignedUserGroups, SelectedCreditCard, Parameters) {
+function CreditCardAssignController($scope, $state, $ocMedia, toastr, OrderCloud, Assignments, Paging, ocParameters, Buyer, UserGroupList, AssignedUserGroups, SelectedCreditCard, Parameters) {
     var vm = this;
     vm.buyer = Buyer;
     vm.assignBuyer = false;
@@ -310,7 +310,7 @@ function CreditCardAssignController($scope, $state, $ocMedia, toastr, OrderCloud
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage, 1));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage, 1));
     };
 
     //Reload the state with new search parameter & reset the page

@@ -11,8 +11,8 @@ function OrdersConfig($stateProvider) {
             controller: 'OrdersCtrl',
             controllerAs: 'orders',
             resolve: {
-                Parameters: function($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
                 },
                 OrderList: function(ocOrdersService, OrderCloud, Parameters) {
                     return ocOrdersService.List(Parameters);

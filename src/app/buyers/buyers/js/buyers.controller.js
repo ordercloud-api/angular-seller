@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('BuyersCtrl', BuyersController);
 
-function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderCloud, OrderCloudParameters, Parameters, BuyerList) {
+function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderCloud, ocParameters, Parameters, BuyerList) {
     var vm = this;
     vm.list = BuyerList;
     vm.parameters = Parameters;
@@ -12,12 +12,12 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderClou
 
     //Reload the state with new parameters
     vm.filter = function(resetPage) {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, resetPage));
+        $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        $state.go('.', OrderCloudParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
+        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.Buyers.List(vm.parameters.search, 1, vm.parameters.pageSize)
             .then(function(data) {
                 vm.list = data;
