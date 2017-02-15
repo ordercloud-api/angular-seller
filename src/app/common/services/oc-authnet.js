@@ -2,26 +2,26 @@ angular.module('orderCloud')
     .factory('ocAuthNet', AuthorizeNet)
 ;
 
-function AuthorizeNet( $q, $resource, OrderCloud, apiurl, ocCreditCardUtility) {
-    return {
-        'CreateCreditCard': _createCreateCard,
-        'UpdateCreditCard': _updateCreditCard,
-        'DeleteCreditCard' : _deleteCreditCard,
-        'MakeAuthnetCall' : _makeApiCall
-
+function AuthorizeNet($q, $resource, OrderCloud, apiurl, ocCreditCardUtility) {
+    var service = {
+        CreateCreditCard: _createCreateCard,
+        UpdateCreditCard: _updateCreditCard,
+        DeleteCreditCard: _deleteCreditCard
     };
 
     function _createCreateCard(creditCard, buyerID) {
         var ExpirationDate = ocCreditCardUtility.ExpirationDateFormat(creditCard.ExpirationMonth, creditCard.ExpirationYear);
         return _makeApiCall('POST', {
-            'buyerID' : buyerID ? buyerID : OrderCloud.BuyerID.Get(),
-            'TransactionType' : 'createCreditCard',
-            'CardDetails' : {
-                'CardholderName' : creditCard.CardholderName,
-                'CardType' : creditCard.CardType,
-                'CardNumber' : creditCard.CardNumber,
-                'ExpirationDate' : ExpirationDate,
-                'CardCode' : creditCard.CardCode
+            BuyerID: buyerID ? buyerID : OrderCloud.BuyerID.Get(),
+            TransactionType: 'createCreditCard',
+            CardDetails: {
+                CreditCardID: creditCard.ID,
+                CardholderName: creditCard.CardholderName,
+                CardType: creditCard.CardType,
+                CardNumber: creditCard.CardNumber,
+                ExpirationDate: ExpirationDate,
+                CardCode: creditCard.CardCode,
+                Shared: creditCard.Shared
             }
         });
     }
@@ -29,30 +29,33 @@ function AuthorizeNet( $q, $resource, OrderCloud, apiurl, ocCreditCardUtility) {
     function _updateCreditCard(creditCard, buyerID) {
         var ExpirationDate = ocCreditCardUtility.ExpirationDateFormat(creditCard.ExpirationMonth, creditCard.ExpirationYear);
         return _makeApiCall('POST', {
-            'buyerID' : buyerID ? buyerID : OrderCloud.BuyerID.Get(),
-            'TransactionType' : 'updateCreditCard',
-            'CardDetails' : {
-                'CreditCardID' : creditCard.ID,
-                'CardholderName' : creditCard.CardholderName,
-                'CardType' : creditCard.CardType,
-                'CardNumber' : 'XXXX'+ creditCard.PartialAccountNumber,
-                'ExpirationDate' : ExpirationDate
+            BuyerID: buyerID ? buyerID : OrderCloud.BuyerID.Get(),
+            TransactionType: 'updateCreditCard',
+            CardDetails: {
+                UpdatedCreditCardID: creditCard.UpdatedCreditCardID,
+                CreditCardID: creditCard.ID,
+                CardholderName: creditCard.CardholderName,
+                CardType: creditCard.CardType,
+                CardNumber: 'XXXX'+ creditCard.PartialAccountNumber,
+                ExpirationDate: ExpirationDate,
+                Shared: creditCard.Shared
             }
         });
 
     }
     function _deleteCreditCard(creditCard, buyerID) {
         return _makeApiCall('POST', {
-            'buyerID': buyerID ? buyerID : OrderCloud.BuyerID.Get(),
-            'TransactionType': 'deleteCreditCard',
-            'CardDetails': {
-                'CreditCardID': creditCard.ID
+            BuyerID: buyerID ? buyerID : OrderCloud.BuyerID.Get(),
+            TransactionType: 'deleteCreditCard',
+            CardDetails: {
+                CreditCardID: creditCard.ID,
+                Shared: creditCard.Shared
             }
         });
     }
 
     function _makeApiCall(method, requestBody) {
-        var apiUrl = apiurl +'/v1/integrationproxy/authorizenettest';
+        var apiUrl = apiurl +'/v1/integrationproxy/authorizenet';
         var d = $q.defer();
         $resource(apiUrl, null, {
             callApi: {
@@ -63,11 +66,13 @@ function AuthorizeNet( $q, $resource, OrderCloud, apiurl, ocCreditCardUtility) {
             }
         }).callApi(requestBody).$promise
             .then(function(data) {
-                d.resolve(data);
+                d.resolve(data.ResponseBody.Result ? data.ResponseBody.Result : data.ResponseBody);
             })
             .catch(function(ex) {
                 d.reject(ex);
             });
         return d.promise;
     }
+
+    return service;
 }

@@ -66,7 +66,7 @@ function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderC
         ocUserGroups.Create($stateParams.buyerid)
             .then(function(newUserGroup) {
                 toastr.success(newUserGroup.Name + ' was created.', 'Success!');
-                $state.go('userGroup.detail', {usergroupid:newUserGroup.ID});
+                $state.go('userGroup', {usergroupid:newUserGroup.ID});
             })
     };
 
