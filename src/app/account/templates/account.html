@@ -1,0 +1,21 @@
+<article>
+	<h3><i class="fa fa-cog"></i> My Account</h3>
+	<hr>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-sm-5">
+					<h5><b>Name:</b> <span class="pull-right">{{account.profile.FirstName + ' ' + account.profile.LastName}}</span></h5>
+					<h5><b>Email Address:</b> <span class="pull-right">{{account.profile.Email}}</span></h5>
+					<h5><b>Username:</b> <span class="pull-right">{{account.profile.Username}}</span></h5>
+					<h5><b>Phone Number:</b> <span class="pull-right">{{account.profile.Phone}}</span></h5>
+					<hr class="visible-xs visible-sm">
+				</div>
+				<div class="col-sm-7 text-right">
+					<button type="button" class="btn btn-default" ng-click="account.editInfo()"><i class="fa fa-edit"></i> Edit Profile</button>
+					<button type="button" class="btn btn-default" ng-click="account.changePassword(account.currentUser)"><i class="fa fa-lock"></i> Change Password</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</article>
