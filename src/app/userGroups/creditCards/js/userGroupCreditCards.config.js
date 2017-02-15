@@ -1,11 +1,10 @@
 angular.module('orderCloud')
-    .config(CreditCardsConfig)
+    .config(UserGroupCreditCardsConfig)
 ;
 
-function CreditCardsConfig($stateProvider) {
+function UserGroupCreditCardsConfig($stateProvider){
     $stateProvider
-        .state('creditCards', {
-            parent: 'buyer',
+        .state('userGroup.creditCards', {
             templateUrl: 'creditCards/templates/creditCards.html',
             controller: 'CreditCardsCtrl',
             controllerAs: 'creditCards',
@@ -14,8 +13,8 @@ function CreditCardsConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                CurrentAssignments: function(ocCreditCards, $stateParams) {
-                    return ocCreditCards.Assignments.Get('company', $stateParams.buyerid);
+                CurrentAssignments: function($q, ocCreditCards, $stateParams) {
+                    return ocCreditCards.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);
                 },
                 CreditCardList: function(OrderCloud, Parameters, CurrentAssignments, ocCreditCards) {
                     return OrderCloud.CreditCards.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)

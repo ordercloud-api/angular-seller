@@ -48,7 +48,7 @@
                         <col>
                         <col>
                         <col>
-                        <col>
+                        <col width="10%">
                         <col>
                     </colgroup>
                     <thead>
@@ -70,7 +70,7 @@
                             Details
                         </th>
                         <th>
-                            Expiration Date
+                            Exp. Date
                         </th>
                         <th></th>
                     </tr>
@@ -91,7 +91,7 @@
                             <span>{{'XXXX-XXXX-XXXX-' + creditCard.PartialAccountNumber}}</span>
                         </td>
                         <td>
-                            {{creditCard.ExpirationDate | date:'MM/yy'}}
+                            {{creditCard.ExpirationDate | date:'MM/yyyy'}}
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger btn-block btn-xs" ng-click="creditCards.deleteCreditCard(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
