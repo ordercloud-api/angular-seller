@@ -1,9 +1,0 @@
-*.sw*
-*~
-/build/
-/compile/
-node_modules/
-bower_components/
-errorShots/
-.idea
-plato/
