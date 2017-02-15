@@ -5,8 +5,12 @@
         <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}">
             <a ui-sref="buyers"><i class="fa fa-tags"></i> Buyer Organizations</a>
         </li>
-        <li ui-sref-active="active"><a ui-sref="products"><i class="fa fa-cube"></i> Product Management</a></li>
-        <li ui-sref-active="active"><a ui-sref="orders"><i class="fa fa-inbox"></i> Order Management</a></li>
+        <li ng-class="{active: application.$state.is('products') || application.$state.includes('productDetail')}">
+            <a ui-sref="products"><i class="fa fa-cube"></i> Product Management</a>
+        </li>
+        <li ng-class="{active: application.$state.is('orders') || application.$state.includes('orderDetail')}">
+            <a ui-sref="orders"><i class="fa fa-inbox"></i> Order Management</a>
+        </li>
         <li ui-sref-active="active"><a ui-sref="adminUsers"><i class="fa fa-user"></i> Admin Users</a></li>
         <li ng-class="{active: application.$state.is('adminUserGroups') || application.$state.includes('adminUserGroup')}">
             <a ui-sref="adminUserGroups"><i class="fa fa-users"></i> Admin User Groups</a>

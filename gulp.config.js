@@ -37,7 +37,7 @@ module.exports = {
     ],
     appFiles: [
         build + '**/app.module.js',
-        build + '**/common/config/routing.config.js',
+        build + '**/common/config/routing.js',
         build + '**/common/config/*.js',
         build + '**/*s.config.js',
         build + '**/*.config.js',
