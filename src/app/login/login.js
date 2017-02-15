@@ -15,7 +15,7 @@ function LoginConfig($stateProvider) {
     ;
 }
 
-function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, clientid, buyerid) {
+function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, ocRoles, clientid, buyerid) {
     return {
         SendVerificationCode: _sendVerificationCode,
         ResetPassword: _resetPassword,
@@ -67,6 +67,7 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, clienti
         angular.forEach($cookies.getAll(), function(val, key) {
             $cookies.remove(key);
         });
+        ocRoles.Remove();
         $state.go('login', {}, {reload: true});
     }
 
@@ -90,7 +91,7 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, clienti
     }
 }
 
-function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, LoginService) {
+function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, LoginService, ocRoles) {
     var vm = this;
     vm.credentials = {
         Username: null,
@@ -108,6 +109,7 @@ function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, Lo
             .then(function(data) {
                 vm.rememberStatus ? OrderCloud.Refresh.SetToken(data['refresh_token']) : angular.noop();
                 OrderCloud.Auth.SetToken(data['access_token']);
+                ocRoles.Set(data['access_token']);
                 $state.go('home');
             })
             .catch(function(ex) {
