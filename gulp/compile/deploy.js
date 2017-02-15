@@ -7,8 +7,7 @@ var gulp = require('gulp'),
 gulp.task('deploy', ['href'], function() {
     return gulp.src(config.compile + "**/*")
         .pipe(ghPages({
-            force: true,
-            message: "Deploy to gh-pages"
+            force: true
         }))
 });
 
