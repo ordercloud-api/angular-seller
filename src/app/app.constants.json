@@ -6,5 +6,6 @@
   "catalogid": "SHARED",
   "environment": "prod",
   "defaultstate": "home",
+  "html5mode": false,
   "bootswatchtheme": null
 }
