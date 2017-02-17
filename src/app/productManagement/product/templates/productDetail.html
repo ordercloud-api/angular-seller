@@ -44,7 +44,7 @@
     <div ui-view cg-busy="application.stateLoading('productDetail')">
         <div class="row">
             <div class="col-sm-8">
-                <form name="productDetail.InfoForm" autocomplete="off" ng-submit="productDetail.updateProduct()" novalidate class="form-horizontal">
+                <form name="productDetail.InfoForm" autocomplete="off" ng-submit="productDetail.updateProduct()" novalidate class="form-horizontal" oc-readonly-roles="ProductAdmin">
                     <fieldset class="form-group">
                         <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
                         <div class="col-sm-9">

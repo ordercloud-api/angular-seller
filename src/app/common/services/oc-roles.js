@@ -47,6 +47,8 @@ function OrderCloudRolesService($window, OrderCloud) {
         var decodedTokenObject = JSON.parse(decodedToken);
         roles = decodedTokenObject.role;
 
+        if (typeof roles == 'string') roles = [roles];
+
         return roles;
     }
 
