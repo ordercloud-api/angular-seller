@@ -3,7 +3,7 @@
         <div class="alert alert-info" ng-if="productInventory.inventory.LastUpdated">
             Inventory was last updated on {{productInventory.inventory.LastUpdated | date:'short'}}
         </div>
-        <form name="productInventory.ProductInventoryForm" ng-submit="productInventory.updateProductInventory(productDetail.product)" autocomplete="off" novalidate class="form-horizontal">
+        <form name="productInventory.ProductInventoryForm" ng-submit="productInventory.updateProductInventory(productDetail.product)" autocomplete="off" novalidate class="form-horizontal" oc-readonly-roles="InventoryAdmin">
             <fieldset class="form-group">
                 <label for="InventoryNotificationPoint" class="col-sm-3 control-label">Notification Point</label>
                 <div class="col-sm-9">
@@ -29,7 +29,7 @@
             </fieldset>
             <fieldset class="form-group">
                 <div class="col-sm-offset-3 col-sm-9">
-                    <button type="submit" cg-busy="productInventory.productUpdateLoading" class="btn btn-primary btn-block" ng-disabled="productInventory.ProductInventoryForm.$invalid">Update</button>
+                    <button type="submit" cg-busy="productInventory.productUpdateLoading" class="btn btn-primary btn-block">Update</button>
                 </div>
             </fieldset>
         </form>

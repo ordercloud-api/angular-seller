@@ -11,7 +11,7 @@
 					<h5><b>Phone Number:</b> <span class="pull-right">{{account.profile.Phone}}</span></h5>
 					<hr class="visible-xs visible-sm">
 				</div>
-				<div class="col-sm-7 text-right">
+				<div class="col-sm-7 text-right" oc-if-roles="MeAdmin">
 					<button type="button" class="btn btn-default" ng-click="account.editInfo()"><i class="fa fa-edit"></i> Edit Profile</button>
 					<button type="button" class="btn btn-default" ng-click="account.changePassword(account.currentUser)"><i class="fa fa-lock"></i> Change Password</button>
 				</div>

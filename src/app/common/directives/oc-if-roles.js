@@ -18,7 +18,7 @@ angular.module('orderCloud')
  * <div oc-if-roles="['BuyerAdmin', 'ProductAdmin']"></div>
  *
  * 3) If only one of numerous roles are required, provide a || delimited list of roles as directive attribute's value
- * <div oc-if-roles="BuyerAdmin || UserGroupAdmin"></div>
+ * <div oc-if-roles="BuyerAdmin || UserGroupAdmin || AddressReader"></div>
  *
  * 4) RoleGroup alias can be configured ahead of time using the ocRolesProvider -- RoleGroups can be configured to compare for ANY or ALL provided roles
  * <div oc-if-roles="MyGroupOfRoles"></div>

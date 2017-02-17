@@ -9,7 +9,7 @@ angular.module('orderCloud')
 function OrderCloudReadonlyRoles(ocRoles, ocRolesService) {
     var directive = {
         restrict: 'A',
-        controller: function($scope, $attrs) {
+        controller: function($scope, $attrs, $element) {
             var vm = this;
             vm.Authorized = true;
 
@@ -60,7 +60,6 @@ function OrderCloudReadonlyRolesInput() {
 
     function link(scope, element, attr, ctrl) {
         var ocReadonlyRolesCtrl = ctrl[0];
-        console.log(element.attr('type'));
         if (ocReadonlyRolesCtrl) {
             var authorized = ocReadonlyRolesCtrl.Authorized;
 
@@ -135,7 +134,7 @@ function OrderCloudReadonlyRolesButton() {
         if (ocReadonlyRolesCtrl) {
             var authorized = ocReadonlyRolesCtrl.Authorized;
 
-            if (!authorized) {
+            if (!authorized && !element.attr('ng-disabled')) {
                 element.attr('disabled', true);
             }
         }
