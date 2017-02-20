@@ -15,7 +15,7 @@
         <li ui-sref-active="active">
             <a href="" ui-sref=".specs"><i class="fa fa-edit"></i> Specs</a>
         </li>
-        <li class="hidden-xs" ng-class="{active:application.$state.includes('productDetail.pricing') || application.$state.is('productDetail.createAssignment')}">
+        <li class="hidden-xs" ng-class="{active:application.$state.includes('productDetail.pricing') || application.$state.is('productDetail.createAssignment')}" oc-if-roles="['ProductAdmin', 'ProductAssignmentAdmin']">
             <a href="" ui-sref=".pricing"><i class="fa fa-dollar"></i> Pricing</a>
         </li>
         <li class="hidden-xs" ui-sref-active="active">
@@ -27,13 +27,13 @@
         <li role="presentation" class="visible-xs" uib-dropdown> <!--Mobile dropdown menu-->
             <a uib-dropdown-toggle>More <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown-menu-right" uib-dropdown-menu>
-                <li ng-class="{active:application.$state.includes('productDetail.pricing') || application.$state.is('productDetail.createAssignment')}">
+                <li ng-class="{active:application.$state.includes('productDetail.pricing') || application.$state.is('productDetail.createAssignment')}" oc-if-roles="['ProductAdmin', 'ProductAssignmentAdmin']">
                     <a href="" ui-sref=".pricing"><i class="fa fa-dollar"></i> Pricing</a>
                 </li>
                 <li ui-sref-active="active">
                     <a href="" ui-sref=".shipping"><i class="fa fa-truck"></i> Shipping</a>
                 </li>
-                <li ui-sref-active="active" ng-if="productDetail.inventoryEnabled">
+                <li ui-sref-active="active" ng-if="productDetail.inventoryEnabled" oc-if-roles="InventoryAdmin">
                     <a href="" ui-sref=".inventory"><i class="fa fa-clipboard"></i> Inventory</a>
                 </li>
 
@@ -44,7 +44,7 @@
     <div ui-view cg-busy="application.stateLoading('productDetail')">
         <div class="row">
             <div class="col-sm-8">
-                <form name="productDetail.InfoForm" autocomplete="off" ng-submit="productDetail.updateProduct()" novalidate class="form-horizontal">
+                <form name="productDetail.InfoForm" autocomplete="off" ng-submit="productDetail.updateProduct()" novalidate class="form-horizontal" oc-readonly-roles="ProductAdmin">
                     <fieldset class="form-group">
                         <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
                         <div class="col-sm-9">

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('LoginService', LoginService)
 ;
 
-function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, ocRoles, clientid) {
+function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, ocRolesService, clientid) {
     return {
         SendVerificationCode: _sendVerificationCode,
         ResetPassword: _resetPassword,
@@ -54,7 +54,7 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, ocRoles
         angular.forEach($cookies.getAll(), function(val, key) {
             $cookies.remove(key);
         });
-        ocRoles.Remove();
+        ocRolesService.Remove();
         $state.go('login', {}, {reload: true});
     }
 

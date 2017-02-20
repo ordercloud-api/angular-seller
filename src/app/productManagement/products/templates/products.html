@@ -4,7 +4,7 @@
             Products
         </h3>
         <!--====== CREATE ======-->
-        <div class="l-page-header__btns">
+        <div class="l-page-header__btns" oc-if-roles="ProductAdmin">
             <button type="button" class="btn btn-primary btn-block" ng-click="products.createProduct()"><i class="fa fa-plus-circle"></i>
                 New Product
             </button>
@@ -45,7 +45,7 @@
                         <col>
                         <col>
                         <col>
-                        <col>
+                        <col oc-if-roles="ProductAdmin">
                     </colgroup>
                     <thead>
                     <tr>
@@ -60,7 +60,7 @@
                             <i class="fa fa-caret-up" ng-show="products.parameters.sortBy == '!Name'"></i>
                         </th>
                         <th>Active</th>
-                        <th></th>
+                        <th oc-if-roles="ProductAdmin"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -70,7 +70,7 @@
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':product.Active}"></i>
                         </td>
-                        <td>
+                        <td oc-if-roles="ProductAdmin">
                             <button ng-click="products.deleteProduct(this)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                         </td>
                     </tr>
