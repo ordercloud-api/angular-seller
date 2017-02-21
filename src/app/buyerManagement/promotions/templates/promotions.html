@@ -3,7 +3,7 @@
         Promotions
     </h3>
     <!--====== CREATE ======-->
-    <div class="l-page-header__btns">
+    <div class="l-page-header__btns" oc-if-roles="PromotionAdmin">
         <button type="button" class="btn btn-primary btn-block" ng-click="promotions.createPromotion()"><i class="fa fa-plus-circle"></i>
             New Promotion
         </button>
@@ -46,18 +46,18 @@
             </div>
         </div>
         <div class="panel panel-default table-responsive">
-            <table class="table table-striped table-bordered l-promotion-table">
+            <table class="table table-striped table-bordered l-promotion-table" oc-readonly-roles="PromotionAdmin">
                 <colgroup>
                     <col>
                     <col>
                     <col>
                     <col>
                     <col>
-                    <col>
+                    <col oc-if-roles="PromotionAdmin">
                 </colgroup>
                 <thead>
                 <tr>
-                    <th class="text-center" ng-click="promotions.selectAllItems()">
+                    <th class="text-center" ng-click="application.userIsAuthorized(['PromotionAdmin']) ? promotions.selectAllItems() : angular.noop()">
                         Assign
                     </th>
                     <th ng-click="promotions.updateSort('ID')">
@@ -76,7 +76,7 @@
                     <th>
                         Expiration Date
                     </th>
-                    <th></th>
+                    <th oc-if-roles="PromotionAdmin"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -88,7 +88,7 @@
                     <td><a href="" ng-click="promotions.editPromotion(this)">{{promotion.Code}}</a></td>
                     <td>{{promotion.StartDate | date}} <em ng-if="!promotion.StartDate" class="text-muted">None</em></td>
                     <td>{{promotion.ExpirationDate | date}} <em ng-if="!promotion.ExpirationDate" class="text-muted">None</em></td>
-                    <td>
+                    <td oc-if-roles="PromotionAdmin">
                         <button class="btn btn-danger btn-xs" type="button" ng-click="promotions.deletePromotion(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                     </td>
                 </tr>

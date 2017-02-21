@@ -4,7 +4,7 @@
             Approval Rules
         </h3>
         <!--====== CREATE ======-->
-        <div class="l-page-header__btns">
+        <div class="l-page-header__btns" oc-if-roles="ApprovalRuleAdmin">
             <button type="button" class="btn btn-primary btn-block" ng-click="approvalRules.createApprovalRule()"><i class="fa fa-plus-circle"></i>
                 New Approval Rule
             </button>
@@ -48,6 +48,7 @@
                     <colgroup>
                         <col>
                         <col>
+                        <col oc-if-roles="ApprovalRuleAdmin">
                     </colgroup>
                     <thead>
                     <tr>
@@ -61,14 +62,14 @@
                             <i class="fa fa-caret-down" ng-show="approvalRules.parameters.sortBy == 'Name'"></i>
                             <i class="fa fa-caret-up" ng-show="approvalRules.parameters.sortBy == '!Name'"></i>
                         </th>
-                        <th></th>
+                        <th oc-if-roles="ApprovalRuleAdmin"></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="approvalRule in approvalRules.list.Items">
                         <td>{{approvalRule.ID}}</td>
                         <td><a href="" ng-click="approvalRules.editApprovalRule(this)">{{approvalRule.Name}}</a></td>
-                        <td>
+                        <td oc-if-roles="ApprovalRuleAdmin">
                             <button class="btn btn-danger btn-xs btn-block" ng-click="approvalRules.deleteApprovalRule(this)"><i class="fa fa-trash-o"></i><span class="hidden-xs"> Delete</span></button>
                         </td>
                     </tr>
