@@ -19,7 +19,8 @@
         <li ui-sref-active="active">
             <a href="" ui-sref=".shipments"><i class="fa fa-truck"></i> Shipments</a>
         </li>
-        <li ui-sref-active="active">
+        <!-- TODO: these roles seem incorrect in the api - fix when this is adjusted there -->
+        <li ui-sref-active="active" oc-if-roles="['ApprovalRuleAdmin', 'AddressReader']">
             <a href="" ui-sref=".approvals"><i class="fa fa-check-square-o"></i> Approvals</a>
         </li>
     </ul>
@@ -73,7 +74,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="lineItem in orderDetail.lineItems.Items">
-                        <td><a href="#" ng-click="orderDetail.editLineItem(lineItem)"><i class="fa fa-edit"></i> {{lineItem.ID}}</a></td>
+                        <td><a ng-click="orderDetail.editLineItem(lineItem)"><i class="fa fa-edit"></i> {{lineItem.ID}}</a></td>
                         <td>
                             <span>{{lineItem.Product.Name}}</span>
                             <small class="text-muted">({{lineItem.Product.ID}})</small>

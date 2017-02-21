@@ -20,7 +20,7 @@ function OrderCloudRolesService($window, OrderCloud) {
             case 2: { output += '=='; break; }
             case 3: { output += '='; break; }
             default: {
-                console.log('Illegal base64url string');
+                console.warn('Illegal base64url string');
                 return;
             }
         }
@@ -49,7 +49,7 @@ function OrderCloudRolesService($window, OrderCloud) {
 
         if (typeof roles == 'string') roles = [roles];
 
-        return roles;
+        return roles || [];
     }
 
     //Returns local service variable or obtains roles again from token
@@ -65,6 +65,7 @@ function OrderCloudRolesService($window, OrderCloud) {
     //Returns boolean whether user's claimed roles cover a required array of roles
     function _userIsAuthorized(requiredRoles, any) {
         var userRoles = _get();
+        if (!userRoles) return;
         if (userRoles.indexOf('FullAccess') > -1) {
             return true;
         }

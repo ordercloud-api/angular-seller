@@ -14,7 +14,7 @@
         <li ng-class="{active: application.$state.is('adminUserGroups') || application.$state.includes('adminUserGroup')}" oc-if-roles="AdminUserGroupRoles">
             <a ui-sref="adminUserGroups"><i class="fa fa-users"></i> Admin User Groups</a>
         </li>
-        <li ui-sref-active="active" oc-if-roles="AdminAddressRoles"><a ui-sref="adminAddresses"><i class="fa fa-map-marker"></i> Admin Addresses</a></li>
+        <li ui-sref-active="active" oc-if-roles="AddressRoles"><a ui-sref="adminAddresses"><i class="fa fa-map-marker"></i> Admin Addresses</a></li>
         <li ui-sref-active="active"><a ui-sref="security"><i class="fa fa-lock"></i> Security</a></li>
         <li ui-sref-active="active"><a ui-sref="account"><i class="fa fa-user-circle-o"></i> Account</a></li>
         <li ui-sref-active="active"><a ng-click="application.logout()"><i class="fa fa-power-off"></i> Log Out</a></li>
