@@ -68,7 +68,6 @@ function OrderCloudReadonlyRolesInput() {
                     element.attr('disabled', true);
                 }
                 else {
-                    console.log(attr);
                     element.attr('readonly', true);
                 }
             }

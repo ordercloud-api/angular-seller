@@ -20,7 +20,7 @@ function OrderCloudRolesService($window, OrderCloud) {
             case 2: { output += '=='; break; }
             case 3: { output += '='; break; }
             default: {
-                console.log('Illegal base64url string');
+                console.warn('Illegal base64url string');
                 return;
             }
         }
