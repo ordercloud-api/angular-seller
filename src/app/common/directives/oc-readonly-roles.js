@@ -64,10 +64,11 @@ function OrderCloudReadonlyRolesInput() {
             var authorized = ocReadonlyRolesCtrl.Authorized;
 
             if (!authorized) {
-                if (element.attr('type') == 'checkbox') {
+                if (element.attr('type') == 'checkbox' || attr['uibDatepickerPopup']) {
                     element.attr('disabled', true);
                 }
                 else {
+                    console.log(attr);
                     element.attr('readonly', true);
                 }
             }
