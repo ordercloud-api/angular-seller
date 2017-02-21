@@ -75,12 +75,14 @@ angular.module('orderCloud')
                 if(!userGroupIDs.length) {
                     vm.userGroups = null;
                 } else {
-                    var filter = {ID: userGroupIDs.join('|')};
-                    OrderCloud.UserGroups.List(null, null, vm.pageSize, null, null, filter, vm.buyerID)
-                        .then(function(userGroupList){
-                            userGroupList.Meta = assignmentList.Meta;
-                            vm.userGroups = userGroupList;
-                        });
+                    if (ocRoles.UserIsAuthorized(['UserGroupReader', 'UserGroupAdmin'], true)) {
+                        var filter = {ID: userGroupIDs.join('|')};
+                        OrderCloud.UserGroups.List(null, null, vm.pageSize, null, null, filter, vm.buyerID)
+                            .then(function(userGroupList){
+                                userGroupList.Meta = assignmentList.Meta;
+                                vm.userGroups = userGroupList;
+                            });
+                    }
                 }
             });
      }

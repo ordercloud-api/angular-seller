@@ -49,7 +49,7 @@ function OrderCloudRolesService($window, OrderCloud) {
 
         if (typeof roles == 'string') roles = [roles];
 
-        return roles;
+        return roles || [];
     }
 
     //Returns local service variable or obtains roles again from token

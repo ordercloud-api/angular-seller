@@ -4,7 +4,7 @@
     </div>
     <div ng-if="catalogAssignments.category">
         <header>
-            <div class="pull-right">
+            <div class="pull-right" oc-if-roles="CategoryAdmin">
                 <button type="button" class="btn btn-default" ng-click="catalogAssignments.editCategory(catalogAssignments.category.ID)"><i class="fa fa-edit"></i> Edit</button>
                 <button type="button" class="btn btn-danger" ng-click="catalogAssignments.deleteCategory(catalogAssignments.category.ID)"><i class="fa fa-trash"></i> Delete</button>
             </div>
@@ -22,7 +22,7 @@
                     Select a category to view details
                 </div>
                 <!--Assign a Product to Category-->
-                <div class="row" ng-if="catalogAssignments.category">
+                <div class="row" ng-if="catalogAssignments.category" oc-if-roles="CategoryAdmin">
                     <div class="col-xs-12 col-sm-8 col-md-9">
                         <ui-select multiple ng-model="catalogAssignments.selectedProducts" close-on-select="false">
                             <ui-select-match placeholder="Search and select products to add...">
@@ -63,7 +63,7 @@
                         <tr ng-repeat="product in catalogAssignments.products.Items">
                             <td><a href="" ui-sref="productDetail({productid: product.ID})">{{product.ID}}</a></td>
                             <td>{{product.Name}}</td>
-                            <td>
+                            <td oc-if-roles="CategoryAdmin">
                                 <button type="button" class="btn btn-xs btn-danger" uib-tooltip="Remove Product" tooltip-placement="left" ng-click="catalogAssignments.deleteAssignment(product)"><i class="fa fa-times"></i></button>
                             </td>
                         </tr>
@@ -79,7 +79,7 @@
                     </uib-pagination>
                 </div>
             </uib-tab>
-            <uib-tab>
+            <uib-tab oc-if-roles="['CategoryAdmin', 'BuyerReader', 'UserGroupReader']">
                 <uib-tab-heading>Availability</uib-tab-heading>
                 <br>
                 <div ng-if="!catalogAssignments.category" class="well text-center">

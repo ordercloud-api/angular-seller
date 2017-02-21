@@ -4,7 +4,7 @@
             User Groups
         </h3>
         <!--====== CREATE ======-->
-        <div class="l-page-header__btns">
+        <div class="l-page-header__btns" oc-if-roles="UserGroupAdmin">
             <button type="button" class="btn btn-primary btn-block" ng-click="userGroups.createGroup()"><i class="fa fa-plus-circle"></i>
                 New User Group
             </button>
@@ -49,7 +49,7 @@
                         <col>
                         <col>
                         <col>
-                        <col>
+                        <col oc-if-roles="UserGroupAdmin">
                     </colgroup>
                     <thead>
                     <tr>
@@ -64,7 +64,7 @@
                             <i class="fa fa-caret-up" ng-show="userGroups.parameters.sortBy == '!Name'"></i>
                         </th>
                         <th>Description</th>
-                        <th></th>
+                        <th oc-if-roles="UserGroupAdmin"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -74,7 +74,7 @@
                             <a href="" ui-sref="userGroup({usergroupid:userGroup.ID})">{{userGroup.Name}}</a>
                         </td>
                         <td>{{userGroup.Description}}</td>
-                        <td>
+                        <td oc-if-roles="UserGroupAdmin">
                             <button ng-click="userGroups.deleteGroup(this)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                         </td>
                     </tr>

@@ -4,7 +4,7 @@
             Users
         </h3>
         <!--====== CREATE ======-->
-        <div class="l-page-header__btns">
+        <div class="l-page-header__btns" oc-if-roles="BuyerUserAdmin">
             <button type="button" class="btn btn-primary btn-block" ng-click="users.createUser()"><i class="fa fa-plus-circle"></i>
                 New User
             </button>
@@ -51,7 +51,7 @@
                         <col>
                         <col>
                         <col>
-                        <col>
+                        <col oc-if-roles="BuyerUserAdmin">
                     </colgroup>
                     <thead>
                     <tr>
@@ -83,7 +83,7 @@
                         <th>
                             Active
                         </th>
-                        <th></th>
+                        <th oc-if-roles="BuyerUserAdmin"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -94,7 +94,7 @@
                         <td>{{user.LastName}}</td>
                         <td>{{user.Email}}</td>
                         <td class="text-center"><i class="fa fa-circle" ng-class="{active:user.Active}"></i></td>
-                        <td>
+                        <td oc-if-roles="BuyerUserAdmin">
                             <button class="btn btn-danger btn-xs btn-block" ng-click="users.deleteUser(this)"><i class="fa fa-trash-o"></i><span class="hidden-xs"> Delete</span></button>
                         </td>
                     </tr>
