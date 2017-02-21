@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUserGroupUsersCtrl', AdminUserGroupUsersController)
 ;
 
-function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocAdminUsers, OrderCloud, ocParameters, UserList, CurrentAssignments, Parameters ) {
+function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocAdminUsers, OrderCloud, ocParameters, ocRolesService, UserList, CurrentAssignments, Parameters ) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
@@ -113,22 +113,28 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
     vm.createUser = function() {
         ocAdminUsers.Create()
             .then(function(newAdminUser) {
-                var newAssignment = {
-                    UserID: newAdminUser.ID,
-                    UserGroupID: $stateParams.adminusergroupid
-                };
+                if (ocRolesService.UserIsAuthorized(['AdminUserGroupAdmin'])) {
+                    var newAssignment = {
+                        UserID: newAdminUser.ID,
+                        UserGroupID: $stateParams.adminusergroupid
+                    };
 
-                //Automatically assign the new user to this user group
-                vm.searchLoading = OrderCloud.AdminUserGroups.SaveUserAssignment(newAssignment)
-                    .then(function() {
-                        newAdminUser.Assigned = true;
-                        CurrentAssignments.push(newAssignment);
-                        _updateList(newAdminUser);
-                    })
-                    .catch(function() {
-                        newAdminUser.Assigned = false;
-                        _updateList(newAdminUser);
-                    });
+                    //Automatically assign the new user to this user group
+                    vm.searchLoading = OrderCloud.AdminUserGroups.SaveUserAssignment(newAssignment)
+                        .then(function() {
+                            newAdminUser.Assigned = true;
+                            CurrentAssignments.push(newAssignment);
+                            _updateList(newAdminUser);
+                        })
+                        .catch(function() {
+                            newAdminUser.Assigned = false;
+                            _updateList(newAdminUser);
+                        });
+                }
+                else {
+                    newAdminUser.Assigned = false;
+                    _updateList(newAdminUser);
+                }
             });
 
         function _updateList(n) {

@@ -3,7 +3,7 @@
         Cost Centers
     </h3>
     <!--====== CREATE ======-->
-    <div class="l-page-header__btns">
+    <div class="l-page-header__btns" oc-if-roles="CostCenterAdmin">
         <button type="button" class="btn btn-primary btn-block" ng-click="costCenters.createCostCenter()"><i class="fa fa-plus-circle"></i>
             New Cost Center
         </button>
@@ -46,16 +46,16 @@
             </div>
         </div>
         <div class="panel panel-default table-responsive">
-            <table class="table table-striped table-bordered l-costcenter-table">
+            <table class="table table-striped table-bordered l-costcenter-table" oc-readonly-roles="CostCenterAdmin">
                 <colgroup>
                     <col>
                     <col>
                     <col>
-                    <col>
+                    <col oc-if-roles="CostCenterAdmin">
                 </colgroup>
                 <thead>
                 <tr>
-                    <th class="text-center" ng-click="costCenters.selectAllItems()">
+                    <th class="text-center" ng-click="application.userIsAuthorized(['CostCenterAdmin']) ? costCenters.selectAllItems() : angular.noop()">
                         Assign
                     </th>
                     <th ng-click="costCenters.updateSort('ID')">
@@ -68,7 +68,7 @@
                         <i class="fa fa-caret-down" ng-show="costCenters.parameters.sortBy == 'Name'"></i>
                         <i class="fa fa-caret-up" ng-show="costCenters.parameters.sortBy == '!Name'"></i>
                     </th>
-                    <th></th>
+                    <th oc-if-roles="CostCenterAdmin"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -78,7 +78,7 @@
                     </td>
                     <td>{{costCenter.ID}}</td>
                     <td><a href="" ng-click="costCenters.editCostCenter(this)">{{costCenter.Name}}</a></td>
-                    <td>
+                    <td oc-if-roles="CostCenterAdmin">
                         <button class="btn btn-danger btn-xs" type="button" ng-click="costCenters.deleteCostCenter(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                     </td>
                 </tr>

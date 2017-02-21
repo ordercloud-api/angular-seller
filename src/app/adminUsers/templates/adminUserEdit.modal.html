@@ -1,4 +1,4 @@
-<form name="adminUserEditModal.form" class="form-horizontal" ng-submit="adminUserEditModal.submit()" novalidate ng-disabled="adminUserEditModal.loading">
+<form name="adminUserEditModal.form" class="form-horizontal" ng-submit="adminUserEditModal.submit()" novalidate ng-disabled="adminUserEditModal.loading" oc-readonly-roles="AdminUserAdmin">
     <div class="modal-header">
         <button type="button" class="close" aria-label="Close" ng-click="adminUserEditModal.cancel()"><span aria-hidden="true">&times;</span></button>
         <h3 class="modal-title"><span class="text-muted">Edit User: </span>{{adminUserEditModal.fullName || adminUserEditModal.username}}</h3>
@@ -52,6 +52,6 @@
         </div>
     </div>
     <div class="modal-footer" >
-        <button type="submit" class="btn btn-block btn-primary" ng-disabled="adminUserEditModal.form.$invalid" cg-busy="adminUserEditModal.loading">Update</button>
+        <button type="submit" class="btn btn-block btn-primary" cg-busy="adminUserEditModal.loading">Update</button>
     </div>
 </form>

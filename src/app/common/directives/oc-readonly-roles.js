@@ -64,10 +64,11 @@ function OrderCloudReadonlyRolesInput() {
             var authorized = ocReadonlyRolesCtrl.Authorized;
 
             if (!authorized) {
-                if (element.attr('type') == 'checkbox') {
+                if (element.attr('type') == 'checkbox' || attr['uibDatepickerPopup']) {
                     element.attr('disabled', true);
                 }
                 else {
+                    console.log(attr);
                     element.attr('readonly', true);
                 }
             }
@@ -102,16 +103,17 @@ function OrderCloudReadonlyRolesTextArea() {
 function OrderCloudReadonlyRolesSelect() {
     var directive = {
         restrict: 'E',
-        priority: -1000,
         require: ['^?ocReadonlyRoles'],
         link: link
     };
 
     function link(scope, element, attr, ctrl) {
         var ocReadonlyRolesCtrl = ctrl[0];
+        console.log('hit');
         if (ocReadonlyRolesCtrl) {
             var authorized = ocReadonlyRolesCtrl.Authorized;
 
+            console.log(element);
             if (!authorized) {
                 element.attr('disabled', true);
             }
@@ -134,7 +136,7 @@ function OrderCloudReadonlyRolesButton() {
         if (ocReadonlyRolesCtrl) {
             var authorized = ocReadonlyRolesCtrl.Authorized;
 
-            if (!authorized && !element.attr('ng-disabled')) {
+            if (!authorized && !element.attr('ng-disabled') && !element.hasClass('close')) {
                 element.attr('disabled', true);
             }
         }
