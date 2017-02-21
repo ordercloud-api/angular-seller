@@ -4,7 +4,7 @@
             Admin Users
         </h3>
         <!--====== CREATE ======-->
-        <div class="l-page-header__btns">
+        <div class="l-page-header__btns" oc-if-roles="AdminUserAdmin">
             <button type="button" class="btn btn-primary btn-block" ng-click="adminUsers.createUser()"><i class="fa fa-plus-circle"></i>
                 New Admin User
             </button>
@@ -54,7 +54,7 @@
         <div ng-if="adminUsers.list.Items.length">
             <div class="row">
                 <div class="col-xs-6">
-                    <button ng-if="adminUsers.selectedCount" class="btn btn-danger btn-xs" ng-click="adminUsers.deleteSelected()">
+                    <button ng-if="adminUsers.selectedCount" class="btn btn-danger btn-xs" ng-click="adminUsers.deleteSelected()" oc-if-roles="AdminUserAdmin">
                         <i class="fa fa-trash"></i> Delete {{adminUsers.selectedCount == 1 ? "User" : (adminUsers.selectedCount + " Users")}}
                     </button>
                 </div>
@@ -72,7 +72,7 @@
                         <col>
                         <col>
                         <col>
-                        <col>
+                        <col oc-if-roles="AdminUserAdmin">
                     </colgroup>
                     <thead>
                     <tr>
@@ -104,7 +104,7 @@
                         <th>
                             Active
                         </th>
-                        <th></th>
+                        <th oc-if-roles="AdminUserAdmin"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -117,7 +117,7 @@
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':user.Active}"></i>
                         </td>
-                        <td>
+                        <td oc-if-roles="AdminUserAdmin">
                             <button type="button" ng-click="adminUsers.deleteUser(this)" class="btn btn-danger btn-xs">
                                 <i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span>
                             </button>
