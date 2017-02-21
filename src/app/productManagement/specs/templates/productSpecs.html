@@ -1,15 +1,17 @@
 <div ng-if="!productSpecs.specs.Items.length" class="well text-center">
     This product does not have any specs. <br>
-    <a ng-click="productSpecs.createSpec(productDetail.product.ID)">Create one now</a>
+    <a ng-click="productSpecs.createSpec(productDetail.product.ID)" oc-if-roles="ProductAdmin">Create one now</a>
 </div>
 <div class="row" ng-if="productSpecs.specs.Items.length">
     <div class="col-sm-5">
-        <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpec(productDetail.product.ID)">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i>
-            New Spec
-        </button>
-        <br>
-        <br>
+        <div oc-if-roles="ProductAdmin">
+            <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpec(productDetail.product.ID)">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                New Spec
+            </button>
+            <br>
+            <br>
+        </div>
 
         <script type="text/ng-template" id="specs_renderer.html">
             <div class="tree-node tree-node-content" ng-class="{'selected-node': node.Spec.ID == productSpecs.selectedSpec.Spec.ID}">
@@ -30,7 +32,7 @@
         <div ng-if="productSpecs.selectedSpec">
             <header>
                 <h3>
-                    <div class="pull-right">
+                    <div class="pull-right" oc-if-roles="ProductAdmin">
                         <button type="button" class="btn btn-default" ng-click="productSpecs.editSelectedSpec()"><i class="fa fa-edit"></i> Edit</button>
                         <button type="button" class="btn btn-danger" ng-click="productSpecs.deleteSelectedSpec()"><i class="fa fa-trash"></i> Delete</button>
                     </div>
@@ -57,7 +59,7 @@
             <div ng-if="!productSpecs.selectedSpec.Options.length">
                 <hr>
                 <div class="well text-center">
-                    There are no options for this spec. <a ng-click="productSpecs.createSpecOption()">Create</a> one now.</b>
+                    There are no options for this spec. <span oc-if-roles="ProductAdmin"><a ng-click="productSpecs.createSpecOption()">Create</a> one now.</span>
                 </div>
             </div>
             <div ng-if="productSpecs.selectedSpec.Options.length">
@@ -65,12 +67,14 @@
                     Options
                 </h4>
 
-                <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpecOption()">
-                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                    New Option
-                </button>
-                <br>
-                <br>
+                <div oc-if-roles="ProductAdmin">
+                    <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpecOption()">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        New Option
+                    </button>
+                    <br>
+                    <br>
+                </div>
 
                 <script type="text/ng-template" id="spec_options_renderer.html">
                     <div class="tree-node tree-node-content" cg-busy="node.loading">
@@ -85,7 +89,7 @@
                         </p>
                         <small ng-if="node.DefaultOption" class="text-primary">DEFAULT OPTION</small>
                         <i class="fa fa-edit text-primary" ng-click="productSpecs.specOptionSelected(node)"></i>
-                        <i ui-tree-handle class="fa fa-reorder text-muted"></i>
+                        <i ui-tree-handle class="fa fa-reorder text-muted" oc-if-roles="ProductAdmin"></i>
                     </div>
                 </script>
                 <div ui-tree="productSpecs.specOptionsTreeOptions" id="spec-options-tree-root" data-drag-delay="200">
