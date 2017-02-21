@@ -6,7 +6,6 @@ angular.module('orderCloud')
             {Name: 'OrderRoles', Type: 'Any', Roles: ['OrderReader', 'OrderAdmin']},
             {Name: 'AdminUserRoles', Type: 'Any', Roles: ['AdminUserReader', 'AdminUserAdmin']},
             {Name: 'AdminUserGroupRoles', Type: 'Any', Roles: ['AdminUserGroupReader', 'AdminUserGroupAdmin']},
-            {Name: 'AdminAddressRoles', Type: 'Any', Roles: ['OrderReader', 'OrderAdmin']},
             {Name: 'BuyerUserRoles', Type: 'Any', Roles: ['BuyerUserReader', 'BuyerUserAdmin']},
             {Name: 'UserGroupRoles', Type: 'Any', Roles: ['UserGroupReader', 'UserGroupAdmin']},
             {Name: 'CategoryRoles', Type: 'Any', Roles: ['CategoryReader', 'CategoryAdmin']},

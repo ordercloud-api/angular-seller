@@ -4,7 +4,7 @@
             Admin Addresses
         </h3>
         <!--====== CREATE ======-->
-        <div class="l-page-header__btns">
+        <div class="l-page-header__btns" oc-if-roles="AddressAdmin">
             <button type="button" class="btn btn-primary btn-block" ng-click="adminAddresses.createAddress()"><i class="fa fa-plus-circle"></i>
                 New Admin Address
             </button>
@@ -47,7 +47,7 @@
                         <col>
                         <col>
                         <col>
-                        <col>
+                        <col oc-if-roles="AddressAdmin">
                     </colgroup>
                     <thead>
                     <tr>
@@ -66,7 +66,7 @@
                             <i class="fa fa-caret-down" ng-show="adminAddresses.parameters.sortBy == 'Street1'"></i>
                             <i class="fa fa-caret-up" ng-show="adminAddresses.parameters.sortBy == '!Street1'"></i>
                         </th>
-                        <th></th>
+                        <th oc-if-roles="AddressAdmin"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -78,7 +78,7 @@
                         <td>{{adminAddress | address}} <br ng-if="application.$ocMedia('max-width:767px')"> {{adminAddress.City + ', ' + adminAddress.State + ' ' +
                             adminAddress.Zip}}
                         </td>
-                        <td>
+                        <td oc-if-roles="AddressAdmin">
                             <button type="button" class="btn btn-danger btn-xs" ng-click="adminAddresses.deleteAddress(this)">
                                 <i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span>
                             </button>
