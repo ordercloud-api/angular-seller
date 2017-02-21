@@ -21,19 +21,19 @@
         <li role="presentation" ui-sref-active="active">
             <a ui-sref="buyerSecurity"><i class="fa fa-lock"></i> Security</a>
         </li>
-        <li role="presentation" ng-class="{active: application.$state.includes('catalogManagement')}" oc-if-roles="CategoryReader || CategoryAdmin">
+        <li role="presentation" ng-class="{active: application.$state.includes('catalogManagement')}" oc-if-roles="CategoryRoles">
             <a ui-sref="catalogManagement({ search: '', sortBy: ''})"><i class="fa fa-sitemap"></i> Catalog</a>
         </li>
-        <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('users')}" oc-if-roles="BuyerUserReader || BuyerUserAdmin">
+        <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('users')}" oc-if-roles="BuyerUserRoles">
             <a ui-sref="users({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-user"></i> Users</a>
         </li>
-        <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('userGroups') || application.$state.includes('userGroup')}" oc-if-roles="UserGroupReader || UserGroupAdmin">
+        <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('userGroups') || application.$state.includes('userGroup')}" oc-if-roles="UserGroupRoles">
             <a ui-sref="userGroups({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-users"></i> User Groups</a>
         </li>
-        <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.is('addresses') || application.$state.is('address')}" oc-if-roles="AddressReader || AddressAdmin">
+        <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.is('addresses') || application.$state.is('address')}" oc-if-roles="AddressRoles">
             <a ui-sref="addresses({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-map-marker"></i> Addresses</a>
         </li>
-        <li role="presentation" class="hidden-xs hidden-sm hidden-md" ng-class="{active: application.$state.includes('creditCards')}" oc-if-roles="CreditCardReader || CreditCardAdmin">
+        <li role="presentation" class="hidden-xs hidden-sm hidden-md" ng-class="{active: application.$state.includes('creditCards')}" oc-if-roles="CreditCardRoles">
             <a ui-sref="creditCards({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-credit-card"></i> Credit Cards</a>
         </li>
         <li role="presentation"  ng-class="{active:
@@ -41,22 +41,22 @@
             uib-dropdown ng-if="application.$ocMedia('max-width:767px') ? application.userIsAuthorized(['BuyerUserReader', 'BuyerUserAdmin', 'UserGroupReader', 'UserGroupAdmin', 'AddressReader', 'AddressAdmin', 'CreditCardReader', 'CreditCardAdmin'], true) : application.userIsAuthorized(['SpendingAccountReader', 'SpendingAccountAdmin', 'CostCenterReader', 'CostCenterAdmin'], true)">
             <a uib-dropdown-toggle>More <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown-menu-right" uib-dropdown-menu>
-                <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('users')}" oc-if-roles="BuyerUserReader || BuyerUserAdmin">
+                <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('users')}" oc-if-roles="BuyerUserRoles">
                     <a ui-sref="users({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-user"></i> Users</a>
                 </li>
-                <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('userGroups')}" oc-if-roles="UserGroupReader || UserGroupAdmin">
+                <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('userGroups')}" oc-if-roles="UserGroupRoles">
                     <a ui-sref="userGroups({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-users"></i> User Groups</a>
                 </li>
-                <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('addresses')}" oc-if-roles="AddressReader || AddressAdmin">
+                <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('addresses')}" oc-if-roles="AddressRoles">
                     <a ui-sref="addresses({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-map-marker"></i> Addresses</a>
                 </li>
-                <li role="presentation" class="hidden-lg" ng-class="{active: application.$state.includes('creditCards')}" oc-if-roles="CreditCardReader || CreditCardAdmin">
+                <li role="presentation" class="hidden-lg" ng-class="{active: application.$state.includes('creditCards')}" oc-if-roles="CreditCardRoles">
                     <a ui-sref="creditCards({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-credit-card"></i> Credit Cards</a>
                 </li>
-                <li role="presentation" ng-class="{active: application.$state.includes('spendingAccounts')}" oc-if-roles="SpendingAccountReader || SpendingAccountAdmin">
+                <li role="presentation" ng-class="{active: application.$state.includes('spendingAccounts')}" oc-if-roles="SpendingAccountRoles">
                     <a ui-sref="spendingAccounts({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-dollar"></i> Spending Accounts</a>
                 </li>
-                <li role="presentation" ng-class="{active: application.$state.includes('costCenters')}" oc-if-roles="CostCenterReader || CostCenterAdmin">
+                <li role="presentation" ng-class="{active: application.$state.includes('costCenters')}" oc-if-roles="CostCenterRoles">
                     <a ui-sref="costCenters({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-asterisk"></i> Cost Centers</a>
                 </li>
 

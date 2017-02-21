@@ -109,11 +109,9 @@ function OrderCloudReadonlyRolesSelect() {
 
     function link(scope, element, attr, ctrl) {
         var ocReadonlyRolesCtrl = ctrl[0];
-        console.log('hit');
         if (ocReadonlyRolesCtrl) {
             var authorized = ocReadonlyRolesCtrl.Authorized;
 
-            console.log(element);
             if (!authorized) {
                 element.attr('disabled', true);
             }

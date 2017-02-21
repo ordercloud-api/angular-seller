@@ -16,19 +16,19 @@
                 <li ui-sref-active="active">
                     <a href="" ui-sref=".security"><i class="fa fa-lock"></i> Security</a>
                 </li>
-                <li ui-sref-active="active" oc-if-roles="BuyerUserReader || BuyerUserAdmin">
+                <li ui-sref-active="active" oc-if-roles="BuyerUserRoles">
                     <a href="" ui-sref=".users"><i class="fa fa-user"></i> Users</a>
                 </li>
-                <li ui-sref-active="active" oc-if-roles="AddressReader || AddressAdmin">
+                <li ui-sref-active="active" oc-if-roles="AddressRoles">
                     <a href="" ui-sref=".addresses"><i class="fa fa-map-marker"></i> Addresses</a>
                 </li>
-                <li ui-sref-active="active" oc-if-roles="CreditCardReader || CreditCardAdmin">
+                <li ui-sref-active="active" oc-if-roles="CreditCardRoles">
                     <a href="" ui-sref=".creditCards"><i class="fa fa-credit-card"></i> Credit Cards</a>
                 </li>
-                <li ui-sref-active="active" oc-if-roles="SpendingAccountReader || SpendingAccountAdmin">
+                <li ui-sref-active="active" oc-if-roles="SpendingAccountRoles">
                     <a href="" ui-sref=".spendingAccounts"><i class="fa fa-dollar"></i> Spending Accounts</a>
                 </li>
-                <li ui-sref-active="active" oc-if-roles="CostCenterReader || CostCenterAdmin">
+                <li ui-sref-active="active" oc-if-roles="CostCenterRoles">
                     <a href="" ui-sref=".costCenters"><i class="fa fa-asterisk"></i> Cost Centers</a>
                 </li>
             </ul>
