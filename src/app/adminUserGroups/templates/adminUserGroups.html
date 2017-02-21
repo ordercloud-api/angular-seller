@@ -1,7 +1,7 @@
 <article>
     <header class="l-page-header">
         <h3 class="l-page-header__title">Admin User Groups</h3>
-        <div class="l-page-header__btns">
+        <div class="l-page-header__btns" oc-if-roles="AdminUserGroupAdmin">
             <button type="button" class="btn btn-primary btn-block" ng-click="adminUserGroups.createGroup()"><i class="fa fa-plus-circle"></i> New Admin User Group</button>
         </div>
     </header>
@@ -39,8 +39,7 @@
                         <col>
                         <col>
                         <col>
-                        <col>
-                        <col>
+                        <col oc-if-roles="AdminUserGroupAdmin">
                     </colgroup>
                     <thead>
                     <tr>
@@ -54,11 +53,12 @@
                             <i class="fa fa-caret-down" ng-show="adminUserGroups.parameters.sortBy == 'Name'"></i>
                             <i class="fa fa-caret-up" ng-show="adminUserGroups.parameters.sortBy == '!Name'"></i>
                         </th>
-                        <th colspan="2" ng-click="adminUserGroups.updateSort('Description')">
+                        <th ng-click="adminUserGroups.updateSort('Description')">
                             Description
                             <i class="fa fa-caret-down" ng-show="adminUserGroups.parameters.sortBy == 'Description'"></i>
                             <i class="fa fa-caret-up" ng-show="adminUserGroups.parameters.sortBy == '!Description'"></i>
                         </th>
+                        <th oc-if-roles="AdminUserGroupAdmin"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -68,7 +68,7 @@
                         </td>
                         <td><a href="" ui-sref="adminUserGroup({adminusergroupid:adminUserGroup.ID})">{{adminUserGroup.Name}}</a></td>
                         <td>{{adminUserGroup.Description}}</td>
-                        <td>
+                        <td oc-if-roles="AdminUserGroupAdmin">
                             <button class="btn btn-danger btn-xs" ng-click="adminUserGroups.deleteGroup(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                         </td>
                     </tr>

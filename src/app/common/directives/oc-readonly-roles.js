@@ -64,7 +64,7 @@ function OrderCloudReadonlyRolesInput() {
             var authorized = ocReadonlyRolesCtrl.Authorized;
 
             if (!authorized) {
-                if (element.attr('type') == 'checkbox') {
+                if (element.attr('type') == 'checkbox' || attr['uibDatepickerPopup']) {
                     element.attr('disabled', true);
                 }
                 else {
@@ -102,7 +102,6 @@ function OrderCloudReadonlyRolesTextArea() {
 function OrderCloudReadonlyRolesSelect() {
     var directive = {
         restrict: 'E',
-        priority: -1000,
         require: ['^?ocReadonlyRoles'],
         link: link
     };
@@ -134,7 +133,7 @@ function OrderCloudReadonlyRolesButton() {
         if (ocReadonlyRolesCtrl) {
             var authorized = ocReadonlyRolesCtrl.Authorized;
 
-            if (!authorized && !element.attr('ng-disabled')) {
+            if (!authorized && !element.attr('ng-disabled') && !element.hasClass('close')) {
                 element.attr('disabled', true);
             }
         }

@@ -9,6 +9,7 @@ function CreditCardEditModalController($uibModalInstance, $filter, ocAuthNet, oc
     vm.creditCardInfo = ocCreditCardUtility;
     vm.creditCard.ExpirationMonth = $filter('date')(vm.creditCard.ExpirationDate, 'MM');
     vm.creditCard.ExpirationYear = +($filter('date')(vm.creditCard.ExpirationDate, 'yyyy'));
+    if (vm.creditCardInfo.ExpirationYears.indexOf(vm.creditCard.ExpirationYear) == -1) vm.creditCardInfo.ExpirationYears.unshift(vm.creditCard.ExpirationYear);
 
     vm.submit = function() {
         vm.creditCard.Shared = true;
