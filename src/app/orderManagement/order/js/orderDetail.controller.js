@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('OrderCtrl', OrderController)
 ;
 
-function OrderController($stateParams, OrderCloud, ocOrderDetailService, SelectedOrder, OrderLineItems) {
+function OrderController($stateParams, toastr, OrderCloud, ocOrderDetailService, SelectedOrder, OrderLineItems) {
     var vm = this;
     vm.order = SelectedOrder;
     vm.lineItems = OrderLineItems;
@@ -36,6 +36,7 @@ function OrderController($stateParams, OrderCloud, ocOrderDetailService, Selecte
                 OrderCloud.Orders.Get($stateParams.orderid, $stateParams.buyerid)
                     .then(function(orderData) {
                         vm.order = angular.extend(vm.order, _.pick(orderData, ['Subtotal', 'TaxCost', 'ShippingCost', 'Total']));
+                        toastr.success('Line item updated.', 'Success!');
                     });
             });
     };
