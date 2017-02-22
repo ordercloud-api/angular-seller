@@ -6,7 +6,7 @@ angular.module('orderCloud')
     .controller('OrderShipmentsEditItemCtrl', OrderShipmentsEditItemController)
 ;
 
-function OrderShipmentsController($exceptionHandler, $stateParams, OrderCloud, ocConfirm, ocOrderShipmentsService, OrderShipments) {
+function OrderShipmentsController($exceptionHandler, $stateParams, toastr, OrderCloud, ocConfirm, ocOrderShipmentsService, OrderShipments) {
     var vm = this;
     vm.list = OrderShipments;
     vm.orderID = $stateParams.orderid;
@@ -32,14 +32,11 @@ function OrderShipmentsController($exceptionHandler, $stateParams, OrderCloud, o
     };
     if (vm.list.Items.length) vm.selectShipment(vm.list.Items[0]);
 
-    vm.newShipment = function() {
-        ocOrderShipmentsService.Create(vm.orderID);
-    };
-
     vm.editShipment = function() {
         ocOrderShipmentsService.Edit(vm.selectedShipment, $stateParams.buyerid)
             .then(function(data) {
                 vm.selectedShipment = angular.extend(vm.selectedShipment, data);
+                toastr.success('Shipment was updated.', 'Success!');
             });
     };
 
@@ -101,7 +98,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, OrderCloud, o
     };
 }
 
-function OrderShipmentsCreateController($state, $stateParams, $timeout, ocOrderShipmentsService, ShipmentLineItems) {
+function OrderShipmentsCreateController($state, $stateParams, $timeout, toastr, ocOrderShipmentsService, ShipmentLineItems) {
     var vm = this;
     vm.lineItems = ShipmentLineItems;
     vm.selectedLineItemPage = ShipmentLineItems.Meta.Page;
@@ -150,6 +147,7 @@ function OrderShipmentsCreateController($state, $stateParams, $timeout, ocOrderS
         ocOrderShipmentsService.Create(vm.shipment, vm.lineItems.Items, $stateParams.orderid, $stateParams.buyerid)
             .then(function() {
                 $state.go('^', {}, {reload:true});
+                toastr.success('Shipment was created.', 'Success!');
             });
     };
 }
