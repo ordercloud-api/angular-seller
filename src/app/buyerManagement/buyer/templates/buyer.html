@@ -38,7 +38,7 @@
         </li>
         <li role="presentation"  ng-class="{active:
             application.$state.is('spendingAccounts') || application.$state.is('costCenters')}"
-            uib-dropdown ng-if="application.$ocMedia('max-width:767px') ? application.userIsAuthorized(['BuyerUserReader', 'BuyerUserAdmin', 'UserGroupReader', 'UserGroupAdmin', 'AddressReader', 'AddressAdmin', 'CreditCardReader', 'CreditCardAdmin'], true) : application.userIsAuthorized(['SpendingAccountReader', 'SpendingAccountAdmin', 'CostCenterReader', 'CostCenterAdmin'], true)">
+            uib-dropdown ng-if="application.$ocMedia('max-width:767px') ? application.userIsAuthorized(['BuyerUserReader', 'BuyerUserAdmin', 'UserGroupReader', 'UserGroupAdmin', 'AddressReader', 'AddressAdmin', 'CreditCardReader', 'CreditCardAdmin'], true) : application.userIsAuthorized(['SpendingAccountReader', 'SpendingAccountAdmin', 'CostCenterReader', 'CostCenterAdmin', 'PromotionReader', 'PromotionAdmin'], true)">
             <a uib-dropdown-toggle>More <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown-menu-right" uib-dropdown-menu>
                 <li role="presentation" class="visible-xs" ng-class="{active: application.$state.includes('users')}" oc-if-roles="BuyerUserRoles">
@@ -59,16 +59,12 @@
                 <li role="presentation" ng-class="{active: application.$state.includes('costCenters')}" oc-if-roles="CostCenterRoles">
                     <a ui-sref="costCenters({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-asterisk"></i> Cost Centers</a>
                 </li>
-
-                <!--TODO: waiting on more requirements for approval rules-->
-                <!--<li role="presentation" ng-class="{active: application.$state.includes('approvalRules')}">
+                <li role="presentation" ng-class="{active: application.$state.includes('approvalRules')}" oc-if-roles="ApprovalRuleRoles">
                     <a ui-sref="approvalRules({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-check-square-o"></i> Approval Rules</a>
-                </li>-->
-
-                <!--TODO: waiting on more requirements for promotions-->
-                <!--<li role="presentation" ng-class="{active: application.$state.includes('promotions')}">
+                </li>
+                <li role="presentation" ng-class="{active: application.$state.includes('promotions')}" oc-if-roles="PromotionRoles">
                     <a ui-sref="promotions({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-bullhorn"></i> Promotions</a>
-                </li>-->
+                </li>
             </ul>
         </li>
 
