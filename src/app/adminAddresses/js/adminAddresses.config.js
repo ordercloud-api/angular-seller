@@ -11,7 +11,7 @@ function AdminAddressesConfig($stateProvider){
             controllerAs: 'adminAddresses',
             url: '/admin-addresses?search&page&pageSize&searchOn&sortBy&filters',
             data: {
-                componentName: 'Admin Addresses'
+                pageTitle: 'Admin Addresses'
             },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {

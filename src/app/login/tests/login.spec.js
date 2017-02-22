@@ -57,6 +57,34 @@ describe('Component: Login', function() {
             });
         });
 
+        describe('Logout', function() {
+            beforeEach(inject(function($state, $cookies, ocRolesService) {
+                var fakeCookies = {
+                    cookie1: 'FAKE',
+                    cookie2: 'SUPER_FAKE'
+                };
+                spyOn($cookies, 'getAll').and.returnValue(fakeCookies);
+                spyOn($cookies, 'remove').and.callThrough();
+                spyOn(ocRolesService, 'Remove').and.callThrough();
+                spyOn($state, 'go').and.callThrough();
+                loginFactory.Logout();
+            }));
+            it ('should get all of the cookies', inject(function($cookies) {
+                expect($cookies.getAll).toHaveBeenCalled();
+            }));
+            it ('should remove all of the cookies', inject(function($cookies) {
+                expect($cookies.remove.calls.count()).toEqual(2);
+                expect($cookies.remove).toHaveBeenCalledWith('cookie1');
+                expect($cookies.remove).toHaveBeenCalledWith('cookie2');
+            }));
+            it ('should call ocRolesService.Remove()', inject(function(ocRolesService) {
+                expect(ocRolesService.Remove).toHaveBeenCalled();
+            }));
+            it ('should redirect to the login state', inject(function($state) {
+                expect($state.go).toHaveBeenCalledWith('login', {}, {reload:true});
+            }))
+        });
+
         describe('RememberMe', function(){
             beforeEach(function(){
                 var deferred = q.defer();
@@ -77,7 +105,6 @@ describe('Component: Login', function() {
                 expect(oc.Refresh.ReadToken).toHaveBeenCalled();
                 expect(oc.Refresh.GetToken).toHaveBeenCalledWith('REFRESH_TOKEN');
                 scope.$digest();
-                expect(oc.BuyerID.Set).toHaveBeenCalled();
                 expect(oc.Auth.SetToken).toHaveBeenCalledWith('ACCESS_TOKEN');
             });
 

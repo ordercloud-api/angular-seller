@@ -36,7 +36,7 @@ describe('Component: Buyers', function() {
         }));
     });
 
-    describe('State: buyers.edit', function() {
+    xdescribe('State: buyers.edit', function() {
         var state;
         beforeEach(inject(function($state) {
             state = $state.get('buyers.edit');
@@ -48,7 +48,7 @@ describe('Component: Buyers', function() {
         }));
     });
 
-    describe('State: buyers.details', function(){
+    xdescribe('State: buyers.details', function(){
         var state;
         beforeEach(inject(function($state){
             state = $state.get('buyers.details');
@@ -60,7 +60,7 @@ describe('Component: Buyers', function() {
         }));
     });
 
-    describe('Controller: BuyerCtrl', function() {
+    xdescribe('Controller: BuyerCtrl', function() {
         var buyerCtrl,
             parameters,
             buyerList;
@@ -151,7 +151,7 @@ describe('Component: Buyers', function() {
         })
     });
 
-    describe('Controller: BuyerEditCtrl', function() {
+    xdescribe('Controller: BuyerEditCtrl', function() {
         var buyerEditCtrl,
             toaster;
         beforeEach(inject(function($state, $controller, toastr) {
@@ -186,7 +186,7 @@ describe('Component: Buyers', function() {
         });
     });
 
-    describe('Controller: BuyerCreateCtrl', function() {
+    xdescribe('Controller: BuyerCreateCtrl', function() {
         var buyerCreateCtrl,
             toaster;
         beforeEach(inject(function($state, $controller, toastr) {

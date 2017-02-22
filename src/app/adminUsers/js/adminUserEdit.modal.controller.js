@@ -25,16 +25,6 @@ function AdminUserEditModalController($exceptionHandler, $uibModalInstance, Orde
             });
     };
 
-    vm.delete = function() {
-        OrderCloud.AdminUsers.Delete(userid)
-            .then(function() {
-                $uibModalInstance.close();
-            })
-            .catch(function(ex) {
-                $exceptionHandler(ex)
-            });
-    };
-
     vm.cancel = function() {
         $uibModalInstance.dismiss();
     }

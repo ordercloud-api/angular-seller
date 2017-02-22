@@ -1,18 +1,30 @@
 angular.module('orderCloud')
-    .factory('ocStateLoading', function($q) {
+    .factory('ocStateLoading', function($rootScope, $exceptionHandler, defaultstate, $q) {
         var stateLoading = {};
         var service = {
-            Watch: _watch,
-            Start: _start,
-            End: _end
+            Init: _init,
+            Watch: _watch
         };
+
+        function _init() {
+            $rootScope.$on('$stateChangeStart', function(e, toState) {
+                var parent = toState.parent || toState.name.split('.')[0];
+                stateLoading[parent] = $q.defer();
+            });
+
+            $rootScope.$on('$stateChangeSuccess', function() {
+                _end();
+            });
+
+            $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+                if (toState.name == defaultstate) event.preventDefault(); //prevent infinite loop when error occurs on default state (otherwise in Routing config)
+                error.data ? $exceptionHandler(error) : $exceptionHandler({message:error});
+                _end();
+            });
+        }
 
         function _watch(key) {
             return stateLoading[key];
-        }
-
-        function _start(key) {
-            stateLoading[key] = $q.defer();
         }
 
         function _end() {

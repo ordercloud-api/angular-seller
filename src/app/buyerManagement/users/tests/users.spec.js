@@ -37,7 +37,7 @@ describe('Component: Users', function() {
         }));
     });
 
-    describe('State: users.edit', function() {
+    xdescribe('State: users.edit', function() {
         var state;
         beforeEach(inject(function($state) {
             state = $state.get('users.edit');
@@ -48,7 +48,7 @@ describe('Component: Users', function() {
             expect(oc.Users.Get).toHaveBeenCalledWith($stateParams.userid);
         }));
     });
-    describe('Controller: UserCreateCtrl', function() {
+    xdescribe('Controller: UserCreateCtrl', function() {
         var userCreateCtrl;
         beforeEach(inject(function($state, $controller) {
             userCreateCtrl = $controller('UserCreateCtrl', {
@@ -75,7 +75,7 @@ describe('Component: Users', function() {
         });
     });
 
-    describe('Controller: UserEditCtrl', function() {
+    xdescribe('Controller: UserEditCtrl', function() {
         var userEditCtrl;
         beforeEach(inject(function($state, $controller) {
             userEditCtrl = $controller('UserEditCtrl', {
