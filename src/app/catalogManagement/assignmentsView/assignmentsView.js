@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CatalogAssignmentsCtrl', CatalogAssignmentsController)
 ;
 
- function CatalogAssignmentsController($q, $exceptionHandler, toastr, $rootScope, OrderCloud, CategoryModalFactory, Tree, CatalogID, SelectedBuyer){
+ function CatalogAssignmentsController($q, $exceptionHandler, toastr, $state, $rootScope, OrderCloud, CategoryModalFactory, ocRolesService, Tree, CatalogID, SelectedBuyer){
      var vm = this;
      vm.assignmentType = 'buyer';
      vm.productIds = null;
@@ -33,13 +33,15 @@ angular.module('orderCloud')
      vm.editCategory = function(id){
          CategoryModalFactory.Edit(id, vm.catalogID)
              .then(function(data) {
-                 vm.category = data;
+                 toastr.success(data.Name + ' was updated.', 'Success!');
+                 $state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2, preSelectID:data.ID}, {reload:true});
              })
      };
      vm.deleteCategory = function(id) {
          CategoryModalFactory.Delete(id, vm.catalogID)
-             .then(function(data) {
-
+             .then(function() {
+                 toastr.success('Category was deleted.', 'Success!');
+                 $state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2}, {reload:true});
              })
      };
      
@@ -75,7 +77,7 @@ angular.module('orderCloud')
                 if(!userGroupIDs.length) {
                     vm.userGroups = null;
                 } else {
-                    if (ocRoles.UserIsAuthorized(['UserGroupReader', 'UserGroupAdmin'], true)) {
+                    if (ocRolesService.UserIsAuthorized(['UserGroupReader', 'UserGroupAdmin'], true)) {
                         var filter = {ID: userGroupIDs.join('|')};
                         OrderCloud.UserGroups.List(null, null, vm.pageSize, null, null, filter, vm.buyerID)
                             .then(function(userGroupList){

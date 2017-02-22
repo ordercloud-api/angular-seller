@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CategoryViewTreeCtrl', CategoryViewTreeController)
 ;
 
-function CategoryViewTreeController(CatalogViewManagement, CategoryTreeService, CategoryModalFactory, Tree, CatalogID){
+function CategoryViewTreeController(toastr, $state, $stateParams, CatalogViewManagement, CategoryTreeService, CategoryModalFactory, Tree, CatalogID){
      var vm = this;
      vm.tree = Tree;
      vm.catalogid = CatalogID;
@@ -11,6 +11,12 @@ function CategoryViewTreeController(CatalogViewManagement, CategoryTreeService, 
          vm.selectedCategory = category;
      };
 
+    if ($stateParams.preSelectID) {
+        vm.categorySelected($stateParams.preSelectID);
+    } else if (vm.tree[0] && vm.tree[0].ID) {
+        vm.categorySelected(vm.tree[0].ID);
+    }
+
     vm.treeOptions = {
         dropped: function(event) {
             CategoryTreeService.UpdateCategoryNode(event, vm.catalogid);
@@ -18,6 +24,11 @@ function CategoryViewTreeController(CatalogViewManagement, CategoryTreeService, 
     };
 
      vm.createCategory = function(parentid){
-         CategoryModalFactory.Create(parentid, vm.catalogid);
+         CategoryModalFactory.Create(parentid, vm.catalogid)
+             .then(function(newCategory) {
+                 toastr.success(newCategory.Name + ' was created!', 'Success!');
+                 //TODO: replace state reload with something less resource intensive
+                 $state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2}, {reload:true});
+             });
      };
 }

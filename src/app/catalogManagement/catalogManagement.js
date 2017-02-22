@@ -7,6 +7,9 @@ function CatalogManagementConfig($stateProvider) {
     $stateProvider
         .state('catalogManagement', {
             parent: 'buyer',
+            params: {
+                preSelectID: undefined
+            },
             url: '/catalog',
             resolve: {
                 CatalogID: function(SelectedBuyer) {

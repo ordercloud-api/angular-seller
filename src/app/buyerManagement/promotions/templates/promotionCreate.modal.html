@@ -72,7 +72,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="promotionExpirationDate" class="col-sm-3 control-label">End Date</label>
+                <label for="promotionExpirationDate" class="col-sm-3 control-label">Expiration Date</label>
                 <div class="col-sm-9">
                     <input id="promotionExpirationDate" ng-if="application.isTouchDevice" class="form-control"  type="date" ng-model="promotionCreateModal.promotion.ExpirationDate"/>
                     <input id="promotionExpirationDate" ng-if="!application.isTouchDevice" type="text" ng-click="open2 = !open2" is-open="open2" uib-datepicker-popup="MM/dd/yyyy" class="form-control" ng-model="promotionCreateModal.promotion.ExpirationDate">

@@ -52,21 +52,15 @@
                     </colgroup>
                     <thead>
                     <tr>
-                        <th>
-                            <!-- Commented out until API supports sorting for buyers -->
-                            <!-- <a href="#" role="button" ng-click="buyers.updateSort('ID')"> -->
+                        <th ng-click="buyers.updateSort('ID')">
                             ID
                             <i class="fa fa-caret-down" ng-show="buyers.parameters.sortBy == 'ID'"></i>
                             <i class="fa fa-caret-up" ng-show="buyers.parameters.sortBy == '!ID'"></i>
-                            <!-- </a> -->
                         </th>
-                        <th>
-                            <!-- Commented out until API supports sorting for buyers -->
-                            <!-- <a href="#" role="button" ng-click="buyers.updateSort('Name')"> -->
+                        <th ng-click="buyers.updateSort('Name')">
                             Name
                             <i class="fa fa-caret-down" ng-show="buyers.parameters.sortBy == 'Name'"></i>
                             <i class="fa fa-caret-up" ng-show="buyers.parameters.sortBy == '!Name'"></i>
-                            <!-- </a> -->
                         </th>
                         <th>
                             Active

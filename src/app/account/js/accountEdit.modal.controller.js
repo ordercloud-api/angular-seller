@@ -10,9 +10,7 @@ function AccountEditModalController($uibModalInstance, $exceptionHandler, Accoun
 	vm.update = function() {
 		AccountService.Update(currentProfile, vm.profile)
 			.then(function(data) {
-				vm.profile = angular.copy(data);
-				currentProfile = data;
-				vm.submit();
+				$uibModalInstance.close(data);
 			})
 			.catch(function(ex) {
 				vm.profile = currentProfile;
@@ -23,10 +21,6 @@ function AccountEditModalController($uibModalInstance, $exceptionHandler, Accoun
 	vm.resetForm = function(form) {
 		vm.profile = currentProfile;
 		form.$setPristine(true);
-	};
-
-	vm.submit = function() {
-		$uibModalInstance.close();
 	};
 
 	vm.cancel = function() {
