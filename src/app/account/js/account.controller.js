@@ -23,6 +23,9 @@ function AccountController($uibModal, CurrentUser){
 					return vm.currentUser;
 				}
 			}
+		}).result.then(function(updatedUser) {
+			vm.profile = angular.copy(updatedUser);
+			vm.currentUser = updatedUser;
 		});
 	};
 
