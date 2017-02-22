@@ -37,7 +37,7 @@ describe('Component: UserGroups', function() {
         }));
     });
 
-    describe('State: userGroups.edit', function() {
+    xdescribe('State: userGroups.edit', function() {
         var state;
         beforeEach(inject(function($state) {
             state = $state.get('userGroups.edit');
@@ -49,7 +49,7 @@ describe('Component: UserGroups', function() {
         }));
     });
 
-    describe('State: userGroups.assign', function() {
+    xdescribe('State: userGroups.assign', function() {
         var state;
         beforeEach(inject(function($state) {
             state = $state.get('userGroups.assign');
@@ -71,7 +71,7 @@ describe('Component: UserGroups', function() {
         }));
     });
 
-    describe('Controller: UserGroupEditCtrl', function() {
+    xdescribe('Controller: UserGroupEditCtrl', function() {
         var userGroupEditCtrl;
         beforeEach(inject(function($state, $controller) {
             userGroupEditCtrl = $controller('UserGroupEditCtrl', {
@@ -100,7 +100,7 @@ describe('Component: UserGroups', function() {
         });
     });
 
-    describe('Controller: UserGroupCreateCtrl', function() {
+    xdescribe('Controller: UserGroupCreateCtrl', function() {
         var userGroupCreateCtrl;
         beforeEach(inject(function($state, $controller) {
             userGroupCreateCtrl = $controller('UserGroupCreateCtrl', {
@@ -127,7 +127,7 @@ describe('Component: UserGroups', function() {
         });
     });
 
-    describe('Controller: UserGroupAssignCtrl', function() {
+    xdescribe('Controller: UserGroupAssignCtrl', function() {
         var userGroupAssignCtrl;
         beforeEach(inject(function($state, $controller) {
             userGroupAssignCtrl = $controller('UserGroupAssignCtrl', {

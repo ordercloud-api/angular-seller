@@ -34,13 +34,13 @@ describe('Component: SpendingAccounts', function() {
             $injector.invoke(state.resolve.Parameters);
             expect(ocParameters.Get).toHaveBeenCalled();
         }));
-        it('should resolve SpendingAccountList', inject(function($injector) {
+        xit('should resolve SpendingAccountList', inject(function($injector) {
             $injector.invoke(state.resolve.SpendingAccountList);
             expect(oc.SpendingAccounts.List).toHaveBeenCalledWith(null, null, 12, null, null, {'RedemptionCode': '!*'});
         }));
     });
 
-    describe('State: spendingAccounts.edit', function() {
+    xdescribe('State: spendingAccounts.edit', function() {
         var state;
         beforeEach(inject(function($state) {
             state = $state.get('spendingAccounts.edit');
@@ -54,7 +54,7 @@ describe('Component: SpendingAccounts', function() {
         }));
     });
 
-    describe('State: spendingAccounts.assignGroup', function() {
+    xdescribe('State: spendingAccounts.assignGroup', function() {
         var state;
         beforeEach(inject(function($state) {
             state = $state.get('spendingAccounts.assignGroup');
@@ -76,7 +76,7 @@ describe('Component: SpendingAccounts', function() {
         }));
     });
 
-    describe('State: spendingAccounts.assignUser', function() {
+    xdescribe('State: spendingAccounts.assignUser', function() {
         var state;
         beforeEach(inject(function($state) {
             state = $state.get('spendingAccounts.assignUser');
@@ -98,7 +98,7 @@ describe('Component: SpendingAccounts', function() {
         }));
     });
 
-    describe('Controller: SpendingAccountEditCtrl', function() {
+    xdescribe('Controller: SpendingAccountEditCtrl', function() {
         var spendingAccountEditCtrl;
         beforeEach(inject(function($state, $controller) {
             spendingAccountEditCtrl = $controller('SpendingAccountEditCtrl', {
@@ -143,7 +143,7 @@ describe('Component: SpendingAccounts', function() {
         });
     });
 
-    describe('Controller: SpendingAccountCreateCtrl', function() {
+    xdescribe('Controller: SpendingAccountCreateCtrl', function() {
         var spendingAccountCreateCtrl;
         beforeEach(inject(function($state, $controller) {
             spendingAccountCreateCtrl = $controller('SpendingAccountCreateCtrl', {
@@ -170,7 +170,7 @@ describe('Component: SpendingAccounts', function() {
         });
     });
 
-    describe('Controller: SpendingAccountAssignGroupCtrl', function() {
+    xdescribe('Controller: SpendingAccountAssignGroupCtrl', function() {
         var spendingAccountAssignGroupCtrl;
         beforeEach(inject(function($state, $controller) {
             spendingAccountAssignGroupCtrl = $controller('SpendingAccountAssignGroupCtrl', {
@@ -218,7 +218,7 @@ describe('Component: SpendingAccounts', function() {
         });
     });
 
-    describe('Controller: SpendingAccountAssignUserCtrl', function() {
+    xdescribe('Controller: SpendingAccountAssignUserCtrl', function() {
         var spendingAccountAssignUserCtrl;
         beforeEach(inject(function($state, $controller) {
             spendingAccountAssignUserCtrl = $controller('SpendingAccountAssignUserCtrl', {
@@ -265,7 +265,7 @@ describe('Component: SpendingAccounts', function() {
         });
     });
 
-    describe('Factory: SpendingAccountAssignment', function() {
+    xdescribe('Factory: SpendingAccountAssignment', function() {
        var spendingAccountAssignment, sampleList, assignments;
         beforeEach(inject(function(SpendingAccountAssignment, Assignments, $state) {
             spendingAccountAssignment = SpendingAccountAssignment;

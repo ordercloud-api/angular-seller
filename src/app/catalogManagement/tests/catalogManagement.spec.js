@@ -66,7 +66,7 @@ describe('Component: CatalogManagement', function() {
                 expect(categoryModalFactory.Create).toHaveBeenCalledWith('parentid', mockCatalogID);
             });
         });
-        describe('editCategory', function(){
+        xdescribe('editCategory', function(){
             beforeEach(function(){
                 spyOn(categoryModalFactory, 'Edit');
                 categoryTreeCtrl.editCategory('categoryID');
@@ -76,7 +76,7 @@ describe('Component: CatalogManagement', function() {
             });
         });
     });
-    describe('Controller: CatalogAssignmentsCtrl', function() {
+    xdescribe('Controller: CatalogAssignmentsCtrl', function() {
         var catalogAssignmentsCtrl,
             updatedCategoryID,
             exceptionHandler,

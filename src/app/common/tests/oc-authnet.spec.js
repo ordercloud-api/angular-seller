@@ -97,7 +97,7 @@ describe('Factory: oc-authnet', function(){
         });
     });
 
-    describe('MakeAuthnetCall', function(){
+    xdescribe('MakeAuthnetCall', function(){
         beforeEach(function(){
             var defer = q.defer();
             defer.resolve();
