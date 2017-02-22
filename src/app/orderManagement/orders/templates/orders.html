@@ -67,47 +67,35 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>
-                                <a href="#" role="button" ng-click="orders.updateSort('ID')">
-                                    ID
-                                    <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'ID'"></i>
-                                    <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!ID'"></i>
-                                </a>
+                            <th ng-click="orders.updateSort('ID')">
+                                ID
+                                <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'ID'"></i>
+                                <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!ID'"></i>
                             </th>
-                            <th>
-                                <a href="#" role="button" ng-click="orders.updateSort('Status')">
-                                    Status
-                                    <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'Status'"></i>
-                                    <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!Status'"></i>
-                                </a>
+                            <th ng-click="orders.updateSort('Status')">
+                                Status
+                                <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'Status'"></i>
+                                <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!Status'"></i>
                             </th>
-                            <th>
-                                <a href="#" role="button" ng-click="orders.updateSort('DateSubmitted')">
-                                    Received
-                                    <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'DateSubmitted'"></i>
-                                    <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!DateSubmitted'"></i>
-                                </a>
+                            <th ng-click="orders.updateSort('DateSubmitted')">
+                                Received
+                                <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'DateSubmitted'"></i>
+                                <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!DateSubmitted'"></i>
                             </th>
-                            <th>
-                                <a href="#" role="button" ng-click="orders.updateSort('FromCompanyID')">
-                                    Buyer Company
-                                    <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'FromCompanyID'"></i>
-                                    <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!FromCompanyID'"></i>
-                                </a>
+                            <th ng-click="orders.updateSort('FromCompanyID')">
+                                Buyer Company
+                                <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'FromCompanyID'"></i>
+                                <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!FromCompanyID'"></i>
                             </th>
-                            <th>
-                                <a href="#" role="button" ng-click="order.updateSort('FromUserFirstName')">
-                                    Submitted By
-                                    <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'FromUserFirstName'"></i>
-                                    <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!FromUserFirstName'"></i>
-                                </a>
+                            <th ng-click="orders.updateSort('FromUserFirstName')">
+                                Submitted By
+                                <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'FromUserFirstName'"></i>
+                                <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!FromUserFirstName'"></i>
                             </th>
-                            <th>
-                                <a href="#" role="button" ng-click="orders.updateSort('Subtotal')">
-                                    Subtotal
-                                    <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'Subtotal'"></i>
-                                    <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!Subtotal'"></i>
-                                </a>
+                            <th ng-click="orders.updateSort('Subtotal')">
+                                Subtotal
+                                <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'Subtotal'"></i>
+                                <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!Subtotal'"></i>
                             </th>
                             <th></th>
                         </tr>

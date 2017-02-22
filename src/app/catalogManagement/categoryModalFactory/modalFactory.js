@@ -46,17 +46,11 @@ function CategoryModalFactory($state, $exceptionHandler, OrderCloud, ocConfirm, 
 
     function _delete(id, catalogid) {
         return ocConfirm.Confirm({
-            message: 'Are you sure you want to delete this category?'
+            message: 'Are you sure you want to delete this category? <b>This action cannot be undone</b>',
+            confirmText: 'Delete this category'
             })
             .then(function() {
-                return OrderCloud.Categories.Delete(id, catalogid)
-                    .then(function() {
-                        //TODO: replace state reload with something less resource intensive
-                        $state.go('catalogManagement', {buyerID: catalogid, activeTab: 2}, {reload:true});
-                    })
-                    .catch(function(err){
-                        $exceptionHandler(err);
-                    });
+                return OrderCloud.Categories.Delete(id, catalogid);
             });
     }
     return service;
@@ -85,8 +79,6 @@ function CreateCategoryModalController($state, $exceptionHandler, $uibModalInsta
         vm.loading = OrderCloud.Categories.Create(vm.category, vm.catalogid)
             .then(function(category) {
                 $uibModalInstance.close(category);
-                //TODO: replace state reload with something less resource intensive
-                $state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2}, {reload:true});
             })
             .catch(function(ex) {
                 $exceptionHandler(ex);

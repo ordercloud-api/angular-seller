@@ -54,7 +54,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
 
     vm.deletePrice = function() {
         ocConfirm.Confirm({
-            message: 'Are you sure you want to delete this price and all of it\'s assignments? This action cannot be undone.'
+            message: 'Are you sure you want to delete this price and all of it\'s assignments? <b>This action cannot be undone.</b>'
             })
             .then(function() {
                 console.log('hit');
@@ -62,6 +62,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                     .then(function() {
                         delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
                         vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
+                        toastr.success(vm.selectedPrice.PriceSchedule.Name + ' was deleted', 'Success!');
                         vm.selectedPrice = null;
                     })
             })

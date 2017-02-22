@@ -66,7 +66,7 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderClou
         ocBuyers.Create()
             .then(function(data) {
                 toastr.success(data.Name + ' was created.', 'Success!');
-                $state.go('buyer.settings', {buyerid: data.ID});
+                $state.go('buyer', {buyerid: data.ID});
             })
     };
 

@@ -53,11 +53,7 @@
                             <i class="fa fa-caret-down" ng-show="adminUserGroups.parameters.sortBy == 'Name'"></i>
                             <i class="fa fa-caret-up" ng-show="adminUserGroups.parameters.sortBy == '!Name'"></i>
                         </th>
-                        <th ng-click="adminUserGroups.updateSort('Description')">
-                            Description
-                            <i class="fa fa-caret-down" ng-show="adminUserGroups.parameters.sortBy == 'Description'"></i>
-                            <i class="fa fa-caret-up" ng-show="adminUserGroups.parameters.sortBy == '!Description'"></i>
-                        </th>
+                        <th>Description</th>
                         <th oc-if-roles="AdminUserGroupAdmin"></th>
                     </tr>
                     </thead>

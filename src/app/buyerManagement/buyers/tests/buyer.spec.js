@@ -4,7 +4,7 @@ describe('Component: Buyers', function() {
         buyer,
         oc;
     beforeEach(module(function($provide) {
-        $provide.value('Parameters', {search:null, page: null, pageSize: null, searchOn: null, sortBy: null, userID: null, userGroupID: null, level: null, buyerID: null})
+        $provide.value('Parameters', {search:null, page: null, pageSize: null, searchOn: null, sortBy: null, userID: null, userGroupID: null, level: null, filters: null, buyerID: null})
     }));
     beforeEach(module('orderCloud'));
     beforeEach(module('orderCloud.sdk'));
@@ -32,7 +32,7 @@ describe('Component: Buyers', function() {
         }));
         it('should resolve BuyersList', inject(function($injector, Parameters) {
             $injector.invoke(state.resolve.BuyerList);
-            expect(oc.Buyers.List).toHaveBeenCalledWith(Parameters.search, Parameters.page, Parameters.pageSize);
+            expect(oc.Buyers.List).toHaveBeenCalledWith(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
         }));
     });
 
