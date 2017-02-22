@@ -66,6 +66,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
         ocOrderShipmentsService.CreateItems(vm.selectedShipment, $stateParams.orderid, $stateParams.buyerid)
             .then(function(data) {
                 vm.selectedShipment.Items = data.Items;
+                toastr.success('Shipment item was created.', 'Success!');
             });
     };
 
@@ -77,6 +78,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
                         item.QuantityShipped = data.QuantityShipped;
                     }
                 });
+                toastr.success('Shipment item was updated.', 'Success!');
             });
     };
 
