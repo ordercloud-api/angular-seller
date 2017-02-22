@@ -5,7 +5,7 @@ angular.module('orderCloud')
     .controller('ProductSpecOptionEditCtrl', ProductSpecOptionEditController)
 ;
 
-function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConfirm, OrderCloud, ocProductSpecs, ProductSpecs) {
+function ProductSpecsController($rootScope, $uibModal, toastr, ocConfirm, OrderCloud, ocProductSpecs, ProductSpecs) {
     var vm = this;
     vm.specs = angular.copy(ProductSpecs);
     vm.selectedSpec = null;
@@ -58,27 +58,23 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
                 vm.specs.Items[_.indexOf(vm.specs.Items, vm.selectedSpec)].Spec = updatedSpec;
                 vm.specs.Items[_.indexOf(vm.specs.Items, vm.selectedSpec)].SpecID = updatedSpec.ID;
                 vm.selectedSpec.Spec = updatedSpec;
-            })
+                toastr.success(vm.selectedSpec.Spec.Name + ' was updated.', 'Success!');
+            });
     }
 
     function deleteSelectedSpec() {
-        ocConfirm.Confirm({message: 'Are you sure you want to delete this spec?'})
+        ocProductSpecs.DeleteSpec(vm.selectedSpec.Spec.ID)
             .then(function() {
-                OrderCloud.Specs.Delete(vm.selectedSpec.Spec.ID)
-                    .then(function() {
-                        var specIndex = 0;
-                        angular.forEach(vm.specs.Items, function(spec, index) {
-                            if (spec.Spec.ID == vm.selectedSpec.Spec.ID) {
-                                specIndex = index;
-                            }
-                        });
-                        vm.specs.Items.splice(specIndex, 1);
-                        vm.selectedSpec = null;
-                        $rootScope.$broadcast('ProductManagement:SpecCountChanged', 'decrement');
-                    })
-                    .catch(function(err) {
-                        $exceptionHandler(err);
-                    });
+                var specIndex = 0;
+                angular.forEach(vm.specs.Items, function(spec, index) {
+                    if (spec.Spec.ID == vm.selectedSpec.Spec.ID) {
+                        specIndex = index;
+                    }
+                });
+                vm.specs.Items.splice(specIndex, 1);
+                vm.selectedSpec = null;
+                $rootScope.$broadcast('ProductManagement:SpecCountChanged', 'decrement');
+                toastr.success('Spec was deleted.', 'Success!');
             });
     }
 
@@ -115,6 +111,7 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
                     vm.selectedSpec.Options[index].DefaultOption = specOption.DefaultOption ? false : option.DefaultOption;
                 }
             });
+            toastr.success('Spec option ' + specOption.Value + ' was created.', 'Success!');
         });
     }
 
@@ -146,25 +143,24 @@ function ProductSpecsController($rootScope, $uibModal, $exceptionHandler, ocConf
                     vm.selectedSpec.Options[index].DefaultOption = specOption.DefaultOption ? false : option.DefaultOption;
                 }
             });
+            toastr.success('Spec option ' + specOption.Value + ' was updated.', 'Success!');
         });
     }
 
 
     function deleteSpecOption(node) {
-        ocConfirm.Confirm({message: 'Are you sure you want to delete this spec option?', confirmText: 'Yes', cancelText:'No'})
+        ocProductSpecs.DeleteSpecOption(vm.selectedSpec.Spec.ID, node.ID)
             .then(function() {
-                node.loading = OrderCloud.Specs.DeleteOption(vm.selectedSpec.Spec.ID, node.ID)
-                    .then(function() {
-                        var specOptionIndex = 0;
-                        angular.forEach(vm.selectedSpec.Options, function(option, index) {
-                            if (option.ID == node.ID) {
-                                specOptionIndex = index;
-                            }
-                        });
-                        vm.selectedSpec.Options.splice(specOptionIndex, 1);
-                    });
+                var specOptionIndex = 0;
+                angular.forEach(vm.selectedSpec.Options, function(option, index) {
+                    if (option.ID == node.ID) {
+                        specOptionIndex = index;
+                    }
+                });
+                vm.selectedSpec.Options.splice(specOptionIndex, 1);
+                toastr.success('Spec option was deleted.', 'Success!');
             });
-    };
+    }
 }
 
 function ProductSpecCreateController($uibModalInstance, toastr, OrderCloud, ProductID) {
