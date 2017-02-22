@@ -36,27 +36,29 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
         ocOrderShipmentsService.Edit(vm.selectedShipment, $stateParams.buyerid)
             .then(function(data) {
                 vm.selectedShipment = angular.extend(vm.selectedShipment, data);
+                var shipmentIndex = 0;
+                angular.forEach(vm.list.Items, function(shipment, index) {
+                    if (shipment.ID == vm.selectedShipment.OriginalShipmentID) {
+                        shipmentIndex = index;
+                    }
+                });
+                vm.list.Items[shipmentIndex] = data;
                 toastr.success('Shipment was updated.', 'Success!');
             });
     };
 
     vm.deleteShipment = function(shipment) {
-        ocConfirm.Confirm({message: 'Are you sure you want to delete this shipment?'})
+        ocOrderShipmentsService.Delete(vm.selectedShipment.ID, $stateParams.buyerid)
             .then(function() {
-                OrderCloud.Shipments.Delete(vm.selectedShipment.ID, $stateParams.buyerid)
-                    .then(function() {
-                        var shipmentIndex = 0;
-                        angular.forEach(vm.list.Items, function(shipment, index) {
-                            if (shipment.ID == vm.selectedShipment.ID) {
-                                shipmentIndex = index;
-                            }
-                        });
-                        vm.list.Items.splice(shipmentIndex, 1);
-                        vm.selectedShipment = null;
-                    })
-                    .catch(function(ex) {
-                        $exceptionHandler(ex);
-                    });
+                var shipmentIndex = 0;
+                angular.forEach(vm.list.Items, function(shipment, index) {
+                    if (shipment.ID == vm.selectedShipment.ID) {
+                        shipmentIndex = index;
+                    }
+                });
+                vm.list.Items.splice(shipmentIndex, 1);
+                vm.selectedShipment = null;
+                toastr.success('Shipment was deleted.', 'Success!');
             });
     };
 
@@ -79,21 +81,16 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
     };
 
     vm.deleteShipmentItem = function(item) {
-        ocConfirm.Confirm({message: 'Are you sure you want to delete this shipment item?'})
+        ocOrderShipmentsService.DeleteItem(vm.selectedShipment.ID, $stateParams.orderid, item.LineItemID, $stateParams.buyerid)
             .then(function() {
-                OrderCloud.Shipments.DeleteItem(vm.selectedShipment.ID, $stateParams.orderid, item.LineItemID, $stateParams.buyerid)
-                    .then(function() {
-                        var itemIndex = 0;
-                        angular.forEach(vm.selectedShipment.Items, function(shipmentItem, index) {
-                            if (shipmentItem.LineItemID == item.LineItemID) {
-                                itemIndex = index;
-                            }
-                        });
-                        vm.selectedShipment.Items.splice(itemIndex, 1);
-                    })
-                    .catch(function(ex) {
-                        $exceptionHandler(ex);
-                    });
+                var itemIndex = 0;
+                angular.forEach(vm.selectedShipment.Items, function(shipmentItem, index) {
+                    if (shipmentItem.LineItemID == item.LineItemID) {
+                        itemIndex = index;
+                    }
+                });
+                vm.selectedShipment.Items.splice(itemIndex, 1);
+                toastr.success('Shipment item was deleted.', 'Success!');
             });
     };
 }
@@ -169,7 +166,9 @@ function OrderShipmentsEditController($uibModalInstance, OrderCloud, OrderShipme
         if (partial.DateDelivered) partial.DateDelivered = new Date(partial.DateDelivered);
         vm.loading = OrderCloud.Shipments.Patch(originalShipmentID, vm.shipment, BuyerID)
             .then(function(data) {
-                $uibModalInstance.close(_.pick(data, ['ID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered']));
+                var result = _.pick(data, ['ID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered']);
+                result.OriginalShipmentID = originalShipmentID;
+                $uibModalInstance.close(result);
             })
             .catch(function(ex) {
                 if (ex.status == 409) {
