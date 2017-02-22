@@ -85,9 +85,9 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
 
     vm.selectItem = function(scope) {
         if (!scope.user.Assigned) vm.allItemsSelected = false;
-        vm.selectedCount = $filter('filter')(vm.list.Items, {'Assigned':true}).length;
 
         changedCheck();
+        selectedCheck();
     };
 
     vm.resetAssignments = function() {

@@ -2,7 +2,8 @@ describe('Component: AdminUserGroups', function(){
     var scope,
         q,
         oc,
-        adminUserGroup;
+        adminUserGroup,
+        adminUserGroupList;
     beforeEach(module(function($provide) {
         $provide.value('Parameters', {search:null, page: null, pageSize: null, searchOn: null, sortBy: null, userID: null, userGroupID: null, level: null, buyerID: null})
     }));
@@ -16,6 +17,16 @@ describe('Component: AdminUserGroups', function(){
             ID: "TestAdminUserGroup123456789",
             Name: "TestAdminUserGroupTest",
             Description: "Test"
+        };
+        adminUserGroupList = {
+            Meta: {
+                Page:1,
+                PageSize:20,
+                ItemRange: [0, 1],
+                TotalCount:1,
+                TotalPages:1
+            },
+            Items: [adminUserGroup]
         };
     }));
     describe('State: adminUserGroups', function() {
@@ -34,10 +45,10 @@ describe('Component: AdminUserGroups', function(){
             expect(oc.AdminUserGroups.List).toHaveBeenCalled();
         }));
     });
-    describe('State: adminUserGroups.edit', function() {
+    describe('State: adminUserGroup', function() {
         var state;
         beforeEach(inject(function($state){
-            state = $state.get('adminUserGroups.edit');
+            state = $state.get('adminUserGroup');
             spyOn(oc.AdminUserGroups, 'Get').and.returnValue(null);
         }));
         it('should resolve SelectedAdminUserGroup', inject(function($injector, $stateParams){
@@ -45,124 +56,134 @@ describe('Component: AdminUserGroups', function(){
             expect(oc.AdminUserGroups.Get).toHaveBeenCalledWith($stateParams.adminusergroupid)
         }));
     });
-    describe('State: adminUserGroups.assign', function() {
-        var state;
-        beforeEach(inject(function($state) {
-            state = $state.get('adminUserGroups.assign');
-            spyOn(oc.AdminUsers, 'List').and.returnValue(null);
-            spyOn(oc.AdminUserGroups, 'ListUserAssignments').and.returnValue(null);
-            spyOn(oc.AdminUserGroups, 'Get').and.returnValue(null);
+    describe('Service: ocAdminUserGroups', function(){
+        var uibModal, confirm;
+        beforeEach(inject(function($uibModal, ocConfirm) {
+            uibModal = $uibModal;
+            confirm = ocConfirm;
         }));
-        it('should resolve AdminUsersList', inject(function($injector){
-            $injector.invoke(state.resolve.AdminUserList);
-            expect(oc.AdminUsers.List).toHaveBeenCalledWith(null, 1, 20);
-        }));
-        it('should resolve AssignedAdminUsers', inject(function($injector, $stateParams){
-            $injector.invoke(state.resolve.AssignedAdminUsers);
-            expect(oc.AdminUserGroups.ListUserAssignments).toHaveBeenCalledWith($stateParams.adminusergroupid);
-        }));
-        it('should resolve SelectedAdminUserGroup', inject(function($injector, $stateParams){
-            $injector.invoke(state.resolve.SelectedAdminUserGroup);
-            expect(oc.AdminUserGroups.Get).toHaveBeenCalledWith($stateParams.adminusergroupid);
-        }));
-    });
-    describe('Controller: AdminUserGroupEditCtrl', function() {
-        var adminUserGroupEditCtrl;
-        beforeEach(inject(function($state, $controller){
-            adminUserGroupEditCtrl = $controller('AdminUserGroupEditCtrl', {
-                $scope: scope,
-                SelectedAdminUserGroup: adminUserGroup
-            });
-        }));
-        describe('Submit', function(){
-            beforeEach(inject(function($state) {
-                adminUserGroupEditCtrl.adminUserGroup = adminUserGroup;
-                adminUserGroupEditCtrl.adminGroupID = adminUserGroup.ID;
-                var defer = q.defer();
-                defer.resolve(adminUserGroup);
-                spyOn(oc.AdminUserGroups, 'Update').and.returnValue(defer.promise);
-                spyOn($state, 'go').and.returnValue(true);
-                adminUserGroupEditCtrl.Submit();
-                scope.$digest();
-            }));
-            it('should call the AdminUserGroups Update method', function(){
-                expect(oc.AdminUserGroups.Update).toHaveBeenCalledWith(adminUserGroupEditCtrl.adminGroupID, adminUserGroupEditCtrl.adminUserGroup);
-            });
-            it('should enter the adminUserGroups state', inject(function($state){
-                expect($state.go).toHaveBeenCalledWith('adminUserGroups', {}, {reload: true});
-            }))
+
+        describe('Create', function() {
+            it('should open adminUserGroupCreateModal using $uibModal')
         });
-        describe('Delete', function(){
-            beforeEach(inject(function($state) {
-                var defer = q.defer();
-                defer.resolve(adminUserGroup);
-                spyOn(oc.AdminUserGroups, 'Delete').and.returnValue(defer.promise);
-                spyOn($state, 'go').and.returnValue(true);
-                adminUserGroupEditCtrl.Delete();
-                scope.$digest();
-            }));
-            it('should call the AdminUserGroups Delete method', function(){
-                expect(oc.AdminUserGroups.Delete).toHaveBeenCalledWith(adminUserGroup.ID);
-            });
-            it('should enter the adminUserGroups state', inject(function($state){
-                expect($state.go).toHaveBeenCalledWith('adminUserGroups', {}, {reload: true});
-            }))
+
+        describe('Delete', function() {
+            it('should call ocConfirm.Confirm');
+            it('should call OrderCloud.AdminUserGroups.Delete() if they confirm')
         })
     });
-    describe('Controller: AdminUserGroupCreateCtrl' ,function(){
-        var adminUserGroupCreateCtrl;
-        beforeEach(inject(function($state, $controller){
-            adminUserGroupCreateCtrl = $controller('AdminUserGroupCreateCtrl', {
-                $scope: scope,
+    describe('Controller: AdminUserGroupsCtrl', function() {
+        var adminUserGroups, stateSvc, toastrSvc, ocAdminUserGroupsSvc, ocParametersSvc;
+        beforeEach(inject(function($controller, $state, toastr, ocAdminUserGroups, ocParameters, Parameters) {
+            stateSvc = $state;
+            toastrSvc = toastr;
+            ocAdminUserGroupsSvc = ocAdminUserGroups;
+            ocParametersSvc = ocParameters;
+            adminUserGroups = $controller('AdminUserGroupsCtrl', {
+                $state:stateSvc,
+                toastr: toastrSvc,
+                OrderCloud: oc,
+                ocAdminUserGroups: ocAdminUserGroupsSvc,
+                ocParameters: ocParametersSvc,
+                AdminUserGroupList: adminUserGroupList,
+                Parameters: Parameters
+            })
+        }));
+        describe('Initialize', function() {
+            it('should set vm.list to AdminUserGroupList');
+            it('should set vm.parameters to Parameters');
+            it('should set vm.sortSelection based on Parameters');
+            it('should set vm.searchResults based on Parameters.search');
+        });
+        describe('Function: vm.filter', function() {
+            it('should reload the state with ocParameters.Create()');
+        });
+        describe('Function: vm.search', function() {
+            it('should reload the state with ocParameters.Create() and notify set to false');
+            it('should call OrderCloud.AdminUserGroups.List()');
+            it('should set vm.list equal to the response');
+            it('should set reset vm.searchResults based on vm.parameters.search');
+        });
+        describe('Function: vm.clearSearch', function() {
+            it('should set vm.parameters.search to null');
+            it('should call vm.filter(resetPage:true)');
+        });
+        describe('Function: vm.updateSort', function() {
+            it('should set vm.parameters.sortBy to the value passed in');
+            it('should call vm.filter(resetPage:false)');
+        });
+        describe('Function: vm.loadMore', function() {
+            it('should call OrderCloud.AdminUserGroups.List() with the new page');
+            it('should add data.Items to the vm.list.Items array');
+            it('should set vm.list.Meta to the response data.Meta');
+        });
+        describe('Function: vm.createGroup', function() {
+            it('should call ocAdminUserGroups.Create()');
+            it('should push the new user group to vm.list.Items');
+            it('should increment vm.list.Meta.TotalCount and vm.list.Meta.ItemRange[1]');
+            it('should display a success toast');
+        });
+        describe('Function: vm.deleteGroup', function() {
+            it('should call ocAdminUserGroups.Delete()');
+            it('should splice the deleted user group from vm.list.Items');
+            it('should decrement vm.list.Meta.TotalCount and vm.list.Meta.ItemRange[1]');
+            it('should display a success toast');
+        });
+    });
+    describe('Controller: AdminUserGroupCtrl', function() {
+        var adminUserGroupCtrl, stateSvc, toastrSvc, ocAdminUserGroupsSvc;
+        beforeEach(inject(function($controller, $state, toastr, ocAdminUserGroups) {
+            stateSvc = $state;
+            toastrSvc = toastr;
+            ocAdminUserGroupsSvc = ocAdminUserGroups;
+            adminUserGroupCtrl = $controller('AdminUserGroupCtrl', {
+                $state:stateSvc,
+                toastr: toastrSvc,
+                OrderCloud: oc,
+                ocAdminUserGroups: ocAdminUserGroupsSvc,
                 SelectedAdminUserGroup: adminUserGroup
             });
-        }));
-        describe('Submit', function(){
-            beforeEach(inject(function($state){
-                adminUserGroupCreateCtrl.adminUserGroup = adminUserGroup;
-                var defer = q.defer();
-                defer.resolve();
-                spyOn(oc.AdminUserGroups, 'Create').and.returnValue(defer.promise);
-                spyOn($state, 'go').and.returnValue(true);
-                adminUserGroupCreateCtrl.Submit();
-                scope.$digest();
-            }));
-            it('should call the AdminUserGroups Submit method', function(){
-                expect(oc.AdminUserGroups.Create).toHaveBeenCalledWith(adminUserGroupCreateCtrl.adminUserGroup)
+            describe('Initialize', function() {
+                it ('should set vm.group to SelectedAdminUserGroup');
+                it ('should set vm.model to a copy of SelectedAdminUserGroup');
             });
-            it('should enter the adminUserGroups state', inject(function($state){
-                expect($state.go).toHaveBeenCalledWith('adminUserGroups', {}, {reload: true});
-            }))
-        })
+            describe('Function: vm.update', function() {
+                it ('should call OrderCloud.AdminUserGroups.Update()');
+                it ('should call $state.go() with the new group ID and {notify:false}');
+                it ('should set vm.group to the updated user group');
+                it ('should set vm.model to a copy of the updated user group');
+                it ('should set SelectedAdminUserGroup to a copy ofthe updated user group');
+                it ('should display a success toast');
+            });
+            describe('Function: vm.delete', function() {
+                it ('should call ocAdminUserGroups.Delete()');
+                it ('should display a success toast');
+                it ('should return to the adminUserGroups state');
+            })
+        }))
     });
-    describe('Controller: AdminUserGroupAssignCtrl', function(){
-        var adminUserGroupAssignCtrl;
-        beforeEach(inject(function($state, $controller){
-            adminUserGroupAssignCtrl = $controller('AdminUserGroupAssignCtrl', {
-                $scope: scope,
-                AdminUserList: [],
-                AssignedAdminUsers: [],
-                SelectedAdminUserGroup: {}
-            });
-            spyOn($state, 'go').and.returnValue(true);
+    describe('Modal Controllers', function() {
+        var uibModalInstance, exceptionHandler;
+        beforeEach(inject(function($uibModalInstance, $exceptionHandler){
+            uibModalInstance = $uibModalInstance;
+            exceptionHandler = $exceptionHandler;
         }));
-        describe('SaveAssignment', function(){
-            beforeEach(inject(function(Assignments){
-                spyOn(Assignments, 'SaveAssignments').and.returnValue(null);
-                adminUserGroupAssignCtrl.saveAssignments();
+        describe('Controller: AdminGroupCreateModalCtrl', function() {
+            var adminGroupCreateModalCtrl;
+            beforeEach(inject(function($controller){
+                adminGroupCreateModalCtrl = $controller('AdminGroupCreateModalCtrl', {
+                    $uibModalInstance: uibModalInstance,
+                    $exceptionHandler: exceptionHandler,
+                    OrderCloud: oc
+                });
             }));
-            it('should call the Assignments saveAssignments method', inject(function(Assignments){
-                expect(Assignments.SaveAssignments).toHaveBeenCalled();
-            }))
+            describe('Function: vm.submit()', function() {
+                it ('should call OrderCloud.AdminGroups.Create()');
+                it ('should close the modal with the newGroup');
+            });
+            describe('Function: vm.cancel()', function() {
+                it ('should dismiss the modal');
+            })
         });
-        describe('PagingFunction', function(){
-            beforeEach(inject(function(Paging){
-                spyOn(Paging, 'Paging').and.returnValue(null);
-                adminUserGroupAssignCtrl.pagingfunction();
-            }));
-            it ('should call the Paging paging method', inject(function(Paging){
-                expect(Paging.Paging).toHaveBeenCalled();
-            }));
-        });
-    })
+    });
 });

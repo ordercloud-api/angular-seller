@@ -79,14 +79,14 @@ describe('Component: Account', function() {
             uibModal,
             actualOptions;
         beforeEach(inject(function ($uibModal, $controller) {
-            accountInfoCtrl = $controller('AccountInfoCtrl', {
+            accountInfoCtrl = $controller('AccountCtrl', {
                 CurrentUser: {},
                 Profile: {}
             });
             uibModal = $uibModal;
             accountInfoCtrl.editInfoModalOptions = {
                 animation: true,
-                templateUrl: 'account/templates/accountSettings.modal.tpl.html',
+                templateUrl: 'account/templates/accountEdit.modal.html',
                 controller: 'AccountEditModalCtrl',
                 controllerAs: 'accountEditModal',
                 backdrop: 'static',
@@ -98,7 +98,7 @@ describe('Component: Account', function() {
             };
             accountInfoCtrl.changePasswordModalOptions = {
                 animation: true,
-                templateUrl: 'account/templates/changePassword.modal.tpl.html',
+                templateUrl: 'account/templates/changePassword.modal.html',
                 controller: 'ChangePasswordModalCtrl',
                 controllerAs: 'changePasswordModal',
                 backdrop:'static',
@@ -204,7 +204,7 @@ describe('Component: Account', function() {
     describe('Controller: ConfirmPasswordCtrl', function () {
         var confirmPasswordCtrl;
         beforeEach(inject(function($controller) {
-            confirmPasswordCtrl = $controller('ConfirmPasswordCtrl', {
+            confirmPasswordCtrl = $controller('ConfirmPasswordModalCtrl', {
                 $uibModalInstance: uibModalInstance,
                 password: 'fakepassword'
             });

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUsersCtrl', AdminUsersController)
 ;
 
-function AdminUsersController($q, $filter, $state, $uibModal, toastr, $ocMedia, ocConfirm, OrderCloud, ocAdminUsers, ocParameters, AdminUsersList, Parameters) {
+function AdminUsersController($state, toastr, OrderCloud, ocAdminUsers, ocParameters, AdminUsersList, Parameters) {
     var vm = this;
     vm.list = AdminUsersList;
     vm.parameters = Parameters;
