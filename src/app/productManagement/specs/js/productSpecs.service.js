@@ -2,12 +2,14 @@ angular.module('orderCloud')
     .factory('ocProductSpecs', ocProductsSpecsService)
 ;
 
-function ocProductsSpecsService($q, $uibModal, OrderCloud) {
+function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
     var service = {
         ProductSpecsDetail: _productSpecsDetail,
         UpdateSpecListOrder: _updateSpecListOrder,
         UpdateSpecOptionsListOrder: _updateSpecOptionsListOrder,
-        EditSpec: _editSpec
+        EditSpec: _editSpec,
+        DeleteSpec: _deleteSpec,
+        DeleteSpecOption: _deleteSpecOption
     };
 
     function _productSpecsDetail(productid) {
@@ -126,6 +128,20 @@ function ocProductsSpecsService($q, $uibModal, OrderCloud) {
                 }
             }
         }).result
+    }
+
+    function _deleteSpec(specID) {
+        return ocConfirm.Confirm({message:'Are you sure you want to delete this spec? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete this spec', cancelText:'Cancel'})
+            .then(function() {
+                return OrderCloud.Specs.Delete(specID);
+            });
+    }
+
+    function _deleteSpecOption(specID, specOptionID) {
+        return ocConfirm.Confirm({message:'Are you sure you want to delete this spec option? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete this spec option', cancelText:'Cancel'})
+            .then(function() {
+                return OrderCloud.Specs.DeleteOption(specID, specOptionID);
+            });
     }
 
     return service;
