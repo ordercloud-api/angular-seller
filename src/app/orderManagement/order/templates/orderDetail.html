@@ -95,17 +95,20 @@
         </div>
 
         <!--====== LINE ITEM PAGINATION ======-->
-        <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && orderDetail.lineItems.Meta.TotalPages > 1">
-            <uib-pagination boundary-links="orderDetail.lineItems.Meta.TotalPages > 5" max-size="5"
-                            total-items="orderDetail.lineItems.Meta.TotalCount" items-per-page="orderDetail.lineItems.Meta.PageSize"
-                            ng-model="orderDetail.lineItems.Meta.Page" ng-change="orderDetail.pageChanged()"></uib-pagination>
-        </div>
+        <ul uib-pagination
+            class="pagination-sm pull-right hidden-xs"
+            ng-if="orderDetail.lineItems.Meta.TotalPages > 1"
+            total-items="orderDetail.lineItems.Meta.TotalCount"
+            items-per-page="orderDetail.lineItems.Meta.PageSize"
+            max-size="5"
+            boundary-links="orderDetail.lineItems.Meta.TotalPages > 5"
+            ng-model="orderDetail.lineItems.Meta.Page"
+            ng-change="orderDetail.pageChanged()">
+        </ul>
         <button type="button"
-                ng-if="application.$ocMedia('max-width:767px')"
-                class="btn btn-default btn-block btn-lg"
+                class="btn btn-default btn-block btn-lg visible-xs"
                 ng-show="orderDetail.lineItems.Meta.Page < orderDetail.lineItems.Meta.TotalPages"
-                ng-click="orderDetail.loadMore()">Load More
-        </button>
+                ng-click="orderDetail.loadMore()">Load More</button>
 
         <!-- Monetary Order Details-->
         <div class="row">

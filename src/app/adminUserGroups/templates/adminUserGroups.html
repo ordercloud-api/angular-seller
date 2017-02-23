@@ -71,18 +71,18 @@
                     </tbody>
                 </table>
             </div>
-            <uib-pagination class="pagination-sm pull-right"
-                            ng-if="application.$ocMedia('min-width:768px') && adminUserGroups.list.Meta.TotalPages > 1"
-                            total-items="adminUserGroups.list.Meta.TotalCount"
-                            items-per-page="adminUserGroups.list.Meta.PageSize"
-                            max-size="5"
-                            boundary-links="adminUserGroups.list.Meta.TotalPages > 5"
-                            ng-model="adminUserGroups.list.Meta.Page"
-                            ng-change="adminUserGroups.pageChanged()">
-            </uib-pagination>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="adminUserGroups.list.Meta.TotalPages > 1"
+                total-items="adminUserGroups.list.Meta.TotalCount"
+                items-per-page="adminUserGroups.list.Meta.PageSize"
+                max-size="5"
+                boundary-links="adminUserGroups.list.Meta.TotalPages > 5"
+                ng-model="adminUserGroups.list.Meta.Page"
+                ng-change="adminUserGroups.pageChanged()">
+            </ul>
             <button type="button"
-                    ng-if="application.$ocMedia('max-width:767px')"
-                    class="btn btn-default btn-block btn-lg"
+                    class="btn btn-default btn-block btn-lg visible-xs"
                     ng-show="adminUserGroups.list.Meta.Page < adminUserGroups.list.Meta.TotalPages"
                     ng-click="adminUserGroups.loadMore()">Load More</button>
         </div>

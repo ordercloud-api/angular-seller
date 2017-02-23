@@ -74,15 +74,18 @@
     </div>
 
     <!--====== Approvals PAGINATION ======-->
-    <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && orderApprovals.list.Meta.TotalPages > 1">
-        <uib-pagination boundary-links="orderApprovals.list.Meta.TotalPages > 5" max-size="5"
-                        total-items="orderApprovals.list.Meta.TotalCount" items-per-page="orderApprovals.list.Meta.PageSize"
-                        ng-model="orderApprovals.list.Meta.Page" ng-change="orderApprovals.pageChanged()"></uib-pagination>
-    </div>
+    <ul uib-pagination
+        class="pagination-sm pull-right hidden-xs"
+        ng-if="orderApprovals.list.Meta.TotalPages > 1"
+        total-items="orderApprovals.list.Meta.TotalCount"
+        items-per-page="orderApprovals.list.Meta.PageSize"
+        max-size="5"
+        boundary-links="orderApprovals.list.Meta.TotalPages > 5"
+        ng-model="orderApprovals.list.Meta.Page"
+        ng-change="orderApprovals.pageChanged()">
+    </ul>
     <button type="button"
-            ng-if="application.$ocMedia('max-width:767px')"
-            class="btn btn-default btn-block btn-lg"
+            class="btn btn-default btn-block btn-lg visible-xs"
             ng-show="orderApprovals.list.Meta.Page < orderApprovals.list.Meta.TotalPages"
-            ng-click="orderApprovals.loadMore()">Load More
-    </button>
+            ng-click="orderApprovals.loadMore()">Load More</button>
 </div>

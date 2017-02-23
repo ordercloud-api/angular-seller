@@ -70,14 +70,16 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="text-center" ng-if="catalogAssignments.products.Meta.TotalPages > 1">
-                    <uib-pagination boundary-links="catalogAssignments.products.Meta.TotalPages > 5"
-                                    max-size="5" total-items="catalogAssignments.products.Meta.TotalCount"
-                                    items-per-page="catalogAssignments.products.Meta.PageSize"
-                                    ng-model="catalogAssignments.products.Meta.Page"
-                                    ng-change="catalogAssignments.productPageChanged()">
-                    </uib-pagination>
-                </div>
+                <ul uib-pagination
+                    class="pagination-sm pull-right"
+                    boundary-links="catalogAssignments.products.Meta.TotalPages > 5"
+                    max-size="5"
+                    total-items="catalogAssignments.products.Meta.TotalCount"
+                    items-per-page="catalogAssignments.products.Meta.PageSize"
+                    ng-model="catalogAssignments.products.Meta.Page"
+                    ng-if="catalogAssignments.products.Meta.TotalPages > 1"
+                    ng-change="catalogAssignments.productPageChanged()">
+                </ul>
             </uib-tab>
             <uib-tab oc-if-roles="['CategoryAdmin', 'BuyerReader', 'UserGroupReader']">
                 <uib-tab-heading>Availability</uib-tab-heading>
@@ -159,14 +161,16 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="text-center" ng-if="catalogAssignments.userGroups.Meta.TotalPages > 1">
-                    <uib-pagination boundary-links="catalogAssignments.userGroups.Meta.TotalPages > 5"
-                                    max-size="5" total-items="catalogAssignments.userGroups.Meta.TotalCount"
-                                    items-per-page="catalogAssignments.userGroups.Meta.PageSize"
-                                    ng-model="catalogAssignments.userGroups.Meta.Page"
-                                    ng-change="catalogAssignments.userGroupPageChanged()">
-                    </uib-pagination>
-                </div>
+                <ul uib-pagination
+                    class="pagination-sm pull-right"
+                    boundary-links="catalogAssignments.userGroups.Meta.TotalPages > 5"
+                    max-size="5"
+                    total-items="catalogAssignments.userGroups.Meta.TotalCount"
+                    items-per-page="catalogAssignments.userGroups.Meta.PageSize"
+                    ng-model="catalogAssignments.userGroups.Meta.Page"
+                    ng-if="catalogAssignments.userGroups.Meta.TotalPages > 1"
+                    ng-change="catalogAssignments.userGroupPageChanged()">
+                </ul>
             </uib-tab>
         </uib-tabset>
     </div>

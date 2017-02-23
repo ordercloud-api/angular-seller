@@ -115,17 +115,20 @@
                     </tbody>
                 </table>
             </div>
-            <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && orders.list.Meta.TotalPages > 1">
-                <uib-pagination boundary-links="orders.list.Meta.TotalPages > 5" max-size="5"
-                                total-items="orders.list.Meta.TotalCount" items-per-page="orders.list.Meta.PageSize"
-                                ng-model="orders.list.Meta.Page" ng-change="orders.pageChanged()"></uib-pagination>
-            </div>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="orders.list.Meta.TotalPages > 1"
+                total-items="orders.list.Meta.TotalCount"
+                items-per-page="orders.list.Meta.PageSize"
+                max-size="5"
+                boundary-links="orders.list.Meta.TotalPages > 5"
+                ng-model="orders.list.Meta.Page"
+                ng-change="orders.pageChanged()">
+            </ul>
             <button type="button"
-                    ng-if="application.$ocMedia('max-width:767px')"
-                    class="btn btn-default btn-block btn-lg"
+                    class="btn btn-default btn-block btn-lg visible-xs"
                     ng-show="orders.list.Meta.Page < orders.list.Meta.TotalPages"
-                    ng-click="orders.loadMore()">Load More
-            </button>
+                    ng-click="orders.loadMore()">Load More</button>
         </div>
     </div>
 

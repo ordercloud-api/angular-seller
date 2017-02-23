@@ -58,15 +58,18 @@
     </div>
 
     <!--====== PAYMENTS PAGINATION ======-->
-    <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && orderPayments.list.Meta.TotalPages > 1">
-        <uib-pagination boundary-links="orderPayments.list.Meta.TotalPages > 5" max-size="5"
-                        total-items="orderPayments.list.Meta.TotalCount" items-per-page="orderPayments.list.Meta.PageSize"
-                        ng-model="orderPayments.list.Meta.Page" ng-change="orderPayments.pageChanged()"></uib-pagination>
-    </div>
+    <ul uib-pagination
+        class="pagination-sm pull-right hidden-xs"
+        ng-if="orderPayments.list.Meta.TotalPages > 1"
+        total-items="orderPayments.list.Meta.TotalCount"
+        items-per-page="orderPayments.list.Meta.PageSize"
+        max-size="5"
+        boundary-links="orderPayments.list.Meta.TotalPages > 5"
+        ng-model="orderPayments.list.Meta.Page"
+        ng-change="orderPayments.pageChanged()">
+    </ul>
     <button type="button"
-            ng-if="application.$ocMedia('max-width:767px')"
-            class="btn btn-default btn-block btn-lg"
+            class="btn btn-default btn-block btn-lg visible-xs"
             ng-show="orderPayments.list.Meta.Page < orderPayments.list.Meta.TotalPages"
-            ng-click="orderPayments.loadMore()">Load More
-    </button>
+            ng-click="orderPayments.loadMore()">Load More</button>
 </div>

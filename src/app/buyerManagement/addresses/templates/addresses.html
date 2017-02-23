@@ -99,18 +99,18 @@
                     </tbody>
                 </table>
             </div>
-            <uib-pagination class="pagination-sm pull-right"
-                            ng-if="application.$ocMedia('min-width:768px') && addresses.list.Meta.TotalPages > 1"
-                            total-items="addresses.list.Meta.TotalCount"
-                            items-per-page="addresses.list.Meta.PageSize"
-                            max-size="5"
-                            boundary-links="addresses.list.Meta.TotalPages > 5"
-                            ng-model="addresses.list.Meta.Page"
-                            ng-change="addresses.pageChanged()">
-            </uib-pagination>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="addresses.list.Meta.TotalPages > 1"
+                total-items="addresses.list.Meta.TotalCount"
+                items-per-page="addresses.list.Meta.PageSize"
+                max-size="5"
+                boundary-links="addresses.list.Meta.TotalPages > 5"
+                ng-model="addresses.list.Meta.Page"
+                ng-change="addresses.pageChanged()">
+            </ul>
             <button type="button"
-                    ng-if="application.$ocMedia('max-width:767px')"
-                    class="btn btn-default btn-block btn-lg"
+                    class="btn btn-default btn-block btn-lg visible-xs"
                     ng-show="addresses.list.Meta.Page < addresses.list.Meta.TotalPages"
                     ng-click="addresses.loadMore()">Load More
             </button>

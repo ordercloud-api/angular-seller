@@ -17,17 +17,20 @@
                 </li>
             </ul>
             <!--====== SHIPMENT PAGINATION ======-->
-            <div class="text-center" ng-if="application.$ocMedia('min-width:768px') && orderShipments.list.Meta.TotalPages > 1">
-                <uib-pagination boundary-links="orderShipments.list.Meta.TotalPages > 5" max-size="5"
-                                total-items="orderShipments.list.Meta.TotalCount" items-per-page="orderShipments.list.Meta.PageSize"
-                                ng-model="orderShipments.list.Meta.Page" ng-change="orderShipments.pageChanged()"></uib-pagination>
-            </div>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="orderShipments.list.Meta.TotalPages > 1"
+                total-items="orderShipments.list.Meta.TotalCount"
+                items-per-page="orderShipments.list.Meta.PageSize"
+                max-size="5"
+                boundary-links="orderShipments.list.Meta.TotalPages > 5"
+                ng-model="orderShipments.list.Meta.Page"
+                ng-change="orderShipments.pageChanged()">
+            </ul>
             <button type="button"
-                    ng-if="application.$ocMedia('max-width:767px')"
-                    class="btn btn-default btn-block btn-lg"
+                    class="btn btn-default btn-block btn-lg visible-xs"
                     ng-show="orderShipments.list.Meta.Page < orderShipments.list.Meta.TotalPages"
-                    ng-click="orderShipments.loadMore()">Load More
-            </button>
+                    ng-click="orderShipments.loadMore()">Load More</button>
         </div>
         <div class="col-sm-7">
             <div ng-if="!orderShipments.selectedShipment" class="well text-center">
