@@ -10,6 +10,9 @@ function OrderConfig($stateProvider) {
             templateUrl: 'orderManagement/order/templates/orderDetail.html',
             controller: 'OrderCtrl',
             controllerAs: 'orderDetail',
+            data: {
+                pageTitle: 'Order'
+            },
             resolve: {
                 SelectedOrder: function($stateParams, ocOrderDetailService) {
                     //return OrderCloud.Orders.Get($stateParams.orderid, $stateParams.buyerid);

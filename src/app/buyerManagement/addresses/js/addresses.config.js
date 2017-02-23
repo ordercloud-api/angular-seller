@@ -10,6 +10,9 @@ function AddressesConfig($stateProvider){
             controller: 'AddressesCtrl',
             controllerAs: 'addresses',
             url: '/addresses?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'Buyer Addresses'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
@@ -30,6 +33,9 @@ function AddressesConfig($stateProvider){
             controller: 'AddressesCtrl',
             controllerAs: 'addresses',
             url: '/addresses?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'User Group Addresses'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

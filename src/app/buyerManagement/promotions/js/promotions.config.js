@@ -10,6 +10,9 @@ function PromotionsConfig($stateProvider) {
             controller: 'PromotionsCtrl',
             controllerAs: 'promotions',
             url: '/promotions?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'Buyer Promotions'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
@@ -30,6 +33,9 @@ function PromotionsConfig($stateProvider) {
             controller: 'PromotionsCtrl',
             controllerAs: 'promotions',
             url: '/promotions?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'User Group Promotions'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

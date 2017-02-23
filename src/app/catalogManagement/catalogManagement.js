@@ -36,6 +36,9 @@ function CatalogManagementConfig($stateProvider) {
                     controller: 'CatalogAssignmentsCtrl',
                     controllerAs: 'catalogAssignments'
                 }
+            },
+            data: {
+                pageTitle: 'Buyer Catalog'
             }
         });
 }

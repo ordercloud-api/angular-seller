@@ -47,20 +47,19 @@
             <fieldset class="form-group">
                 <label for="MinQuantity" class="col-sm-3 control-label">Min Quantity</label>
                 <div class="col-sm-9">
-                    <input id="MinQuantity" name="MinQuantity" type="text" class="form-control"
+                    <input id="MinQuantity" name="MinQuantity" type="number" class="form-control"
+                           min="1"
                            ng-max="productCreateAssignment.priceSchedule.MaxQuantity"
                            ng-disabled="productCreateAssignment.priceSchedule.RestrictedQuantity"
-                           pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger"
                            ng-model="productCreateAssignment.priceSchedule.MinQuantity"/>
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="MaxQuantity" class="col-sm-3 control-label">Max Quantity</label>
                 <div class="col-sm-9">
-                    <input id="MaxQuantity" name="MaxQuantity" placeholder="(Optional)"  type="text" class="form-control"
+                    <input id="MaxQuantity" name="MaxQuantity" placeholder="(Optional)"  type="number" class="form-control"
                            ng-min="productCreateAssignment.priceSchedule.MinQuantity"
                            ng-disabled="productCreateAssignment.priceSchedule.RestrictedQuantity"
-                           pattern="^[0-9]*[1-9][0-9]*$" pattern-err-type="positiveInteger"
                            ng-model="productCreateAssignment.priceSchedule.MaxQuantity"/>
                 </div>
             </fieldset>
@@ -72,14 +71,18 @@
         <div class="row">
             <div class="form-group col-sm-5">
                 <label for="priceSchedulePBQInput">Quantity</label>
-                <input id="priceSchedulePBQInput" type="number" pattern="^[0-9]*[1-9][0-9]*$"
-                       pattern-err-type="positiveInteger" class="form-control"
+                <input id="priceSchedulePBQInput" type="number" min="1" class="form-control"
                        ng-model="productCreateAssignment.quantity" />
             </div>
             <div class="form-group col-sm-5">
                 <label for="priceSchedulePBPInput">Price (each)</label>
-                <input id="priceSchedulePBPInput" type="number" step="any" class="form-control"
-                       ng-model="productCreateAssignment.price" />
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-dollar"></i>
+                    </span>
+                    <input id="priceSchedulePBPInput" type="number" placeholder="0.00" step="0.01" min="0" class="form-control"
+                           ng-model="productCreateAssignment.price" />
+                </div>
             </div>
             <div class="form-group col-sm-2">
                 <br>

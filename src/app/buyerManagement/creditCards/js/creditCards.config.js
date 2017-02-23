@@ -10,6 +10,9 @@ function CreditCardsConfig($stateProvider) {
             controller: 'CreditCardsCtrl',
             controllerAs: 'creditCards',
             url: '/credit-cards?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'Buyer Credit Cards'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
@@ -30,6 +33,9 @@ function CreditCardsConfig($stateProvider) {
             controller: 'CreditCardsCtrl',
             controllerAs: 'creditCards',
             url: '/credit-cards?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'User Group Credit Cards'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

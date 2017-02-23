@@ -4,25 +4,28 @@
             <fieldset class="form-group">
                 <label for="ShipWeight" class="col-sm-3 control-label">Ship Weight</label>
                 <div class="col-sm-9">
-                    <input id="ShipWeight" type="number" class="form-control" ng-model="productDetail.product.ShipWeight" />
+                    <div class="input-group">
+                        <input id="ShipWeight" type="number" min="0" step="any" class="form-control" ng-model="productDetail.product.ShipWeight" />
+                        <span class="input-group-addon">lb(s)</span>
+                    </div>
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="ShipHeight" class="col-sm-3 control-label">Ship Height</label>
                 <div class="col-sm-9">
-                    <input id="ShipHeight" type="number" class="form-control" ng-model="productDetail.product.ShipHeight" />
+                    <input id="ShipHeight" type="number" min="0" step="any" class="form-control" ng-model="productDetail.product.ShipHeight" />
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="ShipWidth" class="col-sm-3 control-label">Ship Width</label>
                 <div class="col-sm-9">
-                    <input id="ShipWidth" type="number" class="form-control" ng-model="productDetail.product.ShipWidth" />
+                    <input id="ShipWidth" type="number" min="0" step="any" class="form-control" ng-model="productDetail.product.ShipWidth" />
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="ShipLength" class="col-sm-3 control-label">Ship Length</label>
                 <div class="col-sm-9">
-                    <input id="ShipLength" type="number" class="form-control" ng-model="productDetail.product.ShipLength" />
+                    <input id="ShipLength" type="number" min="0" step="any" class="form-control" ng-model="productDetail.product.ShipLength" />
                 </div>
             </fieldset>
             <fieldset class="form-group" oc-if-roles="AddressAdmin">
@@ -46,7 +49,3 @@
         </form>
     </div>
 </div>
-
-<!--
-<h3>Product (productDetailCtrl)</h3>
-{{productDetail.product}}-->

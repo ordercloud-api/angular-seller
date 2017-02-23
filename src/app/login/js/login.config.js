@@ -8,7 +8,10 @@ function LoginConfig($stateProvider) {
             url: '/login/:token',
             templateUrl: 'login/templates/login.tpl.html',
             controller: 'LoginCtrl',
-            controllerAs: 'login'
+            controllerAs: 'login',
+            data: {
+                pageTitle: 'Login'
+            }
         })
     ;
 }

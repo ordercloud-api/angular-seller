@@ -10,6 +10,9 @@ function BuyersConfig($stateProvider) {
             templateUrl: 'buyerManagement/buyers/templates/buyers.html',
             controller: 'BuyersCtrl',
             controllerAs: 'buyers',
+            data: {
+                pageTitle: 'Buyer Organizations'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

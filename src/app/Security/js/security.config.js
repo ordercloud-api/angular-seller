@@ -10,6 +10,9 @@ function SecurityConfig($stateProvider) {
             templateUrl: 'security/templates/security.html',
             controller: 'SecurityCtrl',
             controllerAs: 'security',
+            data: {
+                pageTitle: 'Admin Security'
+            },
             resolve: {
                 Assignments: function(OrderCloud) {
                     return OrderCloud.SecurityProfiles.ListAssignments(null, null, null, 'company', null, 100, null);
@@ -30,6 +33,9 @@ function SecurityConfig($stateProvider) {
             templateUrl: 'security/templates/security.html',
             controller: 'SecurityCtrl',
             controllerAs: 'security',
+            data: {
+                pageTitle: 'Admin User Group Security'
+            },
             resolve: {
                 Assignments: function($stateParams, OrderCloud) {
                     return OrderCloud.SecurityProfiles.ListAssignments(null, null, $stateParams.adminusergroupid, 'group', null, 100, null);
@@ -51,6 +57,9 @@ function SecurityConfig($stateProvider) {
             templateUrl: 'security/templates/security.html',
             controller: 'SecurityCtrl',
             controllerAs: 'security',
+            data: {
+                pageTitle: 'Buyer Security'
+            },
             resolve: {
                 Assignments: function($stateParams, OrderCloud) {
                     return OrderCloud.SecurityProfiles.ListAssignments(null, null, null, 'company', null, 100, $stateParams.buyerid);
@@ -71,6 +80,9 @@ function SecurityConfig($stateProvider) {
             templateUrl: 'security/templates/security.html',
             controller: 'SecurityCtrl',
             controllerAs: 'security',
+            data: {
+                pageTitle: 'User Group Security'
+            },
             resolve: {
                 Assignments: function($stateParams, OrderCloud) {
                     return OrderCloud.SecurityProfiles.ListAssignments(null, null, $stateParams.usergroupid, 'group', null, 100, $stateParams.buyerid);

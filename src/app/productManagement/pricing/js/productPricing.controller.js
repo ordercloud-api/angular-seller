@@ -430,7 +430,7 @@ function PriceSchedulePriceBreakController($uibModalInstance, OrderCloud, PriceS
     var vm = this;
     vm.priceBreak = {
         Quantity: 1,
-        Price: 0
+        Price: null
     };
 
     vm.confirm = function() {

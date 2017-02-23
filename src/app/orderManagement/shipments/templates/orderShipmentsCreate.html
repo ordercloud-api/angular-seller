@@ -11,7 +11,12 @@
             </fieldset>
             <fieldset class="form-group">
                 <label for="shipmentCost">Cost</label>
-                <input id="shipmentCost" type="number" name="Cost" class="form-control" ng-model="orderShipmentsCreate.shipment.Cost" />
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-dollar"></i>
+                    </span>
+                    <input id="shipmentCost" type="number" name="Cost" min="0" placeholder="0.00" step="0.01" class="form-control" ng-model="orderShipmentsCreate.shipment.Cost" />
+                </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="shipmentDateShipped">Date Shipped</label>

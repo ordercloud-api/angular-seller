@@ -10,6 +10,9 @@ function UserGroupsConfig($stateProvider) {
             templateUrl: 'buyerManagement/userGroups/templates/userGroups.html',
             controller: 'UserGroupsCtrl',
             controllerAs: 'userGroups',
+            data: {
+                pageTitle: 'Buyer User Groups'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
@@ -25,6 +28,9 @@ function UserGroupsConfig($stateProvider) {
             templateUrl: 'buyerManagement/userGroups/templates/userGroup.html',
             controller: 'UserGroupCtrl',
             controllerAs: 'userGroup',
+            data: {
+                pageTitle: 'Buyer User Group'
+            },
             resolve: {
                 SelectedUserGroup: function($stateParams, OrderCloud) {
                     return OrderCloud.UserGroups.Get($stateParams.usergroupid, $stateParams.buyerid);

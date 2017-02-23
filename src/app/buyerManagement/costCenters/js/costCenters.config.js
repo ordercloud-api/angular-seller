@@ -10,7 +10,9 @@ function CostCentersConfig($stateProvider) {
             controller: 'CostCentersCtrl',
             controllerAs: 'costCenters',
             url: '/costcenters?search&page&pageSize&searchOn&sortBy&filters',
-            data: {componentName: 'Cost Centers'},
+            data: {
+                pageTitle: 'Buyer Cost Centers'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
@@ -31,7 +33,9 @@ function CostCentersConfig($stateProvider) {
             controller: 'CostCentersCtrl',
             controllerAs: 'costCenters',
             url: '/costcenters?search&page&pageSize&searchOn&sortBy&filters',
-            data: {componentName: 'Cost Centers'},
+            data: {
+                pageTitle: 'User Group Cost Centers'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
