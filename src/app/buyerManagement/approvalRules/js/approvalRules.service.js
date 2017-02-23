@@ -39,7 +39,10 @@ function OrderCloudApprovalRules($q, $uibModal, ocConfirm, OrderCloud) {
     }
 
     function _delete(approvalRule, buyerid) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete ' + approvalRule.Name + '? <br/> <b>This action cannot be undone.</b>', confirmText: 'Delete approval rule', cancelText: 'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + approvalRule.Name + '</b>?',
+                confirmText: 'Delete approval rule',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.ApprovalRules.Delete(approvalRule.ID, buyerid)
             })

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCtrl', BuyerController)
 ;
 
-function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers, SelectedBuyer, ocConfirm){
+function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers, SelectedBuyer){
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.settings = angular.copy(SelectedBuyer);
@@ -16,7 +16,7 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers
             .then(function(data) {
                 vm.selectedBuyer = data;
                 vm.settings = angular.copy(data);
-                toastr.success('Buyer Settings Updated', 'Success');
+                toastr.success(data.Name + ' was updated');
                 vm.settingsForm.$setPristine();
             })
             .catch(function(ex) {
@@ -30,16 +30,11 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers
     };
 
     vm.deleteBuyer = function() {
-        ocConfirm.Confirm({
-                message: "Are you sure you want to delete this buyer organization and all of its related data?  <b>This action cannot be undone.</b>"
-            })
+        ocBuyers.Delete(vm.selectedBuyer)
             .then(function() {
-                OrderCloud.Buyers.Delete(vm.selectedBuyer.ID)
-                    .then(function() {
-                        toastr.success(vm.selectedBuyer.Name + ' was deleted.', 'Success!');
-                        $state.go('buyers');
-                    })
-            })
+                toastr.success(vm.selectedBuyer.Name + ' was deleted.', 'Success!');
+                $state.go('buyers');
+            });
     };
 
     vm.createBuyer = function() {

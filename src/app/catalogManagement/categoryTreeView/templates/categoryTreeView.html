@@ -1,5 +1,5 @@
-<div ng-if="!categoryTree.tree.length" class="well text-center">
-    <b>There are no categories in this catalog. <span oc-if-roles="CategoryAdmin"><a ng-click="categoryTree.createCategory()">Create</a> one now.</span></b>
+<div ng-if="!categoryTree.tree.length" class="no-matches">
+    <b>There are no categories in this catalog. <span oc-if-roles="CategoryAdmin"><a ng-click="categoryTree.createCategory()">Create one now.</a></span></b>
 </div>
 <script type="text/ng-template" id="nodes_renderer.html">
     <div class="tree-node tree-node-content" ng-class="{'inactive-node':!node.Active, 'selected-node':node.ID == catalogManagement.selectedCategory.ID}">

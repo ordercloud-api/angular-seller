@@ -17,7 +17,10 @@ function OrderCloudProducts($uibModal, ocConfirm, OrderCloud) {
     }
 
     function _delete(product) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete ' + product.Name + '? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete this product', cancelText:'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + product.Name + '</b>?',
+                confirmText: 'Delete product',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.Products.Delete(product.ID)
             })

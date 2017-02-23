@@ -46,9 +46,9 @@ function CategoryModalFactory($state, $exceptionHandler, OrderCloud, ocConfirm, 
 
     function _delete(id, catalogid) {
         return ocConfirm.Confirm({
-            message: 'Are you sure you want to delete this category? <b>This action cannot be undone</b>',
-            confirmText: 'Delete this category'
-            })
+                message:'Are you sure you want to delete <br> <b>' + id + '</b>?',
+                confirmText: 'Delete category',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.Categories.Delete(id, catalogid);
             });

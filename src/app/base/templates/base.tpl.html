@@ -1,4 +1,4 @@
-<nav id="myNavmenu" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-sm offcanvas-xs" role="navigation">
+<nav id="GlobalNav" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-sm offcanvas-xs" role="navigation">
     <a class="navmenu-brand hidden-xs hidden-sm" href="" ui-sref="home">{{application.name}}</a>
     <ul class="nav navmenu-nav">
         <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}" oc-if-roles="BuyerRoles">
@@ -23,7 +23,7 @@
 <nav class="navbar navbar-default navbar-unstacked navbar-fixed-top navmenu-on-canvas-lg navmenu-on-canvas-md" ng-if="application.$ocMedia('max-width:991px')">
     <div class="container container-smooth">
         <div class="navbar-header">
-            <a class="navbar-brand" href="" data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="body">
+            <a class="navbar-brand" href="" data-toggle="offcanvas" data-target="#GlobalNav" data-canvas="body">
                 <i class="fa fa-bars"></i>
             </a>
             <a class="navbar-brand" href="">

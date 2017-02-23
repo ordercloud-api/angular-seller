@@ -17,7 +17,10 @@ function OrderCloudAdminUserGroups($uibModal, ocConfirm, OrderCloud) {
     }
 
     function _delete(userGroup) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete ' + userGroup.Name + '? <b>This action cannot be undone.</b>', confirmText: 'Delete this user group', cancelText: 'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + userGroup.Name + '</b>?',
+                confirmText: 'Delete admin user group',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.AdminUserGroups.Delete(userGroup.ID)
             })

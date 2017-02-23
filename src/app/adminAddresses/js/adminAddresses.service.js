@@ -32,9 +32,9 @@ function OrderCloudAdminAddresses($uibModal, ocConfirm, OrderCloud) {
 
     function _delete(address) {
         return ocConfirm.Confirm({
-            message:'Are you sure you want to delete ' + address.AddressName + '? <br> <b>This action cannot be undone.</b>',
-            confirmText: 'Delete this address',
-            cancelText:'Cancel'})
+                message:'Are you sure you want to delete <br> <b>' + (address.AddressName ? address.AddressName : address.ID) + '</b>?',
+                confirmText: 'Delete admin address',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.AdminAddresses.Delete(address.ID)
             })

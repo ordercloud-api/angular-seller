@@ -111,7 +111,10 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
     }
 
     function _delete(shipmentID, buyerID) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete this shipment? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete this shipment', cancelText:'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + shipmentID + '</b>?',
+                confirmText: 'Delete shipment',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.Shipments.Delete(shipmentID, buyerID);
             });
@@ -160,7 +163,9 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
     }
 
     function _deleteItem(shipmentID, orderID, lineItemID, buyerID) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete this shipment item? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete this shipment item', cancelText:'Cancel'})
+        return ocConfirm.Confirm({
+            message:'Are you sure you want to delete this shipment item? <br>' + lineItemID,
+            confirmText: 'Delete shipment item'})
             .then(function() {
                 return OrderCloud.Shipments.DeleteItem(shipmentID, orderID, lineItemID, buyerID);
             });

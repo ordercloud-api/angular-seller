@@ -54,8 +54,9 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
 
     vm.deletePrice = function() {
         ocConfirm.Confirm({
-            message: 'Are you sure you want to delete this price and all of it\'s assignments? <b>This action cannot be undone.</b>'
-            })
+                message:'Are you sure you want to delete <br> <b>' + vm.selectedPrice.PriceSchedule.Name + '</b>?',
+                confirmText: 'Delete price',
+                type: 'delete'})
             .then(function() {
                 console.log('hit');
                 vm.loadingPrice = OrderCloud.PriceSchedules.Delete(vm.selectedPrice.PriceSchedule.ID)

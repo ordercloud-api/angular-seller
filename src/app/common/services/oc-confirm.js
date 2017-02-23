@@ -31,6 +31,7 @@ function ConfirmModalController($uibModalInstance, ConfirmOptions) {
     vm.message = ConfirmOptions.message;
     vm.confirmText = ConfirmOptions.confirmText;
     vm.cancelText = ConfirmOptions.cancelText;
+    vm.type = ConfirmOptions.type;
 
     vm.confirm = function() {
         $uibModalInstance.close();

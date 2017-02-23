@@ -131,14 +131,20 @@ function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
     }
 
     function _deleteSpec(specID) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete this spec? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete this spec', cancelText:'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + specID + '</b>?',
+                confirmText: 'Delete spec',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.Specs.Delete(specID);
             });
     }
 
     function _deleteSpecOption(specID, specOptionID) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete this spec option? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete this spec option', cancelText:'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + specOptionID + '</b>?',
+                confirmText: 'Delete spec option',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.Specs.DeleteOption(specID, specOptionID);
             });
