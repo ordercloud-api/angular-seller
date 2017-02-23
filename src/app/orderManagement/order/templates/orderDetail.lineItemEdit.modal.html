@@ -19,7 +19,12 @@
         <fieldset class="form-group">
             <label for="lineItemUnitPrice" class="control-label col-sm-3">Unit Price</label>
             <div class="col-sm-9">
-                <input id="lineItemUnitPrice" name="UnitPrice" type="number" min="0" class="form-control" ng-model="orderLineItemEditModal.lineItem.UnitPrice" required/>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-dollar"></i>
+                    </span>
+                    <input id="lineItemUnitPrice" name="UnitPrice" type="number" min="0" step="0.01" placeholder="0.00" class="form-control" ng-model="orderLineItemEditModal.lineItem.UnitPrice" required/>
+                </div>
             </div>
         </fieldset>
         <fieldset class="form-group">
