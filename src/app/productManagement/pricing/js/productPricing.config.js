@@ -12,6 +12,9 @@ function ProductPricingConfig($stateProvider) {
             templateUrl: 'productManagement/pricing/templates/productPricing.html',
             controller: 'ProductPricingCtrl',
             controllerAs: 'productPricing',
+            data: {
+                pageTitle: 'Product Pricing'
+            },
             resolve : {
                 AssignmentList: function(ocProductPricing, $stateParams, buyerid) {
                     return ocProductPricing.AssignmentList($stateParams.productid, buyerid);
@@ -27,6 +30,9 @@ function ProductPricingConfig($stateProvider) {
             templateUrl: 'productManagement/pricing/templates/productCreateAssignment.html',
             controller: 'ProductCreateAssignmentCtrl',
             controllerAs: 'productCreateAssignment',
+            data: {
+                pageTitle: 'Create New Price'
+            },
             resolve: {
                 Buyers: function(OrderCloud){
                     return OrderCloud.Buyers.List();

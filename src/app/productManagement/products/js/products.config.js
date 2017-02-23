@@ -10,7 +10,9 @@ function ProductsConfig($stateProvider) {
             controller: 'ProductsCtrl',
             controllerAs: 'products',
             url: '/products?search&page&pageSize&searchOn&sortBy&filters',
-            data: {componentName: 'Products'},
+            data: {
+                pageTitle: 'Products'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

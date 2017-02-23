@@ -10,6 +10,9 @@ function SpendingAccountsConfig($stateProvider) {
             controller: 'SpendingAccountsCtrl',
             controllerAs: 'spendingAccounts',
             url: '/spending-accounts?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'Buyer Spending Accounts'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
@@ -32,6 +35,9 @@ function SpendingAccountsConfig($stateProvider) {
             controller: 'SpendingAccountsCtrl',
             controllerAs: 'spendingAccounts',
             url: '/spending-accounts?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'User Group Spending Accounts'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

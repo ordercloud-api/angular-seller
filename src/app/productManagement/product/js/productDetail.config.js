@@ -10,6 +10,9 @@ function ProductDetailConfig($stateProvider) {
             templateUrl: 'productManagement/product/templates/productDetail.html',
             controller: 'ProductDetailCtrl',
             controllerAs: 'productDetail',
+            data: {
+                pageTitle: 'Product Info'
+            },
             resolve: {
                 SelectedProduct: function ($stateParams, OrderCloud) {
                     return OrderCloud.Products.Get($stateParams.productid);

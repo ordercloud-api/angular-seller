@@ -10,6 +10,9 @@ function UsersConfig($stateProvider) {
             controller: 'UsersCtrl',
             controllerAs: 'users',
             url: '/users?userGroupID&search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'Buyer Users'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
@@ -24,6 +27,9 @@ function UsersConfig($stateProvider) {
             templateUrl: 'buyerManagement/users/templates/userGroupUsers.html',
             controller: 'UserGroupUsersCtrl',
             controllerAs: 'userGroupUsers',
+            data: {
+                pageTitle: 'User Group Members'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

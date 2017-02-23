@@ -10,6 +10,9 @@ function OrdersConfig($stateProvider) {
             templateUrl: 'orderManagement/orders/templates/orders.html',
             controller: 'OrdersCtrl',
             controllerAs: 'orders',
+            data: {
+                pageTitle: 'Orders'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

@@ -10,6 +10,9 @@ function AdminUserGroupsConfig($stateProvider) {
             controller: 'AdminUserGroupsCtrl',
             controllerAs: 'adminUserGroups',
             url: '/admin-user-groups?search&page&pageSize&sortBy&searchOn&filters',
+            data: {
+                pageTitle: 'Admin User Groups'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
@@ -25,6 +28,9 @@ function AdminUserGroupsConfig($stateProvider) {
             templateUrl: 'adminUserGroups/templates/adminUserGroup.html',
             controller: 'AdminUserGroupCtrl',
             controllerAs: 'adminUserGroup',
+            data: {
+                pageTitle: 'Admin User Group'
+            },
             resolve: {
                 SelectedAdminUserGroup: function($stateParams, OrderCloud) {
                     return OrderCloud.AdminUserGroups.Get($stateParams.adminusergroupid);

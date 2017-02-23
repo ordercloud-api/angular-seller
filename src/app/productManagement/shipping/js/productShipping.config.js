@@ -8,7 +8,10 @@ function ProductShippingConfig($stateProvider) {
             url: '/shipping',
             templateUrl: 'productManagement/shipping/templates/productShipping.html',
             controller: 'ProductShippingCtrl',
-            controllerAs: 'productShipping'
+            controllerAs: 'productShipping',
+            data: {
+                pageTitle: 'Product Shipping'
+            }
         })
     ;
 }

@@ -10,6 +10,9 @@ function ApprovalRulesConfig($stateProvider) {
             controller: 'ApprovalRulesCtrl',
             controllerAs: 'approvalRules',
             url: '/approval-rules?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'Buyer Approval Rules'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

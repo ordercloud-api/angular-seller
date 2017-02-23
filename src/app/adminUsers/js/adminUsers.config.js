@@ -10,6 +10,9 @@ function AdminUsersConfig($stateProvider) {
             controller: 'AdminUsersCtrl',
             controllerAs: 'adminUsers',
             url: '/admin-users?search&page&pageSize&searchOn&sortBy&filters',
+            data: {
+                pageTitle: 'Admin Users'
+            },
             resolve : {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
@@ -24,6 +27,9 @@ function AdminUsersConfig($stateProvider) {
             templateUrl: 'adminUsers/templates/adminUserGroupUsers.html',
             controller: 'AdminUserGroupUsersCtrl',
             controllerAs: 'adminUserGroupUsers',
+            data: {
+                pageTitle: 'Admin User Group Members'
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

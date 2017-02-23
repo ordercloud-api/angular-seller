@@ -9,6 +9,9 @@ function ProductInventoryConfig($stateProvider) {
             templateUrl: 'productManagement/inventory/templates/productInventory.html',
             controller: 'ProductInventoryCtrl',
             controllerAs: 'productInventory',
+            data: {
+                pageTitle: 'Product Inventory'
+            },
             resolve: {
                 ProductInventory: function($stateParams, OrderCloud) {
                     return OrderCloud.Products.GetInventory($stateParams.productid);
