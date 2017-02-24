@@ -1,5 +1,5 @@
 <div ui-view cg-busy="application.stateLoading('shipments')">
-    <div ng-if="!orderShipments.list.Items.length" class="well text-center">
+    <div ng-if="!orderShipments.list.Items.length" class="no-matches">
         This order does not have any shipments. <br>
         <a ui-sref=".create">Create one now</a>
     </div>
@@ -102,7 +102,7 @@
                         </table>
                     </div>
                 </div>
-                <div ng-if="!orderShipments.selectedShipment.Items.length" class="well text-center">
+                <div ng-if="!orderShipments.selectedShipment.Items.length" class="no-matches">
                     This shipment does not have any items. <br>
                     <a ng-click="orderShipments.createShipmentItems()">Create one now</a>
                 </div>

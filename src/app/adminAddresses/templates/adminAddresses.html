@@ -12,22 +12,25 @@
     </header>
 
     <!--====== SEARCH/FILTERS ======-->
-    <form name="adminAddresses.searchForm" pretty-submit>
-        <fieldset class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                <input type="search" ng-change="adminAddresses.search()" ng-model-options="{debounce:1000}" placeholder="Search admin addresses..." ng-model="adminAddresses.parameters.search" class="form-control">
+    <div ng-if="adminAddresses.list.Items.length || (!adminAddresses.list.Items.length && adminAddresses.searchResults)">
+        <form name="adminAddresses.searchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input type="search" ng-change="adminAddresses.search()" ng-model-options="{debounce:1000}" placeholder="Search admin addresses..." ng-model="adminAddresses.parameters.search" class="form-control">
                 <span ng-if="adminAddresses.searchResults" class="input-group-btn">
                     <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="adminAddresses.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
                 </span>
-            </div>
-        </fieldset>
-    </form>
+                </div>
+            </fieldset>
+        </form>
+    </div>
 
     <!--====== LIST ======-->
     <div cg-busy="adminAddresses.searchLoading">
         <div class="no-matches" ng-if="!adminAddresses.list.Items.length">
-            <b>No matches found.</b>
+            <b ng-if="adminAddresses.searchResults">No matches found.</b>
+            <b ng-if="!adminAddresses.searchResults">This seller organization does not have any admin addresses.</b>
         </div>
         <div ng-if="adminAddresses.list.Items.length">
             <div class="row">
