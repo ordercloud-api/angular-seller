@@ -27,6 +27,11 @@
     }
   }
   @media(min-width:@screen-sm-min) {
+    &__title {
+      font-size:@font-size-h3;
+    }
+  }
+  @media(min-width:425px) {
     align-items:center;
     flex-direction:row;
     > :not(:last-child) {
@@ -34,7 +39,6 @@
     }
     &__title {
       flex:1 0 auto;
-      font-size:@font-size-h3;
     }
     &__img,
     &__btns {
