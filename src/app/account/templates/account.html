@@ -1,21 +1,45 @@
-<article>
-	<h3><i class="fa fa-cog"></i> My Account</h3>
-	<hr>
-	<div class="panel panel-default">
-		<div class="panel-body">
-			<div class="row">
-				<div class="col-sm-5">
-					<h5><b>Name:</b> <span class="pull-right">{{account.profile.FirstName + ' ' + account.profile.LastName}}</span></h5>
-					<h5><b>Email Address:</b> <span class="pull-right">{{account.profile.Email}}</span></h5>
-					<h5><b>Username:</b> <span class="pull-right">{{account.profile.Username}}</span></h5>
-					<h5><b>Phone Number:</b> <span class="pull-right">{{account.profile.Phone}}</span></h5>
-					<hr class="visible-xs visible-sm">
+<article class="row">
+	<div class="col-sm-10 col-md-8 col-lg-6">
+		<header class="l-page-header">
+			<h3 class="l-page-header__title">
+				<i class="fa fa-user-circle-o"></i> My Account
+			</h3>
+		</header>
+		<form class="progressive" name="account.profileForm" autocomplete="off" novalidate ng-submit="account.updateProfile()" oc-if-roles="MeAdmin" pretty-submit>
+			<fieldset class="form-group row">
+				<div class="col-xs-6">
+					<label for="FirstName">First name</label>
+					<input id="FirstName" name="FirstName" type="text" class="form-control" ng-model="account.profile.FirstName" required>
 				</div>
-				<div class="col-sm-7 text-right" oc-if-roles="MeAdmin">
-					<button type="button" class="btn btn-default" ng-click="account.editInfo()"><i class="fa fa-edit"></i> Edit Profile</button>
-					<button type="button" class="btn btn-default" ng-click="account.changePassword(account.currentUser)"><i class="fa fa-lock"></i> Change Password</button>
+				<div class="col-xs-6">
+					<label for="LastName">Last name</label>
+					<input id="LastName" name="LastName" type="text" class="form-control" ng-model="account.profile.LastName" required>
 				</div>
-			</div>
-		</div>
+			</fieldset>
+			<fieldset class="form-group">
+				<label for="Email">Email address</label>
+				<input id="Email" name="Email" type="email" class="form-control" ng-model="account.profile.Email" required>
+			</fieldset>
+			<fieldset class="form-group">
+				<label for="Phone">Phone number</label>
+				<input id="Phone" name="Phone" type="tel" placeholder="(Optional)" class="form-control" ng-model="account.profile.Phone">
+			</fieldset>
+			<button type="submit" class="btn btn-default">Update profile</button>
+			<button type="button" class="btn btn-default" ng-click="account.changePassword()"><i class="fa fa-lock"></i> Change Password</button>
+		</form>
+		<hr>
+		<form name="account.settingsForm" ng-submit="account.updateUsername()" autocomplete="off" novalidate oc-if-roles="MeAdmin" pretty-submit>
+			<fieldset class="form-group">
+				<label for="Username">Username</label>
+				<input id="Username" name="Username" ng-change="account.usernameChange()" type="text" class="form-control" ng-model="account.profile.Username" required>
+				<p class="help-block">Your user ID is <code>{{account.profile.ID}}</code> and can be changed
+					<a ui-sref="adminUsers" oc-if-roles="AdminUserReader || AdminUserAdmin">in admin users</a>
+					<span ng-if="!application.userIsAuthorized(['AdminUserReader', 'AdminUserAdmin'], true)">by the site administrator.</span>
+				</p>
+			</fieldset>
+			<button type="submit" class="btn btn-default">Update username</button>
+		</form>
+		<hr>
+		<button type="button" class="btn btn-danger btn-block" ng-click="application.logout()"><i class="fa fa-power-off"></i> Logout</button>
 	</div>
 </article>

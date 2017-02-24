@@ -1,78 +1,50 @@
 angular.module('orderCloud')
-    .factory('AccountService', AccountService)
+    .factory('ocAccount', OrderCloudAccountService)
 ;
 
-function AccountService($q, $uibModal, OrderCloud, toastr) {
+function OrderCloudAccountService($q, $uibModal, $cookies, appname) {
     var service = {
-        Update: _update,
+        ConfirmPassword: _confirmPassword,
         ChangePassword: _changePassword
     };
 
-    function _update(currentProfile, newProfile) {
-        var deferred = $q.defer();
-
-        function updateUser() {
-            OrderCloud.Me.Update(newProfile)
-                .then(function(data) {
-                    deferred.resolve(data);
-                })
-                .catch(function(ex) {
-                    deferred.reject(ex);
-                });
+    function _confirmPassword(currentUser) {
+        var hasConfirmed = $cookies.get('oc_has_confirmed.' + appname);
+        if (hasConfirmed) {
+            var df = $q.defer();
+            df.resolve();
+            return df.promise;
+        } else {
+            return $uibModal.open({
+                animation: true,
+                templateUrl: 'account/templates/confirmPassword.modal.html',
+                controller: 'ConfirmPasswordModalCtrl',
+                controllerAs: 'confirmPasswordModal',
+                size: 'confirm',
+                resolve: {
+                    CurrentUser: function() {
+                        return currentUser;
+                    }
+                }
+            }).result
         }
-
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'account/templates/confirmPassword.modal.html',
-            controller: 'ConfirmPasswordModalCtrl',
-            controllerAs: 'confirmPasswordModal',
-            size: 'md'
-        }).result.then(function(password) {
-            var checkPasswordCredentials = {
-                Username: currentProfile.Username,
-                Password: password
-            };
-
-            OrderCloud.Auth.GetToken(checkPasswordCredentials)
-                .then(function() {
-                    updateUser();
-                    toastr.success('Account changes were saved.', 'Success!');
-                })
-                .catch(function(ex) {
-                    deferred.reject(ex);
-                });
-        }, function() {
-            angular.noop();
-        });
-
-        return deferred.promise;
     }
 
     function _changePassword(currentUser) {
-        var deferred = $q.defer();
+        return $uibModal.open({
+            animation: true,
+            templateUrl: 'account/templates/changePassword.modal.html',
+            controller: 'ChangePasswordModalCtrl',
+            controllerAs: 'changePasswordModal',
+            backdrop:'static',
+            size: 'confirm',
+            resolve: {
+                CurrentUser: function(){
+                    return currentUser;
+                }
+            }
+        }).result;
 
-        var checkPasswordCredentials = {
-            Username: currentUser.Username,
-            Password: currentUser.CurrentPassword
-        };
-
-        function changePassword() {
-            currentUser.Password = currentUser.NewPassword;
-            OrderCloud.Me.Update(currentUser)
-                .then(function() {
-                    deferred.resolve();
-                });
-        }
-
-        OrderCloud.Auth.GetToken(checkPasswordCredentials)
-            .then(function() {
-                changePassword();
-            })
-            .catch(function(ex) {
-                deferred.reject(ex);
-            });
-
-        return deferred.promise;
     }
 
     return service;
