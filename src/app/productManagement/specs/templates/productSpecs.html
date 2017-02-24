@@ -1,4 +1,4 @@
-<div ng-if="!productSpecs.specs.Items.length" class="well text-center">
+<div ng-if="!productSpecs.specs.Items.length" class="no-matches">
     This product does not have any specs. <br>
     <a ng-click="productSpecs.createSpec(productDetail.product.ID)" oc-if-roles="ProductAdmin">Create one now</a>
 </div>
@@ -58,7 +58,7 @@
             </header>
             <div ng-if="!productSpecs.selectedSpec.Options.length">
                 <hr>
-                <div class="well text-center">
+                <div class="no-matches">
                     There are no options for this spec. <span oc-if-roles="ProductAdmin"><a ng-click="productSpecs.createSpecOption()">Create</a> one now.</span>
                 </div>
             </div>

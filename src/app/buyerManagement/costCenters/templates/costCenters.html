@@ -10,23 +10,26 @@
     </div>
 </header>
 <!--====== SEARCH/FILTERS ======-->
-<form name="costCenters.searchForm" pretty-submit>
-    <fieldset class="form-group">
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="fa fa-search"></i>
-            </span>
-            <input type="search" ng-change="costCenters.search()" ng-model-options="{debounce:1000}" placeholder="Search costCenters..." ng-model="costCenters.parameters.search" class="form-control">
-            <span ng-if="costCenters.searchResults" class="input-group-btn">
-                <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="costCenters.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
-            </span>
-        </div>
-    </fieldset>
-</form>
+<div ng-if="costCenters.list.Items.length || (!costCenters.list.Items.length && costCenters.searchResults)">
+    <form name="costCenters.searchForm" pretty-submit>
+        <fieldset class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input type="search" ng-change="costCenters.search()" ng-model-options="{debounce:1000}" placeholder="Search costCenters..." ng-model="costCenters.parameters.search" class="form-control">
+                <span ng-if="costCenters.searchResults" class="input-group-btn">
+                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="costCenters.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+                </span>
+            </div>
+        </fieldset>
+    </form>
+</div>
 
 <div cg-busy="costCenters.searchLoading">
     <div class="no-matches" ng-if="!costCenters.list.Items.length">
-        <b>No matches found.</b>
+        <b ng-if="costCenters.searchResults">No matches found.</b>
+        <b ng-if="!costCenters.searchResults">This buyer organization does not have any cost centers.</b>
     </div>
     <div ng-if="costCenters.list.Items.length">
         <div class="row">

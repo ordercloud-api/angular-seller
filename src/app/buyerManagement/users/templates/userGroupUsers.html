@@ -10,23 +10,26 @@
     </div>
 </header>
 <!--====== SEARCH/FILTERS ======-->
-<form name="userGroupUsers.searchForm" pretty-submit>
-    <fieldset class="form-group">
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="fa fa-search"></i>
-            </span>
-            <input type="search" ng-change="userGroupUsers.search()" ng-model-options="{debounce:1000}" placeholder="Search users..." ng-model="userGroupUsers.parameters.search" class="form-control">
-            <span ng-if="userGroupUsers.searchResults" class="input-group-btn">
-                <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="userGroupUsers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
-            </span>
-        </div>
-    </fieldset>
-</form>
+<div ng-if="userGroupUsers.list.Items.length || (!userGroupUsers.list.Items.length && userGroupUsers.searchResults)">
+    <form name="userGroupUsers.searchForm" pretty-submit>
+        <fieldset class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input type="search" ng-change="userGroupUsers.search()" ng-model-options="{debounce:1000}" placeholder="Search users..." ng-model="userGroupUsers.parameters.search" class="form-control">
+                <span ng-if="userGroupUsers.searchResults" class="input-group-btn">
+                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="userGroupUsers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+                </span>
+            </div>
+        </fieldset>
+    </form>
+</div>
 
 <div cg-busy="userGroupUsers.searchLoading">
     <div class="no-matches" ng-if="!userGroupUsers.list.Items.length">
-        <b>No matches found.</b>
+        <b ng-if="users.searchResults">No matches found.</b>
+        <b ng-if="!users.searchResults">This buyer organization does not have any users.</b>
     </div>
     <div ng-if="userGroupUsers.list.Items.length">
         <div class="row">

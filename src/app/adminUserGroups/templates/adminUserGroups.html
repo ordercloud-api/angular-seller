@@ -7,24 +7,27 @@
     </header>
 
     <!--====== SEARCH/FILTERS ======-->
-    <form name="adminUserGroups.searchForm" pretty-submit>
-        <fieldset class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </span>
-                <input type="search" ng-change="adminUserGroups.search()" ng-model-options="{debounce:1000}" placeholder="Search admin user groups..." ng-model="adminUserGroups.parameters.search" class="form-control">
-                <span ng-if="adminUserGroups.searchResults" class="input-group-btn">
-                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="adminUserGroups.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
-                </span>
-            </div>
-        </fieldset>
-    </form>
+    <div ng-if="adminUserGroups.list.Items.length || (!adminUserGroups.list.Items.length && adminUserGroups.searchResults)">
+        <form name="adminUserGroups.searchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input type="search" ng-change="adminUserGroups.search()" ng-model-options="{debounce:1000}" placeholder="Search admin user groups..." ng-model="adminUserGroups.parameters.search" class="form-control">
+                    <span ng-if="adminUserGroups.searchResults" class="input-group-btn">
+                        <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="adminUserGroups.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
 
     <!--====== LIST ======-->
     <div cg-busy="adminUserGroups.searchLoading">
         <div class="no-matches" ng-if="!adminUserGroups.list.Items.length">
-            <b>No matches found.</b>
+            <b ng-if="adminUserGroups.searchResults">No matches found.</b>
+            <b ng-if="!adminUserGroups.searchResults">This seller organization does not have any admin user groups.</b>
         </div>
         <div ng-if="adminUserGroups.list.Items.length">
             <div class="row">

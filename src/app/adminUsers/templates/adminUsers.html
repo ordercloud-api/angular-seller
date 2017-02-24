@@ -12,19 +12,21 @@
     </header>
 
     <!--====== SEARCH/FILTERS ======-->
-    <form name="AdminUsersSearchForm" pretty-submit>
-        <fieldset class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </span>
-                <input type="search" ng-change="adminUsers.search()" ng-model-options="{debounce:1000}" placeholder="Search admin users..." ng-model="adminUsers.parameters.search" class="form-control">
-                <span ng-if="adminUsers.searchResults" class="input-group-btn">
-                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="adminUsers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
-                </span>
-            </div>
-        </fieldset>
-    </form>
+    <div ng-if="adminUsers.list.Items.length || (!adminUsers.list.Items.length && adminUsers.searchResults)">
+        <form name="AdminUsersSearchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input type="search" ng-change="adminUsers.search()" ng-model-options="{debounce:1000}" placeholder="Search admin users..." ng-model="adminUsers.parameters.search" class="form-control">
+                    <span ng-if="adminUsers.searchResults" class="input-group-btn">
+                        <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="adminUsers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
 
     <!--Sort may not be needed now that tables are using .table-responsive-->
 <!--    <div class="form-group" ng-if="application.$ocMedia('max-width:767px')">
@@ -49,7 +51,8 @@
     <!--====== LIST ======-->
     <div cg-busy="adminUsers.searchLoading">
         <div class="no-matches" ng-if="!adminUsers.list.Items.length">
-            <b>No matches found.</b>
+            <b ng-if="adminUsers.searchResults">No matches found.</b>
+            <b ng-if="!adminUsers.searchResults">This seller organization does not have any admin users.</b>
         </div>
         <div ng-if="adminUsers.list.Items.length">
             <div class="row">
