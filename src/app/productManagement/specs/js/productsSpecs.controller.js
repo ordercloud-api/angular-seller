@@ -172,7 +172,7 @@ function ProductSpecCreateController($uibModalInstance, toastr, OrderCloud, Prod
                 OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: data.ID})
                     .then(function(assignment) {
                         assignment.Spec = data;
-                        toastr.success('Spec: ' + data.Name + ' created', 'Success');
+                        toastr.success('Spec: ' + data.Name + ' created');
                         $uibModalInstance.close(assignment);
                     });
             });
