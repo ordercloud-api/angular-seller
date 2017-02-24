@@ -12,28 +12,6 @@ function OrderCloudApprovalsService($q, OrderCloud) {
 
         OrderCloud.Orders.ListApprovals(orderID, null, page, pageSize, null, 'Status', null, buyerID)
             .then(function(data) {
-                data.Items.push({
-                    ApprovalRuleID: 'RequiresApproval',
-                    ApproverEmail: 'test@test.com',
-                    ApproverID: '234234234234234',
-                    ApproverUserName: 'approvinguser234',
-                    ApprovingGroupID: 'ApprovingUsers',
-                    Comments: 'This looks good to me',
-                    DateCompleted: '2017-02-11T22:04:21.88+00:00',
-                    DateCreated: '2017-02-10T22:04:21.88+00:00',
-                    Status: 'Approved'
-                });
-                data.Items.push({
-                    ApprovalRuleID: 'RequiresApproval',
-                    ApproverEmail: 'test@test.com',
-                    ApproverID: '234234234234234',
-                    ApproverUserName: 'approvinguser234',
-                    ApprovingGroupID: 'ApprovingUsers',
-                    Comments: 'No way DUDE',
-                    DateCompleted: '2017-02-11T22:04:21.88+00:00',
-                    DateCreated: '2017-02-10T22:04:21.88+00:00',
-                    Status: 'Declined'
-                })
                 getApprovingUserGroups(data)
             });
 
