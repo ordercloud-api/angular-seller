@@ -1,4 +1,4 @@
-describe('Component: Account', function() {
+xdescribe('Component: Account', function() {
     var scope,
         q,
         account,
