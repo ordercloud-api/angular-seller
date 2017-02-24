@@ -95,50 +95,20 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
             });
     };
 
-    vm.selectAllPriceBreaks = function(ps) {
-        _.each(ps.PriceBreaks, function(pb) { pb.selected = ps.allPriceBreaksSelected });
-    };
+    vm.deletePriceBreak = function(scope) {
+        ocProductPricing.PriceBreaks.Delete(vm.selectedPrice.PriceSchedule, scope.pricebreak)
+            .then(function(updatedPriceSchedule) {
+                var oldAssignment = angular.copy(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID]);
+                oldAssignment.PriceSchedule = updatedPriceSchedule;
+                oldAssignment.PriceScheduleID = updatedPriceSchedule.ID;
 
-    vm.selectPriceBreak = function(ps, scope) {
-        if (!scope.pricebreak.selected) ps.allPriceBreaksSelected = false;
-    };
+                delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
 
-    vm.removePriceBreaks = function() {
-        if (vm.selectedPrice.PriceSchedule.allPriceBreaksSelected || vm.selectedPrice.PriceSchedule.PriceBreaks.length == 1) {
-            toastr.error('You must have at least one price break', 'Request Denied');
-        } else {
-            vm.removePriceBreaksLoading = removePriceBreaks()
-                .then(function(updatedPriceSchedule) {
-                    var oldAssignment = angular.copy(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID]);
-                    oldAssignment.PriceSchedule = updatedPriceSchedule;
-                    oldAssignment.PriceScheduleID = updatedPriceSchedule.ID;
-
-                    delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
-
-                    vm.listAssignments[updatedPriceSchedule.ID] = oldAssignment;
-                    vm.selectedPrice = oldAssignment;
-                    vm.selectedPrice.PriceSchedule = updatedPriceSchedule;
-                })
-        }
-
-        function removePriceBreaks() {
-            var defer = $q.defer();
-            var queue = [];
-            _.each(vm.selectedPrice.PriceSchedule.PriceBreaks, function(pb) {{
-                if (pb.selected) queue.push(OrderCloud.PriceSchedules.DeletePriceBreak(vm.selectedPrice.PriceSchedule.ID, pb.Quantity));
-            }});
-            $q.all(queue)
-                .then(function() {
-                    OrderCloud.PriceSchedules.Get(vm.selectedPrice.PriceSchedule.ID)
-                        .then(function(data) {
-                            defer.resolve(data);
-                        })
-                })
-                .catch(function(ex) {
-                    defer.reject();
-                });
-            return defer.promise;
-        }
+                vm.listAssignments[updatedPriceSchedule.ID] = oldAssignment;
+                vm.selectedPrice = oldAssignment;
+                vm.selectedPrice.PriceSchedule = updatedPriceSchedule;
+                toastr.success('Price Break Quantity ' + scope.pricebreak.Quantity + ' was deleted.');
+            });
     };
 
     //====== Availability =======

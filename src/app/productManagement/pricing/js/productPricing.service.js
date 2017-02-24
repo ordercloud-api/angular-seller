@@ -261,9 +261,20 @@ function ocProductPricingService($q, toastr, OrderCloud, ocConfirm) {
         return priceSchedule;
     }
 
-    function _deletePriceBreak(priceSchedule, index) {
-        priceSchedule.PriceBreaks.splice(index, 1);
-        return _setMinMax(priceSchedule);
+    function _deletePriceBreak(priceSchedule, priceBreak) {
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete this price break?<br> <b>Quantity: ' + priceBreak.Quantity + '</b>?',
+                confirmText: 'Delete price break',
+                type: 'delete'})
+            .then(function() {
+                return OrderCloud.PriceSchedules.DeletePriceBreak(priceSchedule.ID, priceBreak.Quantity)
+                    .then(function() {
+                        return OrderCloud.PriceSchedules.Get(priceSchedule.ID)
+                            .then(function(updatedPriceSchedule) {
+                                return updatedPriceSchedule;
+                            })
+                    });
+            });
     }
 
     function _addDisplayQuantity(priceSchedule) {
