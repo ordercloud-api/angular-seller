@@ -27,15 +27,25 @@
     <br>
     <div ui-view cg-busy="application.stateLoading('orderDetail')">
         <!--====== ORDER DETAILS ======-->
+
         <div class="panel panel-default">
             <div class="panel-body">
-                <div>
-                    <b>Date {{orderDetail.order.DateSubmitted ? 'Submitted' : 'Created'}}: </b> {{(orderDetail.order.DateSubmitted || orderDetail.order.DateCreated) | date:'medium'}} <br>
-                    <b>Status: </b> {{orderDetail.order.Status | humanize}} <br>
-                    <b>Buyer Company: </b> {{orderDetail.order.FromCompany.Name}} <br>
-                    <b>Created By: </b> {{orderDetail.order.FromUserFirstName + ' ' + orderDetail.order.FromUserLastName}} <br>
-                    <div ng-if="orderDetail.order.Comments">
-                        <b>Comments: </b> {{orderDetail.order.Comments}}
+                <div class="row">
+                    <div class="col-sm-8">
+                        <b>Date {{orderDetail.order.DateSubmitted ? 'Submitted' : 'Created'}}: </b> {{(orderDetail.order.DateSubmitted || orderDetail.order.DateCreated) | date:'medium'}} <br>
+                        <b>Status: </b> {{orderDetail.order.Status | humanize}} <br>
+                        <b>Buyer Company: </b> {{orderDetail.order.FromCompany.Name}} <br>
+                        <b>Created By: </b> {{orderDetail.order.FromUserFirstName + ' ' + orderDetail.order.FromUserLastName}} <br>
+                        <div ng-if="orderDetail.order.Comments">
+                            <b>Comments: </b> {{orderDetail.order.Comments}}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <span>Subtotal</span> <span class="pull-right">{{orderDetail.order.Subtotal | currency}}</span> <br>
+                        <span>Shipping</span> <span class="pull-right">{{orderDetail.order.ShippingCost | currency}}</span> <br>
+                        <span>Tax</span> <span class="pull-right">{{orderDetail.order.TaxCost | currency}}</span>
+                        <hr>
+                        <b>Total <span class="pull-right">{{orderDetail.order.Total | currency}}</span></b>
                     </div>
                 </div>
             </div>
@@ -43,16 +53,20 @@
         <div class="row">
             <div class="col-sm-6" ng-if="orderDetail.order.ShippingAddressID">
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Shipping Address</h3>
+                    </div>
                     <div class="panel-body">
-                        <h4>Shipping Address</h4>
                         <div ng-bind-html="orderDetail.lineItems.Items[0].ShippingAddress | address:'full'"></div>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6" ng-if="orderDetail.order.BillingAddressID">
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Billing Address</h3>
+                    </div>
                     <div class="panel-body">
-                        <h4>Billing Address</h4>
                         <div ng-bind-html="orderDetail.order.BillingAddress | address:'full'"></div>
                     </div>
                 </div>
@@ -61,7 +75,15 @@
 
         <!--====== LINE ITEM LIST ======-->
         <div class="panel panel-default table-responsive">
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered l-lineitem-table">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -74,9 +96,9 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="lineItem in orderDetail.lineItems.Items">
-                        <td><a ng-click="orderDetail.editLineItem(lineItem)"><i class="fa fa-edit"></i> {{lineItem.ID}}</a></td>
+                        <td>{{lineItem.ID}}</td>
                         <td>
-                            <span>{{lineItem.Product.Name}}</span>
+                            <a ng-click="orderDetail.editLineItem(lineItem)"><i class="fa fa-edit"></i> {{lineItem.Product.Name}}</a>
                             <small class="text-muted">({{lineItem.Product.ID}})</small>
                             <ul ng-if="lineItem.Specs.length > 0">
                                 <li ng-repeat="spec in lineItem.Specs">
@@ -109,19 +131,5 @@
                 class="btn btn-default btn-block btn-lg visible-xs"
                 ng-show="orderDetail.lineItems.Meta.Page < orderDetail.lineItems.Meta.TotalPages"
                 ng-click="orderDetail.loadMore()">Load More</button>
-
-        <!-- Monetary Order Details-->
-        <div class="row">
-            <div class="col-sm-offset-8 col-sm-4">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <span>Subtotal</span> <span class="pull-right">{{orderDetail.order.Subtotal | currency}}</span> <br>
-                        <span>Shipping</span> <span class="pull-right">{{orderDetail.order.ShippingCost | currency}}</span> <br>
-                        <span>Tax</span> <span class="pull-right">{{orderDetail.order.TaxCost | currency}}</span> <br>
-                        <b>Total <span class="pull-right">{{orderDetail.order.Total | currency}}</span></b>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </article>

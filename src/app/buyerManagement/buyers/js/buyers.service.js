@@ -20,7 +20,7 @@ function BuyersService($uibModal, ocConfirm, OrderCloud) {
 
     function _delete(buyer) {
         return ocConfirm.Confirm({
-                message:'Are you sure you want to delete <br> <b>' + buyer.Name + '</b>? <br> This will delete all of the organizations data.',
+                message:'Are you sure you want to delete <br> <b>' + buyer.Name + '</b>? <br><br> This will delete all of the buyer\'s data.',
                 confirmText: 'Delete buyer organization',
                 type: 'delete'})
             .then(function() {

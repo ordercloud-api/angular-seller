@@ -64,7 +64,15 @@
                     orders.list.Meta.ItemRange[1] + ' of ' + orders.list.Meta.TotalCount + ' results'}}</p>
             </div>
             <div class="panel panel-default table-responsive">
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered l-order-table">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
                     <thead>
                         <tr>
                             <th ng-click="orders.updateSort('ID')">
@@ -97,7 +105,6 @@
                                 <i class="fa fa-caret-down" ng-show="orders.parameters.sortBy == 'Subtotal'"></i>
                                 <i class="fa fa-caret-up" ng-show="orders.parameters.sortBy == '!Subtotal'"></i>
                             </th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,9 +115,6 @@
                             <td>{{order.FromCompany.Name}}</td>
                             <td>{{order.FromUserFirstName + ' ' + order.FromUserLastName}}</td>
                             <td>{{order.Subtotal | currency}}</td>
-                            <td class="actions-cell">
-                                <button ui-sref="orderDetail({buyerid: order.FromCompanyID, orderid: order.ID})" class="btn btn-default btn-xs btn-block">View Order</button>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
