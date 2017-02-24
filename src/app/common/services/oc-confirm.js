@@ -14,7 +14,7 @@ function OrderCloudConfirmService($uibModal) {
             templateUrl: 'common/templates/confirm.modal.html',
             controller: 'ConfirmModalCtrl',
             controllerAs: 'confirmModal',
-            size: options.size || 'sm',
+            size: options.size || 'confirm',
             resolve: {
                 ConfirmOptions: function() {
                     return options;
@@ -31,6 +31,7 @@ function ConfirmModalController($uibModalInstance, ConfirmOptions) {
     vm.message = ConfirmOptions.message;
     vm.confirmText = ConfirmOptions.confirmText;
     vm.cancelText = ConfirmOptions.cancelText;
+    vm.type = ConfirmOptions.type;
 
     vm.confirm = function() {
         $uibModalInstance.close();

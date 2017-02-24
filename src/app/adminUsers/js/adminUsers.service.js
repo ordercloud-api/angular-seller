@@ -37,7 +37,10 @@ function OrderCloudAdminUsers($q, $uibModal, ocConfirm, OrderCloud) {
     }
 
     function _delete(user) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete ' + user.Username + '? <br/> <b>This action cannot be undone.</b>', confirmText: 'Delete this user', cancelText: 'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + user.Username + '</b>?',
+                confirmText: 'Delete admin user',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.AdminUsers.Delete(user.ID)
             })

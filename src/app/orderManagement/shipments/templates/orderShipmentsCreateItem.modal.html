@@ -1,7 +1,7 @@
 <form class="form-horizontal" ng-submit="orderShipmentsCreateItems.submit()" name="orderShipmentsCreateItems.form">
     <div class="modal-header">
         <button type="button" class="close" ng-click="orderShipmentsCreateItems.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title">Add Shipment Items</h3>
+        <h4 class="modal-title">Add Shipment Items</h4>
     </div>
     <div class="modal-body">
         <!--====== LINE ITEM LIST ======-->
@@ -38,17 +38,20 @@
             </table>
         </div>
         <!--====== LINE ITEM PAGINATION ======-->
-        <div class="text-center" ng-if="!application.isTouchDevice && orderShipmentsCreateItems.lineItems.Meta.TotalPages > 1">
-            <uib-pagination boundary-links="orderShipmentsCreateItems.lineItems.Meta.TotalPages > 5" max-size="5"
-                            total-items="orderShipmentsCreateItems.lineItems.Meta.TotalCount" items-per-page="orderShipmentsCreateItems.lineItems.Meta.PageSize"
-                            ng-model="orderShipmentsCreateItems.lineItems.Meta.Page" ng-change="orderShipmentsCreateItems.pageChanged()"></uib-pagination>
-        </div>
+        <ul uib-pagination
+            class="pagination-sm pull-right hidden-xs"
+            ng-if="orderShipmentsCreateItems.lineItems.Meta.TotalPages > 1"
+            total-items="orderShipmentsCreateItems.lineItems.Meta.TotalCount"
+            items-per-page="orderShipmentsCreateItems.lineItems.Meta.PageSize"
+            max-size="5"
+            boundary-links="orderShipmentsCreateItems.lineItems.Meta.TotalPages > 5"
+            ng-model="orderShipmentsCreateItems.lineItems.Meta.Page"
+            ng-change="orderShipmentsCreateItems.pageChanged()">
+        </ul>
         <button type="button"
-                ng-if="application.isTouchDevice"
-                class="btn btn-default btn-block btn-lg"
+                class="btn btn-default btn-block btn-lg visible-xs"
                 ng-show="orderShipmentsCreateItems.lineItems.Meta.Page < orderShipmentsCreateItems.lineItems.Meta.TotalPages"
-                ng-click="orderShipmentsCreateItems.loadMore()">Load More
-        </button>
+                ng-click="orderShipmentsCreateItems.loadMore()">Load More</button>
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-primary btn-block" ng-disabled="orderShipmentsCreateItems.form.$invalid">Save</button>

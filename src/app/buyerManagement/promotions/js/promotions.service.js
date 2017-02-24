@@ -46,7 +46,10 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
     }
 
     function _delete(promotion, buyerid) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete this promotion? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete promotion', cancelText:'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + (promotion.Name ? promotion.Name : promotion.Code) + '</b>?',
+                confirmText: 'Delete promotion',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.Promotions.Delete(promotion.ID, buyerid)
             })

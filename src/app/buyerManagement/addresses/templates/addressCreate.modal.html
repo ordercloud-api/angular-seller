@@ -1,7 +1,7 @@
 <form name="addressCreateModal.form" class="form-horizontal" ng-submit="addressCreateModal.submit()" autocomplete="off" novalidate>
     <div class="modal-header">
         <button type="button" class="close" aria-label="Close" ng-click="addressCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title">New Address</h3>
+        <h4 class="modal-title">New Address</h4>
     </div>
     <div class="modal-body">
         <fieldset class="form-group">
@@ -52,14 +52,14 @@
                 <input type="text" class="form-control" id="addressCity" name="City" ng-model="addressCreateModal.address.City" required />
             </div>
         </fieldset>
-        <fieldset class="form-group" ng-if="addressCreateModal.address.Country == 'US' || addressCreateModal.address.Country == 'CA'">
+        <fieldset class="form-group" ng-if="(addressCreateModal.states | filter:{country:addressCreateModal.address.Country}).length">
             <label class="col-sm-3 control-label" for="addressState">State</label>
             <div class="col-sm-9">
-                <select id="addressState" name="State" class="form-control" ng-options="state.value as state.label for state in addressCreateModal.states" ng-model="addressCreateModal.address.State" required></select>
+                <select id="addressState" name="State" class="form-control" ng-options="state.value as state.label for state in addressCreateModal.states | filter:{country:addressCreateModal.address.Country}" ng-model="addressCreateModal.address.State" required></select>
             </div>
         </fieldset>
-        <fieldset class="form-group" ng-if="!(addressCreateModal.address.Country == 'US' || addressCreateModal.address.Country == 'CA')">
-            <label class="col-sm-3 control-label" for="addressState">ID</label>
+        <fieldset class="form-group" ng-if="!(addressCreateModal.states | filter:{country:addressCreateModal.address.Country}).length">
+            <label class="col-sm-3 control-label" for="addressState">State</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control" id="addressState" name="State" ng-model="addressCreateModal.address.State" required />
             </div>

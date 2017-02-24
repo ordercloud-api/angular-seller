@@ -46,7 +46,10 @@ function OrderCloudSpendingAccounts($q, $uibModal, ocConfirm, OrderCloud) {
     }
 
     function _delete(spendingAccount, buyerid) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete this spending account? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete spending account', cancelText:'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + spendingAccount.Name + '</b>?',
+                confirmText: 'Delete spending account',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.SpendingAccounts.Delete(spendingAccount.ID, buyerid)
             })

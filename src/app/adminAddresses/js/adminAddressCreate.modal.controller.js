@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminAddressCreateModalCtrl', AdminAddressCreateModalController)
 ;
 
-function AdminAddressCreateModalController($uibModalInstance, $exceptionHandler, $scope, OrderCloud, ocGeography){
+function AdminAddressCreateModalController($timeout, $uibModalInstance, $exceptionHandler, $scope, OrderCloud, ocGeography){
     var vm = this;
     vm.adminAddress = {
         Country: 'US' // this is to default 'create' addresses to the country US
@@ -12,8 +12,13 @@ function AdminAddressCreateModalController($uibModalInstance, $exceptionHandler,
 
     $scope.$watch(function() {
         return vm.adminAddress.Country
-    }, function() {
-        vm.adminAddress.State = null;
+    }, function(n, o) {
+        if (n && n != o) {
+            vm.adminAddress.State = null;
+            $timeout(function() {
+                vm.form.State.$$element.focus();
+            }, 100);
+        }
     });
 
     vm.submit = function() {

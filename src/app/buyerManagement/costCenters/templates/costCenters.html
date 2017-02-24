@@ -85,19 +85,20 @@
                 </tbody>
             </table>
         </div>
-        <uib-pagination class="pagination-sm pull-right"
-                        ng-if="application.$ocMedia('min-width:768px') && costCenters.list.Meta.TotalPages > 1"
-                        total-items="costCenters.list.Meta.TotalCount"
-                        items-per-page="costCenters.list.Meta.PageSize"
-                        max-size="5"
-                        boundary-links="costCenters.list.Meta.TotalPages > 5"
-                        ng-model="costCenters.list.Meta.Page"
-                        ng-change="costCenters.pageChanged()">
-        </uib-pagination>
+        <ul uib-pagination
+            class="pagination-sm pull-right hidden-xs"
+            boundary-links="costCenters.list.Meta.TotalPages > 5"
+            max-size="5"
+            total-items="costCenters.list.Meta.TotalCount"
+            items-per-page="costCenters.list.Meta.PageSize"
+            ng-model="costCenters.list.Meta.Page"
+            ng-if="costCenters.list.Meta.TotalPages > 1"
+            ng-change="costCenters.pageChanged()">
+        </ul>
         <button type="button"
-                ng-if="application.$ocMedia('max-width:767px')"
-                class="btn btn-default btn-block btn-lg"
+                class="btn btn-default btn-block btn-lg visible-xs"
                 ng-show="costCenters.list.Meta.Page < costCenters.list.Meta.TotalPages"
-                ng-click="costCenters.loadMore()">Load More</button>
+                ng-click="costCenters.loadMore()">Load More
+        </button>
     </div>
 </div>

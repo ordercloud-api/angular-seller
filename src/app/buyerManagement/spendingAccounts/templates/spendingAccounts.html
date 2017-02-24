@@ -100,19 +100,20 @@
                 </tbody>
             </table>
         </div>
-        <uib-pagination class="pagination-sm pull-right"
-                        ng-if="application.$ocMedia('min-width:768px') && spendingAccounts.list.Meta.TotalPages > 1"
-                        total-items="spendingAccounts.list.Meta.TotalCount"
-                        items-per-page="spendingAccounts.list.Meta.PageSize"
-                        max-size="5"
-                        boundary-links="spendingAccounts.list.Meta.TotalPages > 5"
-                        ng-model="spendingAccounts.list.Meta.Page"
-                        ng-change="spendingAccounts.pageChanged()">
-        </uib-pagination>
+        <ul uib-pagination
+            class="pagination-sm pull-right hidden-xs"
+            boundary-links="spendingAccounts.list.Meta.TotalPages > 5"
+            max-size="5"
+            total-items="spendingAccounts.list.Meta.TotalCount"
+            items-per-page="spendingAccounts.list.Meta.PageSize"
+            ng-model="spendingAccounts.list.Meta.Page"
+            ng-if="spendingAccounts.list.Meta.TotalPages > 1"
+            ng-change="spendingAccounts.pageChanged()">
+        </ul>
         <button type="button"
-                ng-if="application.$ocMedia('max-width:767px')"
-                class="btn btn-default btn-block btn-lg"
+                class="btn btn-default btn-block btn-lg visible-xs"
                 ng-show="spendingAccounts.list.Meta.Page < spendingAccounts.list.Meta.TotalPages"
-                ng-click="spendingAccounts.loadMore()">Load More</button>
+                ng-click="spendingAccounts.loadMore()">Load More
+        </button>
     </div>
 </div>

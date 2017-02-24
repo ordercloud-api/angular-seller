@@ -47,7 +47,10 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) 
 
     function _delete(creditCard, buyerid) {
         creditCard.Shared = true;
-        return ocConfirm.Confirm({message:'Are you sure you want to delete this credit card? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete credit card', cancelText:'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + 'xxxx-xxxx-xxxx-' + creditCard.PartialAccountNumber + '</b>?',
+                confirmText: 'Delete admin user group',
+                type: 'delete'})
             .then(function() {
                 return ocAuthNet.DeleteCreditCard(creditCard, buyerid);
             });

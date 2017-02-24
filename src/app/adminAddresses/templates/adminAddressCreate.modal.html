@@ -1,7 +1,7 @@
 <form name="adminAddressCreateModal.form" class="form-horizontal" ng-submit="adminAddressCreateModal.submit()" cg-busy="adminAddressCreateModal.loading" autocomplete="off" novalidate>
     <div class="modal-header">
         <button type="button" class="close" aria-label="Close" ng-click="adminAddressCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title">New Admin Address</h3>
+        <h4 class="modal-title">New Admin Address</h4>
     </div>
     <div class="modal-body">
         <fieldset class="form-group">
@@ -52,14 +52,14 @@
                 <input type="text" class="form-control" id="addressCity" name="City" ng-model="adminAddressCreateModal.adminAddress.City" required />
             </div>
         </fieldset>
-        <fieldset class="form-group" ng-if="adminAddressCreateModal.adminAddress.Country == 'US' || adminAddressCreateModal.adminAddress.Country == 'CA'">
+        <fieldset class="form-group" ng-if="(adminAddressCreateModal.states | filter:{country:adminAddressCreateModal.adminAddress.Country}).length">
             <label class="col-sm-3 control-label" for="addressState">State</label>
             <div class="col-sm-9">
-                <select id="addressState" name="State" class="form-control" ng-options="state.value as state.label for state in adminAddressCreateModal.states" ng-model="adminAddressCreateModal.adminAddress.State" required></select>
+                <select id="addressState" name="State" class="form-control" ng-options="state.value as state.label for state in adminAddressCreateModal.states | filter:{country:adminAddressCreateModal.adminAddress.Country}" ng-model="adminAddressCreateModal.adminAddress.State" required></select>
             </div>
         </fieldset>
-        <fieldset class="form-group" ng-if="!(adminAddressCreateModal.adminAddress.Country == 'US' || adminAddressCreateModal.adminAddress.Country == 'CA')">
-            <label class="col-sm-3 control-label" for="addressState">ID</label>
+        <fieldset class="form-group" ng-if="!(adminAddressCreateModal.states | filter:{country:adminAddressCreateModal.adminAddress.Country}).length">
+            <label class="col-sm-3 control-label" for="addressState">State</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control" id="addressState" name="State" ng-model="adminAddressCreateModal.adminAddress.State" required />
             </div>

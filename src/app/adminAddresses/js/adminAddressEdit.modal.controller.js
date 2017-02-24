@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminAddressEditModalCtrl', AdminAddressEditModalController)
 ;
 
-function AdminAddressEditModalController($uibModalInstance, $exceptionHandler, $scope, OrderCloud, ocGeography, SelectedAddress) {
+function AdminAddressEditModalController($timeout, $uibModalInstance, $exceptionHandler, $scope, OrderCloud, ocGeography, SelectedAddress) {
     var vm = this;
 
     vm.adminAddress = angular.copy(SelectedAddress);
@@ -13,7 +13,12 @@ function AdminAddressEditModalController($uibModalInstance, $exceptionHandler, $
     $scope.$watch(function() {
         return vm.adminAddress.Country
     }, function(n, o) {
-        if (n && n != o) vm.adminAddress.State = null;
+        if (n && n != o) {
+            vm.adminAddress.State = null;
+            $timeout(function() {
+                vm.form.State.$$element.focus();
+            }, 100);
+        }
     });
 
     vm.submit = function() {

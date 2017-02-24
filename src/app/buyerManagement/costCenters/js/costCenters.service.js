@@ -46,7 +46,10 @@ function OrderCloudCostCenters($q, $uibModal, ocConfirm, OrderCloud) {
     }
 
     function _delete(costCenter, buyerid) {
-        return ocConfirm.Confirm({message:'Are you sure you want to delete this cost center? <br> <b>This action cannot be undone.</b>', confirmText: 'Delete cost center', cancelText:'Cancel'})
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + costCenter.Name + '</b>?',
+                confirmText: 'Delete cost center',
+                type: 'delete'})
             .then(function() {
                 return OrderCloud.CostCenters.Delete(costCenter.ID, buyerid)
             })
