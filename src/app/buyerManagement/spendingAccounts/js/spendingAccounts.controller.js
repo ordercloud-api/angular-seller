@@ -22,6 +22,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
         $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.SpendingAccounts.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
+                vm.changedAssignments = [];
                 vm.list = ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);
                 vm.searchResults = vm.parameters.search.length > 0;
 
@@ -60,8 +61,9 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
     vm.loadMore = function() {
         return OrderCloud.SpendingAccounts.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
             .then(function(data) {
-                vm.list.Items = vm.list.Items.concat(data.Items);
-                vm.list.Meta = data.Meta;
+                var mappedData = ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);
+                vm.list.Items = vm.list.Items.concat(mappedData.Items);
+                vm.list.Meta = mappedData.Meta;
 
                 selectedCheck();
             });

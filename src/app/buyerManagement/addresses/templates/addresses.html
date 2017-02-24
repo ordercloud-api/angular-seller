@@ -35,9 +35,14 @@
         <div ng-if="addresses.list.Items.length">
             <div class="row">
                 <div class="col-xs-6">
-                    <button ng-if="addresses.changedAssignments.length" ng-click="addresses.updateAssignments()" class="btn btn-primary btn-xs">
-                        Update Assignments
-                    </button>
+                    <div class="btn-group" ng-if="addresses.changedAssignments.length">
+                        <button ng-click="addresses.updateAssignments()" class="btn btn-primary btn-xs">
+                            Update Assignments
+                        </button>
+                        <button class="btn btn-default btn-xs" ng-click="addresses.resetAssignments()">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="col-xs-6">
                     <p class="text-right">{{(application.$ocMedia('min-width:768px') ? addresses.list.Meta.ItemRange[0] : '1') + ' - ' +
