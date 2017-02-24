@@ -5,6 +5,7 @@ angular.module('orderCloud')
 function PromotionEditModalController($uibModalInstance, OrderCloud, SelectedPromotion, SelectedBuyerID) {
     var vm = this;
     vm.promotion = angular.copy(SelectedPromotion);
+    vm.promotionName = SelectedPromotion.Name ? SelectedPromotion.Name : SelectedPromotion.Code;
     if (vm.promotion.StartDate) vm.promotion.StartDate = new Date(vm.promotion.StartDate);
     if (vm.promotion.ExpirationDate) vm.promotion.ExpirationDate = new Date(vm.promotion.ExpirationDate);
 
