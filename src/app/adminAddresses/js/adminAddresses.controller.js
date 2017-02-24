@@ -68,7 +68,7 @@ function AdminAddressesController($state, toastr, OrderCloud, ocAdminAddresses, 
                 vm.list.Items.push(newAddress);
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
-                toastr.success(newAddress.AddressName + ' was created.', 'Success!');
+                toastr.success(newAddress.AddressName + ' was created.');
             });
     };
 
@@ -76,7 +76,7 @@ function AdminAddressesController($state, toastr, OrderCloud, ocAdminAddresses, 
         ocAdminAddresses.Edit(scope.adminAddress)
             .then(function(updatedAddress) {
                 vm.list.Items[scope.$index] = updatedAddress;
-                toastr.success(updatedAddress.AddressName + ' was updated.', 'Success!');
+                toastr.success(updatedAddress.AddressName + ' was updated.');
             });
     };
 
@@ -86,7 +86,7 @@ function AdminAddressesController($state, toastr, OrderCloud, ocAdminAddresses, 
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-                toastr.success(scope.adminAddress.AddressName + ' was deleted.', 'Success!');
+                toastr.success(scope.adminAddress.AddressName + ' was deleted.');
             })
     }
 }

@@ -1,7 +1,7 @@
 <form name="orderLineItemEditModal.form" class="form-horizontal" ng-submit="orderLineItemEditModal.submit()" novalidate autocomplete="off" oc-readonly-roles="OrderAdmin" cg-busy="orderLineItemEditModal.loading">
     <div class="modal-header">
         <button type="button" class="close" aria-label="Close" ng-click="orderLineItemEditModal.cancel()"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Edit Line Item</h4>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span> Line Item {{orderLineItemEditModal.lineItemID}}</h4>
     </div>
     <div class="modal-body">
         <fieldset class="form-group">

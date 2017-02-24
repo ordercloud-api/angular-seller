@@ -43,7 +43,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
                     }
                 });
                 vm.list.Items[shipmentIndex] = data;
-                toastr.success('Shipment was updated.', 'Success!');
+                toastr.success('Shipment was updated.');
             });
     };
 
@@ -58,7 +58,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
                 });
                 vm.list.Items.splice(shipmentIndex, 1);
                 vm.selectedShipment = null;
-                toastr.success('Shipment was deleted.', 'Success!');
+                toastr.success('Shipment was deleted.');
             });
     };
 
@@ -66,7 +66,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
         ocOrderShipmentsService.CreateItems(vm.selectedShipment, $stateParams.orderid, $stateParams.buyerid)
             .then(function(data) {
                 vm.selectedShipment.Items = data.Items;
-                toastr.success('Shipment item was created.', 'Success!');
+                toastr.success('Shipment item was created.');
             });
     };
 
@@ -78,7 +78,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
                         item.QuantityShipped = data.QuantityShipped;
                     }
                 });
-                toastr.success('Shipment item was updated.', 'Success!');
+                toastr.success('Shipment item was updated.');
             });
     };
 
@@ -92,7 +92,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
                     }
                 });
                 vm.selectedShipment.Items.splice(itemIndex, 1);
-                toastr.success('Shipment item was deleted.', 'Success!');
+                toastr.success('Shipment item was deleted.');
             });
     };
 }
@@ -146,15 +146,15 @@ function OrderShipmentsCreateController($state, $stateParams, $timeout, toastr, 
         ocOrderShipmentsService.Create(vm.shipment, vm.lineItems.Items, $stateParams.orderid, $stateParams.buyerid)
             .then(function() {
                 $state.go('^', {}, {reload:true});
-                toastr.success('Shipment was created.', 'Success!');
+                toastr.success('Shipment was created.');
             });
     };
 }
 
 function OrderShipmentsEditController($uibModalInstance, OrderCloud, OrderShipment, BuyerID) {
     var vm = this;
-    var originalShipmentID = angular.copy(OrderShipment.ID);
     vm.shipment = angular.copy(OrderShipment);
+    vm.shipmentID = OrderShipment.ID;
     if (vm.shipment.DateShipped) vm.shipment.DateShipped = new Date(vm.shipment.DateShipped);
     if (vm.shipment.DateDelivered) vm.shipment.DateDelivered = new Date(vm.shipment.DateDelivered);
 
@@ -166,10 +166,10 @@ function OrderShipmentsEditController($uibModalInstance, OrderCloud, OrderShipme
         var partial = _.pick(vm.shipment, ['ID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered']);
         if (partial.DateShipped) partial.DateShipped = new Date(partial.DateShipped);
         if (partial.DateDelivered) partial.DateDelivered = new Date(partial.DateDelivered);
-        vm.loading = OrderCloud.Shipments.Patch(originalShipmentID, vm.shipment, BuyerID)
+        vm.loading = OrderCloud.Shipments.Patch(OrderShipment.ID, vm.shipment, BuyerID)
             .then(function(data) {
                 var result = _.pick(data, ['ID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered']);
-                result.OriginalShipmentID = originalShipmentID;
+                result.OriginalShipmentID = OrderShipment.ID;
                 $uibModalInstance.close(result);
             })
             .catch(function(ex) {
@@ -273,6 +273,7 @@ function OrderShipmentsCreateItemsController($q, $uibModalInstance, $exceptionHa
 function OrderShipmentsEditItemController($uibModalInstance, OrderCloud, ShipmentItem, ShipmentID, BuyerID) {
     var vm = this;
     vm.shipmentItem = angular.copy(ShipmentItem);
+    vm.itemID = ShipmentItem.ID;
 
     vm.submit = function() {
         vm.loading = OrderCloud.Shipments.SaveItem(ShipmentID, vm.shipmentItem, BuyerID)

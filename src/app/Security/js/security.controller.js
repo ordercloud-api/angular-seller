@@ -19,7 +19,7 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
                 UserGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
             })
                 .then(function() {
-                    toastr.success(scope.profile.Name + ' was enabled.', 'Success!');
+                    toastr.success(scope.profile.Name + ' was enabled.');
                 })
                 .catch(function(ex) {
                     scope.profile.selected = false;
@@ -28,7 +28,7 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
         } else {
             OrderCloud.SecurityProfiles.DeleteAssignment(scope.profile.ID, null, $stateParams.usergroupid || $stateParams.adminusergroupid, $stateParams.buyerid)
                 .then(function() {
-                    toastr.success(scope.profile.Name + ' was disabled.', 'Success!');
+                    toastr.success(scope.profile.Name + ' was disabled.');
                 })
                 .catch(function(ex) {
                     scope.profile.selected = true;

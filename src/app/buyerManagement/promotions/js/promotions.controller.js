@@ -22,6 +22,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
         $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.Promotions.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
+                vm.changedAssignments = [];
                 vm.list = ocPromotions.Assignments.Map(CurrentAssignments, data);
                 vm.searchResults = vm.parameters.search.length > 0;
 
@@ -60,8 +61,9 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
     vm.loadMore = function() {
         return OrderCloud.Promotions.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
             .then(function(data) {
-                vm.list.Items = vm.list.Items.concat(data.Items);
-                vm.list.Meta = data.Meta;
+                var mappedData = ocPromotions.Assignments.Map(CurrentAssignments, data, $stateParams.buyerid);
+                vm.list.Items = vm.list.Items.concat(mappedData.Items);
+                vm.list.Meta = mappedData.Meta;
 
                 selectedCheck();
             });
@@ -109,7 +111,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('Promotion assignments updated.', 'Success!');
+                toastr.success('Promotion assignments updated.');
             })
     };
 
@@ -144,7 +146,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success(n.Code + ' was created.', 'Success!');
+            toastr.success(n.Code + ' was created.');
         }
     };
 
@@ -161,14 +163,14 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
 
                     changedCheck();
                 }
-                toastr.success(updatedPromotion.Code + ' was updated.', 'Success!');
+                toastr.success(updatedPromotion.Code + ' was updated.');
             })
     };
 
     vm.deletePromotion = function(scope) {
         ocPromotions.Delete(scope.promotion, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.promotion.Code + ' was deleted.', 'Success!');
+                toastr.success(scope.promotion.Code + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;

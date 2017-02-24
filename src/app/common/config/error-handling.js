@@ -8,7 +8,8 @@ angular.module('orderCloud')
             confirmpassword: 'Your passwords do not match',
             noSpecialChars: 'Only Alphanumeric characters are allowed',
             'Buyer.UnavailableID': 'This ID is already in use.',
-            'LineItem.UnavailableID': 'This ID is already in use.'
+            'LineItem.UnavailableID': 'This ID is already in use.',
+            'User.UsernameMustBeUnique': 'This username is already in use.'
         });
 
         $provide.decorator('$exceptionHandler', handler);

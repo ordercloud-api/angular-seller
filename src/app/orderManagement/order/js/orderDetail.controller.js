@@ -36,7 +36,7 @@ function OrderController($stateParams, toastr, OrderCloud, ocOrderDetailService,
                 OrderCloud.Orders.Get($stateParams.orderid, $stateParams.buyerid)
                     .then(function(orderData) {
                         vm.order = angular.extend(vm.order, _.pick(orderData, ['Subtotal', 'TaxCost', 'ShippingCost', 'Total']));
-                        toastr.success('Line item updated.', 'Success!');
+                        toastr.success('Line item updated.');
                     });
             });
     };

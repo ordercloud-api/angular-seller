@@ -32,7 +32,7 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers
     vm.deleteBuyer = function() {
         ocBuyers.Delete(vm.selectedBuyer)
             .then(function() {
-                toastr.success(vm.selectedBuyer.Name + ' was deleted.', 'Success!');
+                toastr.success(vm.selectedBuyer.Name + ' was deleted.');
                 $state.go('buyers');
             });
     };
@@ -40,7 +40,7 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers
     vm.createBuyer = function() {
         ocBuyers.Create()
             .then(function(data) {
-                toastr.success(data.Name + ' was created.', 'Success!');
+                toastr.success(data.Name + ' was created.');
                 $state.go('buyer.settings', {buyerid: data.ID});
             })
     }

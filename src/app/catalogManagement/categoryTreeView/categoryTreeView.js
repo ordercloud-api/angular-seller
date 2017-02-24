@@ -26,7 +26,7 @@ function CategoryViewTreeController(toastr, $state, $stateParams, CatalogViewMan
      vm.createCategory = function(parentid){
          CategoryModalFactory.Create(parentid, vm.catalogid)
              .then(function(newCategory) {
-                 toastr.success(newCategory.Name + ' was created!', 'Success!');
+                 toastr.success(newCategory.Name + ' was created.');
                  //TODO: replace state reload with something less resource intensive
                  $state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2}, {reload:true});
              });

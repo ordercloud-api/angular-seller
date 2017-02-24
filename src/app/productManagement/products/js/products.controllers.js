@@ -67,7 +67,7 @@ function ProductsController($state, toastr, OrderCloud, ocParameters, ocProducts
     vm.createProduct = function() {
         ocProducts.Create()
             .then(function(newProduct) {
-                toastr.success(newProduct.Name + ' was created.', 'Success!');
+                toastr.success(newProduct.Name + ' was created.');
                 $state.go('productDetail', {productid: newProduct.ID});
             })
     };
@@ -78,7 +78,7 @@ function ProductsController($state, toastr, OrderCloud, ocParameters, ocProducts
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-                toastr.success(scope.product.Name + ' was deleted.', 'Success!');
+                toastr.success(scope.product.Name + ' was deleted.');
             })
     }
 

@@ -265,7 +265,7 @@ describe('Component: CatalogManagement', function() {
             });
             it('should call toastr on success', function(){
                 scope.$digest();
-                expect(toaster.success).toHaveBeenCalledWith('Products assigned to ' + mockCategory.Name, 'Success');
+                expect(toaster.success).toHaveBeenCalledWith('Products assigned to ' + mockCategory.Name);
             });
             it('should refresh list of products and clear any selected products', function(){
                 scope.$digest();
@@ -296,7 +296,7 @@ describe('Component: CatalogManagement', function() {
             });
             it('should call toastr on success', function(){
                 scope.$digest();
-                expect(toaster.success).toHaveBeenCalledWith('User Groups assigned to ' + mockCategory.Name, 'Success');
+                expect(toaster.success).toHaveBeenCalledWith('User Groups assigned to ' + mockCategory.Name);
             });
             it('should refresh list of products and clear any selected products', function(){
                 scope.$digest();

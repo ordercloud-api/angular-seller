@@ -21,6 +21,7 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
         $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.Users.List(null, vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
+                vm.changedAssignments = [];
                 vm.list = ocUsers.Assignments.Map(CurrentAssignments, data);
                 vm.searchResults = vm.parameters.search.length > 0;
 
@@ -59,8 +60,9 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
     vm.loadMore = function() {
         return OrderCloud.Users.List(null, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
             .then(function(data) {
-                vm.list.Items = vm.list.Items.concat(data.Items);
-                vm.list.Meta = data.Meta;
+                var mappedData = ocUsers.Assignments.Map(CurrentAssignments, data);
+                vm.list.Items = vm.list.Items.concat(mappedData.Items);
+                vm.list.Meta = mappedData.Meta;
 
                 selectedCheck();
             });
@@ -108,7 +110,7 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('User assignments updated.', 'Success!');
+                toastr.success('User assignments updated.');
             })
     };
 
@@ -137,7 +139,7 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success(n.Username + ' was created.', 'Success!');
+            toastr.success(n.Username + ' was created.');
         }
     };
 
@@ -154,14 +156,14 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
 
                     changedCheck();
                 }
-                toastr.success(updatedUser.Username + ' was updated.', 'Success!');
+                toastr.success(updatedUser.Username + ' was updated.');
             })
     };
 
     vm.deleteUser = function(scope) {
         ocUsers.Delete(scope.user, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.user.Username + ' was deleted.', 'Success!');
+                toastr.success(scope.user.Username + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;

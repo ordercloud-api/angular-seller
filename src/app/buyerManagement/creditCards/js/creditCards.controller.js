@@ -22,6 +22,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
         $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
         vm.searchLoading = OrderCloud.CreditCards.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
             .then(function(data) {
+                vm.changedAssignments = [];
                 vm.list = ocCreditCards.Assignments.Map(CurrentAssignments, data);
                 vm.searchResults = vm.parameters.search.length > 0;
 
@@ -60,8 +61,9 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
     vm.loadMore = function() {
         return OrderCloud.CreditCards.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
             .then(function(data) {
-                vm.list.Items = vm.list.Items.concat(data.Items);
-                vm.list.Meta = data.Meta;
+                var mappedData = ocCreditCards.Assignments.Map(CurrentAssignments, data);
+                vm.list.Items = vm.list.Items.concat(mappedData.Items);
+                vm.list.Meta = mappedData.Meta;
 
                 selectedCheck();
             });
@@ -109,7 +111,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('Credit card assignments updated.', 'Success!');
+                toastr.success('Credit card assignments updated.');
             })
     };
 
@@ -143,7 +145,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success('Credit card was created.', 'Success!');
+            toastr.success('Credit card ending in ' + n.PartialAccountNumber + ' was created.');
         }
     };
 
@@ -160,14 +162,14 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
 
                     changedCheck();
                 }
-                toastr.success('Credit card was updated.', 'Success!');
+                toastr.success('Credit card ending in ' + updatedCreditCard.PartialAccountNumber + ' was updated.');
             });
     };
 
     vm.deleteCreditCard = function(scope) {
         ocCreditCards.Delete(scope.creditCard, $stateParams.buyerid)
             .then(function() {
-                toastr.success('Credit card was deleted.', 'Success!');
+                toastr.success('Credit card ending in ' + scope.creditCard.PartialAccountNumber + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
