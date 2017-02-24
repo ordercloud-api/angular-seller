@@ -268,6 +268,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
 function PriceScheduleEditModalController($uibModalInstance, SelectedPriceSchedule, OrderCloud) {
     var vm = this;
     vm.data = angular.copy(SelectedPriceSchedule);
+    vm.priceScheduleName = SelectedPriceSchedule.Name;
 
     vm.submit = function() {
         vm.loading = OrderCloud.PriceSchedules.Update(SelectedPriceSchedule.ID, vm.data)

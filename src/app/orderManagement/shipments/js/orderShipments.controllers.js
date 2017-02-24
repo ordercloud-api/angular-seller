@@ -153,8 +153,8 @@ function OrderShipmentsCreateController($state, $stateParams, $timeout, toastr, 
 
 function OrderShipmentsEditController($uibModalInstance, OrderCloud, OrderShipment, BuyerID) {
     var vm = this;
-    var originalShipmentID = angular.copy(OrderShipment.ID);
     vm.shipment = angular.copy(OrderShipment);
+    vm.shipmentID = OrderShipment.ID;
     if (vm.shipment.DateShipped) vm.shipment.DateShipped = new Date(vm.shipment.DateShipped);
     if (vm.shipment.DateDelivered) vm.shipment.DateDelivered = new Date(vm.shipment.DateDelivered);
 
@@ -166,10 +166,10 @@ function OrderShipmentsEditController($uibModalInstance, OrderCloud, OrderShipme
         var partial = _.pick(vm.shipment, ['ID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered']);
         if (partial.DateShipped) partial.DateShipped = new Date(partial.DateShipped);
         if (partial.DateDelivered) partial.DateDelivered = new Date(partial.DateDelivered);
-        vm.loading = OrderCloud.Shipments.Patch(originalShipmentID, vm.shipment, BuyerID)
+        vm.loading = OrderCloud.Shipments.Patch(OrderShipment.ID, vm.shipment, BuyerID)
             .then(function(data) {
                 var result = _.pick(data, ['ID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered']);
-                result.OriginalShipmentID = originalShipmentID;
+                result.OriginalShipmentID = OrderShipment.ID;
                 $uibModalInstance.close(result);
             })
             .catch(function(ex) {
@@ -273,6 +273,7 @@ function OrderShipmentsCreateItemsController($q, $uibModalInstance, $exceptionHa
 function OrderShipmentsEditItemController($uibModalInstance, OrderCloud, ShipmentItem, ShipmentID, BuyerID) {
     var vm = this;
     vm.shipmentItem = angular.copy(ShipmentItem);
+    vm.itemID = ShipmentItem.ID;
 
     vm.submit = function() {
         vm.loading = OrderCloud.Shipments.SaveItem(ShipmentID, vm.shipmentItem, BuyerID)

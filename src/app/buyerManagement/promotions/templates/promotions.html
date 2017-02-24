@@ -65,7 +65,12 @@
                         <i class="fa fa-caret-down" ng-show="promotions.parameters.sortBy == 'ID'"></i>
                         <i class="fa fa-caret-up" ng-show="promotions.parameters.sortBy == '!ID'"></i>
                     </th>
-                    <th ng-click="promotions.updateSort('Name')">
+                    <th ng-click="promotions.updateSotr('Name')">
+                        Name
+                        <i class="fa fa-caret-down" ng-show="promotions.parameters.sortBy == 'Name'"></i>
+                        <i class="fa fa-caret-up" ng-show="promotions.parameters.sortBy == '!Name'"></i>
+                    </th>
+                    <th ng-click="promotions.updateSort('Code')">
                         Code
                         <i class="fa fa-caret-down" ng-show="promotions.parameters.sortBy == 'Code'"></i>
                         <i class="fa fa-caret-up" ng-show="promotions.parameters.sortBy == '!Code'"></i>
@@ -85,6 +90,7 @@
                         <input type="checkbox" ng-model="promotion.Assigned" ng-change="promotions.selectItem(this)"/>
                     </td>
                     <td>{{promotion.ID}}</td>
+                    <td>{{promotion.Name}}</td>
                     <td><a href="" ng-click="promotions.editPromotion(this)">{{promotion.Code}}</a></td>
                     <td>{{promotion.StartDate | date}} <em ng-if="!promotion.StartDate" class="text-muted">None</em></td>
                     <td>{{promotion.ExpirationDate | date}} <em ng-if="!promotion.ExpirationDate" class="text-muted">None</em></td>
