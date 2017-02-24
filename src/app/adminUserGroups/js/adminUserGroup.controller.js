@@ -14,14 +14,14 @@ function AdminUserGroupController($state, toastr, OrderCloud, ocAdminUserGroups,
                 vm.group = updatedUserGroup;
                 vm.model = angular.copy(updatedUserGroup);
                 SelectedAdminUserGroup = angular.copy(updatedUserGroup);
-                toastr.success('User group was updated.', 'Success!')
+                toastr.success(vm.group.Name + ' was updated.');
             })
     };
 
     vm.delete = function() {
         ocAdminUserGroups.Delete(vm.group)
             .then(function() {
-                toastr.success(vm.group.Name + ' was deleted.', 'Success!');
+                toastr.success(vm.group.Name + ' was deleted.');
                 $state.go('adminUserGroups');
             })
     };

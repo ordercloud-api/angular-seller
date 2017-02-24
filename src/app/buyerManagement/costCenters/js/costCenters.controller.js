@@ -109,7 +109,7 @@ function CostCentersController($exceptionHandler, $state, $stateParams, toastr, 
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('Cost center assignments updated.', 'Success!');
+                toastr.success('Cost center assignments updated.');
             })
     };
 
@@ -143,7 +143,7 @@ function CostCentersController($exceptionHandler, $state, $stateParams, toastr, 
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success(n.Name + ' was created.', 'Success!');
+            toastr.success(n.Name + ' was created.');
         }
     };
 
@@ -160,14 +160,14 @@ function CostCentersController($exceptionHandler, $state, $stateParams, toastr, 
 
                     changedCheck();
                 }
-                toastr.success(updatedCostCenter.Name + ' was updated.', 'Success!');
+                toastr.success(updatedCostCenter.Name + ' was updated.');
             })
     };
 
     vm.deleteCostCenter = function(scope) {
         ocCostCenters.Delete(scope.costCenter, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.costCenter.Name + ' was deleted.', 'Success!');
+                toastr.success(scope.costCenter.Name + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;

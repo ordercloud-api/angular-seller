@@ -81,7 +81,7 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
                 vm.list.Items.push(newAddress);
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
-                toastr.success(newAddress.AddressName + ' was created.', 'Success!');
+                toastr.success(newAddress.AddressName + ' was created.');
             });
     };
 
@@ -99,7 +99,7 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
                     });
                     vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
                 }
-                toastr.success(updatedAddress.AddressName + ' was updated.', 'Success!');
+                toastr.success(updatedAddress.AddressName + ' was updated.');
             })
     };
 
@@ -109,7 +109,7 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-                toastr.success(scope.address.AddressName + ' was deleted.', 'Success!');
+                toastr.success(scope.address.AddressName + ' was deleted.');
                 vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
             });
     };

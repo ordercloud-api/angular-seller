@@ -33,14 +33,14 @@ angular.module('orderCloud')
      vm.editCategory = function(id){
          CategoryModalFactory.Edit(id, vm.catalogID)
              .then(function(data) {
-                 toastr.success(data.Name + ' was updated.', 'Success!');
+                 toastr.success(data.Name + ' was updated.');
                  $state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2, preSelectID:data.ID}, {reload:true});
              })
      };
      vm.deleteCategory = function(id) {
          CategoryModalFactory.Delete(id, vm.catalogID)
              .then(function() {
-                 toastr.success('Category was deleted.', 'Success!');
+                 toastr.success(id + ' was deleted.');
                  $state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2}, {reload:true});
              })
      };
@@ -133,7 +133,7 @@ angular.module('orderCloud')
          $q.all(productQueue)
              .then(function(){
                  df.resolve();
-                 toastr.success('Products assigned to ' + vm.category.Name, 'Success');
+                 toastr.success('Products assigned to ' + vm.category.Name);
              })
              .catch(function(error){
                  $exceptionHandler(error);
@@ -161,7 +161,7 @@ angular.module('orderCloud')
          $q.all(queue)
             .then(function(){
                 dfd.resolve();
-                toastr.success('User Groups assigned to ' + vm.category.Name, 'Success');
+                toastr.success('User Groups assigned to ' + vm.category.Name);
             })
             .catch(function(error){
                 $exceptionHandler(error);
@@ -183,7 +183,7 @@ angular.module('orderCloud')
          if(vm.assignmentType === 'buyer') {
              OrderCloud.Categories.SaveAssignment(assignment, vm.catalogID)
                 .then(function(){
-                    toastr.success('Buyer organization assigned to ' + vm.category.Name, 'Success');
+                    toastr.success('Buyer organization assigned to ' + vm.category.Name);
                 })
                 .catch(function(error){
                     $exceptionHandler(error);

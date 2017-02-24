@@ -14,14 +14,14 @@ function UserGroupController($state, $stateParams, toastr, OrderCloud, ocUserGro
                 vm.group = updatedUserGroup;
                 vm.model = angular.copy(updatedUserGroup);
                 SelectedUserGroup = angular.copy(updatedUserGroup);
-                toastr.success('User group was updated.', 'Success!')
+                toastr.success(vm.group.Name + ' was updated.');
             })
     };
 
     vm.delete = function() {
         ocUserGroups.Delete(vm.group, $stateParams.buyerid)
             .then(function() {
-                toastr.success(vm.group.Name + ' was deleted.', 'Success!');
+                toastr.success(vm.group.Name + ' was deleted.');
                 $state.go('userGroups');
             });
     }

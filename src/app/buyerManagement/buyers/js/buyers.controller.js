@@ -65,7 +65,7 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderClou
     vm.createBuyer = function() {
         ocBuyers.Create()
             .then(function(data) {
-                toastr.success(data.Name + ' was created.', 'Success!');
+                toastr.success(data.Name + ' was created.');
                 $state.go('buyer', {buyerid: data.ID});
             })
     };
@@ -76,7 +76,7 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderClou
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-                toastr.success(scope.buyer.Name + ' was deleted.', 'Success!');
+                toastr.success(scope.buyer.Name + ' was deleted.');
             })
             .catch(function(ex) {
                 $exceptionHandler(ex);

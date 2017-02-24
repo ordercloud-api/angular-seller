@@ -109,7 +109,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('Credit card assignments updated.', 'Success!');
+                toastr.success('Credit card assignments updated.');
             })
     };
 
@@ -143,7 +143,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success('Credit card was created.', 'Success!');
+            toastr.success('Credit card ending in ' + n.PartialAccountNumber + ' was created.');
         }
     };
 
@@ -160,14 +160,14 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
 
                     changedCheck();
                 }
-                toastr.success('Credit card was updated.', 'Success!');
+                toastr.success('Credit card ending in ' + updatedCreditCard.PartialAccountNumber + ' was updated.');
             });
     };
 
     vm.deleteCreditCard = function(scope) {
         ocCreditCards.Delete(scope.creditCard, $stateParams.buyerid)
             .then(function() {
-                toastr.success('Credit card was deleted.', 'Success!');
+                toastr.success('Credit card ending in ' + scope.creditCard.PartialAccountNumber + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
