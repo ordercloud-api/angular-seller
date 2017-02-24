@@ -3,7 +3,7 @@ angular.module('orderCloud')
     .controller('ProductSpecCreateCtrl', ProductSpecCreateController)
 ;
 
-function ProductSpecsController($rootScope, $uibModal, toastr, ocProductSpecs, ProductSpecs) {
+function ProductSpecsController($rootScope, toastr, ocProductSpecs, ProductSpecs) {
     var vm = this;
     vm.specs = angular.copy(ProductSpecs);
     vm.selectedSpec = null;
@@ -45,7 +45,7 @@ function ProductSpecsController($rootScope, $uibModal, toastr, ocProductSpecs, P
                 vm.specs.Items[_.indexOf(vm.specs.Items, vm.selectedSpec)].Spec = updatedSpec;
                 vm.specs.Items[_.indexOf(vm.specs.Items, vm.selectedSpec)].SpecID = updatedSpec.ID;
                 vm.selectedSpec.Spec = updatedSpec;
-                toastr.success(vm.selectedSpec.Spec.Name + ' was updated.', 'Success!');
+                toastr.success('Spec: ' + vm.selectedSpec.Spec.Name + ' was updated.');
             });
     }
 
@@ -59,9 +59,9 @@ function ProductSpecsController($rootScope, $uibModal, toastr, ocProductSpecs, P
                     }
                 });
                 vm.specs.Items.splice(specIndex, 1);
+                toastr.success('Spec: ' + vm.selectedSpec.Spec.Name + ' was deleted.');
                 vm.selectedSpec = null;
                 $rootScope.$broadcast('ProductManagement:SpecCountChanged', 'decrement');
-                toastr.success('Spec was deleted.', 'Success!');
             });
     }
 
@@ -84,7 +84,7 @@ function ProductSpecsController($rootScope, $uibModal, toastr, ocProductSpecs, P
                         vm.selectedSpec.Options[index].DefaultOption = specOption.DefaultOption ? false : option.DefaultOption;
                     }
                 });
-                toastr.success('Spec option ' + specOption.Value + ' was created.', 'Success!');
+                toastr.success('Spec option ' + specOption.Value + ' was created.');
             });
     }
 
@@ -99,7 +99,7 @@ function ProductSpecsController($rootScope, $uibModal, toastr, ocProductSpecs, P
                         vm.selectedSpec.Options[index].DefaultOption = specOption.DefaultOption ? false : option.DefaultOption;
                     }
                 });
-                toastr.success('Spec option ' + specOption.Value + ' was updated.', 'Success!');
+                toastr.success('Spec option ' + specOption.Value + ' was updated.');
             });
     }
 
@@ -113,8 +113,8 @@ function ProductSpecsController($rootScope, $uibModal, toastr, ocProductSpecs, P
                         specOptionIndex = index;
                     }
                 });
+                toastr.success('Spec option: ' + node.Value + ' was deleted.');
                 vm.selectedSpec.Options.splice(specOptionIndex, 1);
-                toastr.success('Spec option was deleted.', 'Success!');
             });
     }
 }
@@ -128,7 +128,7 @@ function ProductSpecCreateController($uibModalInstance, toastr, OrderCloud, Prod
                 OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: data.ID})
                     .then(function(assignment) {
                         assignment.Spec = data;
-                        toastr.success(data.Name + ' spec created', 'Success');
+                        toastr.success('Spec: ' + data.Name + ' created');
                         $uibModalInstance.close(assignment);
                     });
             });

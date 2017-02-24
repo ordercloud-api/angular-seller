@@ -141,7 +141,7 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success(n.Username + ' was created.', 'Success!');
+            toastr.success(n.Username + ' was created.');
         }
     };
 
@@ -158,14 +158,14 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
 
                     changedCheck();
                 }
-                toastr.success(updatedAdminUser.Username + ' was updated.', 'Success!');
+                toastr.success(updatedAdminUser.Username + ' was updated.');
             })
     };
 
     vm.deleteUser = function(scope) {
         ocAdminUsers.Delete(scope.user)
             .then(function() {
-                toastr.success(scope.user.Username + ' was deleted.', 'Success!');
+                toastr.success(scope.user.Username + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;

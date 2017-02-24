@@ -75,7 +75,7 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCl
         ocApprovalRules.Edit(scope.approvalRule, $stateParams.buyerid)
             .then(function(updatedApprovalRule) {
                 vm.list.Items[scope.$index] = updatedApprovalRule;
-                toastr.success(updatedApprovalRule.Name + ' was updated.', 'Success!');
+                toastr.success(updatedApprovalRule.Name + ' was updated.');
             })
     };
 
@@ -85,14 +85,14 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCl
                 vm.list.Items.push(newApprovalRule);
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
-                toastr.success(newApprovalRule.Name + ' was created.', 'Success!');
+                toastr.success(newApprovalRule.Name + ' was created.');
             })
     };
 
     vm.deleteApprovalRule = function(scope) {
         ocApprovalRules.Delete(scope.approvalRule, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.approvalRule.Name + ' was deleted.', 'Success!');
+                toastr.success(scope.approvalRule.Name + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;

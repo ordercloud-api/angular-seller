@@ -24,14 +24,14 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProdu
                 vm.inventoryEnabled = angular.copy(data.InventoryEnabled);
                 SelectedProduct = data;
                 vm.InfoForm.$setPristine();
-                toastr.success(data.Name + ' was updated', 'Success!');
+                toastr.success(data.Name + ' was updated');
             })
     }
 
     function deleteProduct(){
         ocProducts.Delete(SelectedProduct)
             .then(function() {
-                toastr.success('Product Deleted', 'Success');
+                toastr.success(SelectedProduct.Name + ' was deleted.');
                 $state.go('products', {}, {reload: true});
             });
     }

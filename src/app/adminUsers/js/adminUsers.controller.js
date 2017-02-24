@@ -68,7 +68,7 @@ function AdminUsersController($state, toastr, OrderCloud, ocAdminUsers, ocParame
                 vm.list.Items.push(newAdminUser);
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
-                toastr.success(newAdminUser.Username + ' was created.', 'Success!');
+                toastr.success(newAdminUser.Username + ' was created.');
             })
     };
 
@@ -76,7 +76,7 @@ function AdminUsersController($state, toastr, OrderCloud, ocAdminUsers, ocParame
         ocAdminUsers.Edit(scope.user)
             .then(function(updatedAdminUser) {
                 vm.list.Items[scope.$index] = updatedAdminUser;
-                toastr.success(updatedAdminUser.Username + ' was updated.', 'Success!');
+                toastr.success(updatedAdminUser.Username + ' was updated.');
             })
     };
 
@@ -86,7 +86,7 @@ function AdminUsersController($state, toastr, OrderCloud, ocAdminUsers, ocParame
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-                toastr.success(scope.user.Username + ' was deleted.', 'Success!');
+                toastr.success(scope.user.Username + ' was deleted.');
             })
     }
 }

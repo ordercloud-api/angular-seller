@@ -109,7 +109,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('Promotion assignments updated.', 'Success!');
+                toastr.success('Promotion assignments updated.');
             })
     };
 
@@ -144,7 +144,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success(n.Code + ' was created.', 'Success!');
+            toastr.success(n.Code + ' was created.');
         }
     };
 
@@ -161,14 +161,14 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
 
                     changedCheck();
                 }
-                toastr.success(updatedPromotion.Code + ' was updated.', 'Success!');
+                toastr.success(updatedPromotion.Code + ' was updated.');
             })
     };
 
     vm.deletePromotion = function(scope) {
         ocPromotions.Delete(scope.promotion, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.promotion.Code + ' was deleted.', 'Success!');
+                toastr.success(scope.promotion.Code + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;

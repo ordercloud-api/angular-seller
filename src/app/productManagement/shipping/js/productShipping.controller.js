@@ -12,7 +12,7 @@ function ProductShippingController(toastr, OrderCloud, ocRolesService) {
         vm.productUpdateLoading = OrderCloud.Products.Patch(product.ID, partial)
             .then(function() {
                 vm.ProductShippingForm.$setPristine();
-                toastr.success(product.Name + ' shipping was updated', 'Success!');
+                toastr.success(product.Name + ' shipping was updated');
             });
     }
 

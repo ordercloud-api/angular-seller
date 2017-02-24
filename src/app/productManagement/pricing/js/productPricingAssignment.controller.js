@@ -52,7 +52,7 @@ function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProduct
     function saveAssignment() {
         ocProductPricing.CreatePrice(vm.product, vm.priceSchedule, vm.selectedBuyer, vm.selectedUserGroups)
             .then(function(data) {
-                toastr.success('Price Created', 'Success');
+                toastr.success(vm.priceSchedule.ID + 'was created.');
                 $state.go('^.pricing', {pricescheduleid:data.PriceScheduleID});
             })
             .catch(function (ex) {
