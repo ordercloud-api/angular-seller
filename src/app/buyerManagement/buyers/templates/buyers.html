@@ -12,24 +12,27 @@
     </header>
 
     <!--====== SEARCH ======-->
-    <form name="BuyersSearchForm" pretty-submit>
-        <fieldset class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </span>
-                <input type="search" ng-change="buyers.search()" ng-model-options="{debounce:1000}" placeholder="Search buyers..." ng-model="buyers.parameters.search" class="form-control">
-                <span ng-if="buyers.searchResults" class="input-group-btn">
-                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="buyers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
-                </span>
-            </div>
-        </fieldset>
-    </form>
+    <div ng-if="buyers.list.Items.length || (!buyers.list.Items.length && buyers.searchResults)">
+        <form name="buyers.searchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input type="search" ng-change="buyers.search()" ng-model-options="{debounce:1000}" placeholder="Search buyers..." ng-model="buyers.parameters.search" class="form-control">
+                    <span ng-if="buyers.searchResults" class="input-group-btn">
+                        <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="buyers.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
 
     <!--====== LIST ======-->
     <div cg-busy="buyers.searchLoading">
         <div class="no-matches" ng-if="!buyers.list.Items.length">
-            <b>No matches found.</b>
+            <b ng-if="buyers.searchResults">No matches found.</b>
+            <b ng-if="!buyers.searchResults">This seller organization does not have any buyer organizations.</b>
         </div>
         <div ng-if="buyers.list.Items.length">
             <div class="row">

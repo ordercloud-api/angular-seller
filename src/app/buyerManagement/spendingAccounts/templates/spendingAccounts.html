@@ -10,23 +10,26 @@
     </div>
 </header>
 <!--====== SEARCH/FILTERS ======-->
-<form name="spendingAccounts.searchForm" pretty-submit>
-    <fieldset class="form-group">
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="fa fa-search"></i>
-            </span>
-            <input type="search" ng-change="spendingAccounts.search()" ng-model-options="{debounce:1000}" placeholder="Search spendingAccounts..." ng-model="spendingAccounts.parameters.search" class="form-control">
-            <span ng-if="spendingAccounts.searchResults" class="input-group-btn">
-                <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="spendingAccounts.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
-            </span>
-        </div>
-    </fieldset>
-</form>
+<div ng-if="spendingAccounts.list.Items.length || (!spendingAccounts.list.Items.length && spendingAccounts.searchResults)">
+    <form name="spendingAccounts.searchForm" pretty-submit>
+        <fieldset class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input type="search" ng-change="spendingAccounts.search()" ng-model-options="{debounce:1000}" placeholder="Search spendingAccounts..." ng-model="spendingAccounts.parameters.search" class="form-control">
+                <span ng-if="spendingAccounts.searchResults" class="input-group-btn">
+                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="spendingAccounts.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+                </span>
+            </div>
+        </fieldset>
+    </form>
+</div>
 
 <div cg-busy="spendingAccounts.searchLoading">
     <div class="no-matches" ng-if="!spendingAccounts.list.Items.length">
-        <b>No matches found.</b>
+        <b ng-if="spendingAccounts.searchResults">No matches found.</b>
+        <b ng-if="!spendingAccounts.searchResults">This buyer organization does not have any spending accounts.</b>
     </div>
     <div ng-if="spendingAccounts.list.Items.length">
         <div class="row">
