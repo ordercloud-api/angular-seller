@@ -2,46 +2,54 @@ angular.module('orderCloud')
 	.controller('AccountCtrl', AccountController)
 ;
 
-function AccountController($uibModal, CurrentUser){
+function AccountController($exceptionHandler, CurrentUser, ocAccount, OrderCloud, toastr){
 	var vm = this;
 	vm.profile = angular.copy(CurrentUser);
 	vm.currentUser = CurrentUser;
 
-	vm.editInfo = function(){
-		$uibModal.open({
-			animation: true,
-			templateUrl: 'account/templates/accountEdit.modal.html',
-			controller: 'AccountEditModalCtrl',
-			controllerAs: 'accountEditModal',
-			backdrop:'static',
-			size: 'md',
-			resolve: {
-				Profile: function(){
-					return vm.profile;
-				},
-				CurrentUser: function(){
-					return vm.currentUser;
-				}
-			}
-		}).result.then(function(updatedUser) {
-			vm.profile = angular.copy(updatedUser);
-			vm.currentUser = updatedUser;
-		});
+	vm.usernameChange = function() {
+		vm.settingsForm.Username.$setValidity('User.UsernameMustBeUnique', true);
 	};
 
-	vm.changePassword = function(user){
-		$uibModal.open({
-			animation: true,
-			templateUrl: 'account/templates/changePassword.modal.html',
-			controller: 'ChangePasswordModalCtrl',
-			controllerAs: 'changePasswordModal',
-			backdrop:'static',
-			size: 'md',
-			resolve: {
-				CurrentUser: function(){
-					return user;
-				}
-			}
-		});
+	vm.updateProfile = function() {
+		ocAccount.ConfirmPassword(vm.currentUser)
+			.then(function() {
+				vm.profileUpdateLoading = OrderCloud.Me.Patch(_.pick(vm.profile, ['FirstName', 'LastName', 'Email', 'Phone']))
+					.then(function(updatedUser) {
+						vm.profile = angular.copy(updatedUser);
+						vm.currentUser = updatedUser;
+						vm.profileForm.$setPristine();
+						toastr.success('Your profile information was updated.');
+					})
+			})
+	};
+
+	vm.updateUsername = function() {
+		ocAccount.ConfirmPassword(vm.currentUser)
+			.then(function() {
+				vm.profileUpdateLoading = OrderCloud.Me.Patch(_.pick(vm.profile, 'Username'))
+					.then(function(updatedUser) {
+						vm.profile = angular.copy(updatedUser);
+						vm.currentUser = updatedUser;
+						vm.settingsForm.$setPristine();
+						toastr.success('Your username was updated.');
+					})
+					.catch(function(ex) {
+						console.log(ex);
+						if (ex.status == 409) {
+							vm.settingsForm.Username.$setValidity(ex.data.Errors[0].ErrorCode, false);
+						}
+						$exceptionHandler(ex);
+					})
+			})
+	};
+
+	vm.changePassword = function(){
+		ocAccount.ChangePassword(vm.currentUser)
+			.then(function(updatedUser) {
+				vm.profile = angular.copy(updatedUser);
+				vm.currentUser = updatedUser;
+				toastr.success('Your password was successfully changed. Next time you log in you will have to use your new password.')
+			});
 	};
 }
