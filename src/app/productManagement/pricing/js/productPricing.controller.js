@@ -46,7 +46,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
             .then(function() {
                 delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
                 vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
-                toastr.success(vm.selectedPrice.PriceSchedule.Name + ' was deleted', 'Success!');
+                toastr.success(vm.selectedPrice.PriceSchedule.Name + ' was deleted');
                 vm.selectedPrice = null;
             });
     };

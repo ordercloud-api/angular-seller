@@ -75,7 +75,7 @@ function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocU
         ocUsers.Edit(scope.user, $stateParams.buyerid)
             .then(function(updatedUser) {
                 vm.list.Items[scope.$index] = updatedUser;
-                toastr.success(updatedUser.Username + ' was updated.', 'Success!');
+                toastr.success(updatedUser.Username + ' was updated.');
             })
     };
 
@@ -85,14 +85,14 @@ function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocU
                 vm.list.Items.push(newUser);
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
-                toastr.success(newUser.Username + ' was created.', 'Success!');
+                toastr.success(newUser.Username + ' was created.');
             })
     };
 
     vm.deleteUser = function(scope) {
         ocUsers.Delete(scope.user, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.user.Username + ' was deleted.', 'Success!');
+                toastr.success(scope.user.Username + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;

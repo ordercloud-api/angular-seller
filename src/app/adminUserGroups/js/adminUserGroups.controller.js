@@ -65,7 +65,7 @@ function AdminUserGroupsController($state, toastr, OrderCloud, ocAdminUserGroups
     vm.createGroup = function() {
         ocAdminUserGroups.Create()
             .then(function(newUserGroup) {
-                toastr.success(newUserGroup.Name + ' was created.', 'Success!');
+                toastr.success(newUserGroup.Name + ' was created.');
                 $state.go('adminUserGroup', {adminusergroupid:newUserGroup.ID});
             });
     };
@@ -76,7 +76,7 @@ function AdminUserGroupsController($state, toastr, OrderCloud, ocAdminUserGroups
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-                toastr.success(scope.adminUserGroup.Name + ' was deleted.', 'Success!')
+                toastr.success(scope.adminUserGroup.Name + ' was deleted.');
             })
     }
 }

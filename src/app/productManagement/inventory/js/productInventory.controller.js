@@ -14,7 +14,7 @@ function ProductInventoryController(toastr, ocProductInventory, ProductInventory
                 vm.inventory = angular.copy(inventory);
                 vm.inventoryAvailable = angular.copy(inventory.Available);
                 vm.ProductInventoryForm.$setPristine();
-                toastr.success(product.Name + ' inventory was updated', 'Success!');
+                toastr.success(product.Name + ' inventory was updated');
             });
     }
 }

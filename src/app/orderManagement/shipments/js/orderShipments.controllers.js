@@ -43,7 +43,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
                     }
                 });
                 vm.list.Items[shipmentIndex] = data;
-                toastr.success('Shipment was updated.', 'Success!');
+                toastr.success('Shipment was updated.');
             });
     };
 
@@ -58,7 +58,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
                 });
                 vm.list.Items.splice(shipmentIndex, 1);
                 vm.selectedShipment = null;
-                toastr.success('Shipment was deleted.', 'Success!');
+                toastr.success('Shipment was deleted.');
             });
     };
 
@@ -66,7 +66,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
         ocOrderShipmentsService.CreateItems(vm.selectedShipment, $stateParams.orderid, $stateParams.buyerid)
             .then(function(data) {
                 vm.selectedShipment.Items = data.Items;
-                toastr.success('Shipment item was created.', 'Success!');
+                toastr.success('Shipment item was created.');
             });
     };
 
@@ -78,7 +78,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
                         item.QuantityShipped = data.QuantityShipped;
                     }
                 });
-                toastr.success('Shipment item was updated.', 'Success!');
+                toastr.success('Shipment item was updated.');
             });
     };
 
@@ -92,7 +92,7 @@ function OrderShipmentsController($exceptionHandler, $stateParams, toastr, Order
                     }
                 });
                 vm.selectedShipment.Items.splice(itemIndex, 1);
-                toastr.success('Shipment item was deleted.', 'Success!');
+                toastr.success('Shipment item was deleted.');
             });
     };
 }
@@ -146,7 +146,7 @@ function OrderShipmentsCreateController($state, $stateParams, $timeout, toastr, 
         ocOrderShipmentsService.Create(vm.shipment, vm.lineItems.Items, $stateParams.orderid, $stateParams.buyerid)
             .then(function() {
                 $state.go('^', {}, {reload:true});
-                toastr.success('Shipment was created.', 'Success!');
+                toastr.success('Shipment was created.');
             });
     };
 }

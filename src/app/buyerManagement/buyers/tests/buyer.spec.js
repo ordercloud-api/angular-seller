@@ -181,7 +181,7 @@ describe('Component: Buyers', function() {
                 expect($state.go).toHaveBeenCalledWith('buyers', {}, {reload: true});
             }));
             it('should display success toastr upon success', function() {
-                expect(toaster.success).toHaveBeenCalledWith('Buyer Updated', 'Success');
+                expect(toaster.success).toHaveBeenCalledWith('Buyer Updated');
             })
         });
     });
@@ -215,7 +215,7 @@ describe('Component: Buyers', function() {
                 expect($state.go).toHaveBeenCalledWith('buyers', {}, {reload: true});
             }));
             it('should display toastr success upon success', function() {
-                expect(toaster.success).toHaveBeenCalledWith('Buyer Created', 'Success');
+                expect(toaster.success).toHaveBeenCalledWith('Buyer Created');
             })
         });
     });

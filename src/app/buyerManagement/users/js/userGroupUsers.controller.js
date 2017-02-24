@@ -108,7 +108,7 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('User assignments updated.', 'Success!');
+                toastr.success('User assignments updated.');
             })
     };
 
@@ -137,7 +137,7 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success(n.Username + ' was created.', 'Success!');
+            toastr.success(n.Username + ' was created.');
         }
     };
 
@@ -154,14 +154,14 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
 
                     changedCheck();
                 }
-                toastr.success(updatedUser.Username + ' was updated.', 'Success!');
+                toastr.success(updatedUser.Username + ' was updated.');
             })
     };
 
     vm.deleteUser = function(scope) {
         ocUsers.Delete(scope.user, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.user.Username + ' was deleted.', 'Success!');
+                toastr.success(scope.user.Username + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;

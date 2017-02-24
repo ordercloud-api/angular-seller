@@ -109,7 +109,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('Spending account assignments updated.', 'Success!');
+                toastr.success('Spending account assignments updated.');
             })
     };
 
@@ -143,7 +143,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success(n.Name + ' was created.', 'Success!');
+            toastr.success(n.Name + ' was created.');
         }
     };
 
@@ -160,14 +160,14 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
 
                     changedCheck();
                 }
-                toastr.success(updatedSpendingAccount.Name + ' was updated.', 'Success!');
+                toastr.success(updatedSpendingAccount.Name + ' was updated.');
             })
     };
 
     vm.deleteSpendingAccount = function(scope) {
         ocSpendingAccounts.Delete(scope.spendingAccount, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.spendingAccount.Name + ' was deleted.', 'Success!');
+                toastr.success(scope.spendingAccount.Name + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;

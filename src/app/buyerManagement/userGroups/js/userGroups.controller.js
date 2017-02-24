@@ -65,7 +65,7 @@ function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderC
     vm.createGroup = function() {
         ocUserGroups.Create($stateParams.buyerid)
             .then(function(newUserGroup) {
-                toastr.success(newUserGroup.Name + ' was created.', 'Success!');
+                toastr.success(newUserGroup.Name + ' was created.');
                 $state.go('userGroup', {usergroupid:newUserGroup.ID});
             })
     };
@@ -73,7 +73,7 @@ function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderC
     vm.deleteGroup = function(scope) {
         ocUserGroups.Delete(scope.userGroup, $stateParams.buyerid)
             .then(function() {
-                toastr.success(scope.userGroup.Name + ' was deleted.', 'Success!');
+                toastr.success(scope.userGroup.Name + ' was deleted.');
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
