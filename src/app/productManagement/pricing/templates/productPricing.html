@@ -130,7 +130,7 @@
                         <tbody>
                         <tr ng-repeat="pricebreak in productPricing.selectedPrice.PriceSchedule.PriceBreaks | orderBy: 'Quantity' track by $index">
                             <td>
-                                {{pricebreak.Quantity}}
+                                {{pricebreak.displayQuantity}}
                             </td>
                             <td>
                                 {{pricebreak.Price | currency}}

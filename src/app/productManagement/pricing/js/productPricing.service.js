@@ -2,18 +2,22 @@ angular.module('orderCloud')
     .factory('ocProductPricing', ocProductPricingService)
 ;
 
-function ocProductPricingService($q, toastr, OrderCloud, ocConfirm) {
+function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
     var service = {
         AssignmentList: _assignmentList,
         AssignmentData: _assignmentData,
         AssignmentDataDetail: _assignmentDataDetail,
         CreateAssignment: _createAssignment,
+        CreateUserGroupAssignment: _createUserGroupAssignment,
         CreatePrice: _createPrice,
+        EditPrice: _editPrice,
+        DeletePrice: _deletePrice,
         PriceBreaks: {
             Create : _createPriceBreak,
             SetMinMax: _setMinMax,
             Delete: _deletePriceBreak,
-            AddDisplayQuantity: _addDisplayQuantity
+            AddDisplayQuantity: _addDisplayQuantity,
+            DisplayQuantity: displayQuantity
         }
     };
 
@@ -64,6 +68,7 @@ function ocProductPricingService($q, toastr, OrderCloud, ocConfirm) {
                 angular.forEach(results, function(ps) {
                     angular.forEach(_.where(assignments.Items, {PriceScheduleID: ps.ID}), function(p) {
                         p.PriceSchedule = ps;
+                        displayQuantity(p.PriceSchedule);
                     });
                 });
                 groupBy();
@@ -163,38 +168,56 @@ function ocProductPricingService($q, toastr, OrderCloud, ocConfirm) {
         return deferred.promise;
     }
 
-    function _createAssignment(assignment) {
-        var deferred = $q.defer();
-
-        OrderCloud.Products.SaveAssignment(assignment)
-            .then(function(data) {
-                deferred.resolve(data);
-            })
-            .catch(function(ex) {
-                if (ex.status == 409 && ex.data.Errors[0].ErrorCode == 'IdExists') {
-                    ocConfirm.Confirm({
-                            message: 'Another price schedule is already assigned to your selected party. Would you like to replace that assignment?'
-                        })
-                        .then(function() {
-                            OrderCloud.Products.DeleteAssignment(assignment.ProductID, null, assignment.UserGroupID, assignment.BuyerID)
-                                .then(function() {
-                                    OrderCloud.Products.SaveAssignment(assignment)
-                                        .then(function(data) {
-                                            deferred.resolve(data);
-                                        });
-                                });
-                        })
-                        .catch(function() {
-                            deferred.reject();
-                        });
+    function _createAssignment(selectedPrice) {
+        return $uibModal.open({
+            templateUrl: 'productManagement/pricing/templates/priceScheduleAssignment.modal.html',
+            size: 'md',
+            controller: 'PriceScheduleCreateAssignmentCtrl',
+            controllerAs: 'priceScheduleAssignment',
+            resolve: {
+                Buyers: function() {
+                    return OrderCloud.Buyers.List(null, 1, 100);
+                },
+                SelectedPrice: function() {
+                    return selectedPrice;
+                },
+                SelectedBuyer: function() {
+                    return null;
+                },
+                BuyerUserGroups: function() {
+                    return null;
+                },
+                AssignedUserGroups: function() {
+                    return null;
                 }
-                else {
-                    toastr.error('There was an error creating your assignment. Please try again.', 'Error');
-                    deferred.reject(ex);
-                }
-            });
+            }
+        }).result;
+    }
 
-        return deferred.promise;
+    function _createUserGroupAssignment(scope, selectedPrice) {
+        return $uibModal.open({
+            templateUrl: 'productManagement/pricing/templates/priceScheduleAssignment.modal.html',
+            size: 'md',
+            controller: 'PriceScheduleCreateAssignmentCtrl',
+            controllerAs: 'priceScheduleAssignment',
+            resolve: {
+                Buyers: function() {
+                    return {Items: [scope.buyer]};
+                },
+                SelectedPrice: function() {
+                    return selectedPrice;
+                },
+                SelectedBuyer: function() {
+                    return scope.buyer;
+                },
+                BuyerUserGroups: function() {
+                    return OrderCloud.UserGroups.List(null, 1, 20, null, null, null, scope.buyer.ID);
+                },
+                AssignedUserGroups: function() {
+                    return scope.buyer.UserGroups;
+                }
+            }
+        }).result;
     }
 
     function _createPrice(product, priceSchedule, selectedBuyer, selectedUserGroups) {
@@ -241,15 +264,41 @@ function ocProductPricingService($q, toastr, OrderCloud, ocConfirm) {
         return deferred.promise;
     }
 
-    function _createPriceBreak(priceSchedule, price, quantity) {
-        var numberExist = _.findWhere(priceSchedule.PriceBreaks, {Quantity: quantity});
-        if (quantity > priceSchedule.MaxQuantity) {
-            toastr.error('Max quantity exceeded','Error');
-        } else {
-            numberExist === undefined ? priceSchedule.PriceBreaks.push({Price: price, Quantity: quantity}) : toastr.error('Quantity already exists. Please delete and re-enter quantity and price to edit', 'Error');
-        }
-        displayQuantity(priceSchedule);
-        return _setMinMax(priceSchedule);
+    function _editPrice(priceSchedule) {
+        return $uibModal.open({
+            templateUrl: 'productManagement/pricing/templates/priceScheduleEdit.modal.html',
+            controller: 'PriceScheduleEditModalCtrl',
+            controllerAs: 'priceScheduleEditModal',
+            resolve: {
+                SelectedPriceSchedule: function() {
+                    return priceSchedule;
+                }
+            }
+        }).result;
+    }
+
+    function _deletePrice(priceSchedule) {
+        return ocConfirm.Confirm({
+                message:'Are you sure you want to delete <br> <b>' + priceSchedule.Name + '</b>?',
+                confirmText: 'Delete price',
+                type: 'delete'})
+            .then(function() {
+                return OrderCloud.PriceSchedules.Delete(priceSchedule.ID);
+            });
+    }
+
+    function _createPriceBreak(priceSchedule) {
+        return $uibModal.open({
+            templateUrl: 'productManagement/pricing/templates/priceSchedulePriceBreak.modal.html',
+            size: 'md',
+            controller: 'PriceSchedulePriceBreakCtrl',
+            controllerAs: 'priceBreak',
+            resolve: {
+                PriceScheduleID: function() {
+                    return priceSchedule.ID;
+                }
+            }
+        }).result;
     }
 
     function _setMinMax(priceSchedule) {
@@ -305,7 +354,7 @@ function ocProductPricingService($q, toastr, OrderCloud, ocConfirm) {
                         priceSchedule.PriceBreaks[i].displayQuantity = itemQuantityRange[0];
                         //displays range between two quantities in the array
                     } else {
-                        priceSchedule.PriceBreaks[i].displayQuantity = itemQuantityRange[0] + '-' + itemQuantityRange[itemQuantityRange.length - 1];
+                        priceSchedule.PriceBreaks[i].displayQuantity = itemQuantityRange[0] + ' - ' + itemQuantityRange[itemQuantityRange.length - 1];
                     }
                 }
             }
