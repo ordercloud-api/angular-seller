@@ -6,6 +6,7 @@ angular.module('orderCloud')
 function ApprovalRuleEditModalController($exceptionHandler, $uibModalInstance, OrderCloud, SelectedApprovalRule, SelectedBuyerID) {
     var vm = this;
     vm.approvalRule = angular.copy(SelectedApprovalRule);
+    vm.approvalRuleName = SelectedApprovalRule.Name;
 
     vm.searchGroups = function(term) {
         return OrderCloud.UserGroups.List(term, 1, 6, null, null, null, SelectedBuyerID)
