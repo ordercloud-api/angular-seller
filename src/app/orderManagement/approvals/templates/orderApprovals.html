@@ -2,8 +2,14 @@
     <!--====== PAYMENT LIST ======-->
     <div ng-if="orderApprovals.list.Items.length">
         <div class="panel panel-default table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Pending'}).length">
-            <h4>Pending Approvals</h4>
-            <table class="table table-bordered">
+            <div class="panel-heading">Pending Approvals</div>
+            <table class="table table-bordered l-approval-pending-table">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
                 <thead>
                 <tr>
                     <th>Approving User Group</th>
@@ -23,8 +29,14 @@
             </table>
         </div>
         <div class="panel panel-default table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Approved'}).length">
-            <h4>Approved</h4>
-            <table class="table table-bordered">
+            <div class="panel-heading">Approved</div>
+            <table class="table table-bordered l-approval-approved-table">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
                 <thead>
                     <tr>
                         <th>Approving User</th>
@@ -46,8 +58,14 @@
             </table>
         </div>
         <div class="panel panel-default table-responsive" ng-if="(orderApprovals.list.Items | filter:{Status:'Declined'}).length">
-            <h4>Declined</h4>
-            <table class="table table-bordered">
+            <div class="panel-heading">Declined</div>
+            <table class="table table-bordered l-approval-declined-table">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
                 <thead>
                     <tr>
                         <th>Approving User</th>
