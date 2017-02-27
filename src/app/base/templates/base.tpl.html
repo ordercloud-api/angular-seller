@@ -22,7 +22,7 @@
 <nav class="navbar navbar-default navbar-unstacked navbar-fixed-top navmenu-on-canvas-lg navmenu-on-canvas-md" ng-if="application.$ocMedia('max-width:991px')">
     <div class="container container-smooth">
         <div class="navbar-header">
-            <a class="navbar-brand" data-toggle="offcanvas" data-target="#GlobalNav" data-canvas="body">
+            <a class="navbar-brand" ng-click="base.toggleGlobalNav()">
                 <i class="fa fa-bars"></i>
             </a>
             <a class="navbar-brand" ui-sref="home">
@@ -31,4 +31,4 @@
         </div>
     </div>
 </nav>
-<main ui-view class="container container-smooth" autoscroll="main" cg-busy="application.stateLoading('base')"></main>
+<main ui-view class="container container-smooth" cg-busy="application.stateLoading('base')"></main>

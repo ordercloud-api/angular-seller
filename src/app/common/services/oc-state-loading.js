@@ -14,6 +14,7 @@ angular.module('orderCloud')
             });
 
             $rootScope.$on('$stateChangeSuccess', function() {
+                document.body.scrollTop = document.documentElement.scrollTop = 0;
                 _end();
             });
 

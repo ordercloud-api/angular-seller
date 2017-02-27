@@ -3,13 +3,18 @@ html {
   height:100vh;
   overflow:hidden;
 }
+
 body {
-  position:absolute;
-  left:0; right:0; top:0; bottom:0;
+  height:100%;
+  overflow-x:hidden;
+  overflow-y:auto;
   padding-top:@navbar-height + @grid-gutter-width/2;
-  padding-bottom:50px;
   @media(min-width:@screen-md-min) {
     padding-left:@navmenu-width;
     padding-top:@grid-gutter-width/2;
   }
+}
+
+main {
+  padding-bottom:50px;
 }
