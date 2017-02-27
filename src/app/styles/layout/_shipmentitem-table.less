@@ -1,0 +1,40 @@
+.l-shipmentitem-table {
+  @media(max-width:@screen-xs-max) {
+    col {
+      &:nth-child(1) {
+        width:20%;
+      }
+      &:nth-child(2) {
+        width:80%;
+      }
+      &:nth-child(3) {
+        width:1%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(3) {
+        display:none;
+      }
+    }
+  }
+  @media(min-width:@screen-sm-min) and (max-width:@screen-md-max) {
+    col {
+      &:nth-child(1) {
+        width:20%;
+      }
+      &:nth-child(2) {
+        width:80%;
+      }
+      &:nth-child(3) {
+        width:1%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(3) {
+        display:none;
+      }
+    }
+  }
+}
