@@ -2,7 +2,7 @@
 // Bootswatch
 // -----------------------------------------------------
 
-@web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic";
+@web-font-path: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
 
 .web-font(@path) {
   @import url("@{path}");
@@ -215,81 +215,6 @@ input[type="checkbox"],
   &:disabled:checked:after {
     background-color: @gray-light;
     border-color: transparent;
-  }
-}
-
-.has-warning {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: @brand-warning;
-  }
-
-  .form-control,
-  .form-control:focus {
-    border: 2px solid @brand-warning;
-  }
-
-  .input-group-addon {
-    border-color: @brand-warning;
-  }
-}
-
-.has-error {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: @brand-danger;
-  }
-
-  .form-control,
-  .form-control:focus {
-    border: 2px solid @brand-danger;
-  }
-
-  .input-group-addon {
-    border-color: @brand-danger;
-  }
-}
-
-.has-success {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: @brand-success;
-  }
-
-  .form-control,
-  .form-control:focus {
-    border: 2px solid @brand-success;
-  }
-
-  .input-group-addon {
-    border-color: @brand-success;
   }
 }
 

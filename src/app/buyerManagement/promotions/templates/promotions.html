@@ -9,6 +9,11 @@
         </button>
     </div>
 </header>
+<div class="alert alert-info">
+    Promotions are unique in that they are shared by all buyer organizations.
+    Any changes made to promotions under <em>{{buyer.settings.Name}}</em> will affect the promotion details for <b>all other buyer organizations</b>.
+    Assignments are still unique to each buyer.
+</div>
 <!--====== SEARCH/FILTERS ======-->
 <div ng-if="promotions.list.Items.length || (!promotions.list.Items.length && promotions.searchResults)">
     <form name="promotions.searchForm" pretty-submit>

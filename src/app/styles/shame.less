@@ -12,13 +12,6 @@ textarea {
   resize:vertical;
 }
 
-.fa-circle {
-  color:@gray-light;
-  &.active {
-    color:@brand-success;
-  }
-}
-
 .pagination {
   margin-top:0;
 }
@@ -32,20 +25,6 @@ textarea {
   display:inline-block;
 }
 
-.table {
-  > thead > tr > th {
-    &[ng-click] {
-      color:@link-color; //show sortable th as a link
-    }
-    .checkbox {
-      margin:0;
-    }
-  }
-  > tbody > tr > td {
-    vertical-align: middle;
-  }
-}
-
 li,
 li a,
 .list-group-item {
@@ -54,4 +33,12 @@ li a,
     text-align:center;
     margin-right:3px;
   }
+}
+
+.no-matches {
+  .panel;
+  .panel-default;
+  .panel-body;
+  color:@text-muted;
+  text-align:center;
 }
