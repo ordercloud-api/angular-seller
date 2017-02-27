@@ -22,7 +22,7 @@ function CatalogManagementProductsController($state, $stateParams, toastr, Order
             .then(function(data) {
                 vm.list = data;
                 vm.searchResults = vm.parameters.search.length > 0;
-            })
+            });
     };
 
     vm.clearSearch = function() {

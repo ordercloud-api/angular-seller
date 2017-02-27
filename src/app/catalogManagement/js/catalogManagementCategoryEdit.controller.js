@@ -32,5 +32,4 @@ function EditCategoryModalController($exceptionHandler, $uibModalInstance, Order
                 $exceptionHandler(ex);
             });
     };
-
 }

@@ -20,6 +20,9 @@ function CatalogManagementAvailabilityController($state, $stateParams, toastr, O
                     toastr.success(category.Name + ' assigned to ' + buyer.Name);
                 }
                 else if (vm.assignmentType == 'none') {
+                    _.map(vm.list.Items, function(i) { i.Assigned = false });
+                    vm.changedAssignments = [];
+                    CurrentAssignments.Items = [];
                     toastr.success('Assignment' + (count > 1 ? 's' : '') + ' removed for ' + category.Name);
                 }
             });
@@ -31,12 +34,11 @@ function CatalogManagementAvailabilityController($state, $stateParams, toastr, O
 
     vm.search = function() {
         $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        //search, page, pageSize, searchOn, sortBy, filters, buyerID
         vm.searchLoading = OrderCloud.UserGroups.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, $stateParams.buyerid)
             .then(function(data) {
                 vm.list = data;
                 vm.searchResults = vm.parameters.search.length > 0;
-            })
+            });
     };
 
     vm.clearSearch = function() {
@@ -105,7 +107,6 @@ function CatalogManagementAvailabilityController($state, $stateParams, toastr, O
         selectedCheck();
     };
 
-    console.log(CurrentAssignments);
     vm.updateAssignments = function() {
         vm.searchLoading = ocCatalogManagement.Availability.UpdateAssignments(CurrentAssignments.Items, vm.changedAssignments, $stateParams.categoryid, CatalogID, $stateParams.buyerid)
             .then(function(data) {
@@ -121,6 +122,6 @@ function CatalogManagementAvailabilityController($state, $stateParams, toastr, O
                 selectedCheck();
 
                 toastr.success('Category assignments updated.');
-            })
+            });
     };
 }
