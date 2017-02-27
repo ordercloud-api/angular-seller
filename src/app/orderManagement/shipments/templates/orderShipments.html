@@ -71,28 +71,30 @@
                     </div>
                     <br>
                     <div class="panel panel-default table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered l-shipmentitem-table">
+                            <colgroup>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                            </colgroup>
                             <thead>
                             <tr>
+                                <th><span class="hidden-xs">Quantity </span>Shipped</th>
                                 <th>Product</th>
                                 <th>Line Item ID</th>
-                                <th>Quantity Shipped</th>
-                                <th></th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat-start="item in orderShipments.selectedShipment.Items" ng-if="item.OrderID == orderShipments.orderID">
+                                <td ng-click="orderShipments.editShipmentItem(item)">{{item.QuantityShipped + ' of ' + item.LineItem.Quantity}}</td>
                                 <td rowspan="{{orderShipments.selectedShipment.ShippingAddress ? 1 : 2}}">
                                     {{item.LineItem.Product.Name}} <small class="text-muted">({{item.LineItem.Product.ID}})</small>
                                 </td>
                                 <td>{{item.LineItem.ID}}</td>
-                                <td>{{item.QuantityShipped + ' of ' + item.LineItem.Quantity}}</td>
                                 <td class="actions-cell" rowspan="{{orderShipments.selectedShipment.ShippingAddress ? 1 : 2}}">
-                                    <button class="btn btn-default btn-xs btn-block" ng-click="orderShipments.editShipmentItem(item)">Edit</button>
-                                </td>
-                                <td class="actions-cell" rowspan="{{orderShipments.selectedShipment.ShippingAddress ? 1 : 2}}">
-                                    <button class="btn btn-danger btn-xs btn-block" ng-click="orderShipments.deleteShipmentItem(item)">Delete</button>
+                                    <button class="btn btn-danger btn-xs btn-block" ng-click="orderShipments.deleteShipmentItem(item)"><i class="fa fa-trash"></i> <span class="hidden-xs">Delete</span></button>
                                 </td>
                             </tr>
                             <tr ng-repeat-end ng-if="!orderShipments.selectedShipment.ShippingAddress">

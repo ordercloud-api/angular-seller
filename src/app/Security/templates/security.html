@@ -3,11 +3,14 @@
         Security Profiles
     </h3>
 </header>
-<div ng-if="security.isAdmin" class="alert alert-warning">
-    <i class="fa fa-warning pull-left" style="margin-top:12px;margin-right:15px;"></i>
-    Upon first load and after a page refresh, these assignments will <b>not reflect the actual assignments in the API</b>.
-    <br>
-    Until we have a way to list admin company level security profile assignments this issue will persist.
+<div class="row" ng-if="security.isAdmin">
+    <div class="col-md-6">
+        <div  class="alert alert-warning">
+            <b>Warning!</b> <br>
+            Upon first load and after a page refresh, these assignments will <b>not reflect the actual assignments in the API</b>.
+            Until we have a way to list admin company level security profile assignments this issue will persist.
+        </div>
+    </div>
 </div>
 <form name="security.form">
     <fieldset class="form-group">

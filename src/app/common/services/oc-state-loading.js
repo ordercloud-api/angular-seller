@@ -1,5 +1,5 @@
 angular.module('orderCloud')
-    .factory('ocStateLoading', function($rootScope, $exceptionHandler, defaultstate, $q) {
+    .factory('ocStateLoading', function($rootScope, $ocMedia, $exceptionHandler, defaultstate, $q) {
         var stateLoading = {};
         var service = {
             Init: _init,
@@ -10,9 +10,11 @@ angular.module('orderCloud')
             $rootScope.$on('$stateChangeStart', function(e, toState) {
                 var parent = toState.parent || toState.name.split('.')[0];
                 stateLoading[parent] = $q.defer();
+                if ($ocMedia('max-width:767px')) $('#GlobalNav').offcanvas('hide');
             });
 
             $rootScope.$on('$stateChangeSuccess', function() {
+                document.body.scrollTop = document.documentElement.scrollTop = 0;
                 _end();
             });
 
