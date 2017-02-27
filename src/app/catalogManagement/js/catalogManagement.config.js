@@ -57,10 +57,29 @@ function CatalogManagementConfig($stateProvider) {
             }
         })
         .state('catalogManagement.category.availability', {
-            url: '/availability',
+            url: '/availability?search&page&pageSize&searchOn&sortBy&filters',
             templateUrl: 'catalogManagement/templates/catalogManagementCategoryAvailability.html',
             controller: 'CatalogManagementAvailabilityCtrl',
-            controllerAs: 'catalogManagementAvailability'
+            controllerAs: 'catalogManagementAvailability',
+            resolve: {
+                Parameters: function($stateParams, ocParameters) {
+                    return ocParameters.Get($stateParams);
+                },
+                CurrentAssignments: function($stateParams, ocCatalogManagement, CatalogID) {
+                    return ocCatalogManagement.Availability.GetAssignments($stateParams.categoryid, $stateParams.buyerid, CatalogID);
+                },
+                UserGroupList: function($stateParams, OrderCloud, ocCatalogManagement, Parameters, CurrentAssignments) {
+                    return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 10, Parameters.searchOn, Parameters.sortBy, Parameters.filters, $stateParams.buyerid)
+                        .then(function(data) {
+                            if (CurrentAssignments.Type == 'userGroups') {
+                                return ocCatalogManagement.Availability.MapAssignments(CurrentAssignments.Items, data);
+                            }
+                            else {
+                                return data;
+                            }
+                        });
+                }
+            }
         })
     ;
 }
