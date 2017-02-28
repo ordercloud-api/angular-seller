@@ -5,24 +5,25 @@ describe('Component: CatalogManagement', function() {
         oc,
         toaster,
         mockCatalogID,
-        mockBuyerID,
-        catalogViewManagement,
-        categoryModalFactory;
+        mockCategoryID,
+        mockProduct,
+        mockBuyerID;
     beforeEach(module(function($provide){
-        $provide.value('CatalogID', 'CatalogID123');
+        $provide.value('CatalogID', 'MockCatalogID123');
+        $provide.value('Parameters', {search:null, page: null, pageSize: null, searchOn: null, sortBy: null, userID: null, userGroupID: null, level: null, buyerID: null});
     }));
     beforeEach(module('orderCloud'));
     beforeEach(module('orderCloud.sdk'));
-    beforeEach(inject(function($rootScope, $q, OrderCloud, CatalogViewManagement, toastr, CategoryModalFactory) {
+    beforeEach(inject(function($rootScope, $q, OrderCloud, toastr) {
         scope = $rootScope.$new();
         rootScope = $rootScope;
         q = $q;
         toaster = toastr;
         oc = OrderCloud;
         mockCatalogID = 'MockCatalogID123';
+        mockCategoryID = 'mockCategory123';
+        mockProduct = {ID: 'mockProduct123', Name: 'mockProduct123'};
         mockBuyerID = mockCatalogID;
-        categoryModalFactory = CategoryModalFactory;
-        catalogViewManagement = CatalogViewManagement;
     }));
     
     describe('State: catalogManagement', function() {
@@ -37,47 +38,110 @@ describe('Component: CatalogManagement', function() {
         }));
     });
 
-    describe('Controller: CategoryTreeCtrl', function() {
-        var categoryTreeCtrl;
-        beforeEach(inject(function($controller) {
-            categoryTreeCtrl = $controller('CategoryViewTreeCtrl', {
-                $scope: scope,
-                CatalogID: mockCatalogID,
-                Tree: 'mockTree',
-                CatalogViewManagement: catalogViewManagement,
-                CategoryModalFactory: categoryModalFactory
-            });
+    describe('State: catalogManagement.category', function() {
+        var state;
+        var stateParams;
+        beforeEach(inject(function($state, $stateParams) {
+            state = $state.get('catalogManagement.category');
+            stateParams = $stateParams;
+            stateParams.categoryid = mockCategoryID;
+            var categoryDefer = q.defer();
+            categoryDefer.resolve({Name:'MyCategory', ID:mockCategoryID});
+            spyOn(oc.Categories, 'Get').and.returnValue(categoryDefer.promise);
         }));
+        it('should resolve SelectedCategory', inject(function($injector, $stateParams) {
+            $stateParams.categoryid = mockCategoryID;
+            $injector.invoke(state.resolve.SelectedCategory);
+            expect(oc.Categories.Get).toHaveBeenCalledWith(stateParams.categoryid, mockCatalogID);
+        }));
+    });
+
+    describe('State: catalogManagement.category.products', function() {
+        var state;
+        var stateParams;
+        beforeEach(inject(function($state, $stateParams, ocParameters, ocCatalogManagement) {
+            state = $state.get('catalogManagement.category.products');
+            stateParams = $stateParams;
+            stateParams.categoryid = mockCategoryID;
+            spyOn(ocParameters, 'Get').and.returnValue(null);
+            var assignmentDefer = q.defer();
+            assignmentDefer.resolve({Items: [{ProductID: mockProduct.ID, CategoryID: mockCategoryID}]});
+            spyOn(ocCatalogManagement.Products, 'GetAssignments').and.returnValue(assignmentDefer.promise);
+            var productListDefer = q.defer();
+            productListDefer.resolve({Item: [mockProduct]});
+            spyOn(oc.Products, 'List').and.returnValue(productListDefer.promise);
+        }));
+        it('should resolve Parameters', inject(function($injector, ocParameters) {
+            $injector.invoke(state.resolve.Parameters);
+            expect(ocParameters.Get).toHaveBeenCalled();
+        }));
+        it('should resolve CurrentAssignments', inject(function($injector, $stateParams, ocCatalogManagement) {
+            $injector.invoke(state.resolve.CurrentAssignments);
+            expect(ocCatalogManagement.Products.GetAssignments).toHaveBeenCalledWith(stateParams.categoryid, mockCatalogID);
+        }));
+        xit('should resolve ProductList', inject(function($injector, ocCatalogManagement) {
+            $injector.invoke(state.resolve.ProductList);
+            expect(oc.Products.List).toHaveBeenCalled();
+        }));
+    });
+
+    describe('State: catalogManagement.category.availability', function() {
+        var state;
+        var stateParams;
+        beforeEach(inject(function($state, $stateParams, ocParameters, ocCatalogManagement) {
+            state = $state.get('catalogManagement.category.availability');
+            stateParams = $stateParams;
+            stateParams.categoryid = mockCategoryID;
+            stateParams.buyerid = mockBuyerID;
+            spyOn(ocParameters, 'Get').and.returnValue(null);
+            var assignmentDefer = q.defer();
+            assignmentDefer.resolve({Items: [{CategoryID: mockCategoryID, BuyerID: mockBuyerID}]});
+            spyOn(ocCatalogManagement.Availability, 'GetAssignments').and.returnValue(assignmentDefer.promise);
+            var userGroupList = q.defer();
+            userGroupList.resolve({Item: [{ID: 'mockUserGroup123', Name: 'mockUserGroup123'}]});
+            spyOn(oc.UserGroups, 'List').and.returnValue(userGroupList.promise);
+        }));
+        it('should resolve Parameters', inject(function($injector, ocParameters) {
+            $injector.invoke(state.resolve.Parameters);
+            expect(ocParameters.Get).toHaveBeenCalled();
+        }));
+        it('should resolve CurrentAssignments', inject(function($injector, $stateParams, ocCatalogManagement) {
+            $injector.invoke(state.resolve.CurrentAssignments);
+            expect(ocCatalogManagement.Availability.GetAssignments).toHaveBeenCalledWith(stateParams.categoryid, stateParams.buyerid, mockCatalogID);
+        }));
+        xit('should resolve UserGroupList', inject(function($injector, ocCatalogManagement) {
+            $injector.invoke(state.resolve.UserGroupList);
+            expect(oc.UserGroups.List).toHaveBeenCalled();
+        }));
+    });
+
+    describe('Controller: CatalogManagementCtrl', function() {
+        var catalogMangementCtrl;
+        beforeEach(inject(function($controller, $state, ocCatalogManagement) {
+            catalogMangementCtrl = $controller('CatalogManagementCtrl', {
+                $rootScope: rootScope,
+                $q: q,
+                ocCatalogManagement: ocCatalogManagement,
+                Tree: 'mockTree',
+                CatalogID: mockCatalogID
+            });
+            spyOn($state, 'go').and.callThrough();
+        }));
+
         describe('categorySelected', function() {
             beforeEach(function() {
-                spyOn(catalogViewManagement, 'SetCategoryID');
-                categoryTreeCtrl.categorySelected('categoryID');
+                catalogMangementCtrl.categorySelected(mockCategoryID);
             });
-            it('should call the SetCategoryID method on catalogViewManagement', function() {
-                expect(catalogViewManagement.SetCategoryID).toHaveBeenCalledWith('categoryID', mockCatalogID);
+            it('should set vm.selectedCategoryID to categoryID', function() {
+                expect(catalogMangementCtrl.selectedCategoryID).toEqual(mockCategoryID);
             });
-        });
-        xdescribe('createCategory', function() {
-            beforeEach(function() {
-                spyOn(categoryModalFactory, 'Create');
-                categoryTreeCtrl.createCategory('parentid');
-            });
-            //TODO: chaining .then() off of $uibModal.open().result breaks this test
-            it('should call the Create method on CategoryModalFactory', function() {
-                expect(categoryModalFactory.Create).toHaveBeenCalledWith('parentid', mockCatalogID);
-            });
-        });
-        xdescribe('editCategory', function(){
-            beforeEach(function(){
-                spyOn(categoryModalFactory, 'Edit');
-                categoryTreeCtrl.editCategory('categoryID');
-            });
-            it('should call the Edit method on CategoryModalFactory', function(){
-                expect(categoryModalFactory.Edit).toHaveBeenCalledWith('categoryID', mockCatalogID);
-            });
+            it('should call $state.go to catalogManagement.category.products with categoryID', inject(function($state) {
+                expect($state.go).toHaveBeenCalledWith('catalogManagement.category.products', {categoryid: mockCategoryID});
+            }));
         });
     });
-    xdescribe('Controller: CatalogAssignmentsCtrl', function() {
+
+    /*xdescribe('Controller: CatalogAssignmentsCtrl', function() {
         var catalogAssignmentsCtrl,
             updatedCategoryID,
             exceptionHandler,
@@ -385,5 +449,5 @@ describe('Component: CatalogManagement', function() {
                 expect(oc.Categories.ListAssignments).toHaveBeenCalled();
             });
         });
-    });
+    });*/
 });
