@@ -1,0 +1,120 @@
+<article>
+    <div>
+        <p>Assign to:
+        <form name="selectAssignmentType" novalidate>
+            <div class="form-group">
+                <div class="radio">
+                    <label>
+                        <input type="radio" ng-model="catalogManagementAvailability.assignmentType" ng-change="catalogManagementAvailability.toggleAssignmentType(catalogManagementCategory.category, buyer.selectedBuyer)" value="none">
+                        Not Assigned
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" ng-model="catalogManagementAvailability.assignmentType" ng-change="catalogManagementAvailability.toggleAssignmentType(catalogManagementCategory.category, buyer.selectedBuyer)" value="buyer">
+                        Buyer Organization
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" ng-model="catalogManagementAvailability.assignmentType" ng-change="catalogManagementAvailability.toggleAssignmentType(catalogManagementCategory.category, buyer.selectedBuyer)" value="userGroups"> User Groups
+                    </label>
+                </div>
+            </div>
+        </form>
+        <hr ng-if="catalogManagementAvailability.assignmentType === 'userGroups'">
+    </div>
+    <div ng-if="catalogManagementAvailability.assignmentType === 'userGroups'">
+        <!--====== SEARCH/FILTERS ======-->
+        <div ng-if="catalogManagementAvailability.list.Items.length || (!catalogManagementAvailability.list.Items.length && catalogManagementAvailability.searchResults)">
+            <form name="catalogManagementAvailability.searchForm" pretty-submit>
+                <fieldset class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                        <input type="search" ng-change="catalogManagementAvailability.search()" ng-model-options="{debounce:1000}" placeholder="Search User Groups..." ng-model="catalogManagementAvailability.parameters.search" class="form-control">
+                        <span ng-if="catalogManagementAvailability.searchResults" class="input-group-btn">
+                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="catalogManagementAvailability.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+                        </span>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <!--====== LIST ======-->
+        <div cg-busy="catalogManagementAvailability.searchLoading">
+            <div class="no-matches" ng-if="!catalogManagementAvailability.list.Items.length">
+                <b ng-if="catalogManagementAvailability.searchResults">No matches found.</b>
+                <b ng-if="!catalogManagementAvailability.searchResults">This seller organization does not have any User Groups.</b>
+            </div>
+            <div ng-if="catalogManagementAvailability.list.Items.length">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="btn-group" ng-if="catalogManagementAvailability.changedAssignments.length">
+                            <button class="btn btn-primary btn-xs" ng-click="catalogManagementAvailability.updateAssignments()">
+                                Update Assignments
+                            </button>
+                            <button class="btn btn-default btn-xs" ng-click="catalogManagementAvailability.resetAssignments()">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <p class="text-right">{{(application.$ocMedia('min-width:768px') ? catalogManagementAvailability.list.Meta.ItemRange[0] : '1') + ' - ' +
+                            catalogManagementAvailability.list.Meta.ItemRange[1] + ' of ' + catalogManagementAvailability.list.Meta.TotalCount + ' results'}}</p>
+                    </div>
+                </div>
+
+                <div class="panel panel-default table-responsive">
+                    <table class="table table-striped table-bordered l-catalog-availability-table" oc-readonly-roles="CategoryAdmin">
+                        <colgroup>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="text-center" ng-click="application.userIsAuthorized(['CategoryAdmin']) ? catalogManagementAvailability.selectAllItems() : angular.noop()">
+                                Assign
+                            </th>
+                            <th ng-click="catalogManagementAvailability.updateSort('ID')">
+                                ID
+                                <i class="fa fa-caret-down" ng-show="catalogManagementAvailability.parameters.sortBy == 'ID'"></i>
+                                <i class="fa fa-caret-up" ng-show="catalogManagementAvailability.parameters.sortBy == '!ID'"></i>
+                            </th>
+                            <th ng-click="catalogManagementAvailability.updateSort('Name')">
+                                Name
+                                <i class="fa fa-caret-down" ng-show="catalogManagementAvailability.parameters.sortBy == 'Name'"></i>
+                                <i class="fa fa-caret-up" ng-show="catalogManagementAvailability.parameters.sortBy == '!Name'"></i>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="userGroup in catalogManagementAvailability.list.Items">
+                            <td class="text-center">
+                                <input type="checkbox" ng-model="userGroup.Assigned" ng-change="catalogManagementAvailability.selectItem(this)" />
+                            </td>
+                            <td>{{userGroup.ID}}</td>
+                            <td><a href="" ui-sref="userGroup({usergroupid:userGroup.ID})">{{userGroup.Name}}</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ul uib-pagination
+                    class="pagination-sm pull-right hidden-xs"
+                    ng-if="catalogManagementAvailability.list.Meta.TotalPages > 1"
+                    total-items="catalogManagementAvailability.list.Meta.TotalCount"
+                    items-per-page="catalogManagementAvailability.list.Meta.PageSize"
+                    max-size="5"
+                    boundary-links="catalogManagementAvailability.list.Meta.TotalPages > 5"
+                    ng-model="catalogManagementAvailability.list.Meta.Page"
+                    ng-change="catalogManagementAvailability.pageChanged()">
+                </ul>
+                <button type="button"
+                        class="btn btn-default btn-block btn-lg visible-xs"
+                        ng-show="catalogManagementAvailability.list.Meta.Page < catalogManagementAvailability.list.Meta.TotalPages"
+                        ng-click="catalogManagementAvailability.loadMore()">Load More</button>
+            </div>
+        </div>
+    </div>
+</article>

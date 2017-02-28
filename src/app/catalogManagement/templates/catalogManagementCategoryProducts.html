@@ -1,0 +1,100 @@
+<article>
+    <!--====== SEARCH/FILTERS ======-->
+    <div ng-if="catalogManagementProducts.list.Items.length || (!catalogManagementProducts.list.Items.length && catalogManagementProducts.searchResults)">
+        <form name="catalogManagementProducts.searchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    <input type="search" ng-change="catalogManagementProducts.search()" ng-model-options="{debounce:1000}" placeholder="Search Products..." ng-model="catalogManagementProducts.parameters.search" class="form-control">
+                        <span ng-if="catalogManagementProducts.searchResults" class="input-group-btn">
+                            <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="catalogManagementProducts.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+                        </span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <!--====== LIST ======-->
+    <div cg-busy="catalogManagementProducts.searchLoading">
+        <div class="no-matches" ng-if="!catalogManagementProducts.list.Items.length">
+            <b ng-if="catalogManagementProducts.searchResults">No matches found.</b>
+            <b ng-if="!catalogManagementProducts.searchResults">This seller organization does not have any Products.</b>
+        </div>
+        <div ng-if="catalogManagementProducts.list.Items.length">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="btn-group" ng-if="catalogManagementProducts.changedAssignments.length">
+                        <button class="btn btn-primary btn-xs" ng-click="catalogManagementProducts.updateAssignments()">
+                            Update Assignments
+                        </button>
+                        <button class="btn btn-default btn-xs" ng-click="catalogManagementProducts.resetAssignments()">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <p class="text-right">{{(application.$ocMedia('min-width:768px') ? catalogManagementProducts.list.Meta.ItemRange[0] : '1') + ' - ' +
+                        catalogManagementProducts.list.Meta.ItemRange[1] + ' of ' + catalogManagementProducts.list.Meta.TotalCount + ' results'}}</p>
+                </div>
+            </div>
+
+            <div class="panel panel-default table-responsive">
+                <table class="table table-striped table-bordered l-catalog-products-table" oc-readonly-roles="CategoryAdmin">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th class="text-center" ng-click="application.userIsAuthorized(['CategoryAdmin']) ? catalogManagementProducts.selectAllItems() : angular.noop()">
+                            Assign
+                        </th>
+                        <th ng-click="catalogManagementProducts.updateSort('ID')">
+                            ID
+                            <i class="fa fa-caret-down" ng-show="catalogManagementProducts.parameters.sortBy == 'ID'"></i>
+                            <i class="fa fa-caret-up" ng-show="catalogManagementProducts.parameters.sortBy == '!ID'"></i>
+                        </th>
+                        <th ng-click="catalogManagementProducts.updateSort('Name')">
+                            Name
+                            <i class="fa fa-caret-down" ng-show="catalogManagementProducts.parameters.sortBy == 'Name'"></i>
+                            <i class="fa fa-caret-up" ng-show="catalogManagementProducts.parameters.sortBy == '!Name'"></i>
+                        </th>
+                        <th>Active</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="product in catalogManagementProducts.list.Items">
+                        <td class="text-center">
+                            <input type="checkbox" ng-model="product.Assigned" ng-change="catalogManagementProducts.selectItem(this)" />
+                        </td>
+                        <td>{{product.ID}}</td>
+                        <td><a href="" ui-sref="productDetail({productid:product.ID})">{{product.Name}}</a></td>
+                        <td class="text-center">
+                            <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':product.Active}"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="catalogManagementProducts.list.Meta.TotalPages > 1"
+                total-items="catalogManagementProducts.list.Meta.TotalCount"
+                items-per-page="catalogManagementProducts.list.Meta.PageSize"
+                max-size="5"
+                boundary-links="catalogManagementProducts.list.Meta.TotalPages > 5"
+                ng-model="catalogManagementProducts.list.Meta.Page"
+                ng-change="catalogManagementProducts.pageChanged()">
+            </ul>
+            <button type="button"
+                    class="btn btn-default btn-block btn-lg visible-xs"
+                    ng-show="catalogManagementProducts.list.Meta.Page < catalogManagementProducts.list.Meta.TotalPages"
+                    ng-click="catalogManagementProducts.loadMore()">Load More</button>
+        </div>
+    </div>
+
+</article>

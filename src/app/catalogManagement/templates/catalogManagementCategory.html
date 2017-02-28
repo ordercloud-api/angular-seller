@@ -1,0 +1,20 @@
+<div>
+    <header>
+        <div class="pull-right" oc-if-roles="CategoryAdmin">
+            <button type="button" class="btn btn-default" ng-click="catalogManagementCategory.editCategory(catalogManagementCategory.category.ID)"><i class="fa fa-edit"></i> Edit</button>
+            <button type="button" class="btn btn-danger" ng-click="catalogManagementCategory.deleteCategory(catalogManagementCategory.category.ID)"><i class="fa fa-trash"></i> Delete</button>
+        </div>
+        <h3>
+            {{catalogManagementCategory.category.Name}}
+            <small>(ID: {{catalogManagementCategory.category.ID}})</small>
+        </h3>
+        <p ng-bind-html="catalogManagementCategory.category.Description || '<em class=\'text-muted\'>No description</em>'"></p>
+    </header>
+    <!-- TODO: Remove inline style -->
+    <ul class="nav nav-tabs">
+        <li role="presentation" ui-sref-active="active"><a ui-sref=".products">Products</a></li>
+        <li role="presentation" ui-sref-active="active"><a ui-sref=".availability">Availability</a></li>
+    </ul>
+    <br>
+    <ui-view></ui-view>
+</div>
