@@ -34,10 +34,13 @@ function CatalogManagementAvailabilityController($state, $stateParams, toastr, O
 
     vm.search = function() {
         $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.UserGroups.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, $stateParams.buyerid)
+        vm.searchLoading = OrderCloud.UserGroups.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, Parameters.buyerid)
             .then(function(data) {
-                vm.list = data;
+                vm.changedAssignments = [];
+                vm.list = ocCatalogManagement.Availability.MapAssignments(CurrentAssignments.Items, data);
                 vm.searchResults = vm.parameters.search.length > 0;
+
+                selectedCheck();
             });
     };
 
@@ -66,9 +69,9 @@ function CatalogManagementAvailabilityController($state, $stateParams, toastr, O
     };
 
     vm.loadMore = function() {
-        vm.searchLoading = OrderCloud.UserGroups.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        vm.searchLoading = OrderCloud.UserGroups.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
             .then(function(data) {
-                var mappedData = ocCatalogManagement.Availability.MapAssignments(CurrentAssignments, data);
+                var mappedData = ocCatalogManagement.Availability.MapAssignments(CurrentAssignments.Items, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
                 vm.list.Meta = mappedData.Meta;
 
@@ -101,7 +104,7 @@ function CatalogManagementAvailabilityController($state, $stateParams, toastr, O
     };
 
     vm.resetAssignments = function() {
-        vm.list = ocCatalogManagement.Availability.MapAssignments(CurrentAssignments, vm.list);
+        vm.list = ocCatalogManagement.Availability.MapAssignments(CurrentAssignments.Items, vm.list);
         vm.changedAssignments = [];
 
         selectedCheck();

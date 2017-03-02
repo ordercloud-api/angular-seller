@@ -68,8 +68,8 @@ function CatalogManagementConfig($stateProvider) {
                 CurrentAssignments: function($stateParams, ocCatalogManagement, CatalogID) {
                     return ocCatalogManagement.Availability.GetAssignments($stateParams.categoryid, $stateParams.buyerid, CatalogID);
                 },
-                UserGroupList: function($stateParams, OrderCloud, ocCatalogManagement, Parameters, CurrentAssignments) {
-                    return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 10, Parameters.searchOn, Parameters.sortBy, Parameters.filters, $stateParams.buyerid)
+                UserGroupList: function(OrderCloud, ocCatalogManagement, Parameters, CurrentAssignments) {
+                    return OrderCloud.UserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize || 10, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
                         .then(function(data) {
                             if (CurrentAssignments.Type == 'userGroups') {
                                 return ocCatalogManagement.Availability.MapAssignments(CurrentAssignments.Items, data);
