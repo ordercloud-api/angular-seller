@@ -14,6 +14,7 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
         DeletePrice: _deletePrice,
         PriceBreaks: {
             Create : _createPriceBreak,
+            Edit: _editPriceBreak,
             SetMinMax: _setMinMax,
             Delete: _deletePriceBreak,
             AddDisplayQuantity: _addDisplayQuantity,
@@ -289,13 +290,30 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
 
     function _createPriceBreak(priceSchedule) {
         return $uibModal.open({
-            templateUrl: 'productManagement/pricing/templates/priceSchedulePriceBreak.modal.html',
+            templateUrl: 'productManagement/pricing/templates/priceSchedulePriceBreakCreate.modal.html',
             size: 'md',
-            controller: 'PriceSchedulePriceBreakCtrl',
-            controllerAs: 'priceBreak',
+            controller: 'PriceSchedulePriceBreakCreateCtrl',
+            controllerAs: 'priceBreakCreate',
             resolve: {
                 PriceScheduleID: function() {
                     return priceSchedule.ID;
+                }
+            }
+        }).result;
+    }
+
+    function _editPriceBreak(priceSchedule, priceBreak) {
+        return $uibModal.open({
+            templateUrl: 'productManagement/pricing/templates/priceSchedulePriceBreakEdit.modal.html',
+            size: 'md',
+            controller: 'PriceSchedulePriceBreakEditCtrl',
+            controllerAs: 'priceBreakEdit',
+            resolve: {
+                PriceScheduleID: function() {
+                    return priceSchedule.ID;
+                },
+                PriceBreak: function() {
+                    return priceBreak;
                 }
             }
         }).result;

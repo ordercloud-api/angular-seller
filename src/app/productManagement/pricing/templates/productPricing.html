@@ -133,7 +133,7 @@
                                 {{pricebreak.displayQuantity}}
                             </td>
                             <td>
-                                {{pricebreak.Price | currency}}
+                                <a href="" ng-click="productPricing.editPriceBreak(this)">{{pricebreak.Price | currency}}</a>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-danger btn-block btn-xs" ng-click="productPricing.deletePriceBreak(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
