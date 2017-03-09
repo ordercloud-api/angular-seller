@@ -70,7 +70,7 @@ the compiled code be thoroughly tested before moving to production.
 When the compile is complete, the express server will fire up again and open the app @ `http://localhost:3000/`. For performance reasons
 the watch is not fired on compile like it is on build.
 
-### Deploying to GitHub Pages
+### Deploying to [GitHub Pages](https://pages.github.com/)
 Having worked in the B2B world for over 15 years we know that showing development progress is extremely important, especially
 during large projects. That is why we've provided an easy way for you to deploy your compiled code directly to a gh-pages branch
 for fast and easy demos!
