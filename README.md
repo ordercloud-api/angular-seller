@@ -32,12 +32,8 @@ If for some reason the `post-install` script fails, reattempt the bower install 
 $ bower install
 ```
 
-### Using Gulp
-Angular-based OrderCloud projects use [Gulp](http://gulpjs.com/) as a build system for both local development and compiling production
-ready code.
-
-#### Local Development
-To view your application locally while you work, run the following command:
+### Local Development
+To view your application locally while you work, run the following gulp command:
 ```sh
 $ gulp build
 ```
@@ -48,24 +44,17 @@ After the build succeeds, an express server will fire up and open the app in you
 Additionally, a watch is initiated so that [BrowserSync](https://browsersync.io/) can automatically refresh the app when
 changes to the `./src/` directory are made.
 
-#### Running Unit and E2E Tests
+### Running Unit and E2E Tests
 [Karma](https://karma-runner.github.io/1.0/index.html), [Jasmine](https://jasmine.github.io/), and [Protrator (e2e test framework for AngularJS)](http://www.protractortest.org/#/)
 are our test frameworks of choice, everything you need to run unit or E2E tests should already be installed via npm.
 
-Unit test files are recognized by adding the suffix `*.spec.js`, run unit tests with the following command:
-```sh
-$ gulp test:unit
-```
-E2E test files are recognized by adding the suffix `*.test.js`, run E2E tests with the following command:
-```sh
-$ gulp test:e2e
-```
-You can alternatively run both unit and e2e tests simply using:
-```sh
-$ gulp test
-```
+| File Extension | Task | Description |
+| --- | --- | --- |
+| `*.spec.js` | `gulp test:unit` | Runs only the unit tests |
+| `*.test.js` | `gulp test:e2e` | Runs only the E2E tests |
+| `*.spec.js or *.test.js` | `gulp test` | Runs both the unit and E2E tests |
 
-#### Compiling for Production
+### Compiling for Production
 After you've thoroughly tested your application, you can run the following command to compile your code to a production-ready
 state:
 ```sh
@@ -81,7 +70,7 @@ the compiled code be thoroughly tested before moving to production.
 When the compile is complete, the express server will fire up again and open the app @ `http://localhost:3000/`. For performance reasons
 the watch is not fired on compile like it is on build.
 
-#### Deploying to GitHub Pages
+### Deploying to GitHub Pages
 Having worked in the B2B world for over 15 years we know that showing development progress is extremely important, especially
 during large projects. That is why we've provided an easy way for you to deploy your compiled code directly to a gh-pages branch
 for fast and easy demos!
