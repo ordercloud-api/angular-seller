@@ -88,10 +88,10 @@ to be deployed on [Heroku](https://www.heroku.com/) using their [GitHub integrat
 can be easily deployed to any hosting provider.
 
 ## Contributors
-The OrderCloud team welcomes any and all open-source contributors to create a pull request for bugs, enhancements, or new features (pending review).
+The OrderCloud team welcomes any and all open-source contributors to create a pull request for bug fixes, enhancements, or new features (pending review).
 
 Prior to writing any code, be sure to [open an issue](https://github.com/ordercloud-api/angular-admin/issues) with a detailed description of
-your problem or proposed enhancement. Sometimes you may find we are already on our way to fixing the problem!
+your problem or proposed enhancement. We may already be on our way to delivering what you want!
 
 The OrderCloud team uses GitHub's standard [fork, branch, pull request workflow](https://gist.github.com/Chaser324/ce0505fbed06b947d962) and
 we expect any contributors to follow a similar workflow. Always provide a passing unit test for any fix or enhancement.
