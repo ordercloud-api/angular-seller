@@ -48,11 +48,11 @@ changes to the `./src/` directory are made.
 [Karma](https://karma-runner.github.io/1.0/index.html), [Jasmine](https://jasmine.github.io/), and [Protrator (e2e test framework for AngularJS)](http://www.protractortest.org/#/)
 are our test frameworks of choice, everything you need to run unit or E2E tests should already be installed via npm.
 
-| File Extension | Task | Description |
+| Task | File Extension | Description |
 | --- | --- | --- |
-| `*.spec.js` | `gulp test:unit` | Runs only the unit tests |
-| `*.test.js` | `gulp test:e2e` | Runs only the E2E tests |
-| `*.spec.js or *.test.js` | `gulp test` | Runs both the unit and E2E tests |
+| `gulp test:unit` | `*.spec.js` | Runs only the unit tests |
+| `gulp test:e2e` | `*.test.js` | Runs only the E2E tests |
+| `gulp test` | `*.spec.js` or `*.test.js` | Runs both the unit and E2E tests |
 
 ### Compiling for Production
 After you've thoroughly tested your application, you can run the following command to compile your code to a production-ready
