@@ -6,6 +6,10 @@
 An open-source starter application for custom OrderCloud administrative solutions built on AngularJS. Ideally solution
 implementers will fork or clone this repository to maintain their customized admin application through merges and
 pull requests after new versions are released in the base fork (this repository).
+
+- [Getting Started](#Getting-started)
+- [Contributors](#Contributors)
+
 - - - -
 
 ## Getting started
