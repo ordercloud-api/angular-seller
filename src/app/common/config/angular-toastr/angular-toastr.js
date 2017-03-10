@@ -20,7 +20,7 @@ angular.module('orderCloud')
 			},
 			toastClass: 'alert alert-dismissable',
 			closeButton:true,
-			closeHtml: '<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+			closeHtml: '<button type="button" class="close hidden-xs" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
 		});
 	})
 ;
