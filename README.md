@@ -99,8 +99,8 @@ Thank you for being a part of the [OrderCloud Community](http://community.orderc
 
 ## Further Reading
 - [Source Code Overview](src/README.md)
-- [Connecting to Your Seller Organization](src/app/README.md#appconstantsjson)
-- [Application Files](src/app/README.md)
-- [Authentication Management](src/app/login/README.md)
-- [Themes and Styles](src/app/styles/README.md)
-- [Common Resources](src/app/common/README.md)
+- [Connecting to Your Seller Organization](src/app/README.md#appconstantsjson) - _coming soon_
+- [Application Files](src/app/README.md) - _coming soon_
+- [Authentication Management](src/app/login/README.md) - _coming soon_
+- [Themes and Styles](src/app/styles/README.md) - _coming soon_
+- [Common Resources](src/app/common/README.md) - _coming soon_
