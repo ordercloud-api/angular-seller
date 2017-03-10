@@ -25,12 +25,6 @@ Install the project dependencies:
 ```sh
 $ npm install
 ```
-You should now have a few more directories in your project:
-```
-./
-  |- node_modules/
-  |- bower_components/
-```
 If for some reason the `post-install` script fails, reattempt the bower install manually:
 ```sh
 $ bower install
@@ -59,13 +53,13 @@ are our test frameworks of choice, everything you need to run unit or E2E tests 
 | `gulp test` | `*.spec.js` or `*.test.js` | Runs both the unit and E2E tests |
 
 ### Compiling for Production
-After you've thoroughly tested your application, you can run the following command to compile your code to a production-ready
+You can run the following command to compile your code to a production-ready
 state:
 ```sh
 $ gulp compile
 ```
-This will concat all similar file types into a single file, minify the code, and drop the result to a new folder `./compile/`.
-Images in the `./src/assets/` directory will be compressed for web optimization and template files will be stringified
+This will concat all similar file types into a single file, minify the code, and drop the result into a new `./compile/` folder.
+Images in the `./src/assets/` directory are compressed for web optimization and template file contents are stringified
 and added to the angular `$templateCache` for faster load times.
 
 >While we've worked hard to ensure that your app will behave the same on both build and compile, it is always recommended that
