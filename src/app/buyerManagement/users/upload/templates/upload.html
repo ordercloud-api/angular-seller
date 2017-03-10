@@ -10,10 +10,10 @@
                     <label>User File:</label>
                     <input class="ng-hide" name="upload" id="userCSV" type="file" />
                     <div class="input-group">
-                        <input type="text" class="form-control" ng-model="upload.productFileData.Name" readonly />
+                        <input type="text" class="form-control" ng-model="userUpload.userFileData.Name" readonly />
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="upload.selectProductFile()" ng-if="!upload.productFileData.Name">Select File</button>
-                            <button type="button" class="btn btn-warning" ng-click="upload.clearProductFile()" ng-if="upload.productFileData.Name">Clear</button>
+                            <button type="button" class="btn btn-default" ng-click="userUpload.selectUserFile()" ng-if="!userUpload.userFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="userUpload.clearUserFile()" ng-if="userUpload.userFileData.Name">Clear</button>
                         </span>
                     </div>
                 </div>
@@ -21,10 +21,10 @@
                     <label>User Group File:</label>
                     <input class="ng-hide" name="upload" id="userGroupCSV" type="file" />
                     <div class="input-group">
-                        <input type="text" class="form-control" ng-model="upload.attributeFileData.Name" readonly />
+                        <input type="text" class="form-control" ng-model="userUpload.userGroupFileData.Name" readonly />
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="upload.selectAttributeFile()" ng-if="!upload.attributeFileData.Name">Select File</button>
-                            <button type="button" class="btn btn-warning" ng-click="upload.clearAttributeFile()" ng-if="upload.attributeFileData.Name">Clear</button>
+                            <button type="button" class="btn btn-default" ng-click="userUpload.selectUserGroupFile()" ng-if="!userUpload.userGroupFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="userUpload.clearUserGroupFile()" ng-if="userUpload.userGroupFileData.Name">Clear</button>
                         </span>
                     </div>
                 </div>
@@ -32,10 +32,10 @@
                     <label>Location File:</label>
                     <input class="ng-hide" name="upload" id="locationCSV" type="file" />
                     <div class="input-group">
-                        <input type="text" class="form-control" ng-model="upload.categoryFileData.Name" readonly />
+                        <input type="text" class="form-control" ng-model="upload.locationFileData.Name" readonly />
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="upload.selectCategoryFile()" ng-if="!upload.categoryFileData.Name">Select File</button>
-                            <button type="button" class="btn btn-warning" ng-click="upload.clearCategoryFile()" ng-if="upload.categoryFileData.Name">Clear</button>
+                            <button type="button" class="btn btn-default" ng-click="userUpload.selectLocationFile()" ng-if="!userUpload.locationFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="userUpload.clearLocationFile()" ng-if="userUpload.locationFileData.Name">Clear</button>
                         </span>
                     </div>
                 </div>

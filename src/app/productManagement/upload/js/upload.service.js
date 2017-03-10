@@ -9,6 +9,7 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
         ReadFiles: _readFiles,
         ValidateProducts: _validateProducts,
         ValidateCategories: _validateCategories,
+        ValidateUsers: _validateUsers,
         BuildXpObj: _buildXpObj,
         Combine: _combine
     };
@@ -560,6 +561,51 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
             }
         }
         return result;
+    }
+
+    function _validateUsers(users, mapping) {
+        var result = {};
+        result.Users = [];
+        result.UserIssues = [];
+
+        _.each(users, function(user) {
+            validateSingleUser(user);
+        });
+
+        function validateSingleUser(user) {
+            var userData = {
+                ID: user[mapping.ID],
+                Username: user[mapping.Username],
+                FirstName: user[mapping.FirstName],
+                LastName: user[mapping.LastName],
+                Email: user[mapping.Email],
+                Phone: user[mapping.Phone],
+                Active: user[mapping.Active]
+            };
+
+            if (!userData.ID) {
+                result.UserIssues.push({
+                    ID: userData.ID,
+                    Username: userData.Username,
+                    Issue: 'User: ' + userData.Username + ' does not have an ID'
+                });
+            }
+            if (!isValid(userData.ID)) {
+                result.UserIssues.push({
+                    ID: userData.ID,
+                    Username: userData.Username,
+                    Issue: 'User: ' + userData.Username + ' has special characters'
+                });
+            }
+            if(!userData.Username) {
+                result.UserIssues.push({
+                    ID: userData.ID,
+                    Username: userData.Username,
+                    Issue: 'User ' + userData.ID + ' does not have a Username'
+                });
+            }
+        }
+        return result
     }
 
     function _buildXpObj(product, mapping){
