@@ -1,0 +1,129 @@
+<article ui-view>
+    <div class="page-header">
+        <h3>Upload Users</h3>
+    </div>
+    <form name="UploadForm">
+        <div class="row">
+            <div class="col-sm-6">
+                <!--PARSING CONTENT-->
+                <div class="form-group">
+                    <label>User File:</label>
+                    <input class="ng-hide" name="upload" id="userCSV" type="file" />
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="upload.productFileData.Name" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="upload.selectProductFile()" ng-if="!upload.productFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="upload.clearProductFile()" ng-if="upload.productFileData.Name">Clear</button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>User Group File:</label>
+                    <input class="ng-hide" name="upload" id="userGroupCSV" type="file" />
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="upload.attributeFileData.Name" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="upload.selectAttributeFile()" ng-if="!upload.attributeFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="upload.clearAttributeFile()" ng-if="upload.attributeFileData.Name">Clear</button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Location File:</label>
+                    <input class="ng-hide" name="upload" id="locationCSV" type="file" />
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="upload.categoryFileData.Name" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="upload.selectCategoryFile()" ng-if="!upload.categoryFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="upload.clearCategoryFile()" ng-if="upload.categoryFileData.Name">Clear</button>
+                        </span>
+                    </div>
+                </div>
+                <!--FILE STATISTICS-->
+                <!--<div class="alert alert-danger" ng-if="upload.parsedProdData.ProductIssues.length">-->
+                    <!--Please resolve product issues-->
+                <!--</div>-->
+                <!--<div class="alert alert-danger" ng-if="upload.parsedCatData.CategoryIssues.length">-->
+                    <!--Please resolve category issues-->
+                <!--</div>-->
+                <!--<div ng-if="upload.parsedProdData && upload.parsedCatData">-->
+                    <!--<div class="well">-->
+                        <!--<p><b>Product File Statistics</b></p>-->
+                        <!--<p>Products: <span class="text-success">{{upload.parsedProdData.ProductCount}}</span></p>-->
+                        <!--<p ng-click="upload.productPreview = !upload.productPreview"><i class="fa" ng-class="{'fa-caret-right': !upload.preview, 'fa-caret-down': upload.preview}"></i> Preview</p>-->
+                        <!--<pre uib-collapse="!upload.productPreview"><code>{{upload.parsedProdData.Products[0] | json}}</code></pre>-->
+                        <!--<p ng-if="upload.parsedProdData.ProductIssues.length">Product Issues:</p>-->
+                        <!--<ul ng-if="upload.parsedProdData.ProductIssues.length">-->
+                            <!--<li ng-repeat="item in upload.parsedProdData.ProductIssues">-->
+                                <!--<b>{{item.ProductID || item.ProductName}}</b><span> {{item.Issue}}</span>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                    <!--<div class="well">-->
+                        <!--<p><b>Category File Statistics</b></p>-->
+                        <!--<p>Categories: <span class="text-success">{{upload.parsedCatData.CategoryCount}}</span></p>-->
+                        <!--<p ng-click="upload.categoryPreview = !upload.categoryPreview"><i class="fa" ng-class="{'fa-caret-right': !upload.preview, 'fa-caret-down': upload.preview}"></i> Preview</p>-->
+                        <!--<pre uib-collapse="!upload.categoryPreview"><code>{{upload.parsedCatData.Categories[0] | json}}</code></pre>-->
+                        <!--<p ng-if="upload.parsedCatData.CategoryIssues.length">Product Issues:</p>-->
+                        <!--<ul ng-if="upload.parsedCatData.CategoryIssues.length">-->
+                            <!--<li ng-repeat="item in upload.parsedCatData.CategoryIssues">-->
+                                <!--<b>{{item.ProductID || item.ProductName}}</b><span> {{item.Issue}}</span>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash;UPLOAD CONTENT&ndash;&gt;-->
+                    <!--<div class="form-group" ng-if="!upload.parsedProdData.ProductIssues.length && !upload.parsedCatData.CategoryIssues.length">-->
+                        <!--<button type="button" class="btn btn-primary btn-block" ng-disabled="!upload.parsedCatData.Categories.length || !upload.parsedProdData.Products.length || upload.parsedCatData.CategoryIssues.length || upload.parsedProdData.ProductIssues.length" ng-click="upload.upload()">Upload</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="panel panel-default" ng-if="upload.started">-->
+                    <!--<div class="panel-body" style="height:100px;" ng-if="!upload.uploadProgress.length">-->
+                        <!--<div class="indicator-container">-->
+                            <!--<div class="indicator">-->
+                                <!--<div class="animation">-->
+                                    <!--<div class="dot"></div>-->
+                                    <!--<div class="dot"></div>-->
+                                    <!--<div class="dot"></div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<ul class="list-group" ng-if="upload.uploadProgress.length">-->
+                        <!--<li class="list-group-item" ng-repeat="step in upload.uploadProgress" ng-class="{'list-group-item-success':((step.SuccessCount + step.ErrorCount) == step.Total) && !step.ErrorCount && step.Message != 'Done', 'list-group-item-warning':((step.SuccessCount + step.ErrorCount) == step.Total) && step.ErrorCount && step.Message != 'Done'}">-->
+                            <!--<div class="row" ng-if="step.Message != 'Done'">-->
+                                <!--<div class="col-xs-9">-->
+                                    <!--<span ng-class="{'text-success':step.SuccessCount == step.Total, 'text-danger':(step.SuccessCount + step.ErrorCount) == step.Total && (step.SuccessCount < step.Total)}">-->
+                                        <!--{{step.Message}}-->
+                                    <!--</span>-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-3 text-right">-->
+                                    <!--<div ng-if="(step.Total && (step.SuccessCount + step.ErrorCount) < step.Total) && $last" class="text-muted"><small class="monospace">{{(step.SuccessCount + step.ErrorCount) + ' / ' + step.Total}}</small> <i class="fa fa-cog fa-lg fa-spin"></i></div>-->
+                                    <!--<div ng-if="(step.Total && step.SuccessCount == step.Total) && !$last"><i class="fa fa-check fa-lg"></i></div>-->
+                                    <!--<div ng-if="(step.Total && (step.SuccessCount + step.ErrorCount) == step.Total && (step.SuccessCount < step.Total)) && !$last">{{step.ErrorCount + (step.ErrorCount == 1 ? ' failure' : ' failures')}} <i class="fa fa-warning"></i></div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div uib-collapse="(step.SuccessCount + step.ErrorCount) == step.Total">-->
+                                <!--<br>-->
+                                <!--<uib-progress class="progress-striped active" max="step.Total">-->
+                                    <!--<uib-bar value="step.SuccessCount" type="success"></uib-bar>-->
+                                    <!--<uib-bar value="step.ErrorCount" type="danger"></uib-bar>-->
+                                <!--</uib-progress>-->
+                            <!--</div>-->
+                            <!--<h5 class="text-center text-uppercase" ng-if="step.Message == 'Done'">-->
+                                <!--Complete-->
+                                <!--<small class="text-danger" ng-if="upload.results.TotalErrorCount">-->
+                                    <!--<br>-->
+                                    <!--With {{upload.results.TotalErrorCount + upload.results.TotalErrorCount == 1 ? ' failure' : ' failures'}}-->
+                                <!--</small>-->
+                                <!--<small class="text-danger" ng-if="upload.results.SkippedCategoryAssignments.length">-->
+                                    <!--<br ng-if="!upload.results.TotalErrorCount">-->
+                                    <!--{{upload.results.TotalErrorCount ? 'and' : 'With'}} {{upload.results.SkippedCategoryAssignments.length}} skipped category assignment{{upload.results.SkippedCategoryAssignments.length == 1 ? '' : 's'}}-->
+                                <!--</small>-->
+                            <!--</h5>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </form>
+</article>
