@@ -99,4 +99,4 @@ Thank you for being a part of the [OrderCloud Community](http://community.orderc
 
 ## Further Reading
 - [`./src/` Directory](src/README.md) - Overview of directory contents and the `index.html` file
-- [`./src/app/` Directory](src/README.md) - Overview of the directory contents, `orderCloud` module, `AppCtrl`, and `app.constants.json`
+- [`./src/app/` Directory](src/app/README.md) - Overview of the directory contents, `orderCloud` module, `AppCtrl`, and `app.constants.json`
