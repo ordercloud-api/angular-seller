@@ -69,7 +69,7 @@ function UserUploadController($scope, UploadService) {
             vm.userFileData.Name = event.target.files[0].name;
             vm.userFileData.Event = event;
             vm.parsedData = null;
-            if(vm.userFileData && vm.userGroupFileData && vm.locationFileData) parsedData();
+            if(vm.userFileData.Name && vm.userGroupFileData.Name && vm.locationFileData.Name) parsedData();
         })
     }
 
@@ -78,7 +78,7 @@ function UserUploadController($scope, UploadService) {
             vm.userGroupFileData.Name = event.target.files[0].name;
             vm.userGroupFileData.Event = event;
             vm.parsedData = null;
-            if(vm.userFileData && vm.userGroupFileData && vm.locationFileData) parsedData();
+            if(vm.userFileData.Name && vm.userGroupFileData.Name && vm.locationFileData.Name) parsedData();
         })
     }
 
@@ -87,7 +87,7 @@ function UserUploadController($scope, UploadService) {
             vm.locationFileData.Name = event.target.files[0].name;
             vm.locationFileData.Event = event;
             vm.parsedData = null;
-            if(vm.userFileData && vm.userGroupFileData && vm.locationFileData) parsedData();
+            if(vm.userFileData.Name && vm.userGroupFileData.Name && vm.locationFileData.Name) parsedData();
         })
     }
 
