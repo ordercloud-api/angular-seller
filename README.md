@@ -98,5 +98,9 @@ we expect any contributors to follow a similar workflow. Always provide a passin
 Thank you for being a part of the [OrderCloud Community](http://community.ordercloud.io) and helping make our resources the best they can be!
 
 ## Further Reading
-- [`./src/` Directory](src/README.md) - Overview of directory contents and the `index.html` file
-- [`./src/app/` Directory](src/app/README.md) - Overview of the directory contents, `orderCloud` module, `AppCtrl`, and `app.constants.json`
+- [Source Code Overview](src/README.md)
+- [Connecting to Your Seller Organization](src/app/README.md#appconstantsjson)
+- [Application Files](src/app/README.md)
+- [Authentication Management](src/app/login/README.md)
+- [Themes and Styles](src/app/styles/README.md)
+- [Common Resources](src/app/common/README.md)
