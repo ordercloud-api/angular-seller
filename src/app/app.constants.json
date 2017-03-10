@@ -1,6 +1,6 @@
 {
   "appname": "Angular Admin",
-  "scope": "ProductAdmin ProductReader InventoryAdmin ProductAssignmentAdmin BuyerAdmin BuyerReader CategoryAdmin CategoryReader AddressAdmin AddressReader CostCenterAdmin CostCenterReader PromotionAdmin PromotionReader CreditCardAdmin CreditCardReader OrderAdmin OrderReader UnsubmittedOrderReader PriceScheduleAdmin PriceScheduleReader SpendingAccountAdmin SpendingAccountReader BuyerUserAdmin BuyerUserReader UserGroupAdmin UserGroupReader ApprovalRuleAdmin ApprovalRuleReader PermissionAdmin AdminUserAdmin AdminUserReader AdminUserGroupAdmin AdminUserGroupReader MessageConfigAssignmentAdmin CatalogReader CatalogAdmin MeAdmin MeXpAdmin MeAddressAdmin MeCreditCardAdmin OverrideUnitPrice OverrideShipping OverrideTax",
+  "scope": ["FullAccess"],
   "clientid": "D89E2196-CC75-4312-A4A9-67E4CC4BEDFB",
   "buyerid": "A",
   "catalogid": "SHARED",
