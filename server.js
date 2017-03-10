@@ -2,9 +2,9 @@
 var config = require('./gulp.config');
 
 var express = require('express'),
-    env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev',
+    env = process.env.NODE_ENV || 'dev',
     app = express(),
-    port = process.env.PORT || 451;
+    port = process.env.PORT || 4051;
 
 switch(env) {
     case 'production':
