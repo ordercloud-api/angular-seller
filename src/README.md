@@ -11,7 +11,7 @@ src/
 
 - [`src/app/`](app/README.md) - contains all of the application code and corresponding tests
 - [`src/assets/`](assets/README.md) - static files like fonts and images
-- [`src/index.html`](#index.html) - this is the HTML document of the single-page application
+- [`src/index.html`](#indexhtml) - this is the HTML document of the single-page application
 
 ## `index.html`
 The index file is the HTML document of the single-page application (SPA).
