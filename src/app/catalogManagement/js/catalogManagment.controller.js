@@ -52,7 +52,7 @@ function CatalogManagementController($rootScope, $state, ocCatalogManagement, Ca
         else {
             angular.forEach(array, function(category) {
                 if (category.children && category.children.length) {
-                    updateCategory(originalID, updatedCategory, catgory.children);
+                    updateTree(originalID, updatedCategory, category.children, action);
                 }
             });
         }
