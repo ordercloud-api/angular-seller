@@ -1,8 +1,6 @@
 angular.module('orderCloud')
     .factory('CategoryTreeService', CategoryTreeService)
     .config(CategoryTreeConfig)
-    .directive('categoryNode', CategoryNode)
-    .directive('categoryTree', CategoryTree)
 ;
 function CategoryTreeService($q, OrderCloud) {
     return {
@@ -124,32 +122,4 @@ function CategoryTreeConfig(treeConfig){
     treeConfig.dragThreshold = 3;
     treeConfig.defaultCollapsed = false;
     treeConfig.appendChildOnHover = true;
-}
-
-function CategoryTree() {
-    return {
-        restrict: 'E',
-        replace: true,
-        scope: {
-            tree: '='
-        },
-        template: "<ul><category-node ng-repeat='node in tree' node='node'></category-node></ul>"
-    };
-}
-
-function CategoryNode($compile) {
-    return {
-        restrict: 'E',
-        replace: true,
-        scope: {
-            node: '='
-        },
-        template: '<li><a ui-sref="base.adminCategories.edit({id:node.ID})" ng-bind-html="node.Name"></a></li>',
-        link: function(scope, element) {
-            if (angular.isArray(scope.node.children)) {
-                element.append("<category-tree tree='node.children' />");
-                $compile(element.contents())(scope);
-            }
-        }
-    };
 }
