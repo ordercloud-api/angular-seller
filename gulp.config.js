@@ -88,7 +88,8 @@ function getConstants() {
         default:
             result.authurl = 'https://auth.ordercloud.io/oauth/token';
             result.apiurl = 'https://api.ordercloud.io';
-            result.devapiurl = 'https://cups-admin.herokuapp.com/api';
+            //result.devapiurl = 'https://cups-admin.herokuapp.com/api';
+            result.devapiurl = 'http://localhost:7203/api';
             break;
     }
     if (process.env.apiurl && process.env.authurl) {

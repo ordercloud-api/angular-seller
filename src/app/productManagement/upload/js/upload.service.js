@@ -6,10 +6,13 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
     var service = {
         Parse: _parse,
         Upload: _upload,
+        UploadUsers: _uploadUsers,
         ReadFiles: _readFiles,
         ValidateProducts: _validateProducts,
         ValidateCategories: _validateCategories,
         ValidateUsers: _validateUsers,
+        ValidateUserGroups: _validateUserGroups,
+        ValidateAddress: _validateAddress,
         BuildXpObj: _buildXpObj,
         Combine: _combine
     };
@@ -19,6 +22,7 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
             .then(function(fileData) {
                 return $resource(devapiurl + '/upload/parse', {}, {parse: {method: 'POST'}}).parse({Files: fileData}).$promise
                     .then(function(data) {
+                        console.log('data', data.Data);
                         return data.Data;
                     });
             });
@@ -423,6 +427,167 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
         return deferred.promise;
     }
 
+    function _uploadUsers(buyerID, users, userGroups, addresses) {
+        var deferred = $q.defer();
+        //var successfulUsers = [];
+        var successfulUserGroups = [];
+        var successfulAddresses = [];
+
+        var results = {
+            FailedUsers: [],
+            FailedUserGroups: [],
+            FailedAddresses: [],
+            FailedUserAssignments: [],
+            FailedUserGroupAssignments: []
+        };
+
+        //var userCount = users.length;
+        var userGroupCount = userGroups.length;
+        var addressCount = addresses.length;
+        var progress = [{Message: '', Total: userGroupCount, SuccessCount: 0, ErrorCount: 0}];
+
+        //function createUsers() {
+        //    progress.push({Message: 'Upload Users', Total: userCount, SuccessCount: 0, ErrorCount: 0});
+        //    deferred.notify(progress);
+        //    var userQueue = [];
+        //    _.each(users, function(user) {
+        //        var userBody = {
+        //            ID: user.ID,
+        //            Username: user.Username,
+        //            FirstName: user.FirstName,
+        //            LastName: user.LastName,
+        //            Email: user.Email,
+        //            Phone: user.Phone,
+        //            Active: user.Active
+        //        };
+        //        userQueue.push( (function() {
+        //            var d = $q.defer();
+        //
+        //            OrderCloud.Users.Update(userBody.ID, userBody, buyerID)
+        //                .then(function() {
+        //                    progress[progress.length - 1].SuccessCount++;
+        //                    deferred.notify(progress);
+        //                    successfulUsers.push(userBody);
+        //                    d.resolve();
+        //                })
+        //                .catch(function(ex) {
+        //                    results.FailedUsers.push({UserID: userBody.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}})
+        //                    progress[progress.length - 1].ErrorCount++;
+        //                    deferred.notify(progress);
+        //                    d.resolve();
+        //                });
+        //            return d.promise;
+        //        }) ());
+        //    });
+        //
+        //    $q.all(userQueue)
+        //        .then(function() {
+        //            users = successfulUsers;
+        //            userCount = users.length;
+        //            createUserGroups();
+        //        })
+        //}
+
+        $timeout(function() {
+            createUserGroups();
+        }, 1000);
+
+        function createUserGroups() {
+            progress.push({Message: 'Upload User Groups', Total: userGroupCount, SuccessCount: 0, ErrorCount: 0});
+            deferred.notify(progress);
+            var userGroupQueue = [];
+            _.each(userGroups, function(userGroup) {
+                var userGroupBody = {
+                    ID: userGroup.ID,
+                    Name: userGroup.Name
+                };
+
+                userGroupQueue.push( (function() {
+                    var d = $q.defer();
+
+                    OrderCloud.UserGroups.Update(userGroupBody.ID, userGroup, buyerID)
+                        .then(function() {
+                            progress[progress.length - 1].SuccessCount++;
+                            deferred.notify(progress);
+                            d.resolve();
+                        })
+                        .catch(function(ex) {
+                            results.FailedUserGroups.push({UserGroupID: userGroupBody.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}})
+                            progress[progress.length - 1].ErrorCount++;
+                            deferred.notify(progress);
+                            d.resolve();
+                        });
+                    return d.promise;
+                })());
+            });
+
+            $q.all(userGroupQueue)
+                .then(function() {
+                    userGroups = successfulUserGroups;
+                    userGroupCount = userGroups.length;
+                    //saveUserAssignment(userGroups);
+                    createAddresses();
+                })
+        }
+
+        //function saveUserAssignment(groups) {
+        //    var userGroupAssignments = [];
+        //
+        //    _.each(users, function(user) {
+        //        var matchedID = _.findWhere(groups, {ID: user.ID})
+        //    })
+        //}
+
+        function createAddresses() {
+            progress.push({Message: 'Upload Addresses', Total: addressCount, SuccessCount: 0, ErrorCount: 0});
+            deferred.notify(progress);
+            var addressQueue = [];
+            _.each(addresses, function(address) {
+                var addressBody = {
+                    ID: address.ID,
+                    CompanyName: address.CompanyName,
+                    Street1: address.Street1,
+                    Street2: address.Street2,
+                    City: address.City,
+                    State: address.State,
+                    Zip: address.Zip,
+                    Country: address.Country,
+                    Phone: address.Phone,
+                    AddressName: address.AddressName
+                };
+                addressQueue.push( (function(){
+                    var d = $q.defer();
+
+                    OrderCloud.Addresses.Update(addressBody.ID, addressBody, buyerID)
+                        .then(function() {
+                            progress[progress.length -1].SuccessCount++;
+                            deferred.notify(progress);
+                            d.resolve();
+                        })
+                        .catch(function(ex) {
+                            results.FailedAddresses.push({AddressID: addressBody.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}})
+                            progress[progress.length - 1].ErrorCount++;
+                            deferred.notify(progress);
+                            d.resolve();
+                        });
+                    return d.promise;
+                })());
+            });
+
+            $q.all(addressQueue)
+                .then(function() {
+                    addresses = successfulAddresses;
+                    addressCount = addresses.length;
+                    //saveUserGroupAssignment;
+                })
+        }
+
+        //function saveUserGroupAssignment() {
+        //
+        //}
+        return deferred.promise;
+    }
+
     function _validateProducts(products, mapping) {
         var result = {};
         result.Products = [];
@@ -606,6 +771,105 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
             }
         }
         return result
+    }
+
+    function _validateUserGroups(groups, mapping) {
+        var result = {};
+        result.UserGroups = [];
+        result.UserGroupIssues = [];
+
+        _.each(groups, function(group) {
+            validateSingleGroup(group)
+        });
+
+        function validateSingleGroup(group) {
+            var userGroupData = {
+                ID: group[mapping.ID],
+                Name: group[mapping.Name]
+            };
+
+            if (!userGroupData.ID) {
+                result.UserGroupIssues.push({
+                    ID: userGroupData.ID,
+                    Issue: 'User Group: ' + userGroupData.Name + ' does not have an ID'
+                });
+            }
+            if (!isValid(userGroupData.ID)) {
+                result.UserGroupIssues.push({
+                    ID: userGroupData.ID,
+                    Issue: 'User Group: ' + userGroupData.Name + ' has an invalid ID'
+                });
+            }
+        }
+        return result;
+    }
+
+    function _validateAddress(addresses, mapping) {
+        var result = {};
+        result.Address = [];
+        result.AddressIssues = [];
+
+        _.each(addresses, function(address) {
+            validateSingleAddress(address);
+        });
+
+        function validateSingleAddress(address) {
+            var addressData = {
+                ID: address[mapping.ID],
+                CompanyName: address[mapping.CompanyName],
+                Street1: address[mapping.Street1],
+                Street2: address[mapping.Street2],
+                City: address[mapping.City],
+                State: address[mapping.State],
+                Zip: address[mapping.Zip],
+                Country: address[mapping.Country],
+                Phone: address[mapping.Phone],
+                AddressName: address[mapping.AddressName]
+            };
+
+            if (!isValid(addressData.ID)) {
+                result.AddressIssues.push({
+                    CompanyName: addressData.CompanyName,
+                    ID: addressData.ID,
+                    Issues: 'Address: ' + addressData.CompanyName + ' has an invalid ID'
+                });
+            }
+            if(!addressData.Street1) {
+                result.AddressIssues.push({
+                    CompanyName: addressData.CompanyName,
+                    ID: addressData.ID,
+                    Issues: 'Address: ' + addressData.CompanyName + ' does not have a Street'
+                })
+            }
+            if(!addressData.City) {
+                result.AddressIssues.push({
+                    CompanyName: addressData.CompanyName,
+                    ID: addressData.ID,
+                    Issues: 'Address: ' + addressData.CompanyName + ' does not have a City'
+                })
+            }
+            if(!addressData.State) {
+                result.AddressIssues.push({
+                    CompanyName: addressData.CompanyName,
+                    ID: addressData.ID,
+                    Issues: 'Address: ' + addressData.CompanyName + ' does not have a State'
+                })
+            }
+            if(!addressData.Zip) {
+                result.AddressIssues.push({
+                    CompanyName: addressData.Zip,
+                    ID: addressData.ID,
+                    Issues: 'Address: ' + addressData.Zip + ' does not have a Zip Code'
+                })
+            }
+            if(!addressData.Country) {
+                result.AddressIssues.push({
+                    CompanyName: addressData.Zip,
+                    ID: addressData.ID,
+                    Issues: 'Address: ' + addressData.Zip + ' does not have a Country'
+                })
+            }
+        }
     }
 
     function _buildXpObj(product, mapping){

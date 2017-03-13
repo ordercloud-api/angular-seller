@@ -29,13 +29,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Location File:</label>
-                    <input class="ng-hide" name="upload" id="locationCSV" type="file" />
+                    <label>Address File:</label>
+                    <input class="ng-hide" name="upload" id="addressCSV" type="file" />
                     <div class="input-group">
-                        <input type="text" class="form-control" ng-model="upload.locationFileData.Name" readonly />
+                        <input type="text" class="form-control" ng-model="upload.addressFileData.Name" readonly />
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="userUpload.selectLocationFile()" ng-if="!userUpload.locationFileData.Name">Select File</button>
-                            <button type="button" class="btn btn-warning" ng-click="userUpload.clearLocationFile()" ng-if="userUpload.locationFileData.Name">Clear</button>
+                            <button type="button" class="btn btn-default" ng-click="userUpload.selectAddressFile()" ng-if="!userUpload.addressFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="userUpload.clearAddressFile()" ng-if="userUpload.addressFileData.Name">Clear</button>
                         </span>
                     </div>
                 </div>
