@@ -5,7 +5,7 @@ angular.module('orderCloud')
 function CatalogManagementAvailabilityController($state, $stateParams, toastr, OrderCloud, ocParameters, ocCatalogManagement, Parameters, CurrentAssignments, UserGroupList, CatalogID) {
     var vm = this;
     vm.list = UserGroupList;
-    vm.assignmentType = CurrentAssignments.Type;
+    vm.assignmentType = $stateParams.assignmentTypeOverride ? 'userGroups' : CurrentAssignments.Type;
     //Set parameters
     vm.parameters = Parameters;
     //Sort by is a filter on mobile devices
@@ -14,6 +14,7 @@ function CatalogManagementAvailabilityController($state, $stateParams, toastr, O
     vm.searchResults = Parameters.search && Parameters.search.length > 0;
 
     vm.toggleAssignmentType = function(category, buyer) {
+        vm.parameters.assignmentTypeOverride = vm.assignmentType == 'userGroups';
         ocCatalogManagement.Availability.ToggleAssignment(vm.assignmentType, category, buyer, CurrentAssignments, CatalogID)
             .then(function(count) {
                 if (vm.assignmentType == 'buyer') {
@@ -33,18 +34,12 @@ function CatalogManagementAvailabilityController($state, $stateParams, toastr, O
     };
 
     vm.search = function() {
-        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.UserGroups.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, Parameters.buyerid)
-            .then(function(data) {
-                vm.changedAssignments = [];
-                vm.list = ocCatalogManagement.Availability.MapAssignments(CurrentAssignments.Items, data);
-                vm.searchResults = vm.parameters.search.length > 0;
-
-                selectedCheck();
-            });
+        vm.parameters.assignmentTypeOverride = true;
+        vm.filter(true);
     };
 
     vm.clearSearch = function() {
+        vm.parameters.assignmentTypeOverride = true;
         vm.parameters.search = null;
         vm.filter(true);
     };

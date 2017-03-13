@@ -37,13 +37,7 @@ function OrdersController($state, $ocMedia, OrderCloud, ocParameters, ocOrdersSe
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.parameters.pageSize = Parameters.pageSize || 12;
-        vm.searchLoading = ocOrdersService.List(vm.parameters)
-            .then(function(data) {
-                vm.list = data;
-                vm.searchResults = vm.parameters.search.length > 0;
-            })
+        vm.filter(true);
     };
 
     //Clear the search parameter, reload the state & reset the page

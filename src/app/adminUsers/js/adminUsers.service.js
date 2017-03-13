@@ -53,7 +53,7 @@ function OrderCloudAdminUsers($q, $uibModal, ocConfirm, OrderCloud) {
                     queue = [],
                     totalPages = angular.copy(data1.Meta.TotalPages),
                     currentPage = angular.copy(data1.Meta.Page);
-                while(currentPage <= totalPages) {
+                while(currentPage < totalPages) {
                     currentPage++;
                     queue.push(OrderCloud.AdminUserGroups.ListUserAssignments(usergroupid, null, currentPage, 100));
                 }

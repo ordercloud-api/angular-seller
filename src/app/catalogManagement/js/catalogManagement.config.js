@@ -61,6 +61,9 @@ function CatalogManagementConfig($stateProvider) {
             templateUrl: 'catalogManagement/templates/catalogManagementCategoryAvailability.html',
             controller: 'CatalogManagementAvailabilityCtrl',
             controllerAs: 'catalogManagementAvailability',
+            params: {
+                assignmentTypeOverride: undefined
+            },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);

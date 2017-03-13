@@ -2,8 +2,6 @@
   "appname": "Angular Admin",
   "scope": ["FullAccess"],
   "clientid": "D89E2196-CC75-4312-A4A9-67E4CC4BEDFB",
-  "buyerid": "A",
-  "catalogid": "SHARED",
   "environment": "prod",
   "defaultstate": "home",
   "html5mode": false,

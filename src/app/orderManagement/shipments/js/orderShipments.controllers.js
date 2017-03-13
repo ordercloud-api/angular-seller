@@ -6,7 +6,7 @@ angular.module('orderCloud')
     .controller('OrderShipmentsEditItemCtrl', OrderShipmentsEditItemController)
 ;
 
-function OrderShipmentsController($exceptionHandler, $stateParams, toastr, OrderCloud, ocConfirm, ocOrderShipmentsService, OrderShipments) {
+function OrderShipmentsController($stateParams, toastr, ocOrderShipmentsService, OrderShipments) {
     var vm = this;
     vm.list = OrderShipments;
     vm.orderID = $stateParams.orderid;
