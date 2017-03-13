@@ -2,10 +2,16 @@ angular.module('orderCloud')
     .controller('CatalogManagementCtrl', CatalogManagementController)
 ;
 
-function CatalogManagementController($rootScope, $state, ocCatalogManagement, Tree, CatalogID) {
+function CatalogManagementController($rootScope, $state, ocCatalogManagement, CategoryTreeService, Tree, CatalogID) {
     var vm = this;
     vm.tree = Tree;
     vm.catalogid = CatalogID;
+
+    vm.treeOptions = {
+        dropped: function(event) {
+            CategoryTreeService.UpdateCategoryNode(event, vm.catalogid);
+        }
+    };
 
     vm.categorySelected = function(categoryID) {
         vm.selectedCategoryID = categoryID;
