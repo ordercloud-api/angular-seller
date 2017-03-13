@@ -19,15 +19,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.Promotions.List(vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
-            .then(function(data) {
-                vm.changedAssignments = [];
-                vm.list = ocPromotions.Assignments.Map(CurrentAssignments, data);
-                vm.searchResults = vm.parameters.search.length > 0;
-
-                selectedCheck();
-            })
+        vm.filter(true);
     };
 
     //Clear the search parameter, reload the state & reset the page

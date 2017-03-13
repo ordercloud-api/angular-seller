@@ -17,10 +17,10 @@
             <fieldset class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input type="search" ng-change="adminAddresses.search()" ng-model-options="{debounce:1000}" placeholder="Search admin addresses..." ng-model="adminAddresses.parameters.search" class="form-control">
-                <span ng-if="adminAddresses.searchResults" class="input-group-btn">
-                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="adminAddresses.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
-                </span>
+                    <input type="search" name="search" autofocus="adminAddresses.searchResults" ng-change="adminAddresses.search()" ng-model-options="{debounce:1000}" placeholder="Search admin addresses..." ng-model="adminAddresses.parameters.search" class="form-control">
+                    <span ng-if="adminAddresses.searchResults" class="input-group-btn">
+                        <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="adminAddresses.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                    </span>
                 </div>
             </fieldset>
         </form>
