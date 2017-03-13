@@ -110,7 +110,7 @@ function UserUploadController($scope, UploadService, SelectedBuyer) {
                 };
                 var addressMapping = {
                     "ID": "address_id",
-                    "CompanyName": "address_name",
+                    "CompanyName": "store_location_id",
                     "Street1": "street_1",
                     "Street2": "street_2",
                     "City": "city",
