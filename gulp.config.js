@@ -104,9 +104,14 @@ function getConstants() {
     if (process.env.appname) result.appname = process.env.appname;
     if (process.env.scope) result.scope = process.env.scope;
     if (process.env.ocscope) result.ocscope = process.env.ocscope;
+
     if (process.env.buyerid) result.buyerid = process.env.buyerid;
     if (process.env.catalogid) result.catalogid = process.env.catalogid;
     if (process.env.devapiurl) result.devapiurl = process.env.devapiurl;
+
+    if (process.env.html5mode) result.html5mode = process.env.html5mode;
+    if (process.env.bootswatchtheme) result.bootswatchtheme = process.env.bootswatchtheme;
+
     return result;
 }
 

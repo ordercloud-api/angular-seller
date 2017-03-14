@@ -87,14 +87,14 @@
                         </ul>
                     </div>
                     <!--UPLOAD CONTENT-->
-                    <!--<div class="form-group" ng-if="!userUpload.parsedUserData.UserIssues.length && !userUpload.parsedUserGroupData.UserGroupIssues.length && !userUpload.parsedAddressData.AddressIssues.length">-->
-                    <div class="form-group" ng-if="!userUpload.parsedUserGroupData.UserGroupIssues.length && !userUpload.parsedAddressData.AddressIssues.length">
-                        <!--<button type="button" class="btn btn-primary btn-block"-->
-                                <!--ng-disabled="userUpload.parsedUserGroupData.UserGroupIssues.length || userUpload.parsedUserData.UserIssues.length || userUpload.parsedAddressData.AddressIssues.length"-->
-                                <!--ng-click="userUpload.upload()">Upload</button>    -->
+                    <div class="form-group" ng-if="!userUpload.parsedUserData.UserIssues.length && !userUpload.parsedUserGroupData.UserGroupIssues.length && !userUpload.parsedAddressData.AddressIssues.length">
+                    <!--<div class="form-group" ng-if="!userUpload.parsedUserGroupData.UserGroupIssues.length && !userUpload.parsedAddressData.AddressIssues.length">-->
                         <button type="button" class="btn btn-primary btn-block"
-                                ng-disabled="userUpload.parsedUserGroupData.UserGroupIssues.length || userUpload.parsedAddressData.AddressIssues.length"
+                                ng-disabled="userUpload.parsedUserGroupData.UserGroupIssues.length || userUpload.parsedUserData.UserIssues.length || userUpload.parsedAddressData.AddressIssues.length"
                                 ng-click="userUpload.upload()">Upload</button>
+                        <!--<button type="button" class="btn btn-primary btn-block"-->
+                                <!--ng-disabled="userUpload.parsedUserGroupData.UserGroupIssues.length || userUpload.parsedAddressData.AddressIssues.length"-->
+                                <!--ng-click="userUpload.upload()">Upload</button>-->
                     </div>
                 </div>
                 <div class="panel panel-default" ng-if="userUpload.started">

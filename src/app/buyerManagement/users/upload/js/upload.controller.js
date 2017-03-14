@@ -96,7 +96,7 @@ function UserUploadController($scope, UploadService, SelectedBuyer) {
         return UploadService.Parse([{UserFile: vm.userFileData.Event}, {UserGroupFile: vm.userGroupFileData.Event}, {AddressFile: vm.addressFileData.Event}])
             .then(function(parsed) {
                 var userMapping = {
-                    "ID": "",
+                    "ID": "id",
                     "Username": "username",
                     "FirstName": "firstname",
                     "LastName": "lastname",

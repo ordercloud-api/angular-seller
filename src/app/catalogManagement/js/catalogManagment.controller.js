@@ -2,10 +2,16 @@ angular.module('orderCloud')
     .controller('CatalogManagementCtrl', CatalogManagementController)
 ;
 
-function CatalogManagementController($rootScope, $state, ocCatalogManagement, Tree, CatalogID) {
+function CatalogManagementController($rootScope, $state, ocCatalogManagement, CategoryTreeService, Tree, CatalogID) {
     var vm = this;
     vm.tree = Tree;
     vm.catalogid = CatalogID;
+
+    vm.treeOptions = {
+        dropped: function(event) {
+            CategoryTreeService.UpdateCategoryNode(event, vm.catalogid);
+        }
+    };
 
     vm.categorySelected = function(categoryID) {
         vm.selectedCategoryID = categoryID;
@@ -46,7 +52,7 @@ function CatalogManagementController($rootScope, $state, ocCatalogManagement, Tr
         else {
             angular.forEach(array, function(category) {
                 if (category.children && category.children.length) {
-                    updateCategory(originalID, updatedCategory, catgory.children);
+                    updateTree(originalID, updatedCategory, category.children, action);
                 }
             });
         }

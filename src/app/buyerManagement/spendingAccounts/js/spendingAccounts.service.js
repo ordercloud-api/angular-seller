@@ -62,7 +62,7 @@ function OrderCloudSpendingAccounts($q, $uibModal, ocConfirm, OrderCloud) {
                     queue = [],
                     totalPages = angular.copy(data1.Meta.TotalPages),
                     currentPage = angular.copy(data1.Meta.Page);
-                while(currentPage <= totalPages) {
+                while(currentPage < totalPages) {
                     currentPage++;
                     queue.push(OrderCloud.SpendingAccounts.ListAssignments(null, null, usergroupid, level, currentPage, 100, buyerid));
                 }

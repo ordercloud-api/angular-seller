@@ -33,7 +33,7 @@
             </div>
         </section>
     </div>
-    <div class="col-sm-7" ui-view>
+    <div class="col-sm-7" cg-busy="application.stateLoading('catalogManagement')" ui-view>
         <div ng-if="catalogManagement.tree.length && !catalogManagement.selectedCategoryID" class="well text-center">
             Select a category to view details
         </div>

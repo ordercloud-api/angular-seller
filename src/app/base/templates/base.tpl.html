@@ -2,21 +2,29 @@
     <a class="navmenu-brand hidden-xs hidden-sm" href="" ui-sref="home">{{application.name}}</a>
     <ul class="nav navmenu-nav">
         <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}" oc-if-roles="BuyerRoles">
-            <a ui-sref="buyers"><i class="fa fa-tags"></i> Buyer Organizations</a>
+            <a ng-click="base.selectNavItem('buyers')" ui-sref="buyers"><i class="fa fa-tags"></i> Buyer Organizations</a>
         </li>
         <li ng-class="{active: application.$state.is('products') || application.$state.includes('productDetail')}" oc-if-roles="ProductRoles">
-            <a ui-sref="products"><i class="fa fa-cube"></i> Product Management</a>
+            <a ng-click="base.selectNavItem('products')" ui-sref="products"><i class="fa fa-cube"></i> Product Management</a>
         </li>
         <li ng-class="{active: application.$state.is('orders') || application.$state.includes('orderDetail')}" oc-if-roles="OrderRoles">
-            <a ui-sref="orders"><i class="fa fa-inbox"></i> Order Management</a>
+            <a ng-click="base.selectNavItem('orders')" ui-sref="orders"><i class="fa fa-inbox"></i> Order Management</a>
         </li>
-        <li ui-sref-active="active" oc-if-roles="AdminUserRoles"><a ui-sref="adminUsers"><i class="fa fa-user"></i> Admin Users</a></li>
+        <li ng-class="{active: application.$state.is('adminUsers')}" oc-if-roles="AdminUserRoles">
+            <a ng-click="base.selectNavItem('adminUsers')" ui-sref="adminUsers"><i class="fa fa-user"></i> Admin Users</a>
+        </li>
         <li ng-class="{active: application.$state.is('adminUserGroups') || application.$state.includes('adminUserGroup')}" oc-if-roles="AdminUserGroupRoles">
-            <a ui-sref="adminUserGroups"><i class="fa fa-users"></i> Admin User Groups</a>
+            <a ng-click="base.selectNavItem('adminUserGroups')" ui-sref="adminUserGroups"><i class="fa fa-users"></i> Admin User Groups</a>
         </li>
-        <li ui-sref-active="active" oc-if-roles="AddressRoles"><a ui-sref="adminAddresses"><i class="fa fa-map-marker"></i> Admin Addresses</a></li>
-        <li ui-sref-active="active"><a ui-sref="security"><i class="fa fa-lock"></i> Security</a></li>
-        <li ui-sref-active="active"><a ui-sref="account"><i class="fa fa-user-circle-o"></i> Account</a></li>
+        <li ng-class="{active: application.$state.is('adminAddresses')}" oc-if-roles="AddressRoles">
+            <a ng-click="base.selectNavItem('adminAddresses')"><i class="fa fa-map-marker"></i> Admin Addresses</a>
+        </li>
+        <li ng-class="{active: application.$state.is('security')}">
+            <a ng-click="base.selectNavItem('security')"><i class="fa fa-lock"></i> Security</a>
+        </li>
+        <li ng-class="{active: application.$state.is('account')}">
+            <a ng-click="base.selectNavItem('account')"><i class="fa fa-user-circle-o"></i> Account</a>
+        </li>
     </ul>
 </nav>
 <nav class="navbar navbar-default navbar-unstacked navbar-fixed-top navmenu-on-canvas-lg navmenu-on-canvas-md" ng-if="application.$ocMedia('max-width:991px')">

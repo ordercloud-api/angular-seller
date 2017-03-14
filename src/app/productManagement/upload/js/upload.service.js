@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('UploadService', UploadService)
 ;
 
-function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid) {
+function UploadService($q, $resource, $timeout, OrderCloud, devapiurl) {
     var service = {
         Parse: _parse,
         Upload: _upload,
@@ -287,7 +287,8 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
             angular.forEach(categories, function(category) {
                 var cat = {
                     ID: category.ID,
-                    Name: category.Name
+                    Name: category.Name,
+                    Active: 'true'
                 };
                 categoryQueue.push((function() {
                     var d = $q.defer();
@@ -394,7 +395,9 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                 categoryAssignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.Categories.SaveProductAssignment(catAss, catalogid)
+                    //TODO: REPLACE catalogid
+                    //OrderCloud.Categories.SaveProductAssignment(catAss, catalogid)
+                    OrderCloud.Categories.SaveProductAssignment(catAss)
                         .then(function() {
                             progress[progress.length - 1].SuccessCount++;
                             deferred.notify(progress);
@@ -446,14 +449,14 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
         var progress = [{Message: 'Uploading Users, User Groups, and Addresses', Total: userGroupCount + addressCount, SuccessCount: 0, ErrorCount: 0}];
 
         $timeout(function() {
-            createUserGroups();
+            createUsers();
         }, 1000);
 
         function createUsers() {
             progress.push({Message: 'Upload Users', Total: userCount, SuccessCount: 0, ErrorCount: 0});
             deferred.notify(progress);
             var userQueue = [];
-            _.each(users, function(user) {
+            _.each(users.Users, function(user) {
                 var userBody = {
                     ID: user.ID,
                     Username: user.Username,
@@ -461,7 +464,7 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                     LastName: user.LastName,
                     Email: user.Email,
                     Phone: user.Phone,
-                    Active: user.Active
+                    Active: user.Active.toLowerCase() === 'true'
                 };
                 userQueue.push( (function() {
                     var d = $q.defer();

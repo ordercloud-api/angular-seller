@@ -18,12 +18,7 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCl
 
     //Reload the state with new search parameter & reset the page
     vm.search = function() {
-        $state.go('.', ocParameters.Create(vm.parameters, true), {notify:false}); //don't trigger $stateChangeStart/Success, this is just so the URL will update with the search
-        vm.searchLoading = OrderCloud.ApprovalRules.List(null, vm.parameters.search, 1, vm.parameters.pageSize, vm.parameters.searchOn, vm.parameters.sortBy, vm.parameters.filters, vm.parameters.buyerid)
-            .then(function(data) {
-                vm.list = data;
-                vm.searchResults = vm.parameters.search.length > 0;
-            })
+        vm.filter(true);
     };
 
     //Clear the search parameter, reload the state & reset the page
