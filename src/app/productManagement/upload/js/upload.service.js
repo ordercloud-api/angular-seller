@@ -22,6 +22,20 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl) {
             .then(function(fileData) {
                 return $resource(devapiurl + '/upload/parse', {}, {parse: {method: 'POST'}}).parse({Files: fileData}).$promise
                     .then(function(data) {
+                        if(data.Data.UserFile) {
+                            var userQueue = [];
+                            var users = data.Data.UserFile;
+                            var uniqueUserObjs = _.groupBy(users, 'id');
+                            _.each(uniqueUserObjs, function(userArr){
+                                if(userArr.length > 0) {
+                                    userArr[0].store_location_id = _.pluck(userArr, 'store_location_id');
+                                    userQueue.push(userArr[0]);
+                                }
+                            });
+                            data.Data.UserFile = userQueue;
+                        } else {
+                            return data.Data;
+                        }
                         return data.Data;
                     });
             });
@@ -464,7 +478,10 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl) {
                     LastName: user.LastName,
                     Email: user.Email,
                     Phone: user.Phone,
-                    Active: user.Active.toLowerCase() === 'true'
+                    Active: user.Active.toLowerCase() === 'true',
+                    xp: {
+                        Locations: user.xp.Locations
+                    }
                 };
                 userQueue.push( (function() {
                     var d = $q.defer();
@@ -542,18 +559,54 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl) {
                 .then(function() {
                     successfulUserGroups = userGroups.UserGroups;
                     userGroupCount = userGroups.UserGroups.length;
-                    //saveUserAssignment(userGroups);
-                    createAddresses();
+                    saveUserAssignment(successfulUsers, userGroups);
                 })
         }
 
-        //function saveUserAssignment(groups) {
-        //    var userGroupAssignments = [];
-        //
-        //    _.each(users, function(user) {
-        //        var matchedID = _.findWhere(groups, {ID: user.ID})
-        //    })
-        //}
+        function saveUserAssignment(users, groups) {
+            progress.push({Message: 'Assign Users to User Groups', Total: users.length, SuccessCount: 0, ErrorCount: 0});
+            deferred.notify(progress);
+            var groupAssignmentQueue = [];
+            _.each(users, function(user) {
+                groupAssignmentQueue.push( (function() {
+                    var d = $q.defer();
+                    var assignedLocationIDs = user.xp.Locations;
+                    _.each(assignedLocationIDs, function(id) {
+                        var matchedID = _.findWhere(groups.UserGroups, {ID: id});
+                        if(matchedID) {
+                            var assignment = {
+                                UserID: user.ID,
+                                UserGroupID: matchedID.ID
+                            };
+                            OrderCloud.UserGroups.SaveUserAssignment(assignment, buyerID)
+                                .then(function() {
+                                    progress[progress.length - 1].SuccessCount++;
+                                    deferred.notify(progress);
+                                    d.resolve();
+                                })
+                                .catch(function(ex) {
+                                    progress[progress.length - 1].ErrorCount++;
+                                    deferred.notify(progress);
+                                    results.FailedUserAssignments.push({UserID: assignment.UserID, UserGroupID: assignment.UserGroupID, Error: {Code: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
+                                    d.resolve();
+                                });
+                        } else {
+                            progress[progress.length - 1].ErrorCount++;
+                            deferred.notify(progress);
+                            results.FailedUserAssignments.push({UserID: user.ID, UserGroupID: matchedID.ID, Message: 'An error occurred while assigning this User to a matching User Group'});
+                            d.resolve();
+                        }
+                    });
+                    return d.promise;
+                })());
+            });
+            $q.all(groupAssignmentQueue)
+                .then(function() {
+                    //successfulUserAssignments = userGroups.UserGroups;
+                    //userGroupCount = userGroups.UserGroups.length;
+                    createAddresses();
+                });
+        }
 
         function createAddresses() {
             progress.push({Message: 'Upload Addresses', Total: addressCount, SuccessCount: 0, ErrorCount: 0});
@@ -802,7 +855,8 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl) {
                 LastName: user[mapping.LastName],
                 Email: user[mapping.Email],
                 Phone: user[mapping.Phone],
-                Active: user[mapping.Active]
+                Active: user[mapping.Active],
+                xp: _buildXpObj(user, mapping)
             };
 
             result.Users.push(userData);
@@ -936,14 +990,14 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl) {
         return result;
     }
 
-    function _buildXpObj(product, mapping){
+    function _buildXpObj(object, mapping){
         var result = {};
         var xpKeyPaths = [];
 
         //get all xp keyPaths that have a value, ex: xp.image.URL
         _.each(mapping, function(value, key){
             var isXP = key.indexOf('xp') > -1;
-            if(isXP && product[mapping[key]]) xpKeyPaths.push(key);
+            if(isXP && object[mapping[key]]) xpKeyPaths.push(key);
         });
 
         //build up xp obj then set xp value
@@ -953,7 +1007,7 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl) {
                 return node[value] || (node[value] = {});
             }, result);
 
-            setXPValue(result, keys, product[mapping[path]]);
+            setXPValue(result, keys, object[mapping[path]]);
         });
 
         return result.xp || null;

@@ -88,13 +88,9 @@
                     </div>
                     <!--UPLOAD CONTENT-->
                     <div class="form-group" ng-if="!userUpload.parsedUserData.UserIssues.length && !userUpload.parsedUserGroupData.UserGroupIssues.length && !userUpload.parsedAddressData.AddressIssues.length">
-                    <!--<div class="form-group" ng-if="!userUpload.parsedUserGroupData.UserGroupIssues.length && !userUpload.parsedAddressData.AddressIssues.length">-->
                         <button type="button" class="btn btn-primary btn-block"
                                 ng-disabled="userUpload.parsedUserGroupData.UserGroupIssues.length || userUpload.parsedUserData.UserIssues.length || userUpload.parsedAddressData.AddressIssues.length"
                                 ng-click="userUpload.upload()">Upload</button>
-                        <!--<button type="button" class="btn btn-primary btn-block"-->
-                                <!--ng-disabled="userUpload.parsedUserGroupData.UserGroupIssues.length || userUpload.parsedAddressData.AddressIssues.length"-->
-                                <!--ng-click="userUpload.upload()">Upload</button>-->
                     </div>
                 </div>
                 <div class="panel panel-default" ng-if="userUpload.started">
@@ -136,10 +132,10 @@
                                     <br>
                                     With {{userUpload.results.TotalErrorCount + userUpload.results.TotalErrorCount == 1 ? ' failure' : ' failures'}}
                                 </small>
-                                <!--<small class="text-danger" ng-if="userUpload.results.SkippedCategoryAssignments.length">-->
-                                    <!--<br ng-if="!userUpload.results.TotalErrorCount">-->
-                                    <!--{{userUpload.results.TotalErrorCount ? 'and' : 'With'}} {{userUpload.results.SkippedCategoryAssignments.length}} skipped category assignment{{userUpload.results.SkippedCategoryAssignments.length == 1 ? '' : 's'}}-->
-                                <!--</small>-->
+                                <small class="text-danger" ng-if="userUpload.results.SkippedCategoryAssignments.length">
+                                    <br ng-if="!userUpload.results.TotalErrorCount">
+                                    {{userUpload.results.TotalErrorCount ? 'and' : 'With'}} {{userUpload.results.SkippedCategoryAssignments.length}} skipped category assignment{{userUpload.results.SkippedCategoryAssignments.length == 1 ? '' : 's'}}
+                                </small>
                             </h5>
                         </li>
                     </ul>

@@ -102,7 +102,8 @@ function UserUploadController($scope, UploadService, SelectedBuyer) {
                     "LastName": "lastname",
                     "Email": "emailaddress",
                     "Phone": "phone",
-                    "Active": "active"
+                    "Active": "active",
+                    "xp.Locations": "store_location_id"
                 };
                 var userGroupMapping = {
                     "ID": "id",
@@ -148,6 +149,7 @@ function UserUploadController($scope, UploadService, SelectedBuyer) {
                 },
                 function(progress) {
                     vm.uploadProgress = progress;
+                    console.log(vm.uploadProgress);
                 }
             );
     };
