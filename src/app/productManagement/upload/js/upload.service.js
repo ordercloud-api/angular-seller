@@ -315,10 +315,26 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl) {
                             d.resolve();
                         })
                         .catch(function(ex) {
-                            results.FailedCategories.push({CategoryID: cat.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
-                            progress[progress.length - 1].ErrorCount++;
-                            deferred.notify(progress);
-                            d.resolve();
+                            if(ex.Status === 404) {
+                                OrderCloud.Categories.Create(cat, catalogid)
+                                    .then(function() {
+                                        progress[progress.length - 1].SuccessCount++;
+                                        deferred.notify(progress);
+                                        successfulCats.push(cat);
+                                        d.resolve();
+                                    })
+                                    .catch(function(ex) {
+                                        results.FailedCategories.push({CategoryID: cat.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
+                                        progress[progress.length - 1].ErrorCount++;
+                                        deferred.notify(progress);
+                                        d.resolve();
+                                    })
+                            } else {
+                                results.FailedCategories.push({CategoryID: cat.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
+                                progress[progress.length - 1].ErrorCount++;
+                                deferred.notify(progress);
+                                d.resolve();
+                            }
                         });
 
                     return d.promise;
