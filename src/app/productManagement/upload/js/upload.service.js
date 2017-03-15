@@ -315,7 +315,7 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl) {
                             d.resolve();
                         })
                         .catch(function(ex) {
-                            if(ex.Status === 404) {
+                            if(ex.status === 404) {
                                 OrderCloud.Categories.Create(cat, catalogid)
                                     .then(function() {
                                         progress[progress.length - 1].SuccessCount++;
