@@ -109,7 +109,8 @@ function UploadController($scope, UploadService) {
                 var combined = UploadService.Combine(parsed.ProductFile, parsed.AttributeFile);
                 vm.parsedProdData = UploadService.ValidateProducts(combined.productData, productMapping);
                 vm.parsedProdData.ProductCount = combined.productData.length;
-                vm.parsedCatData.CategoryCount = combined.catData.length;
+                vm.parsedCatData.CategoryCount = vm.parsedCatData.Categories.length;
+                console.log(vm.parsedCatData);
             });
     }
 
@@ -129,6 +130,7 @@ function UploadController($scope, UploadService) {
                     console.log(ex);
                 },
                 function(progress) {
+                    console.log(progress);
                     vm.uploadProgress = progress;
                 }
             );
