@@ -22,7 +22,20 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
             .then(function(fileData) {
                 return $resource(devapiurl + '/upload/parse', {}, {parse: {method: 'POST'}}).parse({Files: fileData}).$promise
                     .then(function(data) {
-                        console.log('data', data.Data);
+                        if(data.Data.UserFile) {
+                            var userQueue = [];
+                            var users = data.Data.UserFile;
+                            var uniqueUserObjs = _.groupBy(users, 'id');
+                            _.each(uniqueUserObjs, function(userArr){
+                                if(userArr.length > 0) {
+                                    userArr[0].store_location_id = _.pluck(userArr, 'store_location_id');
+                                    userQueue.push(userArr[0]);
+                                }
+                            });
+                            data.Data.UserFile = userQueue;
+                        } else {
+                            return data.Data;
+                        }
                         return data.Data;
                     });
             });
@@ -62,7 +75,7 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
     function _upload(products, categories) {
         var deferred = $q.defer();
         var successfulProducts = [];
-
+        var successfulCats = [];
         var results = {
             FailedProducts: [],
             FailedCategories: [],
@@ -246,8 +259,8 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
             progress.push({Message: 'Assign Products to Buyers', Total: productCount * bIDs.length, SuccessCount: 0, ErrorCount: 0});
             deferred.notify(progress);
             var buyerAssignmentQueue = [];
-            angular.forEach(products, function(product) {
-                angular.forEach(bIDs, function(buyerID) {
+            _.each(products, function(product) {
+                _.each(bIDs, function(buyerID) {
                     var assignment = {
                         BuyerID: buyerID,
                         ProductID: product.ID,
@@ -265,7 +278,6 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                             .catch(function(ex) {
                                 progress[progress.length - 1].ErrorCount++;
                                 deferred.notify(progress);
-                                //FailedProductBuyerAssignments
                                 results.FailedProductBuyerAssignments.push({BuyerID: buyerID, ProductID: product.ID, Error: {Code: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
                                 d.resolve();
                             });
@@ -282,22 +294,22 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
         function createCategories() {
             progress.push({Message: 'Creating Categories', Total: categoryCount, SuccessCount: 0, ErrorCount: 0});
             deferred.notify(progress);
-            var successfulCats = [];
             var categoryQueue = [];
 
             angular.forEach(categories, function(category) {
                 var cat = {
                     ID: category.ID,
-                    Name: category.Name
+                    Name: category.Name,
+                    Active: 'true'
                 };
                 categoryQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.Categories.Update(cat.ID, cat)
+                    OrderCloud.Categories.Update(cat.ID, cat, catalogid)
                         .then(function() {
                             progress[progress.length - 1].SuccessCount++;
                             deferred.notify(progress);
-                            successfulCats.push(cat);
+                            successfulCats.push(category);
                             d.resolve();
                         })
                         .catch(function(ex) {
@@ -306,36 +318,30 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                             deferred.notify(progress);
                             d.resolve();
                         });
-
                     return d.promise;
                 })());
             });
 
             $q.all(categoryQueue).then(function() {
+                categories = successfulCats;
                 categoryCount = categories.length;
                 setParentID();
-            });
+            })
         }
 
         function setParentID() {
             var categoryQueue = [];
-            var successfulCats = [];
-
             angular.forEach(categories, function(category) {
                 categoryQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.Categories.Patch(category.ID, {ParentID: category.ParentID})
+                    OrderCloud.Categories.Patch(category.ID, {ParentID: category.ParentID}, catalogid)
                         .then(function() {
-                            //progress[progress.length - 1].SuccessCount++;
-                            //deferred.notify(progress);
-                            successfulCats.push(category);
+                            deferred.notify(progress);
                             d.resolve();
                         })
                         .catch(function(ex) {
-                            //results.FailedCategories.push({CategoryID: category.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
-                            //progress[progress.length - 1].ErrorCount++;
-                            //deferred.notify(progress);
+                            deferred.notify(progress);
                             d.resolve();
                         });
 
@@ -344,8 +350,6 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
             });
 
             $q.all(categoryQueue).then(function() {
-                categories = successfulCats;
-                //categoryCount = categories.length;
                 buildCategoryAssignmentQueue(categories);
             });
         }
@@ -353,7 +357,7 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
         function buildCategoryAssignmentQueue(allCategories) {
             var categoryAssignments = [];
 
-            angular.forEach(products, function(product) {
+            _.each(products, function(product) {
                 var directCategory = _.findWhere(allCategories, {ID: product.CategoryID});
 
                 function checkParent(cat) {
@@ -370,7 +374,6 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                         results.SkippedCategoryAssignments.push({CategoryID: cat.ID, ProductID: product.ID, Error: {Message: 'Category does not exist: ' + cat.ID}});
                     }
                 }
-
                 if (directCategory) {
                     var assignment = {
                         CategoryID: directCategory.ID,
@@ -383,35 +386,31 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                     results.SkippedCategoryAssignments.push({CategoryID: product.CategoryID, ProductID: product.ID, Error: {Message: 'Category does not exist: ' + product.CategoryID}});
                 }
             });
-
             assignProductsToCategories(categoryAssignments);
         }
 
-        function assignProductsToCategories(catAssignments) {
-            progress.push({Message: 'Assign Products to Categories', Total: catAssignments.length, SuccessCount: 0, ErrorCount: 0});
+        function assignProductsToCategories(categoryAssignments) {
+            progress.push({Message: 'Assign Products to Categories', Total: categoryAssignments.length, SuccessCount: 0, ErrorCount: 0});
             deferred.notify(progress);
             var categoryAssignmentQueue = [];
-            angular.forEach(catAssignments, function(catAss) {
-                categoryAssignmentQueue.push((function() {
+            _.each(categoryAssignments, function(catAss) {
+                categoryAssignmentQueue.push( (function() {
                     var d = $q.defer();
-
-                    OrderCloud.Categories.SaveProductAssignment(catAss, catalogid)
-                        .then(function() {
-                            progress[progress.length - 1].SuccessCount++;
-                            deferred.notify(progress);
-                            d.resolve();
-                        })
-                        .catch(function(ex) {
-                            progress[progress.length - 1].ErrorCount++;
-                            deferred.notify(progress);
-                            results.FailedCategoryAssignments.push({CategoryID: catAss.CategoryID, ProductID: product.ID, Error: {Code: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
-                            d.resolve();
-                        });
-
+                        OrderCloud.Categories.SaveProductAssignment(catAss, catalogid)
+                            .then(function() {
+                                progress[progress.length - 1].SuccessCount++;
+                                deferred.notify(progress);
+                                d.resolve();
+                            })
+                            .catch(function(ex) {
+                                progress[progress.length - 1].ErrorCount++;
+                                deferred.notify(progress);
+                                results.FailedCategoryAssignments.push({CategoryID: catAss.CategoryID, ProductID: product.ID, Error: {Code: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
+                                d.resolve();
+                            });
                     return d.promise;
-                })());
-            });
-
+                    }) ());
+                });
             $q.all(categoryAssignmentQueue).then(function() {
                 progress.push({Message: 'Done'});
                 deferred.notify(progress);
@@ -427,9 +426,9 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
         return deferred.promise;
     }
 
-    function _uploadUsers(buyerID, users, userGroups, addresses) {
+    function _uploadUsers(buyer, users, userGroups, addresses) {
         var deferred = $q.defer();
-        //var successfulUsers = [];
+        var successfulUsers = [];
         var successfulUserGroups = [];
         var successfulAddresses = [];
 
@@ -438,65 +437,68 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
             FailedUserGroups: [],
             FailedAddresses: [],
             FailedUserAssignments: [],
-            FailedUserGroupAssignments: []
+            FailedAddressAssignments: []
         };
 
-        //var userCount = users.length;
-        var userGroupCount = userGroups.length;
-        var addressCount = addresses.length;
-        var progress = [{Message: '', Total: userGroupCount, SuccessCount: 0, ErrorCount: 0}];
-
-        //function createUsers() {
-        //    progress.push({Message: 'Upload Users', Total: userCount, SuccessCount: 0, ErrorCount: 0});
-        //    deferred.notify(progress);
-        //    var userQueue = [];
-        //    _.each(users, function(user) {
-        //        var userBody = {
-        //            ID: user.ID,
-        //            Username: user.Username,
-        //            FirstName: user.FirstName,
-        //            LastName: user.LastName,
-        //            Email: user.Email,
-        //            Phone: user.Phone,
-        //            Active: user.Active
-        //        };
-        //        userQueue.push( (function() {
-        //            var d = $q.defer();
-        //
-        //            OrderCloud.Users.Update(userBody.ID, userBody, buyerID)
-        //                .then(function() {
-        //                    progress[progress.length - 1].SuccessCount++;
-        //                    deferred.notify(progress);
-        //                    successfulUsers.push(userBody);
-        //                    d.resolve();
-        //                })
-        //                .catch(function(ex) {
-        //                    results.FailedUsers.push({UserID: userBody.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}})
-        //                    progress[progress.length - 1].ErrorCount++;
-        //                    deferred.notify(progress);
-        //                    d.resolve();
-        //                });
-        //            return d.promise;
-        //        }) ());
-        //    });
-        //
-        //    $q.all(userQueue)
-        //        .then(function() {
-        //            users = successfulUsers;
-        //            userCount = users.length;
-        //            createUserGroups();
-        //        })
-        //}
+        var userCount = users.length;
+        var userGroupCount = userGroups.UserGroups.length;
+        var addressCount = addresses.Address.length;
+        var progress = [{Message: 'Uploading Users, User Groups, and Addresses', Total: userGroupCount + addressCount, SuccessCount: 0, ErrorCount: 0}];
 
         $timeout(function() {
-            createUserGroups();
+            createUsers();
         }, 1000);
+
+        function createUsers() {
+            progress.push({Message: 'Upload Users', Total: userCount, SuccessCount: 0, ErrorCount: 0});
+            deferred.notify(progress);
+            var userQueue = [];
+            _.each(users.Users, function(user) {
+                var userBody = {
+                    ID: user.ID,
+                    Username: user.Username,
+                    FirstName: user.FirstName,
+                    LastName: user.LastName,
+                    Email: user.Email,
+                    Phone: user.Phone,
+                    Active: user.Active.toLowerCase() === 'true',
+                    xp: {
+                        Locations: user.xp.Locations
+                    }
+                };
+                userQueue.push( (function() {
+                    var d = $q.defer();
+
+                    OrderCloud.Users.Update(userBody.ID, userBody, buyer.ID)
+                        .then(function() {
+                            progress[progress.length - 1].SuccessCount++;
+                            deferred.notify(progress);
+                            successfulUsers.push(userBody);
+                            d.resolve();
+                        })
+                        .catch(function(ex) {
+                            results.FailedUsers.push({UserID: userBody.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}})
+                            progress[progress.length - 1].ErrorCount++;
+                            deferred.notify(progress);
+                            d.resolve();
+                        });
+                    return d.promise;
+                }) ());
+            });
+
+            $q.all(userQueue)
+                .then(function() {
+                    users = successfulUsers;
+                    userCount = users.length;
+                    createUserGroups();
+                })
+        }
 
         function createUserGroups() {
             progress.push({Message: 'Upload User Groups', Total: userGroupCount, SuccessCount: 0, ErrorCount: 0});
             deferred.notify(progress);
             var userGroupQueue = [];
-            _.each(userGroups, function(userGroup) {
+            _.each(userGroups.UserGroups, function(userGroup) {
                 var userGroupBody = {
                     ID: userGroup.ID,
                     Name: userGroup.Name
@@ -505,17 +507,32 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                 userGroupQueue.push( (function() {
                     var d = $q.defer();
 
-                    OrderCloud.UserGroups.Update(userGroupBody.ID, userGroup, buyerID)
+                    OrderCloud.UserGroups.Update(userGroupBody.ID, userGroupBody, buyer.ID)
                         .then(function() {
                             progress[progress.length - 1].SuccessCount++;
                             deferred.notify(progress);
                             d.resolve();
                         })
                         .catch(function(ex) {
-                            results.FailedUserGroups.push({UserGroupID: userGroupBody.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}})
-                            progress[progress.length - 1].ErrorCount++;
-                            deferred.notify(progress);
-                            d.resolve();
+                            if(ex.status === 404) {
+                                OrderCloud.UserGroups.Create(userGroupBody, buyer.ID)
+                                    .then(function() {
+                                        progress[progress.length - 1].SuccessCount++;
+                                        deferred.notify(progress);
+                                        d.resolve();
+                                    })
+                                    .catch(function(ex){
+                                        results.FailedUserGroups.push({UserGroupID: userGroupBody.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
+                                        progress[progress.length - 1].ErrorCount++;
+                                        deferred.notify(progress);
+                                        d.resolve();
+                                    })
+                            } else {
+                                results.FailedUserGroups.push({UserGroupID: userGroupBody.ID, Error: {ErrorCode: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
+                                progress[progress.length - 1].ErrorCount++;
+                                deferred.notify(progress);
+                                d.resolve();
+                            }
                         });
                     return d.promise;
                 })());
@@ -523,26 +540,62 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
 
             $q.all(userGroupQueue)
                 .then(function() {
-                    userGroups = successfulUserGroups;
-                    userGroupCount = userGroups.length;
-                    //saveUserAssignment(userGroups);
-                    createAddresses();
+                    successfulUserGroups = userGroups.UserGroups;
+                    userGroupCount = userGroups.UserGroups.length;
+                    saveUserAssignment(successfulUsers, userGroups);
                 })
         }
 
-        //function saveUserAssignment(groups) {
-        //    var userGroupAssignments = [];
-        //
-        //    _.each(users, function(user) {
-        //        var matchedID = _.findWhere(groups, {ID: user.ID})
-        //    })
-        //}
+        function saveUserAssignment(users, groups) {
+            progress.push({Message: 'Assign Users to User Groups', Total: users.length, SuccessCount: 0, ErrorCount: 0});
+            deferred.notify(progress);
+            var groupAssignmentQueue = [];
+            _.each(users, function(user) {
+                groupAssignmentQueue.push( (function() {
+                    var d = $q.defer();
+                    var assignedLocationIDs = user.xp.Locations;
+                    _.each(assignedLocationIDs, function(id) {
+                        var matchedID = _.findWhere(groups.UserGroups, {ID: id});
+                        if(matchedID) {
+                            var assignment = {
+                                UserID: user.ID,
+                                UserGroupID: matchedID.ID
+                            };
+                            OrderCloud.UserGroups.SaveUserAssignment(assignment, buyer.ID)
+                                .then(function() {
+                                    progress[progress.length - 1].SuccessCount++;
+                                    deferred.notify(progress);
+                                    d.resolve();
+                                })
+                                .catch(function(ex) {
+                                    progress[progress.length - 1].ErrorCount++;
+                                    deferred.notify(progress);
+                                    results.FailedUserAssignments.push({UserID: assignment.UserID, UserGroupID: assignment.UserGroupID, Error: {Code: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
+                                    d.resolve();
+                                });
+                        } else {
+                            progress[progress.length - 1].ErrorCount++;
+                            deferred.notify(progress);
+                            results.FailedUserAssignments.push({UserID: user.ID, UserGroupID: matchedID.ID, Message: 'An error occurred while assigning this User to a matching User Group'});
+                            d.resolve();
+                        }
+                    });
+                    return d.promise;
+                })());
+            });
+            $q.all(groupAssignmentQueue)
+                .then(function() {
+                    //successfulUserAssignments = userGroups.UserGroups;
+                    //userGroupCount = userGroups.UserGroups.length;
+                    createAddresses();
+                });
+        }
 
         function createAddresses() {
             progress.push({Message: 'Upload Addresses', Total: addressCount, SuccessCount: 0, ErrorCount: 0});
             deferred.notify(progress);
             var addressQueue = [];
-            _.each(addresses, function(address) {
+            _.each(addresses.Address, function(address) {
                 var addressBody = {
                     ID: address.ID,
                     CompanyName: address.CompanyName,
@@ -558,7 +611,7 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                 addressQueue.push( (function(){
                     var d = $q.defer();
 
-                    OrderCloud.Addresses.Update(addressBody.ID, addressBody, buyerID)
+                    OrderCloud.Addresses.Update(addressBody.ID, addressBody, buyer.ID)
                         .then(function() {
                             progress[progress.length -1].SuccessCount++;
                             deferred.notify(progress);
@@ -576,15 +629,55 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
 
             $q.all(addressQueue)
                 .then(function() {
-                    addresses = successfulAddresses;
-                    addressCount = addresses.length;
-                    //saveUserGroupAssignment;
+                    successfulAddresses = addresses.Address;
+                    addressCount = addresses.Address.length;
+                    buildAddressAssignment(successfulUserGroups, successfulAddresses);
                 })
         }
 
-        //function saveUserGroupAssignment() {
-        //
-        //}
+        function buildAddressAssignment(groups, addresses) {
+            var addressAssignments = [];
+
+            _.each(groups, function(group) {
+                var matchingID = _.findWhere(addresses, {CompanyName: group.ID});
+                if(matchingID) {
+                    var assignment = {
+                        IsShipping: true,
+                        ISBilling: false,
+                        AddressID: matchingID.ID,
+                        UserGroupID: group.ID
+                    };
+                    addressAssignments.push(assignment);
+                } else {
+                    results.FailedAddressAssignments.push({UserGroupID: group.ID, Error: {Message: 'The Address for Group ' + group.ID + ' does not exist'}})
+                }
+            });
+            saveAddressAssignment(addressAssignments);
+        }
+
+        function saveAddressAssignment(assignments) {
+            progress.push({Message: 'Assign Addresses to User Groups', Total: assignments.length, SuccessCount: 0, ErrorCount: 0});
+            deferred.notify(progress);
+            var addressAssignmentQueue = [];
+            _.each(assignments, function(assignment) {
+                addressAssignmentQueue.push( (function() {
+                    var d = $q.defer();
+                    OrderCloud.Addresses.SaveAssignment(assignment, buyer.ID)
+                        .then(function() {
+                            progress[progress.length - 1].SuccessCount++;
+                            deferred.notify(progress);
+                            d.resolve();
+                        })
+                        .catch(function(ex) {
+                            progress[progress.length - 1].ErrorCount++;
+                            deferred.notify(progress);
+                            results.FailedCategoryAssignments.push({AddressID: assignment.AddressID, UserGroupID: assignment.GroupID, Error: {Code: ex.data.Errors[0].ErrorCode, Message: ex.data.Errors[0].Message}});
+                            d.resolve();
+                        });
+                    return d.promise;
+                })());
+            });
+        }
         return deferred.promise;
     }
 
@@ -745,8 +838,11 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                 LastName: user[mapping.LastName],
                 Email: user[mapping.Email],
                 Phone: user[mapping.Phone],
-                Active: user[mapping.Active]
+                Active: user[mapping.Active],
+                xp: _buildXpObj(user, mapping)
             };
+
+            result.Users.push(userData);
 
             if (!userData.ID) {
                 result.UserIssues.push({
@@ -788,6 +884,8 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                 Name: group[mapping.Name]
             };
 
+            result.UserGroups.push(userGroupData);
+
             if (!userGroupData.ID) {
                 result.UserGroupIssues.push({
                     ID: userGroupData.ID,
@@ -826,6 +924,8 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                 Phone: address[mapping.Phone],
                 AddressName: address[mapping.AddressName]
             };
+
+            result.Address.push(addressData);
 
             if (!isValid(addressData.ID)) {
                 result.AddressIssues.push({
@@ -870,16 +970,17 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                 })
             }
         }
+        return result;
     }
 
-    function _buildXpObj(product, mapping){
+    function _buildXpObj(object, mapping){
         var result = {};
         var xpKeyPaths = [];
 
         //get all xp keyPaths that have a value, ex: xp.image.URL
         _.each(mapping, function(value, key){
             var isXP = key.indexOf('xp') > -1;
-            if(isXP && product[mapping[key]]) xpKeyPaths.push(key);
+            if(isXP && object[mapping[key]]) xpKeyPaths.push(key);
         });
 
         //build up xp obj then set xp value
@@ -889,7 +990,7 @@ function UploadService($q, $resource, $timeout, OrderCloud, devapiurl, catalogid
                 return node[value] || (node[value] = {});
             }, result);
 
-            setXPValue(result, keys, product[mapping[path]]);
+            setXPValue(result, keys, object[mapping[path]]);
         });
 
         return result.xp || null;

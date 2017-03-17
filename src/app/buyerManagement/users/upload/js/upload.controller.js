@@ -138,7 +138,7 @@ function UserUploadController($scope, UploadService, SelectedBuyer) {
         var addresses = angular.copy(vm.parsedAddressData);
         vm.parsedData = null;
         vm.started = true;
-        UploadService.UploadUsers(vm.selectedBuyer.ID, users, userGroups, addresses)
+        UploadService.UploadUsers(vm.selectedBuyer, users, userGroups, addresses)
             .then(
                 function(data){
                     vm.results = data;
