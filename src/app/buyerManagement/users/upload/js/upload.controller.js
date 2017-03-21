@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserUploadCtrl', UserUploadController)
 ;
 
-function UserUploadController($scope, SelectedBuyer, UploadService, ProductUploadService) {
+function UserUploadController($scope, SelectedBuyer, UploadService, UserUploadService) {
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.userFileData = {};
@@ -121,9 +121,9 @@ function UserUploadController($scope, SelectedBuyer, UploadService, ProductUploa
                     "Phone": "phone",
                     "AddressName": "address_name"
                 };
-                vm.parsedUserData = ProductUploadService.ValidateUsers(parsed.UserFile, userMapping);
-                vm.parsedUserGroupData = ProductUploadService.ValidateUserGroups(parsed.UserGroupFile, userGroupMapping);
-                vm.parsedAddressData = ProductUploadService.ValidateAddress(parsed.AddressFile, addressMapping);
+                vm.parsedUserData = UserUploadService.ValidateUsers(parsed.UserFile, userMapping);
+                vm.parsedUserGroupData = UserUploadService.ValidateUserGroups(parsed.UserGroupFile, userGroupMapping);
+                vm.parsedAddressData = UserUploadService.ValidateAddress(parsed.AddressFile, addressMapping);
 
                 vm.parsedUserData.UserCount = vm.parsedUserData.length;
                 vm.parsedUserGroupData.UserGroupCount = vm.parsedUserGroupData.length;
@@ -139,7 +139,7 @@ function UserUploadController($scope, SelectedBuyer, UploadService, ProductUploa
         var addresses = angular.copy(vm.parsedAddressData);
         vm.parsedData = null;
         vm.started = true;
-        ProductUploadService.UploadUsers(vm.selectedBuyer, users, userGroups, addresses)
+        UserUploadService.UploadUsers(vm.selectedBuyer, users, userGroups, addresses)
             .then(
                 function(data){
                     vm.results = data;
