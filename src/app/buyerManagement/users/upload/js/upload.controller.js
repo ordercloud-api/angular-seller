@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserUploadCtrl', UserUploadController)
 ;
 
-function UserUploadController($scope, UploadService, SelectedBuyer) {
+function UserUploadController($scope, SelectedBuyer, UploadService, ProductUploadService) {
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.userFileData = {};
@@ -121,9 +121,9 @@ function UserUploadController($scope, UploadService, SelectedBuyer) {
                     "Phone": "phone",
                     "AddressName": "address_name"
                 };
-                vm.parsedUserData = UploadService.ValidateUsers(parsed.UserFile, userMapping);
-                vm.parsedUserGroupData = UploadService.ValidateUserGroups(parsed.UserGroupFile, userGroupMapping);
-                vm.parsedAddressData = UploadService.ValidateAddress(parsed.AddressFile, addressMapping);
+                vm.parsedUserData = ProductUploadService.ValidateUsers(parsed.UserFile, userMapping);
+                vm.parsedUserGroupData = ProductUploadService.ValidateUserGroups(parsed.UserGroupFile, userGroupMapping);
+                vm.parsedAddressData = ProductUploadService.ValidateAddress(parsed.AddressFile, addressMapping);
 
                 vm.parsedUserData.UserCount = vm.parsedUserData.length;
                 vm.parsedUserGroupData.UserGroupCount = vm.parsedUserGroupData.length;
@@ -139,7 +139,7 @@ function UserUploadController($scope, UploadService, SelectedBuyer) {
         var addresses = angular.copy(vm.parsedAddressData);
         vm.parsedData = null;
         vm.started = true;
-        UploadService.UploadUsers(vm.selectedBuyer, users, userGroups, addresses)
+        ProductUploadService.UploadUsers(vm.selectedBuyer, users, userGroups, addresses)
             .then(
                 function(data){
                     vm.results = data;
@@ -149,7 +149,6 @@ function UserUploadController($scope, UploadService, SelectedBuyer) {
                 },
                 function(progress) {
                     vm.uploadProgress = progress;
-                    console.log(vm.uploadProgress);
                 }
             );
     };

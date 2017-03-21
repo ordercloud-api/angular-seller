@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UploadCtrl', UploadController)
 ;
 
-function UploadController($scope, UploadService) {
+function UploadController($scope, UploadService, ProductUploadService) {
     var vm = this;
     vm.productFileData = {};
     vm.attributeFileData = {};
@@ -104,13 +104,12 @@ function UploadController($scope, UploadService) {
                     "Name": "category_name",
                     "ParentID": "parent_category_id"
                 };
-                vm.parsedCatData = UploadService.ValidateCategories(parsed.CategoryFile, categoryMapping);
+                vm.parsedCatData = ProductUploadService.ValidateCategories(parsed.CategoryFile, categoryMapping);
 
-                var combined = UploadService.Combine(parsed.ProductFile, parsed.AttributeFile);
-                vm.parsedProdData = UploadService.ValidateProducts(combined.productData, productMapping);
+                var combined = ProductUploadService.Combine(parsed.ProductFile, parsed.AttributeFile);
+                vm.parsedProdData = ProductUploadService.ValidateProducts(combined.productData, productMapping);
                 vm.parsedProdData.ProductCount = combined.productData.length;
                 vm.parsedCatData.CategoryCount = vm.parsedCatData.Categories.length;
-                console.log(vm.parsedCatData);
             });
     }
 
@@ -121,7 +120,7 @@ function UploadController($scope, UploadService) {
         var categories = angular.copy(vm.parsedCatData.Categories);
         vm.parsedData = null;
         vm.started = true;
-        UploadService.Upload(products, categories)
+        ProductUploadService.Upload(products, categories)
             .then(
                 function(data) {
                     vm.results = data;
@@ -130,7 +129,6 @@ function UploadController($scope, UploadService) {
                     console.log(ex);
                 },
                 function(progress) {
-                    console.log(progress);
                     vm.uploadProgress = progress;
                 }
             );
