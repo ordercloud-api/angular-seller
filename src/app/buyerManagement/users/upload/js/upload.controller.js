@@ -149,6 +149,7 @@ function UserUploadController($scope, SelectedBuyer, UploadService, UserUploadSe
                 },
                 function(progress) {
                     vm.uploadProgress = progress;
+                    console.log('vm.uploadProgress', vm.uploadProgress);
                 }
             );
     };

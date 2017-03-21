@@ -52,7 +52,7 @@
                 <div ng-if="userUpload.parsedUserData && userUpload.parsedUserGroupData && userUpload.parsedAddressData">
                     <div class="well">
                         <p><b>User File Statistics</b></p>
-                        <p>Users: <span class="text-success">{{userUpload.parsedUserData.UserCount}}</span></p>
+                        <p>Users: <span class="text-success">{{userUpload.parsedUserData.Users.length}}</span></p>
                         <p ng-click="userUpload.userPreview = !userUpload.userPreview"><i class="fa" ng-class="{'fa-caret-right': !userUpload.preview, 'fa-caret-down': userUpload.preview}"></i> Preview</p>
                         <pre uib-collapse="!userUpload.userPreview"><code>{{userUpload.parsedUserData.Users[0] | json}}</code></pre>
                         <p ng-if="userUpload.parsedUserData.UserIssues.length">User Issues:</p>
@@ -64,7 +64,7 @@
                     </div>
                     <div class="well">
                         <p><b>User Group File Statistics</b></p>
-                        <p>User Groups: <span class="text-success">{{userUpload.parsedUserGroupData.UserGroupCount}}</span></p>
+                        <p>User Groups: <span class="text-success">{{userUpload.parsedUserGroupData.UserGroups.length}}</span></p>
                         <p ng-click="userUpload.userGroupPreview = !userUpload.userGroupPreview"><i class="fa" ng-class="{'fa-caret-right': !userUpload.preview, 'fa-caret-down': userUpload.preview}"></i> Preview</p>
                         <pre uib-collapse="!userUpload.userGroupPreview"><code>{{userUpload.parsedUserGroupData.UserGroups[0] | json}}</code></pre>
                         <p ng-if="userUpload.parsedUserGroupData.UserGroupIssues.length">User Group Issues:</p>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="well">
                         <p><b>Address File Statistics</b></p>
-                        <p>Addresses: <span class="text-success">{{userUpload.parsedAddressData.AddressCount}}</span></p>
+                        <p>Addresses: <span class="text-success">{{userUpload.parsedAddressData.Address.length}}</span></p>
                         <p ng-click="userUpload.addressPreview = !userUpload.addressPreview"><i class="fa" ng-class="{'fa-caret-right': !userUpload.preview, 'fa-caret-down': userUpload.preview}"></i> Preview</p>
                         <pre uib-collapse="!userUpload.addressPreview"><code>{{userUpload.parsedAddressData.Address[0] | json}}</code></pre>
                         <p ng-if="userUpload.parsedAddressData.AddressIssues.length">Address Issues:</p>

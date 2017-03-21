@@ -24,10 +24,11 @@ function UserUploadService($q, $timeout, OrderCloud, UploadService) {
             FailedAddressAssignments: []
         };
 
-        var userCount = users.length;
+        var userCount = users.Users.length;
         var userGroupCount = userGroups.UserGroups.length;
         var addressCount = addresses.Address.length;
-        var progress = [{Message: 'Uploading Users, User Groups, and Addresses', Total: userGroupCount + addressCount, SuccessCount: 0, ErrorCount: 0}];
+        var groupAssignmentCount = [];
+        var progress = [];
 
         $timeout(function() {
             createUsers();
@@ -55,6 +56,10 @@ function UserUploadService($q, $timeout, OrderCloud, UploadService) {
 
                     OrderCloud.Users.Update(userBody.ID, userBody, buyer.ID)
                         .then(function() {
+                            _.each(user.xp.Locations, function(location) {
+                                //Used to get the total amount of user --- userGroup assignments
+                                groupAssignmentCount.push(location);
+                            });
                             progress[progress.length - 1].SuccessCount++;
                             deferred.notify(progress);
                             successfulUsers.push(userBody);
@@ -131,7 +136,7 @@ function UserUploadService($q, $timeout, OrderCloud, UploadService) {
         }
 
         function saveUserAssignment(users, groups) {
-            progress.push({Message: 'Assign Users to User Groups', Total: users.length, SuccessCount: 0, ErrorCount: 0});
+            progress.push({Message: 'Assign Users to User Groups', Total: groupAssignmentCount.length, SuccessCount: 0, ErrorCount: 0});
             deferred.notify(progress);
             var groupAssignmentQueue = [];
             _.each(users, function(user) {
@@ -147,6 +152,7 @@ function UserUploadService($q, $timeout, OrderCloud, UploadService) {
                             };
                             OrderCloud.UserGroups.SaveUserAssignment(assignment, buyer.ID)
                                 .then(function() {
+                                    groupAssignmentCount++;
                                     progress[progress.length - 1].SuccessCount++;
                                     deferred.notify(progress);
                                     d.resolve();
@@ -169,8 +175,6 @@ function UserUploadService($q, $timeout, OrderCloud, UploadService) {
             });
             $q.all(groupAssignmentQueue)
                 .then(function() {
-                    //successfulUserAssignments = userGroups.UserGroups;
-                    //userGroupCount = userGroups.UserGroups.length;
                     createAddresses();
                 });
         }
@@ -261,7 +265,18 @@ function UserUploadService($q, $timeout, OrderCloud, UploadService) {
                     return d.promise;
                 })());
             });
+            $q.all(addressAssignmentQueue).then(function() {
+                progress.push({Message: 'Done'});
+                deferred.notify(progress);
+                finish();
+            })
         }
+
+        function finish() {
+            results.TotalErrorCount = results.FailedUsers.length + results.FailedUserGroups.length + results.FailedAddresses.length + results.FailedUserAssignments.length + results.FailedAddressAssignments.length;
+            deferred.resolve(results);
+        }
+
         return deferred.promise;
     }
 
