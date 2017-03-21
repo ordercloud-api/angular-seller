@@ -130,15 +130,152 @@
                                 Complete
                                 <small class="text-danger" ng-if="userUpload.results.TotalErrorCount">
                                     <br>
-                                    With {{userUpload.results.TotalErrorCount + userUpload.results.TotalErrorCount == 1 ? ' failure' : ' failures'}}
-                                </small>
-                                <small class="text-danger" ng-if="userUpload.results.SkippedCategoryAssignments.length">
-                                    <br ng-if="!userUpload.results.TotalErrorCount">
-                                    {{userUpload.results.TotalErrorCount ? 'and' : 'With'}} {{userUpload.results.SkippedCategoryAssignments.length}} skipped category assignment{{userUpload.results.SkippedCategoryAssignments.length == 1 ? '' : 's'}}
+                                    With {{userUpload.results.TotalErrorCount}}{{userUpload.results.TotalErrorCount + userUpload.results.TotalErrorCount == 1 ? ' failure' : ' failures'}}
                                 </small>
                             </h5>
                         </li>
                     </ul>
+                </div>
+            </div>
+            <div class="col-sm-6" ng-if="userUpload.results">
+                <div class="panel panel-default" ng-if="!userUpload.results.TotalErrorCount > 0">
+                    <div class="panel-body text-center">
+                        <span class="fa-stack fa-4x">
+                          <i class="fa fa-certificate text-primary fa-stack-2x"></i>
+                          <i class="fa fa-upload fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <br><br>
+                        <b class="text-success">Good Job!</b> <br>
+                        <small>Everything was uploaded successfully. <br> You must really know the data model!</small>
+                    </div>
+                </div>
+                <div ng-if="userUpload.results.TotalErrorCount">
+                    <h3 class="page-title">Errors: </h3>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedUsers.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed Users</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="user in userUpload.results.FailedUsers">
+                                    <td>{{user.UserID}}</td>
+                                    <td>{{user.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedUserGroups.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed User Groups</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User Group ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="group in userUpload.results.FailedUserGroups">
+                                    <td>{{group.UserGroupID}}</td>
+                                    <td>{{group.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedUserAssignments.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed User Assignments</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="user in userUpload.results.FailedUserAssignments">
+                                    <td>{{user.UserID}}</td>
+                                    <td>{{user.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedAddresses.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed Addresses</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="address in userUpload.results.FailedAddresses">
+                                    <td>{{address.AddressID}}</td>
+                                    <td>{{address.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedAddressAssignments.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed Address Assignments</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="group in userUpload.results.FailedAddressAssignments">
+                                    <td>{{group.UserGroupID}}</td>
+                                    <td>{{group.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

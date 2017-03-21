@@ -15,6 +15,7 @@ function UserUploadController($scope, SelectedBuyer, UploadService, UserUploadSe
 
     vm.results = null;
     vm.uploadProgress = [];
+    vm.errors = [];
 
     vm.selectUserFile = selectUserFile;
     vm.selectUserGroupFile = selectUserGroupFile;
@@ -145,11 +146,11 @@ function UserUploadController($scope, SelectedBuyer, UploadService, UserUploadSe
                     vm.results = data;
                 },
                 function(ex) {
-                    console.log(ex)
+                    console.log(ex);
+                    vm.errors = ex;
                 },
                 function(progress) {
                     vm.uploadProgress = progress;
-                    console.log('vm.uploadProgress', vm.uploadProgress);
                 }
             );
     };
