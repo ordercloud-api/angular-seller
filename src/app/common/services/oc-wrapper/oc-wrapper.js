@@ -3,15 +3,33 @@ angular.module('orderCloud')
     .factory('sdkOrderCloud', OrderCloudService)
 ;
 
-function OrderCloudService($cookies, appname, apiurl, authurl) {
+function OrderCloudService($cookies, $rootScope, $q, appname, apiurl, authurl) {
     // get sdk from global variable
-    var sdk = nOrderCloud;
+    var sdk = {};
     var defaultClient = nOrderCloud.ApiClient.instance;
     var oauth2 = defaultClient.authentications['oauth2'];
     var authTokenCookieName = appname + '.token';
     var impersonationTokenCookieName = appname + '.impersonation.token';
-    sdk.ApiClient.instance.baseApiPath = apiurl + '/v1';
-    sdk.ApiClient.instance.baseAuthPath = authurl;
+    nOrderCloud.ApiClient.instance.baseApiPath = apiurl + '/v1';
+    nOrderCloud.ApiClient.instance.baseAuthPath = authurl;
+    for(var method in nOrderCloud) {
+        if (nOrderCloud.hasOwnProperty(method)) {
+            sdk[method] = {};
+            for (var apiCall in nOrderCloud[method]) {
+                if (nOrderCloud[method].hasOwnProperty(apiCall)) {
+                    sdk[method][apiCall] = (function() {
+                        var useMethod = method,
+                            useApiCall = apiCall;
+                        return function() {
+                            var dfd = $q.defer();
+                            dfd.resolve(nOrderCloud[useMethod][useApiCall].apply(nOrderCloud[useMethod], arguments));
+                            return dfd.promise;
+                        }
+                    })();
+                }
+            }
+        }
+    }
 
     var _getToken = function() {
         var token = $cookies.get(authTokenCookieName);
