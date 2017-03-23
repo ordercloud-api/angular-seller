@@ -16,7 +16,7 @@ function CatalogManagementConfig($stateProvider) {
                     return SelectedBuyer.DefaultCatalogID;
                 },
                 Tree: function(CategoryTreeService, Catalog) {
-                    return CategoryTreeService.GetCategoryTree(Catalog);
+                    return CategoryTreeService.GetCategoryTree(null, Catalog);
                 }
             },
             templateUrl: 'catalogManagement/templates/catalogManagement.html',

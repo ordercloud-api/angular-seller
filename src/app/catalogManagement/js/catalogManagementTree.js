@@ -17,21 +17,27 @@ function CategoryTreeService($q, OrderCloud, ocUtility) {
             })
     }
 
-    function getCategoryTree(Catalog) {
+    function getCategoryTree(categories, Catalog) {
         var timeLastUpdated = 0;
         if (Catalog.xp && Catalog.xp.LastUpdated) timeLastUpdated = Catalog.xp.LastUpdated;
-        function onCacheEmpty() {
-            return listCategories(Catalog);
+
+        if(!categories) {
+            function onCacheEmpty() {
+                return listCategories(Catalog);
+            }
+            return ocUtility.GetCache('CategoryTree', onCacheEmpty, timeLastUpdated)
+                .then(function(categoryList) {
+                    function onCacheEmpty() {
+                        return buildTree(categoryList);
+                    }
+                    return ocUtility.GetCache('CategoryTree', onCacheEmpty, timeLastUpdated);
+                })
+        } else {
+            function onCacheEmpty() {
+                return buildTree(categories);
+            }
+            return ocUtility.GetCache('CategoryTree', onCacheEmpty, timeLastUpdated);
         }
-        return ocUtility.GetCache('CategoryTree', onCacheEmpty, timeLastUpdated)
-            .then(function(categoryList) {
-                var timeLastUpdated = 0;
-                if (Catalog.xp && Catalog.xp.LastUpdated) timeLastUpdated = Catalog.xp.LastUpdated;
-                function onCacheEmpty() {
-                    return buildTree(categoryList);
-                }
-                return ocUtility.GetCache('CategoryTree', onCacheEmpty, timeLastUpdated);
-            })
     }
 
     function buildTree(CategoryList) {
