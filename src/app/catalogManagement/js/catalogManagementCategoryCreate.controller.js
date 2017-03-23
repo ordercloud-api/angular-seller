@@ -24,6 +24,7 @@ function CreateCategoryModalController($exceptionHandler, $uibModalInstance, Ord
         }
         vm.loading = OrderCloud.Categories.Create(vm.category, vm.catalogid)
             .then(function(category) {
+                OrderCloud.Catalogs.Patch({xp: {LastUpdated: Date.now()}}, CatalogID);
                 $uibModalInstance.close(category);
             })
             .catch(function(ex) {
