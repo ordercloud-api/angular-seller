@@ -16,8 +16,8 @@ function ProductPricingConfig($stateProvider) {
                 pageTitle: 'Product Pricing'
             },
             resolve : {
-                AssignmentList: function(ocProductPricing, $stateParams, buyerid) {
-                    return ocProductPricing.AssignmentList($stateParams.productid, buyerid);
+                AssignmentList: function(ocProductPricing, $stateParams) {
+                    return ocProductPricing.AssignmentList($stateParams.productid);
                 },
                 //when we group together the price schedules by the id , it messes with the pagination, I would would have to update the meta data before it resolves , and then translate the results.
                 AssignmentData: function (ocProductPricing, AssignmentList) {
