@@ -1,7 +1,8 @@
 angular.module('orderCloud')
     .controller('ProductPricingCtrl', ProductPricingController)
     .controller('PriceScheduleEditModalCtrl', PriceScheduleEditModalController)
-    .controller('PriceSchedulePriceBreakCtrl', PriceSchedulePriceBreakController)
+    .controller('PriceSchedulePriceBreakCreateCtrl', PriceSchedulePriceBreakCreateController)
+    .controller('PriceSchedulePriceBreakEditCtrl', PriceSchedulePriceBreakEditController)
 ;
 
 function ProductPricingController($q, $stateParams, $uibModal, toastr, AssignmentList, AssignmentData, ocProductPricing, ocConfirm, OrderCloud) {
@@ -65,6 +66,24 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                 vm.selectedPrice = oldAssignment;
                 ocProductPricing.PriceBreaks.DisplayQuantity(updatedPriceSchedule);
                 vm.selectedPrice.PriceSchedule = updatedPriceSchedule;
+                toastr.success('Price Break was created.');
+            });
+    };
+
+    vm.editPriceBreak = function(scope) {
+        ocProductPricing.PriceBreaks.Edit(vm.selectedPrice.PriceSchedule, scope.pricebreak)
+            .then(function(updatedPriceSchedule) {
+                var oldAssignment = angular.copy(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID]);
+                oldAssignment.PriceSchedule = updatedPriceSchedule;
+                oldAssignment.PriceScheduleID = updatedPriceSchedule.ID;
+
+                delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
+
+                vm.listAssignments[updatedPriceSchedule.ID] = oldAssignment;
+                vm.selectedPrice = oldAssignment;
+                ocProductPricing.PriceBreaks.DisplayQuantity(updatedPriceSchedule);
+                vm.selectedPrice.PriceSchedule = updatedPriceSchedule;
+                toastr.success('Price Break Quantity ' + scope.pricebreak.displayQuantity + ' was updated.');
             });
     };
 
@@ -282,12 +301,28 @@ function PriceScheduleEditModalController($uibModalInstance, SelectedPriceSchedu
     }
 }
 
-function PriceSchedulePriceBreakController($uibModalInstance, OrderCloud, PriceScheduleID) {
+function PriceSchedulePriceBreakCreateController($uibModalInstance, OrderCloud, PriceScheduleID) {
     var vm = this;
     vm.priceBreak = {
         Quantity: 1,
         Price: null
     };
+
+    vm.confirm = function() {
+        vm.loading = OrderCloud.PriceSchedules.SavePriceBreak(PriceScheduleID, vm.priceBreak)
+            .then(function(priceSchedule) {
+                $uibModalInstance.close(priceSchedule);
+            });
+    };
+
+    vm.cancel = function() {
+        $uibModalInstance.dismiss();
+    };
+}
+
+function PriceSchedulePriceBreakEditController($uibModalInstance, OrderCloud, PriceScheduleID, PriceBreak) {
+    var vm = this;
+    vm.priceBreak = angular.copy(PriceBreak);
 
     vm.confirm = function() {
         vm.loading = OrderCloud.PriceSchedules.SavePriceBreak(PriceScheduleID, vm.priceBreak)

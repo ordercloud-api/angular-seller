@@ -1,10 +1,13 @@
-<article>
+<article ui-view>
     <header class="l-page-header">
         <h3 class="l-page-header__title">
             Users
         </h3>
         <!--====== CREATE ======-->
         <div class="l-page-header__btns" oc-if-roles="BuyerUserAdmin">
+            <button type="button" class="btn btn-default btn-block" ui-sref=".userUpload"><i class="fa fa-upload"></i>
+                <span class="hidden-xs hidden-sm">Upload Users</span>
+            </button>
             <button type="button" class="btn btn-primary btn-block" ng-click="users.createUser()"><i class="fa fa-plus-circle"></i>
                 New User
             </button>

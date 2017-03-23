@@ -8,10 +8,10 @@ body {
   height:100%;
   overflow-x:hidden;
   overflow-y:auto;
-  padding-top:@navbar-height + @grid-gutter-width/2;
+  padding-top:@body-padding-top;
   @media(min-width:@screen-md-min) {
     padding-left:@navmenu-width;
-    padding-top:@grid-gutter-width/2;
+    padding-top:@body-padding-top - @navbar-height;
   }
 }
 
