@@ -1,0 +1,283 @@
+<article ui-view>
+    <div class="page-header">
+        <h3>Upload Users</h3>
+    </div>
+    <form name="UploadForm">
+        <div class="row">
+            <div class="col-sm-6">
+                <!--PARSING CONTENT-->
+                <div class="form-group">
+                    <label>User File:</label>
+                    <input class="ng-hide" name="upload" id="userCSV" type="file" />
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="userUpload.userFileData.Name" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="userUpload.selectUserFile()" ng-if="!userUpload.userFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="userUpload.clearUserFile()" ng-if="userUpload.userFileData.Name">Clear</button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>User Group File:</label>
+                    <input class="ng-hide" name="upload" id="userGroupCSV" type="file" />
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="userUpload.userGroupFileData.Name" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="userUpload.selectUserGroupFile()" ng-if="!userUpload.userGroupFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="userUpload.clearUserGroupFile()" ng-if="userUpload.userGroupFileData.Name">Clear</button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Address File:</label>
+                    <input class="ng-hide" name="upload" id="addressCSV" type="file" />
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="userUpload.addressFileData.Name" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="userUpload.selectAddressFile()" ng-if="!userUpload.addressFileData.Name">Select File</button>
+                            <button type="button" class="btn btn-warning" ng-click="userUpload.clearAddressFile()" ng-if="userUpload.addressFileData.Name">Clear</button>
+                        </span>
+                    </div>
+                </div>
+                <!--FILE STATISTICS-->
+                <div class="alert alert-danger" ng-if="userUpload.parsedUserData.UserIssues.length">
+                    Please resolve User issues
+                </div>
+                <div class="alert alert-danger" ng-if="userUpload.parsedUserGroupData.UserGroupIssues.length">
+                    Please resolve User Group issues
+                </div>
+                <div class="alert alert-danger" ng-if="userUpload.parsedAddressData.AddressIssues.length">
+                    Please resolve Address issues
+                </div>
+                <div ng-if="userUpload.parsedUserData && userUpload.parsedUserGroupData && userUpload.parsedAddressData">
+                    <div class="well">
+                        <p><b>User File Statistics</b></p>
+                        <p>Users: <span class="text-success">{{userUpload.parsedUserData.Users.length}}</span></p>
+                        <p ng-click="userUpload.userPreview = !userUpload.userPreview"><i class="fa" ng-class="{'fa-caret-right': !userUpload.preview, 'fa-caret-down': userUpload.preview}"></i> Preview</p>
+                        <pre uib-collapse="!userUpload.userPreview"><code>{{userUpload.parsedUserData.Users[0] | json}}</code></pre>
+                        <p ng-if="userUpload.parsedUserData.UserIssues.length">User Issues:</p>
+                        <ul ng-if="userUpload.parsedUserData.UserIssues.length">
+                            <li ng-repeat="item in userUpload.parsedUserData.UserIssues">
+                                <b>{{item.ProductID || item.ProductName}}</b><span> {{item.Issue}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="well">
+                        <p><b>User Group File Statistics</b></p>
+                        <p>User Groups: <span class="text-success">{{userUpload.parsedUserGroupData.UserGroups.length}}</span></p>
+                        <p ng-click="userUpload.userGroupPreview = !userUpload.userGroupPreview"><i class="fa" ng-class="{'fa-caret-right': !userUpload.preview, 'fa-caret-down': userUpload.preview}"></i> Preview</p>
+                        <pre uib-collapse="!userUpload.userGroupPreview"><code>{{userUpload.parsedUserGroupData.UserGroups[0] | json}}</code></pre>
+                        <p ng-if="userUpload.parsedUserGroupData.UserGroupIssues.length">User Group Issues:</p>
+                        <ul ng-if="userUpload.parsedUserGroupData.UserGroupIssues.length">
+                            <li ng-repeat="item in userUpload.parsedUserGroupData.UserGroupIssues">
+                                <b>{{item.UserID || item.UserName}}</b><span> {{item.Issue}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="well">
+                        <p><b>Address File Statistics</b></p>
+                        <p>Addresses: <span class="text-success">{{userUpload.parsedAddressData.Address.length}}</span></p>
+                        <p ng-click="userUpload.addressPreview = !userUpload.addressPreview"><i class="fa" ng-class="{'fa-caret-right': !userUpload.preview, 'fa-caret-down': userUpload.preview}"></i> Preview</p>
+                        <pre uib-collapse="!userUpload.addressPreview"><code>{{userUpload.parsedAddressData.Address[0] | json}}</code></pre>
+                        <p ng-if="userUpload.parsedAddressData.AddressIssues.length">Address Issues:</p>
+                        <ul ng-if="userUpload.parsedAddressData.AddressIssues.length">
+                            <li ng-repeat="item in userUpload.parsedAddressData.AddressIssues">
+                                <b>{{item.ID || item.CompanyName || item.AddressName}}</b><span> {{item.Issue}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--UPLOAD CONTENT-->
+                    <div class="form-group" ng-if="!userUpload.parsedUserData.UserIssues.length && !userUpload.parsedUserGroupData.UserGroupIssues.length && !userUpload.parsedAddressData.AddressIssues.length">
+                        <button type="button" class="btn btn-primary btn-block"
+                                ng-disabled="userUpload.parsedUserGroupData.UserGroupIssues.length || userUpload.parsedUserData.UserIssues.length || userUpload.parsedAddressData.AddressIssues.length"
+                                ng-click="userUpload.upload()">Upload</button>
+                    </div>
+                </div>
+                <div class="panel panel-default" ng-if="userUpload.started">
+                    <div class="panel-body" style="height:100px;" ng-if="!userUpload.uploadProgress.length">
+                        <div class="indicator-container">
+                            <div class="indicator">
+                                <div class="animation">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group" ng-if="userUpload.uploadProgress.length">
+                        <li class="list-group-item" ng-repeat="step in userUpload.uploadProgress" ng-class="{'list-group-item-success':((step.SuccessCount + step.ErrorCount) == step.Total) && !step.ErrorCount && step.Message != 'Done', 'list-group-item-warning':((step.SuccessCount + step.ErrorCount) == step.Total) && step.ErrorCount && step.Message != 'Done'}">
+                            <div class="row" ng-if="step.Message != 'Done'">
+                                <div class="col-xs-9">
+                                    <span ng-class="{'text-success':step.SuccessCount == step.Total, 'text-danger':(step.SuccessCount + step.ErrorCount) == step.Total && (step.SuccessCount < step.Total)}">
+                                        {{step.Message}}
+                                    </span>
+                                </div>
+                                <div class="col-xs-3 text-right">
+                                    <div ng-if="(step.Total && (step.SuccessCount + step.ErrorCount) < step.Total) && $last" class="text-muted"><small class="monospace">{{(step.SuccessCount + step.ErrorCount) + ' / ' + step.Total}}</small> <i class="fa fa-cog fa-lg fa-spin"></i></div>
+                                    <div ng-if="(step.Total && step.SuccessCount == step.Total) && !$last"><i class="fa fa-check fa-lg"></i></div>
+                                    <div ng-if="(step.Total && (step.SuccessCount + step.ErrorCount) == step.Total && (step.SuccessCount < step.Total)) && !$last">{{step.ErrorCount + (step.ErrorCount == 1 ? ' failure' : ' failures')}} <i class="fa fa-warning"></i></div>
+                                </div>
+                            </div>
+                            <div uib-collapse="(step.SuccessCount + step.ErrorCount) == step.Total">
+                                <br>
+                                <uib-progress class="progress-striped active" max="step.Total">
+                                    <uib-bar value="step.SuccessCount" type="success"></uib-bar>
+                                    <uib-bar value="step.ErrorCount" type="danger"></uib-bar>
+                                </uib-progress>
+                            </div>
+                            <h5 class="text-center text-uppercase" ng-if="step.Message == 'Done'">
+                                Complete
+                                <small class="text-danger" ng-if="userUpload.results.TotalErrorCount">
+                                    <br>
+                                    With {{userUpload.results.TotalErrorCount}}{{userUpload.results.TotalErrorCount + userUpload.results.TotalErrorCount == 1 ? ' failure' : ' failures'}}
+                                </small>
+                            </h5>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-6" ng-if="userUpload.results">
+                <div class="panel panel-default" ng-if="!userUpload.results.TotalErrorCount > 0">
+                    <div class="panel-body text-center">
+                        <span class="fa-stack fa-4x">
+                          <i class="fa fa-certificate text-primary fa-stack-2x"></i>
+                          <i class="fa fa-upload fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <br><br>
+                        <b class="text-success">Good Job!</b> <br>
+                        <small>Everything was uploaded successfully. <br> You must really know the data model!</small>
+                    </div>
+                </div>
+                <div ng-if="userUpload.results.TotalErrorCount">
+                    <h3 class="page-title">Errors: </h3>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedUsers.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed Users</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="user in userUpload.results.FailedUsers">
+                                    <td>{{user.UserID}}</td>
+                                    <td>{{user.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedUserGroups.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed User Groups</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User Group ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="group in userUpload.results.FailedUserGroups">
+                                    <td>{{group.UserGroupID}}</td>
+                                    <td>{{group.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedUserAssignments.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed User Assignments</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="user in userUpload.results.FailedUserAssignments">
+                                    <td>{{user.UserID}}</td>
+                                    <td>{{user.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedAddresses.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed Addresses</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="address in userUpload.results.FailedAddresses">
+                                    <td>{{address.AddressID}}</td>
+                                    <td>{{address.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" ng-if="userUpload.results.FailedAddressAssignments.length">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Failed Address Assignments</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col style="width:35%">
+                                    <col style="width:65%">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Error</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="group in userUpload.results.FailedAddressAssignments">
+                                    <td>{{group.UserGroupID}}</td>
+                                    <td>{{group.Error.Message}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</article>

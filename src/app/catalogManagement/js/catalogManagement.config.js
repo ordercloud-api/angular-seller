@@ -1,5 +1,6 @@
 angular.module('orderCloud')
     .config(CatalogManagementConfig)
+;
 
 function CatalogManagementConfig($stateProvider) {
     $stateProvider
@@ -14,8 +15,8 @@ function CatalogManagementConfig($stateProvider) {
                     //TODO: write unit test for this resolve
                     return SelectedBuyer.DefaultCatalogID;
                 },
-                Tree: function(CategoryTreeService, CatalogID) {
-                    return CategoryTreeService.GetCategoryTree(CatalogID);
+                Tree: function(CategoryTreeService, Catalog) {
+                    return CategoryTreeService.GetCategoryTree(null, Catalog);
                 }
             },
             templateUrl: 'catalogManagement/templates/catalogManagement.html',

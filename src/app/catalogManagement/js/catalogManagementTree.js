@@ -2,59 +2,79 @@ angular.module('orderCloud')
     .factory('CategoryTreeService', CategoryTreeService)
     .config(CategoryTreeConfig)
 ;
-function CategoryTreeService($q, OrderCloud) {
+function CategoryTreeService($q, OrderCloud, ocUtility) {
     return {
-        GetCategoryTree: tree,
+        ListAllCategories: listCategories,
+        GetCategoryTree: getCategoryTree,
+        BuildTree: buildTree,
         UpdateCategoryNode: update
     };
 
-    function tree(catalogid) {
-        var tree = [];
-        var deferred = $q.defer();
-        OrderCloud.Categories.List(null, 1, 100, null, null, null, 'all', catalogid)
-            .then(function(list) {
-                var query = _.where(list.Items, {
-                    ParentID: null
-                });
-                angular.forEach(query, function(node) {
-                    tree.push(getnode(node));
-                });
-
-                function getnode(node) {
-                    var children = _.where(list.Items, {
-                        ParentID: node.ID
-                    });
-                    if (children.length > 0) {
-                        node.children = children;
-                        angular.forEach(children, function(child) {
-                            return getnode(child);
-                        });
-                    } else {
-                        node.children = [];
-                    }
-                    return node;
-                }
-
-                deferred.resolve(tree);
-            });
-        return deferred.promise;
+    function listCategories(Catalog) {
+        return ocUtility.ListAll(OrderCloud.Categories.List, null, 'page', 100, null, null, null, 'all', Catalog.ID)
+            .then(function (categories) {
+                getCategoryTree(categories, Catalog);
+            })
     }
 
-    function update(event, catalogid) {
+    function getCategoryTree(categories, Catalog) {
+        var timeLastUpdated = 0;
+        if (Catalog.xp && Catalog.xp.LastUpdated) timeLastUpdated = Catalog.xp.LastUpdated;
+
+        if(!categories) {
+            function onCacheEmpty() {
+                return listCategories(Catalog);
+            }
+            return ocUtility.GetCache('CategoryTree', onCacheEmpty, timeLastUpdated)
+                .then(function(categoryList) {
+                    function onCacheEmpty() {
+                        return buildTree(categoryList);
+                    }
+                    return ocUtility.GetCache('CategoryTree', onCacheEmpty, timeLastUpdated);
+                })
+        } else {
+            function onCacheEmpty() {
+                return buildTree(categories);
+            }
+            return ocUtility.GetCache('CategoryTree', onCacheEmpty, timeLastUpdated);
+        }
+    }
+
+    function buildTree(CategoryList) {
+        var result = [];
+        angular.forEach(_.where(CategoryList.Items, {ParentID: null}), function (node) {
+            result.push(getnode(node));
+        });
+        function getnode(node) {
+            var children = _.where(CategoryList.Items, {ParentID: node.ID});
+            if (children.length > 0) {
+                node.children = children;
+                angular.forEach(children, function (child) {
+                    return getnode(child);
+                });
+            } else {
+                node.children = [];
+            }
+            return node;
+        }
+        return $q.when(result);
+    }
+
+    function update(event, Catalog) {
         var sourceParentNodeList = event.source.nodesScope.$modelValue,
             destParentNodeList = event.dest.nodesScope.$modelValue,
             masterDeferred = $q.defer();
 
-        updateNodeList(destParentNodeList).then(function() {
+        updateNodeList(destParentNodeList).then(function () {
             if (sourceParentNodeList != destParentNodeList) {
                 if (sourceParentNodeList.length) {
-                    updateNodeList(sourceParentNodeList).then(function() {
-                        updateParentID().then(function() {
+                    updateNodeList(sourceParentNodeList).then(function () {
+                        updateParentID().then(function () {
                             masterDeferred.resolve();
                         });
                     });
                 } else {
-                    updateParentID().then(function() {
+                    updateParentID().then(function () {
                         masterDeferred.resolve();
                     });
                 }
@@ -64,18 +84,18 @@ function CategoryTreeService($q, OrderCloud) {
         function updateNodeList(nodeList) {
             var deferred = $q.defer(),
                 nodeQueue = [];
-            angular.forEach(nodeList, function(cat, index) {
-                nodeQueue.push((function() {
+            angular.forEach(nodeList, function (cat, index) {
+                nodeQueue.push((function () {
                     return OrderCloud.Categories.Patch(cat.ID, {
                         ListOrder: index
-                    }, catalogid);
+                    }, Catalog.ID);
                 }));
             });
 
             var queueIndex = 0;
 
             function run(i) {
-                nodeQueue[i]().then(function() {
+                nodeQueue[i]().then(function () {
                     queueIndex++;
                     if (queueIndex < nodeQueue.length) {
                         run(queueIndex);
@@ -84,6 +104,7 @@ function CategoryTreeService($q, OrderCloud) {
                     }
                 });
             }
+
             run(queueIndex);
 
             return deferred.promise;
@@ -99,8 +120,8 @@ function CategoryTreeService($q, OrderCloud) {
                 parentID = null;
             }
             event.source.nodeScope.node.ParentID = parentID;
-            OrderCloud.Categories.Update(event.source.nodeScope.node.ID, event.source.nodeScope.node, catalogid)
-                .then(function() {
+            OrderCloud.Categories.Update(event.source.nodeScope.node.ID, event.source.nodeScope.node, Catalog.ID)
+                .then(function () {
                     deferred.resolve();
                 });
             return deferred.promise;

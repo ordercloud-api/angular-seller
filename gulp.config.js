@@ -78,18 +78,18 @@ function getConstants() {
         case 'local':
             result.authurl = 'http://core.four51.com:11629/oauth/token';
             result.apiurl = 'http://core.four51.com:9002';
-            break;
-        case 'test':
-            result.authurl = 'https://testauth.ordercloud.io/oauth/token';
-            result.apiurl = 'https://testapi.ordercloud.io';
+            result.devapiurl = 'http://localhost:7203/api';
             break;
         case 'qa':
             result.authurl = 'https://qaauth.ordercloud.io/oauth/token';
             result.apiurl = 'https://qaapi.ordercloud.io';
+            result.devapiurl = 'http://localhost:7203/api';
             break;
         default:
             result.authurl = 'https://auth.ordercloud.io/oauth/token';
             result.apiurl = 'https://api.ordercloud.io';
+            //result.devapiurl = 'https://cups-admin.herokuapp.com/api';
+            result.devapiurl = 'http://localhost:7203/api';
             break;
     }
     if (process.env.apiurl && process.env.authurl) {
@@ -104,8 +104,14 @@ function getConstants() {
     if (process.env.appname) result.appname = process.env.appname;
     if (process.env.scope) result.scope = process.env.scope;
     if (process.env.ocscope) result.ocscope = process.env.ocscope;
+
+    if (process.env.buyerid) result.buyerid = process.env.buyerid;
+    if (process.env.catalogid) result.catalogid = process.env.catalogid;
+    if (process.env.devapiurl) result.devapiurl = process.env.devapiurl;
+
     if (process.env.html5mode) result.html5mode = process.env.html5mode;
     if (process.env.bootswatchtheme) result.bootswatchtheme = process.env.bootswatchtheme;
+
     return result;
 }
 
