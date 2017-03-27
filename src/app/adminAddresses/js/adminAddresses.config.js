@@ -17,8 +17,8 @@ function AdminAddressesConfig($stateProvider){
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                AddressList: function(OrderCloud, Parameters) {
-                    return OrderCloud.AdminAddresses.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                AddressList: function(sdkOrderCloud, Parameters) {
+                    return sdkOrderCloud.AdminAddresses.List(Parameters);
                 }
             }
         })

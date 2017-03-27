@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminAddressEditModalCtrl', AdminAddressEditModalController)
 ;
 
-function AdminAddressEditModalController($timeout, $uibModalInstance, $exceptionHandler, $scope, OrderCloud, ocGeography, SelectedAddress) {
+function AdminAddressEditModalController($timeout, $uibModalInstance, $exceptionHandler, $scope, sdkOrderCloud, ocGeography, SelectedAddress) {
     var vm = this;
 
     vm.adminAddress = angular.copy(SelectedAddress);
@@ -22,7 +22,7 @@ function AdminAddressEditModalController($timeout, $uibModalInstance, $exception
     });
 
     vm.submit = function() {
-        OrderCloud.AdminAddresses.Update(SelectedAddress.ID, vm.adminAddress)
+        vm.loading = sdkOrderCloud.AdminAddresses.Update(SelectedAddress.ID, vm.adminAddress)
             .then(function(updatedAddress) {
                 $uibModalInstance.close(updatedAddress);
             })

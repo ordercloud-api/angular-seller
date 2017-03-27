@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUsersCtrl', AdminUsersController)
 ;
 
-function AdminUsersController($state, toastr, OrderCloud, ocAdminUsers, ocParameters, AdminUsersList, Parameters) {
+function AdminUsersController($state, toastr, sdkOrderCloud, ocAdminUsers, ocParameters, AdminUsersList, Parameters) {
     var vm = this;
     vm.list = AdminUsersList;
     vm.parameters = Parameters;
@@ -50,7 +50,8 @@ function AdminUsersController($state, toastr, OrderCloud, ocAdminUsers, ocParame
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.AdminUsers.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.AdminUsers.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;

@@ -19,6 +19,7 @@ function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, Lo
         vm.loading = sdkOrderCloud.Auth.Login(vm.credentials.Username, vm.credentials.Password, clientid, scope)
             .then(function(data) {
                 sdkOrderCloud.SetToken(data.access_token);
+                //TODO: restore refresh token storage
                 //vm.rememberStatus ? OrderCloud.Refresh.SetToken(data['refresh_token']) : angular.noop();
                 //OrderCloud.Auth.SetToken(data['access_token']);
                 $state.go('home');

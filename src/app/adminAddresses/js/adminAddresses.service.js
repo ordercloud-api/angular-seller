@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocAdminAddresses', OrderCloudAdminAddresses)
 ;
 
-function OrderCloudAdminAddresses($uibModal, ocConfirm, OrderCloud) {
+function OrderCloudAdminAddresses($uibModal, ocConfirm, sdkOrderCloud) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -36,7 +36,7 @@ function OrderCloudAdminAddresses($uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete admin address',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.AdminAddresses.Delete(address.ID)
+                return sdkOrderCloud.AdminAddresses.Delete(address.ID)
             })
     }
 

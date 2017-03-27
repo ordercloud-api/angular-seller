@@ -2,13 +2,13 @@ angular.module('orderCloud')
     .controller('AdminUserGroupCtrl', AdminUserGroupController)
 ;
 
-function AdminUserGroupController($state, toastr, OrderCloud, ocAdminUserGroups, SelectedAdminUserGroup) {
+function AdminUserGroupController($state, toastr, sdkOrderCloud, ocAdminUserGroups, SelectedAdminUserGroup) {
     var vm = this;
     vm.group = SelectedAdminUserGroup;
     vm.model = angular.copy(SelectedAdminUserGroup);
 
     vm.update = function() {
-        OrderCloud.AdminUserGroups.Update(vm.group.ID, vm.model)
+        sdkOrderCloud.AdminUserGroups.Update(vm.group.ID, vm.model)
             .then(function(updatedUserGroup) {
                 if (updatedUserGroup.ID != vm.group.ID) $state.go('.', {adminusergroupid:updatedUserGroup.ID}, {notify:false});
                 vm.group = updatedUserGroup;

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUserGroupUsersCtrl', AdminUserGroupUsersController)
 ;
 
-function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocAdminUsers, OrderCloud, ocParameters, ocRolesService, UserList, CurrentAssignments, Parameters ) {
+function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocAdminUsers, sdkOrderCloud, ocParameters, ocRolesService, UserList, CurrentAssignments, Parameters ) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
@@ -50,7 +50,8 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.AdminUsers.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        var parameters = angular.extend(Parameters, {page: vm.list.Meta.Page + 1})
+        return sdkOrderCloud.AdminUsers.List(parameters)
             .then(function(data) {
                 var mappedData = ocAdminUsers.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -114,7 +115,7 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = OrderCloud.AdminUserGroups.SaveUserAssignment(newAssignment)
+                    vm.searchLoading = sdkOrderCloud.AdminUserGroups.SaveUserAssignment(newAssignment)
                         .then(function() {
                             newAdminUser.Assigned = true;
                             CurrentAssignments.push(newAssignment);

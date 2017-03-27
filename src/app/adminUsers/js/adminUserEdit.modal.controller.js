@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUserEditModalCtrl', AdminUserEditModalController)
 ;
 
-function AdminUserEditModalController($exceptionHandler, $uibModalInstance, OrderCloud, SelectedUser) {
+function AdminUserEditModalController($exceptionHandler, $uibModalInstance, sdkOrderCloud, SelectedUser) {
     var vm = this;
     vm.user = angular.copy(SelectedUser);
     vm.username = SelectedUser.Username;
@@ -15,8 +15,7 @@ function AdminUserEditModalController($exceptionHandler, $uibModalInstance, Orde
     vm.submit = function() {
         var today = new Date();
         vm.user.TermsAccepted = today;
-        vm.loading = {backdrop:false};
-        vm.loading.promise = OrderCloud.AdminUsers.Update(vm.user.ID, vm.user)
+        vm.loading = sdkOrderCloud.AdminUsers.Update(vm.user.ID, vm.user)
             .then(function(data) {
                 $uibModalInstance.close(data);
             })

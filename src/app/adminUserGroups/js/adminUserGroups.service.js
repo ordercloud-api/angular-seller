@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocAdminUserGroups', OrderCloudAdminUserGroups)
 ;
 
-function OrderCloudAdminUserGroups($uibModal, ocConfirm, OrderCloud) {
+function OrderCloudAdminUserGroups($uibModal, ocConfirm, sdkOrderCloud) {
     var service = {
         Create: _create,
         Delete: _delete
@@ -22,7 +22,7 @@ function OrderCloudAdminUserGroups($uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete admin user group',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.AdminUserGroups.Delete(userGroup.ID)
+                return sdkOrderCloud.AdminUserGroups.Delete(userGroup.ID)
             })
     }
 

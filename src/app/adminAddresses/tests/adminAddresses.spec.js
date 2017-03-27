@@ -103,8 +103,7 @@ describe('Component: AdminAddresses', function(){
             it('should reload the state with ocParameters.Create()');
         });
         describe('Function: vm.search', function() {
-            it('should reload the state with ocParameters.Create() and notify set to false');
-            it('should call OrderCloud.AdminAddresses.List()');
+            it('should reload at page 1 with the search parameter');
             it('should set vm.list equal to the response');
             it('should set reset vm.searchResults based on vm.parameters.search');
         });

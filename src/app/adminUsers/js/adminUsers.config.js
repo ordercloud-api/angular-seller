@@ -17,8 +17,8 @@ function AdminUsersConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                AdminUsersList: function(OrderCloud, Parameters) {
-                    return OrderCloud.AdminUsers.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                AdminUsersList: function(sdkOrderCloud, Parameters) {
+                    return sdkOrderCloud.AdminUsers.List(Parameters);
                 }
             }
         })
@@ -37,8 +37,8 @@ function AdminUsersConfig($stateProvider) {
                 CurrentAssignments: function($stateParams, ocAdminUsers) {
                     return ocAdminUsers.Assignments.Get($stateParams.adminusergroupid);
                 },
-                UserList: function(Parameters, CurrentAssignments, ocAdminUsers, OrderCloud) {
-                    return OrderCloud.AdminUsers.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+                UserList: function(Parameters, CurrentAssignments, ocAdminUsers, sdkOrderCloud) {
+                    return sdkOrderCloud.AdminUsers.List(Parameters)
                         .then(function(data) {
                             return ocAdminUsers.Assignments.Map(CurrentAssignments, data);
                         })

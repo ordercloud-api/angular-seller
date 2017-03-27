@@ -17,8 +17,8 @@ function AdminUserGroupsConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                AdminUserGroupList: function(OrderCloud, Parameters) {
-                    return OrderCloud.AdminUserGroups.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                AdminUserGroupList: function(sdkOrderCloud, Parameters) {
+                    return sdkOrderCloud.AdminUserGroups.List(Parameters);
                 }
             }
         })
@@ -32,8 +32,8 @@ function AdminUserGroupsConfig($stateProvider) {
                 pageTitle: 'Admin User Group'
             },
             resolve: {
-                SelectedAdminUserGroup: function($stateParams, OrderCloud) {
-                    return OrderCloud.AdminUserGroups.Get($stateParams.adminusergroupid);
+                SelectedAdminUserGroup: function($stateParams, sdkOrderCloud) {
+                    return sdkOrderCloud.AdminUserGroups.Get($stateParams.adminusergroupid);
                 }
             }
         })
