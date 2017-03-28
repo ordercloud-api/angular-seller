@@ -7,7 +7,7 @@
                 <h3 class="text-center">Admin Login</h3>
                 <div class="form-group">
                     <label for="Username" class="sr-only">Username</label>
-                    <input id="Username" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autocomplete="off" ng-model="login.credentials.Username" ng-required="true" />
+                    <input id="Username" type="text" class="form-control" placeholder="Username" autocapitalize="off" autofocus autocorrect="off" autocomplete="off" ng-model="login.credentials.Username" ng-required="true" />
                 </div>
                 <div class="form-group">
                     <label for="Password" class="sr-only">Password</label>
@@ -59,7 +59,28 @@
                 </div>
                 <div class="form-group">
                     <label for="NewPassword" class="sr-only">New Password</label>
-                    <input type="password" class="form-control" id="NewPassword" placeholder="New Password" ng-model="login.credentials.NewPassword" ng-required="true" />
+                    <input type="password" class="form-control" id="NewPassword" name="NewPassword" placeholder="New Password" ng-model="login.credentials.NewPassword" ng-required="true" autofocus/>
+                </div>
+                <div class="form-group">
+                    <label for="ConfirmPassword" class="sr-only">Confirm Password</label>
+                    <input type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm New Password" ng-model="login.credentials.ConfirmPassword" ng-required="true" />
+                </div>
+                <button type="submit" id="reset_submit" class="btn btn-primary btn-block" ng-disabled="ResetPasswordForm.$invalid || login.credentials.NewPassword != login.credentials.ConfirmPassword">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!--RESET PASSWORD BY TOKEN-->
+    <div ng-switch-when="resetByToken">
+        <div class="panel panel-default">
+            <form class="panel-body" name="ResetPasswordForm" ng-submit="login.resetPasswordByToken()" >
+                <h3 class="text-center">Reset Password</h3>
+                <div class="alert alert-info">
+                    Due to a change in how we store password information, <br>as of <b>TBD</b> you must reset your password. <br> You can use the same password as before. 
+                </div>
+                <div class="form-group">
+                    <label for="NewPassword" class="sr-only">New Password</label>
+                    <input type="password" class="form-control" id="NewPassword" name="NewPassword" placeholder="New Password" ng-model="login.credentials.NewPassword" ng-required="true" autofocus/>
                 </div>
                 <div class="form-group">
                     <label for="ConfirmPassword" class="sr-only">Confirm Password</label>
