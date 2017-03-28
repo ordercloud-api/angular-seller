@@ -3,15 +3,6 @@
         Security Profiles
     </h3>
 </header>
-<div class="row" ng-if="security.isAdmin">
-    <div class="col-md-6">
-        <div  class="alert alert-warning">
-            <b>Warning!</b> <br>
-            Upon first load and after a page refresh, these assignments will <b>not reflect the actual assignments in the API</b>.
-            Until we have a way to list admin company level security profile assignments this issue will persist.
-        </div>
-    </div>
-</div>
 <form name="security.form">
     <fieldset class="form-group">
         <div class="checkbox" ng-repeat="profile in security.profiles">

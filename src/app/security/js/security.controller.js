@@ -9,7 +9,6 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
     vm.buyerid = $stateParams.buyerid;
     vm.usergroupid = $stateParams.usergroupid;
     vm.adminusergroupid = $stateParams.adminusergroupid;
-    vm.isAdmin = !(vm.buyerid || vm.usergroupid || vm.adminusergroupid);
 
     vm.updateAssignment = function(scope) {
         if (scope.profile.selected) {

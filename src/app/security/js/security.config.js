@@ -14,14 +14,14 @@ function SecurityConfig($stateProvider) {
                 pageTitle: 'Admin Security'
             },
             resolve: {
-                Assignments: function(OrderCloud) {
-                    return OrderCloud.SecurityProfiles.ListAssignments(null, null, null, 'company', null, 100, null);
+                Assignments: function(sdkOrderCloud) {
+                    return sdkOrderCloud.SecurityProfiles.ListAssignments({level:"company", pageSize:100, commerceRole:'seller'});
                 },
-                AvailableProfiles: function($q, OrderCloud, Assignments) {
-                    return OrderCloud.SecurityProfiles.List(null, null, 100, null, null, {IsDevProfile:false})
+                AvailableProfiles: function($q, sdkOrderCloud, Assignments) {
+                    return sdkOrderCloud.SecurityProfiles.List({pageSize:100})
                         .then(function(data) {
                             return _.map(data.Items, function(sp) {
-                                sp.selected = _.pluck(_.filter(Assignments.Items, {BuyerID:null}), 'SecurityProfileID').indexOf(sp.ID) > -1;
+                                sp.selected = _.pluck(Assignments.Items, 'SecurityProfileID').indexOf(sp.ID) > -1;
                                 return sp;
                             });
                         });
@@ -37,11 +37,11 @@ function SecurityConfig($stateProvider) {
                 pageTitle: 'Admin User Group Security'
             },
             resolve: {
-                Assignments: function($stateParams, OrderCloud) {
-                    return OrderCloud.SecurityProfiles.ListAssignments(null, null, $stateParams.adminusergroupid, 'group', null, 100, null);
+                Assignments: function($stateParams, sdkOrderCloud) {
+                    return sdkOrderCloud.SecurityProfiles.ListAssignments({level:'group', pageSize:100, userGroupID:$stateParams.adminusergroupid, commerceRole:'seller'});
                 },
-                AvailableProfiles: function($q, OrderCloud, Assignments) {
-                    return OrderCloud.SecurityProfiles.List(null, null, 100, null, null, {IsDevProfile:false})
+                AvailableProfiles: function($q, sdkOrderCloud, Assignments) {
+                    return sdkOrderCloud.SecurityProfiles.List({pageSize:100})
                         .then(function(data) {
                             return _.map(data.Items, function(sp) {
                                 sp.selected = _.pluck((Assignments.Items), 'SecurityProfileID').indexOf(sp.ID) > -1;
@@ -61,11 +61,11 @@ function SecurityConfig($stateProvider) {
                 pageTitle: 'Buyer Security'
             },
             resolve: {
-                Assignments: function($stateParams, OrderCloud) {
-                    return OrderCloud.SecurityProfiles.ListAssignments(null, null, null, 'company', null, 100, $stateParams.buyerid);
+                Assignments: function($stateParams, sdkOrderCloud) {
+                    return sdkOrderCloud.SecurityProfiles.ListAssignments({level:'company', pageSize:100, buyerID:$stateParams.buyerid, commerceRole:'buyer'});
                 },
-                AvailableProfiles: function($q, OrderCloud, Assignments) {
-                    return OrderCloud.SecurityProfiles.List(null, null, 100, null, null, {IsDevProfile:false})
+                AvailableProfiles: function($q, sdkOrderCloud, Assignments) {
+                    return sdkOrderCloud.SecurityProfiles.List({pageSize:100})
                         .then(function(data) {
                             return _.map(data.Items, function(sp) {
                                 sp.selected = _.pluck(Assignments.Items, 'SecurityProfileID').indexOf(sp.ID) > -1;
@@ -84,11 +84,11 @@ function SecurityConfig($stateProvider) {
                 pageTitle: 'User Group Security'
             },
             resolve: {
-                Assignments: function($stateParams, OrderCloud) {
-                    return OrderCloud.SecurityProfiles.ListAssignments(null, null, $stateParams.usergroupid, 'group', null, 100, $stateParams.buyerid);
+                Assignments: function($stateParams, sdkOrderCloud) {
+                    return sdkOrderCloud.SecurityProfiles.ListAssignments({level:'group', pageSize:100, userGroupID:$stateParams.usergroupid, commerceRole:'buyer'});
                 },
-                AvailableProfiles: function($q, OrderCloud, Assignments) {
-                    return OrderCloud.SecurityProfiles.List(null, null, 100, null, null, {IsDevProfile:false})
+                AvailableProfiles: function($q, sdkOrderCloud, Assignments) {
+                    return sdkOrderCloud.SecurityProfiles.List({pageSize:100})
                         .then(function(data) {
                             return _.map(data.Items, function(sp) {
                                 sp.selected = _.pluck(Assignments.Items, 'SecurityProfileID').indexOf(sp.ID) > -1;
