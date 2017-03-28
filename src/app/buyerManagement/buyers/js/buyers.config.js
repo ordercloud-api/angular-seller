@@ -17,8 +17,8 @@ function BuyersConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                BuyerList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Buyers.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters);
+                BuyerList: function(sdkOrderCloud, Parameters) {
+                    return sdkOrderCloud.Buyers.List(Parameters);
                 }
             }
         })

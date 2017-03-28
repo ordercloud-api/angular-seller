@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCtrl', BuyerController)
 ;
 
-function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers, SelectedBuyer){
+function BuyerController($state, $exceptionHandler, toastr, sdkOrderCloud, ocBuyers, SelectedBuyer){
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.settings = angular.copy(SelectedBuyer);
@@ -12,7 +12,7 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers
     };
 
     vm.updateBuyer = function() {
-        vm.updateLoading = OrderCloud.Buyers.Update(vm.settings, SelectedBuyer.ID)
+        vm.updateLoading = sdkOrderCloud.Buyers.Update(SelectedBuyer.ID, vm.settings)
             .then(function(data) {
                 vm.selectedBuyer = data;
                 vm.settings = angular.copy(data);
@@ -36,12 +36,4 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloud, ocBuyers
                 $state.go('buyers');
             });
     };
-
-    vm.createBuyer = function() {
-        ocBuyers.Create()
-            .then(function(data) {
-                toastr.success(data.Name + ' was created.');
-                $state.go('buyer.settings', {buyerid: data.ID});
-            })
-    }
 }

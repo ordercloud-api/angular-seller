@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocBuyers', BuyersService)
 ;
 
-function BuyersService($uibModal, ocConfirm, OrderCloud) {
+function BuyersService($uibModal, ocConfirm, sdkOrderCloud) {
     var service = {
         Create: _create,
         Delete: _delete
@@ -24,7 +24,7 @@ function BuyersService($uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete buyer organization',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Buyers.Delete(buyer.ID)
+                return sdkOrderCloud.Buyers.Delete(buyer.ID)
             })
     }
 
