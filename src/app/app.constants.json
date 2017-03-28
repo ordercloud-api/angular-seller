@@ -1,8 +1,8 @@
 {
   "appname": "Angular Admin",
-  "scope": ["FullAccess"],
+  "scope": ["AddressAdmin", "AdminUserAdmin", "AdminUserGroupAdmin", "ApprovalRuleAdmin", "BuyerAdmin", "BuyerUserAdmin", "CatalogAdmin", "CategoryAdmin", "CostCenterAdmin", "CreditCardAdmin", "CreditCardReader", "InventoryAdmin", "MeAdmin", "MessageConfigAssignmentAdmin", "MeXpAdmin", "OrderAdmin", "OrderReader", "PriceScheduleAdmin", "ProductAdmin", "ProductAssignmentAdmin", "PromotionAdmin", "SpendingAccountAdmin", "UnsubmittedOrderReader", "UserGroupAdmin", "ProductReader", "BuyerReader", "CatalogReader", "CategoryReader", "AddressReader", "CostCenterReader", "PromotionReader", "PriceScheduleReader", "SpendingAccountReader", "BuyerUserReader", "UserGroupReader", "ApprovalRuleReader", "PermissionAdmin", "AdminUserReader", "AdminUserGroupReader", "MeAddressAdmin", "MeCreditCardAdmin", "OverrideUnitPrice", "OverrideShipping", "OverrideTax", "SetSecurityProfile"],
   "clientid": "D89E2196-CC75-4312-A4A9-67E4CC4BEDFB",
-  "environment": "prod",
+  "environment": "staging",
   "defaultstate": "home",
   "html5mode": false,
   "bootswatchtheme": null
