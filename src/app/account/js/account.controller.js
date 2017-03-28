@@ -2,7 +2,7 @@ angular.module('orderCloud')
 	.controller('AccountCtrl', AccountController)
 ;
 
-function AccountController($exceptionHandler, CurrentUser, ocAccount, OrderCloud, toastr){
+function AccountController($exceptionHandler, CurrentUser, ocAccount, sdkOrderCloud, toastr){
 	var vm = this;
 	vm.profile = angular.copy(CurrentUser);
 	vm.currentUser = CurrentUser;
@@ -14,7 +14,7 @@ function AccountController($exceptionHandler, CurrentUser, ocAccount, OrderCloud
 	vm.updateProfile = function() {
 		ocAccount.ConfirmPassword(vm.currentUser)
 			.then(function() {
-				vm.profileUpdateLoading = OrderCloud.Me.Patch(_.pick(vm.profile, ['FirstName', 'LastName', 'Email', 'Phone']))
+				vm.profileUpdateLoading = sdkOrderCloud.Me.Patch(_.pick(vm.profile, ['FirstName', 'LastName', 'Email', 'Phone']))
 					.then(function(updatedUser) {
 						vm.profile = angular.copy(updatedUser);
 						vm.currentUser = updatedUser;
@@ -27,7 +27,7 @@ function AccountController($exceptionHandler, CurrentUser, ocAccount, OrderCloud
 	vm.updateUsername = function() {
 		ocAccount.ConfirmPassword(vm.currentUser)
 			.then(function() {
-				vm.profileUpdateLoading = OrderCloud.Me.Patch(_.pick(vm.profile, 'Username'))
+				vm.profileUpdateLoading = sdkOrderCloud.Me.Patch(_.pick(vm.profile, 'Username'))
 					.then(function(updatedUser) {
 						vm.profile = angular.copy(updatedUser);
 						vm.currentUser = updatedUser;
@@ -46,9 +46,7 @@ function AccountController($exceptionHandler, CurrentUser, ocAccount, OrderCloud
 
 	vm.changePassword = function(){
 		ocAccount.ChangePassword(vm.currentUser)
-			.then(function(updatedUser) {
-				vm.profile = angular.copy(updatedUser);
-				vm.currentUser = updatedUser;
+			.then(function() {
 				toastr.success('Your password was successfully changed. Next time you log in you will have to use your new password.')
 			});
 	};

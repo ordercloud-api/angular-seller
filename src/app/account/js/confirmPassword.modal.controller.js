@@ -2,7 +2,7 @@ angular.module('orderCloud')
 	.controller('ConfirmPasswordModalCtrl', ConfirmPasswordModalController)
 ;
 
-function ConfirmPasswordModalController($exceptionHandler, $uibModalInstance, CurrentUser, $cookies, OrderCloud, appname) {
+function ConfirmPasswordModalController($exceptionHandler, $uibModalInstance, CurrentUser, $cookies, sdkOrderCloud, appname, clientid, scope) {
 	var vm = this;
 
 	vm.submit = function() {
@@ -11,7 +11,7 @@ function ConfirmPasswordModalController($exceptionHandler, $uibModalInstance, Cu
 			Password: vm.password
 		};
 
-		OrderCloud.Auth.GetToken(checkPasswordCredentials)
+		sdkOrderCloud.Auth.Login(checkPasswordCredentials.Username, checkPasswordCredentials.Password, clientid, scope)
 			.then(function() {
 				var expiresIn = new Date();
 				expiresIn.setMinutes(expiresIn.getMinutes() + 20);
