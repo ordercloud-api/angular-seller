@@ -8,8 +8,10 @@ function OrderCloudService($cookies, $rootScope, $q, appname, apiurl, authurl) {
     var sdk = {};
     var defaultClient = OrderCloudSDK.ApiClient.instance;
     var oauth2 = defaultClient.authentications['oauth2'];
-    var authTokenCookieName = appname + '.token';
-    var impersonationTokenCookieName = appname + '.impersonation.token';
+    var cookieAppName = appname.replace(/ /g, '_').toLowerCase();
+    var authTokenCookieName = cookieAppName + '.token';
+    var impersonationTokenCookieName = cookieAppName + '.impersonation.token';
+    var refreshTokenCookieName = cookieAppName + '.refresh.token';
     OrderCloudSDK.ApiClient.instance.baseApiPath = apiurl + '/v1';
     OrderCloudSDK.ApiClient.instance.baseAuthPath = authurl;
     for(var method in OrderCloudSDK) {
@@ -43,6 +45,11 @@ function OrderCloudService($cookies, $rootScope, $q, appname, apiurl, authurl) {
         return token;
     };
 
+    var _getRefreshToken = function() {
+        var token = $cookies.get(refreshTokenCookieName);
+        return token;
+    }
+
     var _setToken = function(token) {
         oauth2.accessToken = token;
         $cookies.put(authTokenCookieName, token);
@@ -53,10 +60,16 @@ function OrderCloudService($cookies, $rootScope, $q, appname, apiurl, authurl) {
         $cookies.put(impersonationTokenCookieName, token);
     };
 
+    var _setRefreshToken = function(token) {
+        $cookies.put(refreshTokenCookieName, token);
+    }
+
     sdk.GetToken = _getToken;
-    sdk.GetIMpersonationToken = _getImpersonationToken;
+    sdk.GetImpersonationToken = _getImpersonationToken;
+    sdk.GetRefreshToken = _getRefreshToken;
     sdk.SetToken = _setToken;
     sdk.SetImpersonationToken = _setImpersonationToken;
+    sdk.SetRefreshToken = _setRefreshToken;
 
     //init authentication for page refresh
     _getToken();

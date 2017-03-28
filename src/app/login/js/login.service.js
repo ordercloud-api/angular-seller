@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('LoginService', LoginService)
 ;
 
-function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, ocRolesService, clientid) {
+function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, sdkOrderCloud, ocRolesService, clientid, scope, defaultstate) {
     return {
         SendVerificationCode: _sendVerificationCode,
         ResetPassword: _resetPassword,
@@ -58,14 +58,15 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, ocRoles
         $state.go('login', {}, {reload: true});
     }
 
-    function _rememberMe() {
-        var availableRefreshToken = OrderCloud.Refresh.ReadToken() || null;
+    function _rememberMe(currentState) {
+        var availableRefreshToken = sdkOrderCloud.GetRefreshToken() || null;
 
         if (availableRefreshToken) {
-            OrderCloud.Refresh.GetToken(availableRefreshToken)
+            sdkOrderCloud.Auth.RefreshToken(availableRefreshToken, clientid, scope)
                 .then(function(data) {
-                    OrderCloud.Auth.SetToken(data.access_token);
-                    $state.go('home');
+                    sdkOrderCloud.Auth.SetToken(data.access_token);
+                    var redirectTo = currentState || defaultstate;
+                    $state.go(redirectTo);
                 })
                 .catch(function () {
                     toastr.error('Your token has expired, please log in again.');

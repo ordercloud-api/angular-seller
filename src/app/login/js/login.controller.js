@@ -19,9 +19,8 @@ function LoginController($state, $stateParams, $exceptionHandler, OrderCloud, Lo
         vm.loading = sdkOrderCloud.Auth.Login(vm.credentials.Username, vm.credentials.Password, clientid, scope)
             .then(function(data) {
                 sdkOrderCloud.SetToken(data.access_token);
-                //TODO: restore refresh token storage
-                //vm.rememberStatus ? OrderCloud.Refresh.SetToken(data['refresh_token']) : angular.noop();
-                //OrderCloud.Auth.SetToken(data['access_token']);
+                OrderCloud.Auth.SetToken(data.access_token); //TODO: remove this line after refactor is complete
+                if (vm.rememberStatus) sdkOrderCloud.SetRefreshToken(data['refresh_token']);
                 var roles = ocRolesService.Set(data.access_token);
                 if (roles.length == 1 && roles[0] == 'PasswordReset') {
                     vm.token = data.access_token;
