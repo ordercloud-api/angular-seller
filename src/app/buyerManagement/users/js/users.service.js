@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocUsers', OrderCloudUsers)
 ;
 
-function OrderCloudUsers($q, $uibModal, ocConfirm, OrderCloud) {
+function OrderCloudUsers($q, $uibModal, ocConfirm, sdkOrderCloud) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -50,12 +50,17 @@ function OrderCloudUsers($q, $uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete user',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Users.Delete(user.ID, buyerid)
+                return sdkOrderCloud.Users.Delete(buyerid, user.ID)
             })
     }
 
     function _getAssignments(buyerid, usergroupid) {
-        return OrderCloud.UserGroups.ListUserAssignments(usergroupid, null, null, 100, buyerid)
+        var options = {
+            buyerID:buyerid,
+            userGroupID:usergroupid,
+            pageSize:100
+        };
+        return sdkOrderCloud.UserGroups.ListUserAssignments(buyerid, options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -63,7 +68,8 @@ function OrderCloudUsers($q, $uibModal, ocConfirm, OrderCloud) {
                     currentPage = angular.copy(data1.Meta.Page);
                 while(currentPage < totalPages) {
                     currentPage++;
-                    queue.push(OrderCloud.UserGroups.ListUserAssignments(usergroupid, null, currentPage, 100, buyerid));
+                    options.page = currentPage;
+                    queue.push(sdkOrderCloud.UserGroups.ListUserAssignments(buyerid, options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -122,7 +128,7 @@ function OrderCloudUsers($q, $uibModal, ocConfirm, OrderCloud) {
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.UserGroups.SaveUserAssignment(diff.new, buyerid) // -- Create new User Assignment
+                    sdkOrderCloud.UserGroups.SaveUserAssignment(buyerid, diff.new) // -- Create new User Assignment
                         .then(function() {
                             allAssignments.push(diff.new); //add the new assignment to the assignment list
                             d.resolve();
@@ -138,7 +144,7 @@ function OrderCloudUsers($q, $uibModal, ocConfirm, OrderCloud) {
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.UserGroups.DeleteUserAssignment(diff.old.UserGroupID, diff.old.UserID, buyerid)
+                    sdkOrderCloud.UserGroups.DeleteUserAssignment(buyerid, diff.old.UserGroupID, diff.old.UserID)
                         .then(function() {
                             allAssignments.splice(allAssignments.indexOf(diff.old), 1); //remove the old assignment from the assignment list
                             d.resolve();

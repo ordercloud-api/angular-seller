@@ -20,10 +20,10 @@ function SpendingAccountsConfig($stateProvider) {
                 CurrentAssignments: function($q, ocSpendingAccounts, $stateParams) {
                     return ocSpendingAccounts.Assignments.Get('company', $stateParams.buyerid);
                 },
-                SpendingAccountList: function(OrderCloud, Parameters, CurrentAssignments, ocSpendingAccounts) {
+                SpendingAccountList: function($stateParams, sdkOrderCloud, Parameters, CurrentAssignments, ocSpendingAccounts) {
                     var parameters = angular.copy(Parameters);
                     parameters.filters = angular.extend((parameters.filters || {}), {RedemptionCode: '!*'});
-                    return OrderCloud.SpendingAccounts.List(parameters.search, parameters.page, parameters.pageSize, parameters.searchOn, parameters.sortBy, parameters.filters, parameters.buyerid)
+                    return sdkOrderCloud.SpendingAccounts.List($stateParams.buyerid, parameters)
                         .then(function(data) {
                             return ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);
                         })
@@ -45,10 +45,10 @@ function SpendingAccountsConfig($stateProvider) {
                 CurrentAssignments: function($q, ocSpendingAccounts, $stateParams) {
                     return ocSpendingAccounts.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);
                 },
-                SpendingAccountList: function(OrderCloud, Parameters, CurrentAssignments, ocSpendingAccounts) {
+                SpendingAccountList: function($stateParams, sdkOrderCloud, Parameters, CurrentAssignments, ocSpendingAccounts) {
                     var parameters = angular.copy(Parameters);
                     parameters.filters = angular.extend((parameters.filters || {}), {RedemptionCode: '!*'});
-                    return OrderCloud.SpendingAccounts.List(parameters.search, parameters.page, parameters.pageSize, parameters.searchOn, parameters.sortBy, parameters.filters, parameters.buyerid)
+                    return sdkOrderCloud.SpendingAccounts.List($stateParams.buyerid, parameters)
                         .then(function(data) {
                             return ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);
                         })

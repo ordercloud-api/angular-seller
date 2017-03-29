@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserGroupsCtrl', UserGroupsController)
 ;
 
-function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderCloud, ocParameters, UserGroupList, Parameters) {
+function UserGroupsController($state, $stateParams, toastr, ocUserGroups, sdkOrderCloud, ocParameters, UserGroupList, Parameters) {
     var vm = this;
     vm.list = UserGroupList;
     vm.parameters = Parameters;
@@ -50,7 +50,8 @@ function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderC
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.UserGroups.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        var parameters = angular.extend(Parameters, vm.list.Meta.Page + 1);
+        return OrderCloud.UserGroups.List($stateParams.buyerid, Parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;

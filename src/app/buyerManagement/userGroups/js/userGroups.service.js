@@ -27,7 +27,7 @@ function OrderCloudUserGroups($uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete user group',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.UserGroups.Delete(userGroup.ID, buyerid)
+                return sdkOrderCloud.UserGroups.Delete(buyerid, userGroup.ID)
             })
     }
 

@@ -2,12 +2,12 @@ angular.module('orderCloud')
     .controller('PromotionCreateModalCtrl', PromotionCreateModalController)
 ;
 
-function PromotionCreateModalController($uibModalInstance, OrderCloud, SelectedBuyerID) {
+function PromotionCreateModalController($uibModalInstance, sdkOrderCloud, SelectedBuyerID) {
     var vm = this;
     vm.promotion = {};
 
     vm.submit = function() {
-        vm.loading = OrderCloud.Promotions.Create(vm.promotion, SelectedBuyerID)
+        vm.loading = sdkOrderCloud.Promotions.Create(vm.promotion)
             .then(function(newPromotion) {
                 $uibModalInstance.close(newPromotion);
             })
