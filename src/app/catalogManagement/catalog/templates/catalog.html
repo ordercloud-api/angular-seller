@@ -1,0 +1,16 @@
+<ul class="breadcrumb">
+    <li><a href="" ui-sref="catalogs">Catalogs</a></li>
+    <li class="active" ui-sref="catalog">{{catalog.selectedCatalog.Name}}</li>
+</ul>
+<div class="l-page-header l-page-header-xs">
+    <h3 class="l-page-header__title">
+        {{catalog.selectedCatalog.Name}} <br>
+        <small>(ID: {{catalog.selectedCatalog.ID}})</small>
+    </h3>
+</div>
+<ul class="nav nav-tabs">
+    <li ui-sref-active="active"><a ui-sref="categories">Categories</a></li>
+    <li ui-sref-active="active"><a ui-sref="catalog.buyers">Buyers</a></li>
+</ul>
+<br>
+<ui-view></ui-view>

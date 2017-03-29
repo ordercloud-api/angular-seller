@@ -1,0 +1,16 @@
+<div>
+    <header>
+        <div class="pull-right" oc-if-roles="CategoryAdmin">
+            <button type="button" class="btn btn-default" ng-click="catalogCategory.editCategory(catalogCategory.category.ID)"><i class="fa fa-edit"></i> Edit</button>
+            <button type="button" class="btn btn-danger" ng-click="catalogCategory.deleteCategory(catalogCategory.category.ID)"><i class="fa fa-trash"></i> Delete</button>
+        </div>
+        <h3>
+            {{catalogCategory.category.Name}}
+            <small>(ID: {{catalogCategory.category.ID}})</small>
+        </h3>
+        <p ng-bind-html="catalogCategory.category.Description || '<em class=\'text-muted\'>No description</em>'"></p>
+    </header>
+    <hr>
+    <h4>Product Assignments</h4>
+    <ui-view></ui-view>
+</div>

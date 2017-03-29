@@ -1,5 +1,5 @@
-angular.module('orderCloud')
-    .config(CatalogManagementConfig)
+// angular.module('orderCloud')
+//     .config(CatalogManagementConfig)
 
 function CatalogManagementConfig($stateProvider) {
     $stateProvider

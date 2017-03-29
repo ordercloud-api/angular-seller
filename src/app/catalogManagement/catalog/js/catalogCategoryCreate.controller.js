@@ -1,6 +1,6 @@
-// angular.module('orderCloud')
-//     .controller('CreateCategoryModalCtrl', CreateCategoryModalController)
-// ;
+angular.module('orderCloud')
+    .controller('CreateCategoryModalCtrl', CreateCategoryModalController)
+;
 
 function CreateCategoryModalController($exceptionHandler, $uibModalInstance, OrderCloud, ParentID, CatalogID){
     var vm = this;

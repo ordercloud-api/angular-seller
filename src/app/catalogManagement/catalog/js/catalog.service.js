@@ -1,8 +1,8 @@
-// angular.module('orderCloud')
-//     .factory('ocCatalogManagement', OrderCloudCatalogManagement)
-// ;
+angular.module('orderCloud')
+    .factory('ocCatalog', OrderCloudCatalog)
+;
 
-function OrderCloudCatalogManagement($q, $uibModal, OrderCloud, ocConfirm) {
+function OrderCloudCatalog($q, $uibModal, OrderCloud, sdkOrderCloud, ocConfirm) {
     var service = {
         CreateCategory: _createCategory,
         EditCategory: _editCategory,
@@ -19,12 +19,18 @@ function OrderCloudCatalogManagement($q, $uibModal, OrderCloud, ocConfirm) {
             CompareAssignments: _compareAvailabilityAssignments,
             UpdateAssignments: _updateAvailabilityAssignments,
             ToggleAssignment: _toggleAvailabilityAssignments
+        },
+        Assignments: {
+            Get: _getAssignments,
+            Map: _mapAssignments,
+            Compare: _compareAssignments,
+            Update: _updateAssignments
         }
     };
 
     function _createCategory(parentid, catalogid) {
         return $uibModal.open({
-            templateUrl: 'catalogManagement/templates/catalogManagementCategoryCreate.modal.html',
+            templateUrl: 'catalogManagement/catalog/templates/catalogCategoryCreate.modal.html',
             controller: 'CreateCategoryModalCtrl',
             controllerAs: 'createCategory',
             size: 'md',
@@ -41,7 +47,7 @@ function OrderCloudCatalogManagement($q, $uibModal, OrderCloud, ocConfirm) {
 
     function _editCategory(category, catalogid) {
         return $uibModal.open({
-            templateUrl: 'catalogManagement/templates/catalogManagementCategoryEdit.modal.html',
+            templateUrl: 'catalogManagement/catalog/templates/catalogCategoryEdit.modal.html',
             controller: 'EditCategoryModalCtrl',
             controllerAs: 'editCategory',
             size: 'md',
@@ -350,6 +356,124 @@ function OrderCloudCatalogManagement($q, $uibModal, OrderCloud, ocConfirm) {
         }
 
         return deferred.promise;
+    }
+
+    function _getAssignments(catalogid) {
+        var options = {
+            catalogID: catalogid,
+            pageSize: 100
+        };
+        return sdkOrderCloud.Catalogs.ListAssignments(options)
+            .then(function(data) {
+                var df = $q.defer(),
+                    queue = [],
+                    totalPages = angular.copy(data.Meta.TotalPages),
+                    currentPage = angular.copy(data.Meta.Page);
+                while(currentPage < totalPages) {
+                    currentPage++;
+                    options.page = currentPage;
+                    queue.push(sdkOrderCloud.Catalogs.ListAssignments(options));
+                }
+                $q.all(queue)
+                    .then(function(results) {
+                        angular.forEach(results, function(r) {
+                            data.Items = data.Items.concat(r.Items);
+                        });
+                        df.resolve(data.Items);
+                    });
+                return df.promise;
+            })
+    }
+
+    function _mapAssignments(allAssignments, buyerList) {
+        buyerList.Items = _.map(buyerList.Items, function(buyer) {
+            buyer.Assigned = false;
+            angular.forEach(allAssignments, function(assignment) {
+                if (buyer.ID == assignment.BuyerID) buyer.Assigned = true;
+            });
+            return buyer;
+        });
+
+        return buyerList;
+    }
+
+    function _compareAssignments(allAssignments, buyerList, catalogID) {
+        var changedAssignments = [];
+        angular.forEach(buyerList.Items, function(buyer) {
+            var existingAssignment = _.where(allAssignments, {BuyerID:buyer.ID})[0];
+            if (existingAssignment && !buyer.Assigned) {
+                changedAssignments.push({
+                    "old": existingAssignment,
+                    "new": null
+                })
+            } else if (!existingAssignment && buyer.Assigned) {
+                changedAssignments.push({
+                    "old": null,
+                    "new": {
+                        BuyerID: buyer.ID,
+                        CatalogID: catalogID
+                    }
+                })
+            }
+        });
+
+        return changedAssignments;
+    }
+
+    function _updateAssignments(allAssignments, changedAssignments, catalogID) {
+        var df = $q.defer(),
+            assignmentQueue = [],
+            errors = [];
+
+        angular.forEach(changedAssignments, function(diff) {
+            if (!diff.old && diff.new) {
+                assignmentQueue.push((function() {
+                    var d = $q.defer();
+
+                    sdkOrderCloud.Catalogs.SaveAssignment(diff.new) // -- Create new User Assignment
+                        .then(function() {
+                            allAssignments.push(diff.new); //add the new assignment to the assignment list
+                            d.resolve();
+                        })
+                        .catch(function(ex) {
+                            errors.push(ex);
+                            d.resolve();
+                        });
+
+                    return d.promise;
+                })())
+            } else if (diff.old && !diff.new) { // -- Delete existing User Assignment
+                assignmentQueue.push((function() {
+                    var d = $q.defer();
+
+                    var options = {
+                        userGroupID: diff.old.UserGroupID
+                    };
+                    sdkOrderCloud.Catalogs.DeleteAssignment(catalogID, diff.old.BuyerID)
+                        .then(function() {
+                            allAssignments.splice(allAssignments.indexOf(diff.old), 1); //remove the old assignment from the assignment list
+                            d.resolve();
+                        })
+                        .catch(function(ex) {
+                            errors.push(ex);
+                            d.resolve();
+                        });
+
+                    return d.promise;
+                })())
+            }
+        });
+
+        $q.all(assignmentQueue)
+            .then(function() {
+                df.resolve({
+                    UpdatedAssignments: allAssignments,
+                    Errors: errors
+                });
+            });
+
+
+        return df.promise;
     }
 
     return service;

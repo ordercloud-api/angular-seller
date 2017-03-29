@@ -1,6 +1,6 @@
-// angular.module('orderCloud')
-//     .controller('EditCategoryModalCtrl', EditCategoryModalController)
-// ;
+angular.module('orderCloud')
+    .controller('EditCategoryModalCtrl', EditCategoryModalController)
+;
 
 function EditCategoryModalController($exceptionHandler, $uibModalInstance, OrderCloud, SelectedCategory, CatalogID){
     var vm = this;

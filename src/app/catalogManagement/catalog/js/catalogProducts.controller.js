@@ -1,8 +1,8 @@
-// angular.module('orderCloud')
-//     .controller('CatalogManagementProductsCtrl', CatalogProductsController)
-// ;
+angular.module('orderCloud')
+    .controller('CatalogProductsCtrl', CatalogProductsController)
+;
 
-function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocCatalogManagement, ocParameters, Parameters, CurrentAssignments, ProductList, CatalogID) {
+function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocCatalog, ocParameters, Parameters, CurrentAssignments, ProductList) {
     var vm = this;
     vm.list = ProductList;
     //Set parameters
@@ -47,7 +47,7 @@ function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocC
     vm.loadMore = function() {
         return OrderCloud.Products.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
             .then(function(data) {
-                var mappedData = ocCatalogManagement.Products.MapAssignments(CurrentAssignments, data);
+                var mappedData = ocCatalog.Products.MapAssignments(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
                 vm.list.Meta = mappedData.Meta;
 
@@ -60,7 +60,7 @@ function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocC
     }
 
     function changedCheck() {
-        vm.changedAssignments = ocCatalogManagement.Products.CompareAssignments(CurrentAssignments, vm.list, $stateParams.categoryid);
+        vm.changedAssignments = ocCatalog.Products.CompareAssignments(CurrentAssignments, vm.list, $stateParams.categoryid);
     }
 
     selectedCheck();
@@ -80,14 +80,14 @@ function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocC
     };
 
     vm.resetAssignments = function() {
-        vm.list = ocCatalogManagement.Products.MapAssignments(CurrentAssignments, vm.list);
+        vm.list = ocCatalog.Products.MapAssignments(CurrentAssignments, vm.list);
         vm.changedAssignments = [];
 
         selectedCheck();
     };
 
     vm.updateAssignments = function() {
-        vm.searchLoading = ocCatalogManagement.Products.UpdateAssignments(CurrentAssignments, vm.changedAssignments, CatalogID)
+        vm.searchLoading = ocCatalog.Products.UpdateAssignments(CurrentAssignments, vm.changedAssignments, $stateParams.catalogid)
             .then(function(data) {
                 angular.forEach(data.Errors, function(ex) {
                     $exceptionHandler(ex);

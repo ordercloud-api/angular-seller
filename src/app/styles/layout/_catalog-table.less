@@ -1,0 +1,36 @@
+.l-catalog-table {
+  @media(max-width:@screen-xs-max) {
+    col {
+      &:nth-child(1) {
+        width:100%;
+      }
+      &:nth-child(2) {
+        width:1%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(1),
+      &:nth-child(3) {
+        display:none;
+      }
+      &:nth-child(2) {
+        border-left:none; //stops double borders from appearing
+      }
+    }
+  }
+  @media(min-width:@screen-sm-min) {
+    col {
+      &:nth-child(1) {
+        width:25%;
+      }
+      &:nth-child(2) {
+        width:75%;
+      }
+      &:nth-child(3),
+      &:nth-child(4) {
+        width:1%;
+      }
+    }
+  }
+}

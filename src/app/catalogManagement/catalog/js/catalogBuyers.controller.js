@@ -1,30 +1,33 @@
-// angular.module('orderCloud')
-//     .controller('CatalogManagementProductsCtrl', CatalogProductsController)
-// ;
+angular.module('orderCloud')
+    .controller('CatalogBuyersCtrl', CatalogBuyersController)
+;
 
-function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocCatalogManagement, ocParameters, Parameters, CurrentAssignments, ProductList, CatalogID) {
+function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, sdkOrderCloud, ocParameters, Parameters, BuyerList, CurrentAssignments) {
     var vm = this;
-    vm.list = ProductList;
-    //Set parameters
+    vm.list = BuyerList;
     vm.parameters = Parameters;
-    //Sort by is a filter on mobile devices
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
+
     //Check if search was used
     vm.searchResults = Parameters.search && Parameters.search.length > 0;
 
+    //Reload the state with new parameters
     vm.filter = function(resetPage) {
         $state.go('.', ocParameters.Create(vm.parameters, resetPage));
     };
 
+    //Reload the state with new search parameter & reset the page
     vm.search = function() {
         vm.filter(true);
     };
 
+    //Clear the search parameter, reload the state & reset the page
     vm.clearSearch = function() {
         vm.parameters.search = null;
         vm.filter(true);
     };
 
+    //Conditionally set, reverse, remove the sortBy parameter & reload the state
     vm.updateSort = function(value) {
         value ? angular.noop() : value = vm.sortSelection;
         switch(vm.parameters.sortBy) {
@@ -40,18 +43,18 @@ function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocC
         vm.filter(false);
     };
 
+    //Reload the state with the incremented page parameter
     vm.pageChanged = function() {
         $state.go('.', {page:vm.list.Meta.Page});
     };
 
+    //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Products.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.Buyers.List(parameters)
             .then(function(data) {
-                var mappedData = ocCatalogManagement.Products.MapAssignments(CurrentAssignments, data);
-                vm.list.Items = vm.list.Items.concat(mappedData.Items);
-                vm.list.Meta = mappedData.Meta;
-
-                selectedCheck();
+                vm.list.Items = vm.list.Items.concat(data.Items);
+                vm.list.Meta = data.Meta;
             });
     };
 
@@ -60,7 +63,7 @@ function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocC
     }
 
     function changedCheck() {
-        vm.changedAssignments = ocCatalogManagement.Products.CompareAssignments(CurrentAssignments, vm.list, $stateParams.categoryid);
+        vm.changedAssignments = ocCatalog.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.catalogid);
     }
 
     selectedCheck();
@@ -73,21 +76,21 @@ function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocC
     };
 
     vm.selectItem = function(scope) {
-        if (!scope.product.Assigned) vm.allItemsSelected = false;
+        if (!scope.buyer.Assigned) vm.allItemsSelected = false;
         vm.selectedCount = _.where(vm.list.Items, {Assigned:true}).length;
 
         changedCheck();
     };
 
     vm.resetAssignments = function() {
-        vm.list = ocCatalogManagement.Products.MapAssignments(CurrentAssignments, vm.list);
+        vm.list = ocCatalog.Assignments.Map(CurrentAssignments, vm.list);
         vm.changedAssignments = [];
 
         selectedCheck();
     };
 
     vm.updateAssignments = function() {
-        vm.searchLoading = ocCatalogManagement.Products.UpdateAssignments(CurrentAssignments, vm.changedAssignments, CatalogID)
+        vm.searchLoading = ocCatalog.Assignments.Update(CurrentAssignments, vm.changedAssignments, $stateParams.catalogid)
             .then(function(data) {
                 angular.forEach(data.Errors, function(ex) {
                     $exceptionHandler(ex);
@@ -97,7 +100,7 @@ function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocC
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('Product assignments updated.');
-            });
+                toastr.success('Catalog assignments updated.');
+            })
     };
 }

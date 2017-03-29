@@ -1,31 +1,31 @@
-// angular.module('orderCloud')
-//     .controller('CatalogManagementCtrl', CatalogManagementController)
-// ;
+angular.module('orderCloud')
+    .controller('CatalogCategoriesCtrl', CatalogCategoriesController)
+;
 
-function CatalogManagementController($rootScope, $state, ocCatalogManagement, CategoryTreeService, Tree, CatalogID) {
+function CatalogCategoriesController($rootScope, $stateParams, $state, ocCatalog, ocCatalogTree, Tree) {
     var vm = this;
     vm.tree = Tree;
-    vm.catalogid = CatalogID;
+    vm.catalogid = $stateParams.catalogid;
 
     vm.treeOptions = {
         dropped: function(event) {
-            CategoryTreeService.UpdateCategoryNode(event, vm.catalogid);
+            ocCatalogTree.UpdateCategoryNode(event, vm.catalogid);
         }
     };
 
     vm.categorySelected = function(categoryID) {
         vm.selectedCategoryID = categoryID;
-        $state.go('catalogManagement.category.products', {categoryid: categoryID});
+        $state.go('categories.category.products', {categoryid: categoryID});
     };
 
     vm.createCategory = function(parentid){
         //parentid should be undefined at this point
-        ocCatalogManagement.CreateCategory(parentid, vm.catalogid)
+        ocCatalog.CreateCategory(parentid, vm.catalogid)
             .then(function(newCategory) {
                 newCategory.children = [];
                 vm.tree.push(newCategory);
                 vm.selectedCategoryID = newCategory.ID;
-                $state.go('catalogManagement.category.products', {categoryid: newCategory.ID});
+                $state.go('categories.category.products', {categoryid: newCategory.ID});
                 toastr.success(newCategory.Name + ' was created.');
             });
     };
@@ -42,7 +42,8 @@ function CatalogManagementController($rootScope, $state, ocCatalogManagement, Ca
         if (found) {
             if (action == 'update') {
                 array[catIndex] = updatedCategory;
-                $state.go('catalogManagement.category.products', {categoryid: updatedCategory.ID});
+                vm.selectedCategoryID = updatedCategory.ID;
+                $state.go('categories.category.products', {categoryid: updatedCategory.ID}, {reload: 'categories.category.products'});
             }
             else if (action == 'delete') {
                 array.splice(catIndex, 1);

@@ -1,6 +1,6 @@
-angular.module('orderCloud')
-    .controller('CatalogManagementAvailabilityCtrl', CatalogManagementAvailabilityController)
-;
+// angular.module('orderCloud')
+//     .controller('CatalogManagementAvailabilityCtrl', CatalogManagementAvailabilityController)
+// ;
 
 function CatalogManagementAvailabilityController($state, $stateParams, toastr, OrderCloud, ocParameters, ocCatalogManagement, Parameters, CurrentAssignments, UserGroupList, CatalogID) {
     var vm = this;

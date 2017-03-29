@@ -1,14 +1,14 @@
-// angular.module('orderCloud')
-//     .factory('CategoryTreeService', CategoryTreeService)
-//     .config(CategoryTreeConfig)
-// ;
-function CategoryTreeService($q, OrderCloud) {
+angular.module('orderCloud')
+    .factory('ocCatalogTree', OrderCloudCatalogTreeService)
+    .config(OrderCloudCatalogTreeConfig)
+;
+function OrderCloudCatalogTreeService($q, OrderCloud) {
     return {
-        GetCategoryTree: tree,
+        Get: _getTree,
         UpdateCategoryNode: update
     };
 
-    function tree(catalogid) {
+    function _getTree(catalogid) {
         var tree = [];
         var deferred = $q.defer();
         OrderCloud.Categories.List(null, 1, 100, null, null, null, 'all', catalogid)
@@ -110,7 +110,7 @@ function CategoryTreeService($q, OrderCloud) {
     }
 }
 
-function CategoryTreeConfig(treeConfig){
+function OrderCloudCatalogTreeConfig(treeConfig){
     treeConfig.treeClass = 'angular-ui-tree';
     treeConfig.emptyTreeClass = 'angular-ui-tree-empty';
     treeConfig.hiddenClass = 'angular-ui-tree-hidden';
