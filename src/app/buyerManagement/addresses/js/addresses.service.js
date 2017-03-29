@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocAddresses', OrderCloudAddresses)
 ;
 
-function OrderCloudAddresses($q, $uibModal, ocConfirm, OrderCloud) {
+function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -51,12 +51,12 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, OrderCloud) {
             confirmText: 'Delete address',
             type: 'delete'})
             .then(function() {
-                return OrderCloud.Addresses.Delete(address.ID, buyerid)
+                return sdkOrderCloud.Addresses.Delete(buyerid, address.ID)
             })
     }
 
     function _getAssignments(level, buyerid, usergroupid) {
-        return OrderCloud.Addresses.ListAssignments(null, null, usergroupid, level, null, null, null, 100, buyerid)
+        return sdkOrderCloud.Addresses.ListAssignments(buyerid, null, null, usergroupid, level, null, null, null, 100)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -64,7 +64,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, OrderCloud) {
                     currentPage = angular.copy(data1.Meta.Page);
                 while(currentPage < totalPages) {
                     currentPage++;
-                    queue.push(OrderCloud.Addresses.ListAssignments(null, null, usergroupid, level, null, null, currentPage, 100, buyerid));
+                    queue.push(sdkOrderCloud.Addresses.ListAssignments(buyerid, null, null, usergroupid, level, null, null, currentPage, 100));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -131,7 +131,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, OrderCloud) {
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.Addresses.SaveAssignment(diff.new, buyerid) // -- Create new Address Assignment
+                    sdkOrderCloud.Addresses.SaveAssignment(buyerid, diff.new) // -- Create new Address Assignment
                         .then(function() {
                             allAssignments.push(diff.new); //add the new assignment to the assignment list
                             d.resolve();
@@ -147,7 +147,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, OrderCloud) {
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.Addresses.SaveAssignment(diff.new, buyerid)
+                    sdkOrderCloud.Addresses.SaveAssignment(buyerid, diff.new)
                         .then(function() {
                             allAssignments[allAssignments.indexOf(diff.old)] = diff.new; //replace the old assignment in the assignment list
                             d.resolve();
@@ -163,7 +163,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, OrderCloud) {
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.Addresses.DeleteAssignment(diff.new.AddressID, diff.new.UserID, diff.new.UserGroupID, buyerid)
+                    sdkOrderCloud.Addresses.DeleteAssignment(buyerid, diff.new.AddressID, diff.new.UserID, diff.new.UserGroupID)
                         .then(function() {
                             allAssignments.splice(allAssignments.indexOf(diff.old), 1); //remove the old assignment from the assignment list
                             d.resolve();

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AddressCreateModalCtrl', AddressCreateModalController)
 ;
 
-function AddressCreateModalController($timeout, $uibModalInstance, $exceptionHandler, $scope, OrderCloud, ocGeography, SelectedBuyerID){
+function AddressCreateModalController($timeout, $uibModalInstance, $exceptionHandler, $scope, sdkOrderCloud, ocGeography, SelectedBuyerID){
     var vm = this;
     vm.address = {
         Country: 'US' // this is to default 'create' addresses to the country US
@@ -20,7 +20,7 @@ function AddressCreateModalController($timeout, $uibModalInstance, $exceptionHan
     });
 
     vm.submit = function() {
-        vm.loading = OrderCloud.Addresses.Create(vm.address, SelectedBuyerID)
+        vm.loading = sdkOrderCloud.Addresses.Create(SelectedBuyerID, vm.address)
             .then(function(newAddress) {
                 $uibModalInstance.close(newAddress);
             })

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AddressesCtrl', AddressesController)
 ;
 
-function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, toastr, OrderCloud, ocParameters, ocAddresses, CurrentAssignments, AddressList, Parameters){
+function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, toastr, sdkOrderCloud, ocParameters, ocAddresses, CurrentAssignments, AddressList, Parameters){
     var vm = this;
     vm.list = AddressList;
     vm.parameters = Parameters;
@@ -61,7 +61,8 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Addresses.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.filters)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.Addresses.List(parameters.buyerid, parameters)
             .then(function(data) {
                 var mappedData = ocAddresses.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
