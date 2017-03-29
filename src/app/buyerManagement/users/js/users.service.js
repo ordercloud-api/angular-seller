@@ -60,7 +60,7 @@ function OrderCloudUsers($q, $uibModal, ocConfirm, sdkOrderCloud) {
             userGroupID:usergroupid,
             pageSize:100
         };
-        return sdkOrderCloud.UserGroups.ListUserAssignments(options)
+        return sdkOrderCloud.UserGroups.ListUserAssignments(buyerid, options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -69,7 +69,7 @@ function OrderCloudUsers($q, $uibModal, ocConfirm, sdkOrderCloud) {
                 while(currentPage < totalPages) {
                     currentPage++;
                     options.page = currentPage;
-                    queue.push(sdkOrderCloud.UserGroups.ListUserAssignments(options));
+                    queue.push(sdkOrderCloud.UserGroups.ListUserAssignments(buyerid, options));
                 }
                 $q.all(queue)
                     .then(function(results) {

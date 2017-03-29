@@ -18,7 +18,7 @@ function UserGroupsConfig($stateProvider) {
                     return ocParameters.Get($stateParams);
                 },
                 UserGroupList: function($stateParams, sdkOrderCloud, Parameters) {
-                    return OrderCloud.UserGroups.List($stateParams.buyerid, Parameters);
+                    return sdkOrderCloud.UserGroups.List($stateParams.buyerid, Parameters);
                 }
             }
         })
