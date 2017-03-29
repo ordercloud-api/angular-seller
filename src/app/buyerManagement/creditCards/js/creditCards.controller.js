@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CreditCardsCtrl', CreditCardsController)
 ;
 
-function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, OrderCloud, ocParameters, ocCreditCards, CreditCardList, CurrentAssignments, Parameters) {
+function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, sdkOrderCloud, ocParameters, ocCreditCards, CreditCardList, CurrentAssignments, Parameters) {
     var vm = this;
     vm.list = CreditCardList;
     vm.parameters = Parameters;
@@ -51,7 +51,8 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.CreditCards.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.CreditCards.List($stateParams.buyerid, parameters)
             .then(function(data) {
                 var mappedData = ocCreditCards.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -117,7 +118,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = OrderCloud.CreditCards.SaveAssignment(newAssignment, $stateParams.buyerid)
+                    vm.searchLoading = sdkOrderCloud.CreditCards.SaveAssignment($stateParams.buyerid, newAssignment)
                         .then(function() {
                             creditCard.Assigned = true;
                             CurrentAssignments.push(newAssignment);
