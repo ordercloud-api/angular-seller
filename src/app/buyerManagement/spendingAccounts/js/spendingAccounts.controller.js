@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('SpendingAccountsCtrl', SpendingAccountsController)
 ;
 
-function SpendingAccountsController($exceptionHandler, $state, $stateParams, toastr, OrderCloud, ocParameters, ocSpendingAccounts, CurrentAssignments, SpendingAccountList, Parameters) {
+function SpendingAccountsController($exceptionHandler, $state, $stateParams, toastr, sdkOrderCloud, ocParameters, ocSpendingAccounts, CurrentAssignments, SpendingAccountList, Parameters) {
     var vm = this;
     vm.list = SpendingAccountList;
     vm.parameters = Parameters;
@@ -51,7 +51,8 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.SpendingAccounts.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.SpendingAccounts.List($stateParams.buyerid, parameters)
             .then(function(data) {
                 var mappedData = ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -117,7 +118,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = OrderCloud.SpendingAccounts.SaveAssignment(newAssignment, $stateParams.buyerid)
+                    vm.searchLoading = sdkOrderCloud.SpendingAccounts.SaveAssignment($stateParams.buyerid, newAssignment)
                         .then(function() {
                             newSpendingAccount.Assigned = true;
                             CurrentAssignments.push(newAssignment);
