@@ -36,12 +36,7 @@
         </div>
         <div ng-if="catalogs.list.Items.length">
             <div class="row">
-                <div class="col-xs-6">
-                    <button ng-if="catalogs.selectedCount" class="btn btn-danger btn-xs" ng-click="catalogs.deleteSelected()">
-                        <i class="fa fa-trash"></i> Delete {{catalogs.selectedCount == 1 ? "Catalogs" : (catalogs.selectedCount + " Catalogs")}}
-                    </button>
-                </div>
-                <div class="col-xs-6">
+                <div class="col-xs-6 col-xs-offset-6">
                     <p class="text-right">{{(application.$ocMedia('min-width:768px') ? catalogs.list.Meta.ItemRange[0] : '1') + ' - ' +
                         catalogs.list.Meta.ItemRange[1] + ' of ' + catalogs.list.Meta.TotalCount + ' results'}}</p>
                 </div>

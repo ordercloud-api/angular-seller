@@ -13,4 +13,4 @@
     <li ui-sref-active="active"><a ui-sref="catalog.buyers">Buyers</a></li>
 </ul>
 <br>
-<ui-view></ui-view>
+<div ui-view cg-busy="application.stateLoading('catalog')"></div>

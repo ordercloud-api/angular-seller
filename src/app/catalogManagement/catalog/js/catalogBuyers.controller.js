@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CatalogBuyersCtrl', CatalogBuyersController)
 ;
 
-function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, sdkOrderCloud, ocParameters, Parameters, BuyerList, CurrentAssignments) {
+function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, sdkOrderCloud, SelectedCatalog, ocParameters, Parameters, BuyerList, CurrentAssignments) {
     var vm = this;
     vm.list = BuyerList;
     vm.parameters = Parameters;

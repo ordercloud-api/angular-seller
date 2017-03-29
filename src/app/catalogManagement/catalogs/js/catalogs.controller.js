@@ -68,12 +68,12 @@ function CatalogsController($exceptionHandler, $state, toastr, ocCatalogs, sdkOr
     };
 
     vm.deleteCatalog = function(scope) {
-        ocCatalogs.Delete(scope.buyer)
+        ocCatalogs.Delete(scope.catalog)
             .then(function() {
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-                toastr.success(scope.buyer.Name + ' was deleted.');
+                toastr.success(scope.catalog.Name + ' was deleted.');
             })
             .catch(function(ex) {
                 $exceptionHandler(ex);

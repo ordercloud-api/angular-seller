@@ -36,8 +36,8 @@
             </div>
         </section>
     </div>
-    <div class="col-sm-7" cg-busy="application.stateLoading('catalog')" ui-view>
-        <div ng-if="catalogCategories.tree.length && !catalogCategories.selectedCategoryID" class="well text-center">
+    <div class="col-sm-7" cg-busy="application.stateLoading('categories')" ui-view>
+        <div ng-if="application.$state.is('categories') && catalogCategories.tree.length" class="well text-center">
             Select a category to view details
         </div>
     </div>
