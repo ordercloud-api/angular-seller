@@ -7,13 +7,13 @@
         <fieldset class="form-group">
             <label for="lineItemID" class="control-label col-sm-3">ID</label>
             <div class="col-sm-9">
-                <input id="lineItemID" name="ID" type="text" class="form-control" ng-change="orderLineItemEditModal.updateValidity()" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="orderLineItemEditModal.lineItem.ID" />
+                <input id="lineItemID" name="ID" type="text" class="form-control" ng-change="orderLineItemEditModal.updateValidity()" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="orderLineItemEditModal.lineItem.ID" ng-disabled="!orderLineItemEditModal.product" />
             </div>
         </fieldset>
         <fieldset class="form-group">
             <label for="lineItemQuantity" class="control-label col-sm-3">Quantity</label>
             <div class="col-sm-9">
-                <input id="lineItemQuantity" name="Quantity" type="number" min="1" class="form-control" ng-model="orderLineItemEditModal.lineItem.Quantity" required/>
+                <input id="lineItemQuantity" name="Quantity" type="number" min="1" class="form-control" ng-model="orderLineItemEditModal.lineItem.Quantity" required ng-disabled="!orderLineItemEditModal.product"/>
             </div>
         </fieldset>
         <fieldset class="form-group">
@@ -23,19 +23,22 @@
                     <span class="input-group-addon">
                         <i class="fa fa-dollar"></i>
                     </span>
-                    <input id="lineItemUnitPrice" name="UnitPrice" type="number" min="0" step="0.01" placeholder="0.00" class="form-control" ng-model="orderLineItemEditModal.lineItem.UnitPrice" required/>
+                    <input id="lineItemUnitPrice" name="UnitPrice" type="number" min="0" step="0.01" placeholder="0.00" class="form-control" ng-model="orderLineItemEditModal.lineItem.UnitPrice" required ng-disabled="!orderLineItemEditModal.product"/>
                 </div>
             </div>
         </fieldset>
         <fieldset class="form-group">
             <label for="lineItemDateNeeded" class="control-label col-sm-3">Date Needed</label>
             <div class="col-sm-9">
-                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderLineItemEditModal.lineItem.DateNeeded">
-                <input id="lineItemDateNeeded" name="DateNeeded" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderLineItemEditModal.lineItem.DateNeeded" uib-datepicker-popup="MM/dd/yyyy" is-open="dateNeeded.open" ng-click="dateNeeded.open = !dateNeeded.open">
+                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderLineItemEditModal.lineItem.DateNeeded" ng-disabled="!orderLineItemEditModal.product">
+                <input id="lineItemDateNeeded" name="DateNeeded" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderLineItemEditModal.lineItem.DateNeeded" uib-datepicker-popup="MM/dd/yyyy" is-open="dateNeeded.open" ng-click="dateNeeded.open = !dateNeeded.open" ng-disabled="!orderLineItemEditModal.product">
             </div>
         </fieldset>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary btn-block">Save</button>
+        <button type="submit" class="btn btn-primary btn-block" ng-if="orderLineItemEditModal.product">Save</button>
+        <div class="alert alert-danger text-center" ng-if="!orderLineItemEditModal.product">
+            <span>This line item cannot be edited as the product has been deleted</span>
+        </div>
     </div>
 </form>

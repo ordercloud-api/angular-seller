@@ -2,11 +2,12 @@ angular.module('orderCloud')
     .controller('OrderLineItemEditModalCtrl', OrderLineItemEditModalController)
 ;
 
-function OrderLineItemEditModalController($uibModalInstance, sdkOrderCloud, OrderID, LineItem) {
+function OrderLineItemEditModalController($uibModalInstance, sdkOrderCloud, OrderID, LineItem, Product) {
     var vm = this;
     vm.lineItem = angular.copy(LineItem);
     vm.lineItemID = LineItem.ID;
     if (vm.lineItem.DateNeeded) vm.lineItem.DateNeeded = new Date(vm.lineItem.DateNeeded);
+    vm.product = Product;
 
     vm.updateValidity = function() {
         if (vm.form.ID.$error['LineItem.UnavailableID']) vm.form.ID.$setValidity('LineItem.UnavailableID', true);

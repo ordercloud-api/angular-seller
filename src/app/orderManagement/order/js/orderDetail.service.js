@@ -43,6 +43,15 @@ function OrderCloudOrderDetailService($q, $uibModal, $exceptionHandler, sdkOrder
                 },
                 LineItem: function() {
                     return lineItem;
+                },
+                Product: function() {
+                    return sdkOrderCloud.Products.Get(lineItem.ProductID)
+                        .then(function(data) {
+                            return data;
+                        })
+                        .catch(function() {
+                            return null;
+                        });
                 }
             }
         }).result;
