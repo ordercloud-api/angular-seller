@@ -2,12 +2,12 @@ angular.module('orderCloud')
     .controller('ApprovalRuleCreateModalCtrl', ApprovalRuleCreateModalController)
 ;
 
-function ApprovalRuleCreateModalController($exceptionHandler, $uibModalInstance, OrderCloud, SelectedBuyerID) {
+function ApprovalRuleCreateModalController($exceptionHandler, $uibModalInstance, sdkOrderCloud, SelectedBuyerID) {
     var vm = this;
     vm.approvalRule = {};
 
     vm.searchGroups = function(term) {
-        return OrderCloud.UserGroups.List(term, 1, 6, null, null, null, SelectedBuyerID)
+        return sdkOrderCloud.UserGroups.List(SelectedBuyerID, term, 1, 6, null, null, null)
             .then(function(data) {
                 return data.Items;
             })
@@ -15,7 +15,7 @@ function ApprovalRuleCreateModalController($exceptionHandler, $uibModalInstance,
 
     vm.submit = function() {
         vm.loading = {backdrop:false};
-        vm.loading.promise = OrderCloud.ApprovalRules.Create(vm.approvalRule, SelectedBuyerID)
+        vm.loading.promise = sdkOrderCloud.ApprovalRules.Create(SelectedBuyerID, vm.approvalRule)
             .then(function(newApprovalRule) {
                 $uibModalInstance.close(newApprovalRule);
             })

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocApprovalRules', OrderCloudApprovalRules)
 ;
 
-function OrderCloudApprovalRules($q, $uibModal, ocConfirm, OrderCloud) {
+function OrderCloudApprovalRules($q, $uibModal, ocConfirm, sdkOrderCloud) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -44,7 +44,7 @@ function OrderCloudApprovalRules($q, $uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete approval rule',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.ApprovalRules.Delete(approvalRule.ID, buyerid)
+                return sdkOrderCloud.ApprovalRules.Delete(buyerid, approvalRule.ID)
             })
     }
 

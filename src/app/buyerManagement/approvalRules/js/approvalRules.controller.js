@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ApprovalRulesCtrl', ApprovalRulesController)
 ;
 
-function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocApprovalRules, ocParameters, ApprovalRuleList, Parameters) {
+function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, sdkOrderCloud, ocApprovalRules, ocParameters, ApprovalRuleList, Parameters) {
     var vm = this;
     vm.list = ApprovalRuleList;
     vm.parameters = Parameters;
@@ -59,7 +59,8 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCl
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.ApprovalRules.List(null, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.ApprovalRules.List(parameters.buyerid, parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
