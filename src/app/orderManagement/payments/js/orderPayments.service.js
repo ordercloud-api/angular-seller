@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocOrderPaymentsService', OrderCloudOrderPaymentsService)
 ;
 
-function OrderCloudOrderPaymentsService($q, OrderCloud) {
+function OrderCloudOrderPaymentsService($q, sdkOrderCloud) {
     var service = {
         List: _list
     };
@@ -10,7 +10,11 @@ function OrderCloudOrderPaymentsService($q, OrderCloud) {
     function _list(orderID, buyerID, page, pageSize) {
         var deferred = $q.defer();
 
-        OrderCloud.Payments.List(orderID, null, page || page, pageSize, null, null, null, buyerID)
+        var options = {
+            page: page,
+            pageSize: pageSize
+        };
+        sdkOrderCloud.Payments.List('incoming', orderID, options)
             .then(function(data) {
                 getPaymentDetails(data);
             });
@@ -24,7 +28,7 @@ function OrderCloudOrderPaymentsService($q, OrderCloud) {
                     payment.Details = null;
 
                     if (payment.Type == 'SpendingAccount') {
-                        OrderCloud.SpendingAccounts.Get(payment.SpendingAccountID, buyerID)
+                        sdkOrderCloud.SpendingAccounts.Get(buyerID, payment.SpendingAccountID)
                             .then(function(spendingAccount) {
                                 payment.Details = spendingAccount;
                                 d.resolve();
@@ -34,7 +38,7 @@ function OrderCloudOrderPaymentsService($q, OrderCloud) {
                             });
                     }
                     else if (payment.Type == 'CreditCard') {
-                        OrderCloud.CreditCards.Get(payment.CreditCardID, buyerID)
+                        sdkOrderCloud.CreditCards.Get(buyerID, payment.CreditCardID)
                             .then(function(creditCard) {
                                 payment.Details = creditCard;
                                 d.resolve();

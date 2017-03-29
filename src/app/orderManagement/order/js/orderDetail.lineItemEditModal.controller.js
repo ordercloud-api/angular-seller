@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('OrderLineItemEditModalCtrl', OrderLineItemEditModalController)
 ;
 
-function OrderLineItemEditModalController($uibModalInstance, OrderCloud, BuyerID, OrderID, LineItem) {
+function OrderLineItemEditModalController($uibModalInstance, sdkOrderCloud, OrderID, LineItem) {
     var vm = this;
     vm.lineItem = angular.copy(LineItem);
     vm.lineItemID = LineItem.ID;
@@ -15,7 +15,7 @@ function OrderLineItemEditModalController($uibModalInstance, OrderCloud, BuyerID
     vm.submit = function() {
         var partial = _.pick(vm.lineItem, ['ID', 'Quantity', 'UnitPrice', 'DateNeeded']);
         if (partial.DateNeeded) partial.DateNeeded = new Date(partial.DateNeeded);
-        vm.loading = OrderCloud.LineItems.Patch(OrderID, LineItem.ID, partial, BuyerID)
+        vm.loading = sdkOrderCloud.LineItems.Patch('incoming', OrderID, LineItem.ID, partial)
             .then(function(data) {
                 data.OriginalID = LineItem.ID;
                 $uibModalInstance.close(data);
