@@ -56,7 +56,12 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
     }
 
     function _getAssignments(level, buyerid, usergroupid) {
-        return sdkOrderCloud.Addresses.ListAssignments(buyerid, null, null, usergroupid, level, null, null, null, 100)
+        var options = {
+            userGroupID: usergroupid,
+            level: level,
+            pageSize: 100
+        };
+        return sdkOrderCloud.Addresses.ListAssignments(buyerid, options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -64,7 +69,8 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                     currentPage = angular.copy(data1.Meta.Page);
                 while(currentPage < totalPages) {
                     currentPage++;
-                    queue.push(sdkOrderCloud.Addresses.ListAssignments(buyerid, null, null, usergroupid, level, null, null, currentPage, 100));
+                    options.page = currentPage;
+                    queue.push(sdkOrderCloud.Addresses.ListAssignments(buyerid, options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -163,7 +169,11 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    sdkOrderCloud.Addresses.DeleteAssignment(buyerid, diff.new.AddressID, diff.new.UserID, diff.new.UserGroupID)
+                    var options = {
+                        userID: diff.new.UserID,
+                        userGroupID: diff.new.UserGroupID
+                    };
+                    sdkOrderCloud.Addresses.DeleteAssignment(buyerid, diff.new.AddressID, options)
                         .then(function() {
                             allAssignments.splice(allAssignments.indexOf(diff.old), 1); //remove the old assignment from the assignment list
                             d.resolve();
