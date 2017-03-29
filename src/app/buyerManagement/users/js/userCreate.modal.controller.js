@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserCreateModalCtrl', UserCreateModalController)
 ;
 
-function UserCreateModalController($exceptionHandler, $uibModalInstance, OrderCloud, SelectedBuyerID) {
+function UserCreateModalController($exceptionHandler, $uibModalInstance, sdkOrderCloud, SelectedBuyerID) {
     var vm = this;
     vm.user = {Email: '', Password: '', Active: false};
 
@@ -10,7 +10,7 @@ function UserCreateModalController($exceptionHandler, $uibModalInstance, OrderCl
         vm.user.TermsAccepted = new Date();
 
         vm.loading = {backdrop:false};
-        vm.loading.promise = OrderCloud.Users.Create(vm.user, SelectedBuyerID)
+        vm.loading.promise = sdkOrderCloud.Users.Create(SelectedBuyerID, vm.user)
             .then(function(newUser) {
                 $uibModalInstance.close(newUser);
             })

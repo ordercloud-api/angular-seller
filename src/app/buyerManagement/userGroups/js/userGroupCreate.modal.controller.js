@@ -6,7 +6,7 @@ function UserGroupCreateModalController($uibModalInstance, $exceptionHandler, Or
     var vm = this;
 
     vm.submit = function() {
-        vm.loading = OrderCloud.UserGroups.Create(vm.userGroup, SelectedBuyerID)
+        vm.loading = sdkOrderCloud.UserGroups.Create(SelectedBuyerID, vm.userGroup)
             .then(function(data) {
                 $uibModalInstance.close(data);
             })

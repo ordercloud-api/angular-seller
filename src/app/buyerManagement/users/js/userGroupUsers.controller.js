@@ -50,7 +50,8 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Users.List(null, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.Users.List($stateParams.buyerid, parameters)
             .then(function(data) {
                 var mappedData = ocUsers.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -115,7 +116,7 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
                 };
 
                 //Automatically assign the new user to this user group
-                vm.searchLoading = OrderCloud.UserGroups.SaveUserAssignment(newAssignment, $stateParams.buyerid)
+                vm.searchLoading = sdkOrderCloud.UserGroups.SaveUserAssignment($stateParams.buyerid, newAssignment)
                     .then(function() {
                         newUser.Assigned = true;
                         CurrentAssignments.push(newAssignment);
