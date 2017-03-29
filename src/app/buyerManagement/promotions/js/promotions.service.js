@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocPromotions', OrderCloudPromotions)
 ;
 
-function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
+function OrderCloudPromotions($q, $uibModal, ocConfirm, sdkOrderCloud) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -51,12 +51,18 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete promotion',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Promotions.Delete(promotion.ID, buyerid)
+                return sdkOrderCloud.Promotions.Delete(promotion.ID, buyerid)
             })
     }
 
     function _getAssignments(level, buyerid, usergroupid) {
-        return OrderCloud.Promotions.ListAssignments(null, null, usergroupid, level, null, 100, buyerid)
+        var options = {
+            userGroupID:usergroupid,
+            level:level,
+            pageSize:100,
+            buyerID:buyerid
+        }
+        return sdkOrderCloud.Promotions.ListAssignments(options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -64,7 +70,8 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                     currentPage = angular.copy(data1.Meta.Page);
                 while(currentPage < totalPages) {
                     currentPage++;
-                    queue.push(OrderCloud.Promotions.ListAssignments(null, null, usergroupid, level, currentPage, 100, buyerid));
+                    options.page = currentPage;
+                    queue.push(OrderCloud.Promotions.ListAssignments(options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -123,7 +130,7 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.Promotions.SaveAssignment(diff.new) // -- Create new User Assignment
+                    sdkOrderCloud.Promotions.SaveAssignment(diff.new) // -- Create new User Assignment
                         .then(function() {
                             allAssignments.push(diff.new); //add the new assignment to the assignment list
                             d.resolve();
@@ -138,8 +145,7 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
             } else if (diff.old && !diff.new) { // -- Delete existing User Assignment
                 assignmentQueue.push((function() {
                     var d = $q.defer();
-
-                    OrderCloud.Promotions.DeleteAssignment(diff.old.PromotionID, null, diff.old.UserGroupID, diff.old.BuyerID)
+                    sdkOrderCloud.Promotions.DeleteAssignment(diff.old.PromotionID, diff.old.BuyerID, {userGroupID: diff.old.UserGroupID})
                         .then(function() {
                             allAssignments.splice(allAssignments.indexOf(diff.old), 1); //remove the old assignment from the assignment list
                             d.resolve();

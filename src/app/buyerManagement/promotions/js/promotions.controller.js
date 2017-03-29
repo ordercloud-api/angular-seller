@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('PromotionsCtrl', PromotionsController)
 ;
 
-function PromotionsController($exceptionHandler, $state, $stateParams, toastr, OrderCloud, ocParameters, ocPromotions, CurrentAssignments, PromotionList, Parameters) {
+function PromotionsController($exceptionHandler, $state, $stateParams, toastr, sdkOrderCloud, ocParameters, ocPromotions, CurrentAssignments, PromotionList, Parameters) {
     var vm = this;
     vm.list = PromotionList;
     vm.parameters = Parameters;
@@ -51,7 +51,8 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Promotions.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.Promotions.List(parameters)
             .then(function(data) {
                 var mappedData = ocPromotions.Assignments.Map(CurrentAssignments, data, $stateParams.buyerid);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -118,7 +119,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = OrderCloud.Promotions.SaveAssignment(newAssignment)
+                    vm.searchLoading = sdkOrderCloud.Promotions.SaveAssignment(newAssignment)
                         .then(function() {
                             newPromotion.Assigned = true;
                             CurrentAssignments.push(newAssignment);
