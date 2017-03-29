@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CostCentersCtrl', CostCentersController)
 ;
 
-function CostCentersController($exceptionHandler, $state, $stateParams, toastr, OrderCloud, ocParameters, ocCostCenters, CurrentAssignments, CostCentersList, Parameters) {
+function CostCentersController($exceptionHandler, $state, $stateParams, toastr, sdkOrderCloud, ocParameters, ocCostCenters, CurrentAssignments, CostCentersList, Parameters) {
     var vm = this;
     vm.list = CostCentersList;
     vm.parameters = Parameters;
@@ -51,7 +51,8 @@ function CostCentersController($exceptionHandler, $state, $stateParams, toastr, 
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.CostCenters.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.CostCenters.List(parameters.buyerid, parameters)
             .then(function(data) {
                 var mappedData = ocCostCenters.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -117,7 +118,7 @@ function CostCentersController($exceptionHandler, $state, $stateParams, toastr, 
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = OrderCloud.CostCenters.SaveAssignment(newAssignment, $stateParams.buyerid)
+                    vm.searchLoading = sdkOrderCloud.CostCenters.SaveAssignment($stateParams.buyerid, newAssignment)
                         .then(function() {
                             newCostCenter.Assigned = true;
                             CurrentAssignments.push(newAssignment);
