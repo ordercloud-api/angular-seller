@@ -1,17 +1,17 @@
 angular.module('orderCloud')
-    .config(BuyerCatalogsConfig)
+    .config(UserGroupCatalogsConfig)
 ;
 
-function BuyerCatalogsConfig($stateProvider) {
+function UserGroupCatalogsConfig($stateProvider) {
     $stateProvider
-        .state('buyerCatalogs', {
-            parent: 'buyer',
+        .state('userGroupCatalogs', {
+            parent: 'userGroup',
             url: '/catalogs?search&page&pageSize&searchOn&sortBy&filters',
-            templateUrl: 'catalogManagement/buyerCatalogs/templates/buyerCatalogs.html',
-            controller: 'BuyerCatalogsCtrl',
-            controllerAs: 'buyerCatalogs',
+            templateUrl: 'catalogManagement/userGroupCatalogs/templates/userGroupCatalogs.html',
+            controller: 'UserGroupCatalogsCtrl',
+            controllerAs: 'userGroupCatalogs',
             data: {
-                pageTitle: 'Buyer Catalogs'
+                pageTitle: 'User Group Catalogs'
             },
             resolve: {
                 Parameters: function($stateParams, ocParameters) {

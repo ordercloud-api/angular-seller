@@ -24,7 +24,8 @@ function OrderCloudCatalog($q, $uibModal, OrderCloud, sdkOrderCloud, ocConfirm) 
             Get: _getAssignments,
             Map: _mapAssignments,
             Compare: _compareAssignments,
-            Update: _updateAssignments
+            Update: _updateAssignments,
+            UpdateAssignment: _updateAssignment
         }
     };
 
@@ -358,9 +359,10 @@ function OrderCloudCatalog($q, $uibModal, OrderCloud, sdkOrderCloud, ocConfirm) 
         return deferred.promise;
     }
 
-    function _getAssignments(catalogid) {
+    function _getAssignments(catalogid, buyerid) {
         var options = {
             catalogID: catalogid,
+            buyerID: buyerid,
             pageSize: 100
         };
         return sdkOrderCloud.Catalogs.ListAssignments(options)
@@ -389,7 +391,11 @@ function OrderCloudCatalog($q, $uibModal, OrderCloud, sdkOrderCloud, ocConfirm) 
         buyerList.Items = _.map(buyerList.Items, function(buyer) {
             buyer.Assigned = false;
             angular.forEach(allAssignments, function(assignment) {
-                if (buyer.ID == assignment.BuyerID) buyer.Assigned = true;
+                if (buyer.ID == assignment.BuyerID) {
+                    buyer.Assigned = true;
+                    buyer.ViewAllProducts = assignment.ViewAllProducts;
+                    buyer.ViewAllCategories = assignment.ViewAllCategories;
+                }
             });
             return buyer;
         });
@@ -472,6 +478,24 @@ function OrderCloudCatalog($q, $uibModal, OrderCloud, sdkOrderCloud, ocConfirm) 
                 });
             });
 
+
+        return df.promise;
+    }
+
+    function _updateAssignment(catalogID, buyerID, options) {
+        var df = $q.defer();
+
+        var assignment = {
+            catalogID: catalogID,
+            buyerID: buyerID,
+            viewAllCategories: options.ViewAllCategories,
+            viewAllProducts: options.ViewAllProducts
+        };
+
+        sdkOrderCloud.Catalogs.SaveAssignment(assignment)
+            .then(function() {
+                df.resolve(assignment);
+            });
 
         return df.promise;
     }

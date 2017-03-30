@@ -103,4 +103,17 @@ function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr
                 toastr.success('Catalog assignments updated.');
             })
     };
+
+    vm.updateAssignment = function(buyer, type) {
+        vm.searchLoading = ocCatalog.Assignments.UpdateAssignment($stateParams.catalogid, buyer.ID, buyer)
+            .then(function(updatedAssignment) {
+                angular.forEach(CurrentAssignments, function(assignment) {
+                    if (assignment.BuyerID == updatedAssignment.BuyerID) {
+                        assignment = updatedAssignment;
+                    }
+                });
+                
+                toastr.success('View all ' + type + ((type == 'categories' ? updatedAssignment.viewAllCategories : updatedAssignment.viewAllProducts) ? ' enabled' : ' disabled') + ' for ' + buyer.Name);
+            });
+    };
 }

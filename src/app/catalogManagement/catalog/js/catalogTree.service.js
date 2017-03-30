@@ -8,35 +8,33 @@ function OrderCloudCatalogTreeService($q, OrderCloud) {
         UpdateCategoryNode: update
     };
 
-    function _getTree(catalogid) {
+    function _getTree(categoryArray) {
         var tree = [];
         var deferred = $q.defer();
-        OrderCloud.Categories.List(null, 1, 100, null, null, null, 'all', catalogid)
-            .then(function(list) {
-                var query = _.where(list.Items, {
-                    ParentID: null
-                });
-                angular.forEach(query, function(node) {
-                    tree.push(getnode(node));
-                });
 
-                function getnode(node) {
-                    var children = _.where(list.Items, {
-                        ParentID: node.ID
-                    });
-                    if (children.length > 0) {
-                        node.children = children;
-                        angular.forEach(children, function(child) {
-                            return getnode(child);
-                        });
-                    } else {
-                        node.children = [];
-                    }
-                    return node;
-                }
+        var query = _.where(categoryArray, {
+            ParentID: null
+        });
+        angular.forEach(query, function(node) {
+            tree.push(getnode(node));
+        });
 
-                deferred.resolve(tree);
+        function getnode(node) {
+            var children = _.where(categoryArray, {
+                ParentID: node.ID
             });
+            if (children.length > 0) {
+                node.children = children;
+                angular.forEach(children, function(child) {
+                    return getnode(child);
+                });
+            } else {
+                node.children = [];
+            }
+            return node;
+        }
+        deferred.resolve(tree);
+        
         return deferred.promise;
     }
 

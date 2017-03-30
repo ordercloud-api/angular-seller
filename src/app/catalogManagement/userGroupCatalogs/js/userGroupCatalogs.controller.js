@@ -1,10 +1,9 @@
 angular.module('orderCloud')
-    .controller('BuyerCatalogsCtrl', BuyerCatalogsController)
+    .controller('UserGroupCatalogsCtrl', UserGroupCatalogsController)
 ;
 
-function BuyerCatalogsController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, sdkOrderCloud, ocParameters, Parameters, CatalogList, SelectedBuyer) {
+function UserGroupCatalogsController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, sdkOrderCloud, ocParameters, Parameters, CatalogList, SelectedUserGroup) {
     var vm = this;
-        var vm = this;
     vm.list = CatalogList;
     vm.parameters = Parameters;
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
@@ -56,13 +55,6 @@ function BuyerCatalogsController($exceptionHandler, $state, $stateParams, toastr
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
-            });
-    };
-
-    vm.updateAssignment = function(catalog, type) {
-        vm.searchLoading = ocCatalog.Assignments.UpdateAssignment(catalog.ID, $stateParams.buyerid, catalog)
-            .then(function(assignment) {
-                toastr.success('View all ' + type + ((type == 'categories' ? assignment.viewAllCategories : assignment.viewAllProducts) ? ' enabled' : ' disabled') + ' for catalog ' + catalog.Name);
             });
     };
 }

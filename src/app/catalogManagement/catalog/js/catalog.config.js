@@ -42,16 +42,19 @@ function CatalogConfig($stateProvider) {
                 preSelectID: undefined
             },
             url: '/categories',
-            resolve: {
-                Tree: function($stateParams, ocCatalogTree) {
-                    return ocCatalogTree.Get($stateParams.catalogid);
-                }
-            },
             templateUrl: 'catalogManagement/catalog/templates/catalogCategories.html',
             controller: 'CatalogCategoriesCtrl',
             controllerAs:'catalogCategories',
             data: {
                 pageTitle: 'Catalog Categories'
+            },
+            resolve: {
+                CategoryList: function($stateParams, ocCatalogCategories) {
+                    return ocCatalogCategories.GetAll($stateParams.catalogid);
+                },
+                Tree: function(CategoryList, ocCatalogTree) {
+                    return ocCatalogTree.Get(CategoryList);
+                }
             }
         })
         .state('categories.category', {
