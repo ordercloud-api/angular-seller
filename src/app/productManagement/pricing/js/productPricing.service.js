@@ -244,35 +244,44 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
         priceSchedule = _setMinMax(priceSchedule);
 
         OrderCloud.PriceSchedules.Create(priceSchedule)
-            .then(function (ps) {
+            .then(function(ps) {
                 var assignment = {
                     ProductID: product.ID,
                     PriceScheduleID: ps.ID,
                     BuyerID: selectedBuyer.ID
                 };
-                if (selectedBuyer && (selectedUserGroups == null || selectedUserGroups.length == 0)) {
-                    OrderCloud.Products.SaveAssignment(assignment)
-                        .then(function (data) {
-                            deferred.resolve({NewPriceSchedule: ps, Assignment: assignment});
-                        })
-                        .catch(function (error) {
-                            deferred.reject(error);
-                        });
-                } else if (selectedBuyer && selectedUserGroups.length > 0) {
-                    var assignmentQueue = [];
-                    angular.forEach(selectedUserGroups, function (usergroup) {
-                        var userGroupAssignment = angular.copy(assignment);
-                        userGroupAssignment.UserGroupID = usergroup.ID;
-                        assignmentQueue.push(OrderCloud.Products.SaveAssignment(userGroupAssignment));
+                var catalogAssignment = {
+                    catalogID: selectedBuyer.DefaultCatalogID,
+                    productID: product.ID
+                };
+                sdkOrderCloud.Catalogs.SaveProductAssignment(catalogAssignment)
+                    .then(function() {
+                        if (selectedBuyer && (selectedUserGroups == null || selectedUserGroups.length == 0 )) {
+                            OrderCloud.Products.SaveAssignment(assignment)
+                                .then(function(data){
+                                    deferred.resolve(data);
+                                })
+                                .catch(function (error) {
+                                    deferred.reject(error);
+                                });
+                        }
+                        else if (selectedBuyer && selectedUserGroups.length > 0 ) {
+                            var assignmentQueue = [];
+                            angular.forEach(selectedUserGroups, function(usergroup) {
+                                var userGroupAssignment = angular.copy(assignment);
+                                userGroupAssignment.UserGroupID = usergroup.ID;
+                                assignmentQueue.push(OrderCloud.Products.SaveAssignment(userGroupAssignment));
+                            });
+                            $q.all(assignmentQueue)
+                                .then(function (data) {
+                                    deferred.resolve(data);
+                                })
+                                .catch(function (error) {
+                                    deferred.reject(error);
+                                });
+                        }
                     });
-                    $q.all(assignmentQueue)
-                        .then(function (data) {
-                            deferred.resolve(data);
-                        })
-                        .catch(function (error) {
-                            deferred.reject(error);
-                        });
-                }
+                
             })
             .catch(function (ex) {
                 deferred.reject(ex);

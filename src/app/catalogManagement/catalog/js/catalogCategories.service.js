@@ -18,7 +18,7 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
             pageSize: 100,
             depth: 'all'
         };
-        return sdkOrderCloud.Categorys.List(catalogID, options)
+        return sdkOrderCloud.Categories.List(catalogID, options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -27,7 +27,7 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
                 while(currentPage < totalPages) {
                     currentPage++;
                     options.page = currentPage;
-                    queue.push(sdkOrderCloud.Categorys.List(catalogID, options));
+                    queue.push(sdkOrderCloud.Categories.List(catalogID, options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -48,7 +48,7 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
             pageSize: 100,
             level: level
         };
-        return sdkOrderCloud.Categorys.ListAssignments(catalogID, options)
+        return sdkOrderCloud.Categories.ListAssignments(catalogID, options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -57,7 +57,7 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
                 while(currentPage < totalPages) {
                     currentPage++;
                     options.page = currentPage;
-                    queue.push(sdkOrderCloud.Categorys.ListAssignments(catalogID, options));
+                    queue.push(sdkOrderCloud.Categories.ListAssignments(catalogID, options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -93,11 +93,11 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
             buyerID: buyerID, 
             userGroupID: userGroupID
         }
-        return sdkOrderCloud.Categorys.SaveAssignment(catalogID, assignment);
+        return sdkOrderCloud.Categories.SaveAssignment(catalogID, assignment);
     }
 
     function _deleteAssignment(catalogID, categoryID, buyerID, userGroupID) {
-        return sdkOrderCloud.Categorys.DeleteAssignment(catalogID, categoryID, buyerID, {userGroupID: userGroupID});
+        return sdkOrderCloud.Categories.DeleteAssignment(catalogID, categoryID, buyerID, {userGroupID: userGroupID});
     }
 
     return service;

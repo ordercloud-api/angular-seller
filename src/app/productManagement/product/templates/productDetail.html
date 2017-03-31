@@ -24,6 +24,9 @@
         <li class="hidden-xs" ui-sref-active="active" ng-if="productDetail.inventoryEnabled">
             <a href="" ui-sref=".inventory"><i class="fa fa-clipboard"></i> Inventory</a>
         </li>
+        <li class="hidden-xs" ng-class="{active: application.$state.is('productDetail.catalogs') || application.$state.is('productDetail.categories')}" oc-if-roles="CategoryRoles">
+            <a href="" ui-sref=".catalogs"><i class="fa fa-th-large"></i> Categories</a>
+        </li>
         <li role="presentation" class="visible-xs" uib-dropdown> <!--Mobile dropdown menu-->
             <a uib-dropdown-toggle>More <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown-menu-right" uib-dropdown-menu>
