@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductCreateModalCtrl', ProductCreateModalController)
 ;
 
-function ProductCreateModalController($uibModalInstance, OrderCloud) {
+function ProductCreateModalController($uibModalInstance, ocProducts, OrderCloud) {
     var vm = this;
     vm.product = {};
     vm.product.Active = true;
@@ -19,8 +19,17 @@ function ProductCreateModalController($uibModalInstance, OrderCloud) {
     function submit() {
         vm.loading = OrderCloud.Products.Create(vm.product)
             .then(function(data) {
-                $uibModalInstance.close(data);
-            })
+                if (angular.isDefined(vm.product.DefaultPrice)) {
+                    data.DefaultPrice = vm.product.DefaultPrice;
+                    ocProducts.CreateDefaultPrice(data)
+                        .then(function(product) {
+                            $uibModalInstance.close(product);
+                        });
+                } else {
+                    $uibModalInstance.close(data);
+                }
+                
+            });
     }
 
     function cancel() {

@@ -1,6 +1,5 @@
 angular.module('orderCloud')
-    .factory('ocAccount', OrderCloudAccountService)
-;
+    .factory('ocAccount', OrderCloudAccountService);
 
 function OrderCloudAccountService($q, $uibModal, $cookies, appname) {
     var service = {
@@ -22,11 +21,11 @@ function OrderCloudAccountService($q, $uibModal, $cookies, appname) {
                 controllerAs: 'confirmPasswordModal',
                 size: 'confirm',
                 resolve: {
-                    CurrentUser: function() {
+                    CurrentUser: function () {
                         return currentUser;
                     }
                 }
-            }).result
+            }).result;
         }
     }
 
@@ -36,10 +35,10 @@ function OrderCloudAccountService($q, $uibModal, $cookies, appname) {
             templateUrl: 'account/templates/changePassword.modal.html',
             controller: 'ChangePasswordModalCtrl',
             controllerAs: 'changePasswordModal',
-            backdrop:'static',
+            backdrop: 'static',
             size: 'confirm',
             resolve: {
-                CurrentUser: function(){
+                CurrentUser: function () {
                     return currentUser;
                 }
             }

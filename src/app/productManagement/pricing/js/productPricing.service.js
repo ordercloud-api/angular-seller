@@ -1,8 +1,7 @@
 angular.module('orderCloud')
-    .factory('ocProductPricing', ocProductPricingService)
-;
+    .factory('ocProductPricing', ocProductPricingService);
 
-function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
+function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocConfirm) {
     var service = {
         AssignmentList: _assignmentList,
         AssignmentData: _assignmentData,
@@ -13,12 +12,17 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
         EditPrice: _editPrice,
         DeletePrice: _deletePrice,
         PriceBreaks: {
-            Create : _createPriceBreak,
+            Create: _createPriceBreak,
             Edit: _editPriceBreak,
             SetMinMax: _setMinMax,
             Delete: _deletePriceBreak,
             AddDisplayQuantity: _addDisplayQuantity,
             DisplayQuantity: displayQuantity
+        },
+        GetProductListPriceSchedules: _getProductListPriceSchedules,
+        Assignments: {
+            Get: _getAssignments,
+            Map: _mapAssignments
         }
     };
 
@@ -28,7 +32,7 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
         var page = 1;
         var pageSize = 100;
         OrderCloud.Products.ListAssignments(productid, null, null, null, null, page, pageSize, null)
-            .then(function(data) {
+            .then(function (data) {
                 var queue = [];
                 var assignments = data;
                 if (data.Meta.TotalPages > data.Meta.Page) {
@@ -38,8 +42,8 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
                         queue.push(OrderCloud.Products.ListAssignments(productid, null, null, null, null, page, data.Meta.PageSize, null));
                     }
                     return $q.all(queue)
-                        .then(function(results) {
-                            angular.forEach(results, function(result) {
+                        .then(function (results) {
+                            angular.forEach(results, function (result) {
                                 assignments.Items = [].concat(assignments.Items, result.Items);
                                 assignments.Meta = result.Meta;
                             });
@@ -47,7 +51,7 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
 
                             deferred.resolve(assignments);
                         });
-                } else{
+                } else {
                     assignments.buyerlist = _.uniq(_.pluck(assignments.Items, 'BuyerID'));
                     deferred.resolve(assignments);
                 }
@@ -61,13 +65,15 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
         var psQueue = [];
         var schedules = _.uniq(_.pluck(assignments.Items, 'PriceScheduleID'));
 
-        angular.forEach(schedules, function(id) {
+        angular.forEach(schedules, function (id) {
             psQueue.push(OrderCloud.PriceSchedules.Get(id));
         });
         $q.all(psQueue)
-            .then(function(results) {
-                angular.forEach(results, function(ps) {
-                    angular.forEach(_.where(assignments.Items, {PriceScheduleID: ps.ID}), function(p) {
+            .then(function (results) {
+                angular.forEach(results, function (ps) {
+                    angular.forEach(_.where(assignments.Items, {
+                        PriceScheduleID: ps.ID
+                    }), function (p) {
                         p.PriceSchedule = ps;
                         displayQuantity(p.PriceSchedule);
                     });
@@ -78,18 +84,20 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
         function groupBy() {
             var results = {};
             var priceSchedules = _.groupBy(assignments.Items, 'PriceScheduleID');
-            angular.forEach(priceSchedules, function(assignments, key) {
+            angular.forEach(priceSchedules, function (assignments, key) {
                 results[key] = {
                     PriceSchedule: assignments[0].PriceSchedule,
                     Buyers: [],
                     UserGroups: []
                 };
-                angular.forEach(assignments,function(details) {
+                angular.forEach(assignments, function (details) {
                     if (details.BuyerID && !details.UserGroupID) {
                         results[key].Buyers.push(details.BuyerID);
-                    }
-                    else if (details.BuyerID && details.UserGroupID) {
-                        results[key].UserGroups.push({BuyerID: details.BuyerID, UserGroupID: details.UserGroupID});
+                    } else if (details.BuyerID && details.UserGroupID) {
+                        results[key].UserGroups.push({
+                            BuyerID: details.BuyerID,
+                            UserGroupID: details.UserGroupID
+                        });
                     }
                 });
             });
@@ -111,25 +119,31 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
         var buyerChunks = chunks(_.uniq(data.Buyers.concat(_.uniq(_.pluck(data.UserGroups, 'BuyerID')))));
         var userGroupGroups = _.groupBy(data.UserGroups, 'BuyerID');
         var userGroupChunks = [];
-        angular.forEach(userGroupGroups, function(group) {
+        angular.forEach(userGroupGroups, function (group) {
             userGroupChunks = userGroupChunks.concat(chunks(group));
         });
 
         var buyerQueue = [];
         var userGroupQueue = [];
 
-        angular.forEach(buyerChunks, function(chunk) {
-            buyerQueue.push(OrderCloud.Buyers.List(null, null, null, null, null, {ID: chunk.join('|')}));
+        angular.forEach(buyerChunks, function (chunk) {
+            buyerQueue.push(OrderCloud.Buyers.List(null, null, null, null, null, {
+                ID: chunk.join('|')
+            }));
         });
 
-        angular.forEach(userGroupChunks, function(chunk) {
-            userGroupQueue.push((function() {
+        angular.forEach(userGroupChunks, function (chunk) {
+            userGroupQueue.push((function () {
                 var d = $q.defer();
                 var buyerID = chunk[0].BuyerID;
 
-                OrderCloud.UserGroups.List(null, null, null, null, null, {ID: _.pluck(chunk, 'UserGroupID').join('|')}, buyerID)
-                    .then(function(data) {
-                        angular.forEach(_.where(result.Buyers, {ID: buyerID}), function(buyer) {
+                OrderCloud.UserGroups.List(null, null, null, null, null, {
+                        ID: _.pluck(chunk, 'UserGroupID').join('|')
+                    }, buyerID)
+                    .then(function (data) {
+                        angular.forEach(_.where(result.Buyers, {
+                            ID: buyerID
+                        }), function (buyer) {
                             if (!buyer.UserGroups) buyer.UserGroups = [];
                             buyer.UserGroups = buyer.UserGroups.concat(data.Items);
                         });
@@ -141,9 +155,9 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
         });
 
         $q.all(buyerQueue)
-            .then(function(results) {
-                angular.forEach(results, function(r) {
-                    _.map(r.Items, function(buyer) {
+            .then(function (results) {
+                angular.forEach(results, function (r) {
+                    _.map(r.Items, function (buyer) {
                         buyer.Assigned = data.Buyers.indexOf(buyer.ID) > -1;
                     });
                     result.Buyers = result.Buyers.concat(r.Items);
@@ -153,13 +167,14 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
 
         function getUserGroups() {
             $q.all(userGroupQueue)
-                .then(function(results) {
+                .then(function (results) {
                     deferred.resolve(result);
                 });
         }
 
         function chunks(list) {
-            var i, j, listChunks = [], chunkSize = 10;
+            var i, j, listChunks = [],
+                chunkSize = 10;
             for (i = 0, j = list.length; i < j; i += chunkSize) {
                 listChunks.push(list.slice(i, i + chunkSize));
             }
@@ -176,19 +191,19 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
             controller: 'PriceScheduleCreateAssignmentCtrl',
             controllerAs: 'priceScheduleAssignment',
             resolve: {
-                Buyers: function() {
+                Buyers: function () {
                     return OrderCloud.Buyers.List(null, 1, 100);
                 },
-                SelectedPrice: function() {
+                SelectedPrice: function () {
                     return selectedPrice;
                 },
-                SelectedBuyer: function() {
+                SelectedBuyer: function () {
                     return null;
                 },
-                BuyerUserGroups: function() {
+                BuyerUserGroups: function () {
                     return null;
                 },
-                AssignedUserGroups: function() {
+                AssignedUserGroups: function () {
                     return null;
                 }
             }
@@ -202,19 +217,21 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
             controller: 'PriceScheduleCreateAssignmentCtrl',
             controllerAs: 'priceScheduleAssignment',
             resolve: {
-                Buyers: function() {
-                    return {Items: [scope.buyer]};
+                Buyers: function () {
+                    return {
+                        Items: [scope.buyer]
+                    };
                 },
-                SelectedPrice: function() {
+                SelectedPrice: function () {
                     return selectedPrice;
                 },
-                SelectedBuyer: function() {
+                SelectedBuyer: function () {
                     return scope.buyer;
                 },
-                BuyerUserGroups: function() {
+                BuyerUserGroups: function () {
                     return OrderCloud.UserGroups.List(null, 1, 20, null, null, null, scope.buyer.ID);
                 },
-                AssignedUserGroups: function() {
+                AssignedUserGroups: function () {
                     return scope.buyer.UserGroups;
                 }
             }
@@ -227,24 +244,23 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
         priceSchedule = _setMinMax(priceSchedule);
 
         OrderCloud.PriceSchedules.Create(priceSchedule)
-            .then(function(ps) {
+            .then(function (ps) {
                 var assignment = {
                     ProductID: product.ID,
                     PriceScheduleID: ps.ID,
                     BuyerID: selectedBuyer.ID
                 };
-                if (selectedBuyer && (selectedUserGroups == null || selectedUserGroups.length == 0 )) {
+                if (selectedBuyer && (selectedUserGroups == null || selectedUserGroups.length == 0)) {
                     OrderCloud.Products.SaveAssignment(assignment)
-                        .then(function(data){
-                            deferred.resolve(data);
+                        .then(function (data) {
+                            deferred.resolve({NewPriceSchedule: ps, Assignment: assignment});
                         })
                         .catch(function (error) {
                             deferred.reject(error);
                         });
-                }
-                else if (selectedBuyer && selectedUserGroups.length > 0 ) {
+                } else if (selectedBuyer && selectedUserGroups.length > 0) {
                     var assignmentQueue = [];
-                    angular.forEach(selectedUserGroups, function(usergroup) {
+                    angular.forEach(selectedUserGroups, function (usergroup) {
                         var userGroupAssignment = angular.copy(assignment);
                         userGroupAssignment.UserGroupID = usergroup.ID;
                         assignmentQueue.push(OrderCloud.Products.SaveAssignment(userGroupAssignment));
@@ -271,7 +287,7 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
             controller: 'PriceScheduleEditModalCtrl',
             controllerAs: 'priceScheduleEditModal',
             resolve: {
-                SelectedPriceSchedule: function() {
+                SelectedPriceSchedule: function () {
                     return priceSchedule;
                 }
             }
@@ -280,10 +296,11 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
 
     function _deletePrice(priceSchedule) {
         return ocConfirm.Confirm({
-                message:'Are you sure you want to delete <br> <b>' + priceSchedule.Name + '</b>?',
+                message: 'Are you sure you want to delete <br> <b>' + priceSchedule.Name + '</b>?',
                 confirmText: 'Delete price',
-                type: 'delete'})
-            .then(function() {
+                type: 'delete'
+            })
+            .then(function () {
                 return OrderCloud.PriceSchedules.Delete(priceSchedule.ID);
             });
     }
@@ -295,7 +312,7 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
             controller: 'PriceSchedulePriceBreakCreateCtrl',
             controllerAs: 'priceBreakCreate',
             resolve: {
-                PriceScheduleID: function() {
+                PriceScheduleID: function () {
                     return priceSchedule.ID;
                 }
             }
@@ -309,10 +326,10 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
             controller: 'PriceSchedulePriceBreakEditCtrl',
             controllerAs: 'priceBreakEdit',
             resolve: {
-                PriceScheduleID: function() {
+                PriceScheduleID: function () {
                     return priceSchedule.ID;
                 },
-                PriceBreak: function() {
+                PriceBreak: function () {
                     return priceBreak;
                 }
             }
@@ -320,7 +337,7 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
     }
 
     function _setMinMax(priceSchedule) {
-        var quantities =  _.pluck(priceSchedule.PriceBreaks, 'Quantity');
+        var quantities = _.pluck(priceSchedule.PriceBreaks, 'Quantity');
         priceSchedule.MinQuantity = _.min(quantities);
         if (priceSchedule.RestrictedQuantity) {
             priceSchedule.MaxQuantity = _.max(quantities);
@@ -330,16 +347,17 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
 
     function _deletePriceBreak(priceSchedule, priceBreak) {
         return ocConfirm.Confirm({
-                message:'Are you sure you want to delete this price break?<br> <b>Quantity: ' + priceBreak.Quantity + '</b>?',
+                message: 'Are you sure you want to delete this price break?<br> <b>Quantity: ' + priceBreak.Quantity + '</b>?',
                 confirmText: 'Delete price break',
-                type: 'delete'})
-            .then(function() {
+                type: 'delete'
+            })
+            .then(function () {
                 return OrderCloud.PriceSchedules.DeletePriceBreak(priceSchedule.ID, priceBreak.Quantity)
-                    .then(function() {
+                    .then(function () {
                         return OrderCloud.PriceSchedules.Get(priceSchedule.ID)
-                            .then(function(updatedPriceSchedule) {
+                            .then(function (updatedPriceSchedule) {
                                 return updatedPriceSchedule;
-                            })
+                            });
                     });
             });
     }
@@ -351,9 +369,13 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
 
     function displayQuantity(priceSchedule) {
         //Organize the priceschedule array in order of quantity
-        priceSchedule.PriceBreaks.sort(function(a,b) {return a.Quantity - b.Quantity});
+        priceSchedule.PriceBreaks.sort(function (a, b) {
+            return a.Quantity - b.Quantity;
+        });
         //find out the max quantity in the array
-        var maxQuantity = Math.max.apply(Math,priceSchedule.PriceBreaks.map(function(object) {return object.Quantity}));
+        var maxQuantity = Math.max.apply(Math, priceSchedule.PriceBreaks.map(function (object) {
+            return object.Quantity;
+        }));
         // go through each item in the priceschedule array
         for (var i = 0; i < priceSchedule.PriceBreaks.length; i++) {
             //if max number is unique, display max number  with + symbol
@@ -377,6 +399,109 @@ function ocProductPricingService($q, $uibModal, OrderCloud, ocConfirm) {
                 }
             }
         }
+    }
+
+    var cachedProductAssignmentResults = {};
+
+    function _getAssignments(productID, level, cacheID, buyerID) {
+        if (cachedProductAssignmentResults.cacheID === cacheID && !productID) return cachedProductAssignmentResults.results;
+        cachedProductAssignmentResults.cacheID = cacheID;
+        var options = {
+            level: level,
+            buyerID: buyerID,
+            productID: productID,
+            pageSize: 100
+        };
+        return sdkOrderCloud.Products.ListAssignments(options)
+            .then(function (data1) {
+                var df = $q.defer(),
+                    queue = [],
+                    totalPages = angular.copy(data1.Meta.TotalPages),
+                    currentPage = angular.copy(data1.Meta.Page);
+                while (currentPage < totalPages) {
+                    currentPage++;
+                    options.page = currentPage;
+                    queue.push(sdkOrderCloud.Products.ListAssignments(options));
+                }
+                $q.all(queue)
+                    .then(function (results) {
+                        angular.forEach(results, function (r) {
+                            data1.Items = data1.Items.concat(r.Items);
+                        });
+                        if (!productID) cachedProductAssignmentResults.results = data1.Items;
+                        df.resolve(data1.Items);
+                    })
+                    .catch(function(ex) {
+                        df.reject(ex);
+                    });
+                return df.promise;
+            });
+    }
+
+    function _getProductListPriceSchedules(productList, CurrentAssignments) {
+        var df = $q.defer();
+        var priceScheduleIDs = _.pluck(CurrentAssignments, 'PriceScheduleID');
+        var defaultPriceScheduleIDs = _.pluck(_.filter(productList.Items, function (product) {
+            return product.DefaultPriceScheduleID !== null;
+        }), 'DefaultPriceScheduleID');
+        var allIDs = _.unique(defaultPriceScheduleIDs.concat(priceScheduleIDs));
+        if (!allIDs.length) {
+            df.resolve([]);
+        } else {
+            _retrievePriceSchedules(allIDs);
+        }
+        return df.promise;
+
+        function _retrievePriceSchedules(priceScheduleIDs) {
+            function chunks(list) {
+                var i, j, listChunks = [], chunkSize = 80;
+                for (i = 0, j = list.length; i < j; i += chunkSize) {
+                    listChunks.push(list.slice(i, i + chunkSize));
+                }
+                return listChunks;
+            }
+
+            var priceChunks = chunks(priceScheduleIDs);
+
+            var priceQueue = [];
+            var fullPriceList = [];
+
+            angular.forEach(priceChunks, function(chunk) {
+                priceQueue.push(sdkOrderCloud.PriceSchedules.List({
+                    pageSize: 100,
+                    filters: {
+                        ID: chunk.join('|')
+                    }
+                }));
+            });
+
+            $q.all(priceQueue).then(function(results) {
+                angular.forEach(results, function(result) {
+                    fullPriceList = fullPriceList.concat(result.Items);
+                });
+                df.resolve(fullPriceList);
+            });
+        }
+    }
+
+    function _mapAssignments(partyID, level, productList, priceList, CurrentAssignments) {
+        _.each(productList.Items, function (product) {
+            var options = {ProductID: product.ID};
+                options[(level === 'company' ? 'BuyerID' : 'UserGroupID')] = partyID;
+            var assignedPrice = _.findWhere(CurrentAssignments, options);
+            if (assignedPrice) {
+                product.SelectedPrice = _.findWhere(priceList, {
+                    ID: assignedPrice.PriceScheduleID
+                });
+            } else if (product.DefaultPriceScheduleID) {
+                product.SelectedPrice = _.findWhere(priceList, {
+                    ID: product.DefaultPriceScheduleID
+                });
+            } else {
+                product.SelectedPrice = null;
+            }
+        });
+        return productList;
     }
 
     return service;

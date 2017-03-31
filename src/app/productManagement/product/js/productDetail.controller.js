@@ -16,7 +16,7 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProdu
     }
 
     function updateProduct() {
-        var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'InventoryEnabled']);
+        var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'InventoryEnabled', 'Active']);
         vm.productUpdateLoading = OrderCloud.Products.Patch(SelectedProduct.ID, partial)
             .then(function(data) {
                 vm.product = angular.copy(data);

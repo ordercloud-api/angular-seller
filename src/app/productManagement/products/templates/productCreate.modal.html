@@ -29,6 +29,15 @@
             </div>
         </fieldset>
         <fieldset class="form-group">
+            <label for="DefaultPrice" class="col-sm-3 control-label">Default Price</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input id="DefaultPrice" type="number" class="form-control" min="0" step="0.01" placeholder="0.00" ng-model="productCreateModal.product.DefaultPrice" />
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
             <label class="col-sm-3 control-label">Image</label>
             <div class="col-sm-9">
                 <oc-file-upload  model="productCreateModal.product" label="Image:" patch="productCreateModal.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>

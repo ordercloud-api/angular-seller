@@ -9,7 +9,8 @@ angular.module('orderCloud')
             noSpecialChars: 'Only Alphanumeric characters are allowed',
             'Buyer.UnavailableID': 'This ID is already in use.',
             'LineItem.UnavailableID': 'This ID is already in use.',
-            'User.UsernameMustBeUnique': 'This username is already in use.'
+            'User.UsernameMustBeUnique': 'This username is already in use.',
+            'step': 'Please enter a valid dollar amount.'
         });
 
         $provide.decorator('$exceptionHandler', handler);

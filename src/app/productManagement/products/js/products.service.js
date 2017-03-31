@@ -2,9 +2,10 @@ angular.module('orderCloud')
     .factory('ocProducts', OrderCloudProducts)
 ;
 
-function OrderCloudProducts($uibModal, ocConfirm, OrderCloud) {
+function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloud, sdkOrderCloud) {
     var service = {
         Create: _create,
+        CreateDefaultPrice: _createDefaultPrice,
         Delete: _delete
     };
 
@@ -14,6 +15,35 @@ function OrderCloudProducts($uibModal, ocConfirm, OrderCloud) {
             controller: 'ProductCreateModalCtrl',
             controllerAs: 'productCreateModal'
         }).result
+    }
+
+    function _createDefaultPrice(product) {
+        var df = $q.defer();
+
+        var priceSchedule = {
+            name: product.Name + ' Default Price',
+            minQuantity: 1,
+            priceBreaks: [
+                {
+                    quantity: 1,
+                    price: product.DefaultPrice
+                }
+            ]
+        };
+        sdkOrderCloud.PriceSchedules.Create(priceSchedule)
+            .then(function(defaultPriceSchedule) {
+                setDefaultPriceSchedule(defaultPriceSchedule);
+            });
+
+        function setDefaultPriceSchedule(defaultPriceSchedule) {
+            product.DefaultPriceScheduleID = defaultPriceSchedule.ID;
+            sdkOrderCloud.Products.Patch(product.ID, {defaultPriceScheduleID: defaultPriceSchedule.ID})
+                .then(function(product) {
+                    df.resolve(product);
+                });
+        }
+
+        return df.promise;
     }
 
     function _delete(product) {

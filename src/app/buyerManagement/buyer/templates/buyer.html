@@ -24,6 +24,9 @@
         <li role="presentation" ng-class="{active: application.$state.includes('buyerCatalog')}"> <!-- TODO: oc-if-roles="CatalogRoles"-->
             <a ui-sref="buyerCatalogs({ search: '', sortBy: ''})"><i class="fa fa-sitemap"></i> Catalogs</a>
         </li>
+        <li role="presentation" ng-class="{active: application.$state.is('buyerProducts')}"> <!-- TODO: oc-if-roles="CatalogRoles"-->
+            <a ui-sref="buyerProducts({ search: '', sortBy: ''})"><i class="fa fa-cube"></i> Products</a>
+        </li>
         <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('users')}" oc-if-roles="BuyerUserRoles">
             <a ui-sref="users({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-user"></i> Users</a>
         </li>
