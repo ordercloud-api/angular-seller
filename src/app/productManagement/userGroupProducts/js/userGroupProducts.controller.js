@@ -1,7 +1,8 @@
 angular.module('orderCloud')
-    .controller('BuyerProductsCtrl', BuyerProductsController);
+    .controller('UserGroupProductsCtrl', UserGroupProductsController)
+;
 
-function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, toastr, OrderCloud, sdkOrderCloud, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, ProductList, Parameters, MappedProductList, CurrentAssignments, $uibModal) {
+function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams, $uibModal, toastr, OrderCloud, sdkOrderCloud, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, SelectedUserGroup, ProductList, Parameters, MappedProductList, BuyerProductAssignments, UserGroupProductAssignments) {
     var vm = this;
     vm.list = MappedProductList;
     //Set parameters
@@ -17,6 +18,7 @@ function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, to
     vm.pageChanged = pageChanged; //Reload the state with the incremented page parameter
     vm.search = search; //Reload the state with new search parameter & reset the page
     vm.updateSort = updateSort; //Conditionally set, reverse, remove the sortBy parameter & reload the state
+    var CurrentAssignments = BuyerProductAssignments.concat(UserGroupProductAssignments);
 
     function filter(resetPage) {
         $state.go('.', ocParameters.Create(vm.parameters, resetPage));
@@ -72,14 +74,14 @@ function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, to
     };
 
     vm.updateProductPrice = function(scope) {
-        ocProductPricing.UpdateProductPrice(scope.product, SelectedBuyer, CurrentAssignments)
+        ocProductPricing.UpdateProductPrice(scope.product, SelectedBuyer, BuyerProductAssignments.concat(UserGroupProductAssignments), SelectedUserGroup)
             .then(function(data) {
                 CurrentAssignments = data.UpdatedAssignments;
                 scope.product.SelectedPrice = data.SelectedPrice;
             })
             .catch(function(ex) {
                 if (ex === 'CREATE') {
-                    ocProductPricing.CreateProductPrice(scope.product, SelectedBuyer, CurrentAssignments)
+                    ocProductPricing.CreateProductPrice(scope.product, SelectedBuyer, BuyerProductAssignments.concat(UserGroupProductAssignments), SelectedUserGroup)
                         .then(function(data) {
                             CurrentAssignments = data.UpdatedAssignments;
                             scope.product.SelectedPrice = data.SelectedPrice;

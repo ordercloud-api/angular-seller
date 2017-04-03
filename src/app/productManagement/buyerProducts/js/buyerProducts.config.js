@@ -14,7 +14,7 @@ function BuyerProductsConfig($stateProvider) {
                     return ocParameters.Get($stateParams);
                 },
                 CurrentAssignments: function ($stateParams, ocProductPricing) {
-                    return ocProductPricing.Assignments.Get(null, 'company', $stateParams.buyerid);
+                    return ocProductPricing.Assignments.Get(null, null, $stateParams.buyerid, $stateParams.buyerid);
                 },
                 ProductList: function (sdkOrderCloud, Parameters) {
                     Parameters.filters = angular.extend(Parameters.filters, {
@@ -25,7 +25,7 @@ function BuyerProductsConfig($stateProvider) {
                 MappedProductList: function ($stateParams, ocProductPricing, ProductList, CurrentAssignments) {
                     return ocProductPricing.GetProductListPriceSchedules(ProductList, CurrentAssignments)
                         .then(function(data) {
-                            return ocProductPricing.Assignments.Map($stateParams.buyerid, 'company', ProductList, data, CurrentAssignments);
+                            return ocProductPricing.Assignments.Map($stateParams.buyerid, null, ProductList, data, CurrentAssignments);
                         });
                 }
             }

@@ -1,7 +1,7 @@
 <form name="createPriceModal.form">
     <div class="modal-header">
         <button type="button" class="close" ng-click="createPriceModal.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <span class="text-muted">{{'Pricing for ' + createPriceModal.buyerName}}</span>
+        <span class="text-muted">{{'Pricing for ' + (createPriceModal.userGroupName || createPriceModal.buyerName)}}</span>
         <h4 class="modal-title">Product: <b>{{createPriceModal.product.Name}}</b></h4>
     </div>
     <div class="modal-body">
