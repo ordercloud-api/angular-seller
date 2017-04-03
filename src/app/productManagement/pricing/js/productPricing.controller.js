@@ -5,7 +5,7 @@ angular.module('orderCloud')
     .controller('PriceSchedulePriceBreakEditCtrl', PriceSchedulePriceBreakEditController)
 ;
 
-function ProductPricingController($q, $stateParams, $uibModal, toastr, AssignmentList, AssignmentData, ocProductPricing, ocConfirm, OrderCloud) {
+function ProductPricingController($q, $stateParams, $uibModal, toastr, AssignmentList, AssignmentData, ocProductPricing, ocConfirm, OrderCloud, SelectedProduct) {
     var vm = this;
     vm.list = AssignmentList;
     vm.listAssignments = AssignmentData;

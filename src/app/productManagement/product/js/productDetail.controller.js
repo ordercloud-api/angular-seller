@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductDetailCtrl', ProductDetailController)
 ;
 
-function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProducts, SelectedProduct) {
+function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProducts, ocProductPricing, SelectedProduct) {
     var vm = this;
     vm.product = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
@@ -10,6 +10,7 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProdu
     vm.updateProduct = updateProduct;
     vm.deleteProduct = deleteProduct;
     vm.patchImage = patchImage;
+    vm.createDefaultPrice = createDefaultPrice;
 
     function patchImage(imageXP){
        return OrderCloud.Products.Patch(vm.product.ID, {xp: imageXP});
@@ -33,6 +34,13 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProdu
             .then(function() {
                 toastr.success(SelectedProduct.Name + ' was deleted.');
                 $state.go('products', {}, {reload: true});
+            });
+    }
+
+    function createDefaultPrice() {
+        ocProductPricing.CreateProductPrice(vm.product, null, null, null, true)
+            .then(function(data) {
+                $state.go('productDetail.pricing.priceScheduleDetail', {pricescheduleid: data.SelectedPrice.ID}, {reload: true});
             });
     }
 

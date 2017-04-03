@@ -242,53 +242,59 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
         }).result;
     }
 
-    function _createPrice(product, priceSchedule, selectedBuyer, selectedUserGroups) {
+    function _createPrice(product, priceSchedule, selectedBuyer, selectedUserGroups, defaultPriceSchedule) {
         var deferred = $q.defer();
 
         priceSchedule = _setMinMax(priceSchedule);
 
-        OrderCloud.PriceSchedules.Create(priceSchedule)
+        sdkOrderCloud.PriceSchedules.Create(priceSchedule)
             .then(function (ps) {
-                var assignment = {
-                    ProductID: product.ID,
-                    PriceScheduleID: ps.ID,
-                    BuyerID: selectedBuyer.ID
-                };
-                var catalogAssignment = {
-                    catalogID: selectedBuyer.DefaultCatalogID,
-                    productID: product.ID
-                };
-                var result = {
-                    Assignment: assignment,
-                    NewPriceSchedule: ps
-                };
-                sdkOrderCloud.Catalogs.SaveProductAssignment(catalogAssignment)
-                    .then(function () {
-                        if (selectedBuyer && (selectedUserGroups == null || selectedUserGroups.length == 0)) {
-                            OrderCloud.Products.SaveAssignment(assignment)
-                                .then(function (data) {
-                                    deferred.resolve(result);
-                                })
-                                .catch(function (error) {
-                                    deferred.reject(error);
+                if (!defaultPriceSchedule) {
+                    var assignment = {
+                        ProductID: product.ID,
+                        PriceScheduleID: ps.ID,
+                        BuyerID: selectedBuyer.ID
+                    };
+                    var catalogAssignment = {
+                        catalogID: selectedBuyer.DefaultCatalogID,
+                        productID: product.ID
+                    };
+                    var result = {
+                        Assignment: assignment,
+                        NewPriceSchedule: ps
+                    };
+                    sdkOrderCloud.Catalogs.SaveProductAssignment(catalogAssignment)
+                        .then(function () {
+                            if (selectedBuyer && (selectedUserGroups == null || selectedUserGroups.length == 0)) {
+                                sdkOrderCloud.Products.SaveAssignment(assignment)
+                                    .then(function (data) {
+                                        deferred.resolve(result);
+                                    })
+                                    .catch(function (error) {
+                                        deferred.reject(error);
+                                    });
+                            } else if (selectedBuyer && selectedUserGroups.length > 0) {
+                                var assignmentQueue = [];
+                                angular.forEach(selectedUserGroups, function (usergroup) {
+                                    var userGroupAssignment = angular.copy(assignment);
+                                    userGroupAssignment.UserGroupID = usergroup.ID;
+                                    assignmentQueue.push(sdkOrderCloud.Products.SaveAssignment(userGroupAssignment));
                                 });
-                        } else if (selectedBuyer && selectedUserGroups.length > 0) {
-                            var assignmentQueue = [];
-                            angular.forEach(selectedUserGroups, function (usergroup) {
-                                var userGroupAssignment = angular.copy(assignment);
-                                userGroupAssignment.UserGroupID = usergroup.ID;
-                                assignmentQueue.push(sdkOrderCloud.Products.SaveAssignment(userGroupAssignment));
-                            });
-                            $q.all(assignmentQueue)
-                                .then(function (data) {
-                                    deferred.resolve(result);
-                                })
-                                .catch(function (error) {
-                                    deferred.reject(error);
-                                });
-                        }
-                    });
-
+                                $q.all(assignmentQueue)
+                                    .then(function (data) {
+                                        deferred.resolve(result);
+                                    })
+                                    .catch(function (error) {
+                                        deferred.reject(error);
+                                    });
+                            }
+                        });
+                } else {
+                    sdkOrderCloud.Products.Patch(product.ID, {DefaultPriceScheduleID: ps.ID})
+                        .then(function() {
+                            deferred.resolve({NewPriceSchedule: ps});
+                        });
+                }
             })
             .catch(function (ex) {
                 deferred.reject(ex);
@@ -600,7 +606,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
         }
     }
 
-    function _createProductPrice(product, SelectedBuyer, CurrentAssignments, SelectedUserGroup) {
+    function _createProductPrice(product, SelectedBuyer, CurrentAssignments, SelectedUserGroup, DefaultPriceSchedule) {
         return $uibModal.open({
             templateUrl: 'productManagement/buyerProducts/templates/createPrice.modal.html',
             controller: 'CreatePriceModalCtrl',
@@ -611,7 +617,8 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                         Buyer: SelectedBuyer,
                         UserGroup: SelectedUserGroup,
                         Product: product,
-                        CurrentAssignments: CurrentAssignments
+                        CurrentAssignments: CurrentAssignments,
+                        DefaultPriceSchedule: DefaultPriceSchedule
                     };
                 }
             }

@@ -21,7 +21,7 @@
                  ng-click="productPricing.selectPrice(this)">
                 <!--==== Product Price Selection ====-->
                 <h5 class="c-price-list__item__info">
-                    {{assignment.PriceSchedule.Name}} <br>
+                    {{assignment.PriceSchedule.Name}} <small class="text-info" ng-if="assignment.PriceSchedule.ID == productDetail.product.DefaultPriceScheduleID">(Default)</small><br>
                     <small>{{'ID: ' + assignment.PriceSchedule.ID}}</small>
                 </h5>
                 <div class="c-price-list__item__price">
@@ -146,6 +146,9 @@
 
             <!--==== Assignments ====-->
             <div ng-show="productPricing.activeTab == 'availability'">
+                <div class="alert alert-info" ng-if="productDetail.product.DefaultPriceScheduleID == productPricing.selectedPrice.PriceSchedule.ID">
+                    This is the default price schedule. All buyer user can order this product if available in one of their catalogs.
+                </div>
                 <div class="panel panel-default" ng-repeat="buyer in productPricing.selectedPrice.Availability" cg-busy="productPricing.availabilityLoading[$index]">
                     <div class="panel-body">
                         <h5 style="margin:0;">

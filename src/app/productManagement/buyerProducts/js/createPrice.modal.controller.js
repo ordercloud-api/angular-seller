@@ -4,12 +4,14 @@ angular.module('orderCloud')
 
 function CreatePriceModalController($exceptionHandler, $uibModalInstance, SelectPriceData, ocProductPricing, toastr) {
     var vm = this;
-    vm.buyerName = SelectPriceData.Buyer.Name;
-    vm.userGroupName = SelectPriceData.UserGroup ? SelectPriceData.UserGroup.Name : null;
+    if (!SelectPriceData.DefaultPriceSchedule) {
+        vm.buyerName = SelectPriceData.Buyer.Name;
+        vm.userGroupName = SelectPriceData.UserGroup ? SelectPriceData.UserGroup.Name : null;
+        vm.previousPriceSchedule = angular.copy(SelectPriceData.Product.SelectedPrice);
+        vm.selectedBuyer = SelectPriceData.Buyer;
+        vm.selectedUserGroup = SelectPriceData.UserGroup;
+    }
     vm.product = SelectPriceData.Product;
-    vm.previousPriceSchedule = angular.copy(SelectPriceData.Product.SelectedPrice);
-    vm.selectedBuyer = SelectPriceData.Buyer;
-    vm.selectedUserGroup = SelectPriceData.UserGroup;
     vm.priceSchedule = {
         RestrictedQuantity: false,
         PriceBreaks: [],
@@ -45,9 +47,11 @@ function CreatePriceModalController($exceptionHandler, $uibModalInstance, Select
     };
 
     vm.submit = function() {
-        ocProductPricing.CreatePrice(vm.product, vm.priceSchedule, vm.selectedBuyer, [vm.selectedUserGroup])
+        ocProductPricing.CreatePrice(vm.product, vm.priceSchedule, vm.selectedBuyer, [vm.selectedUserGroup], SelectPriceData.DefaultPriceSchedule)
             .then(function(data) {
-                SelectPriceData.CurrentAssignments.push(data.Assignment);
+                if (!SelectPriceData.DefaultPriceSchedule) {
+                    SelectPriceData.CurrentAssignments.push(data.Assignment);
+                }
                 $uibModalInstance.close({SelectedPrice: data.NewPriceSchedule, UpdatedAssignments:SelectPriceData.CurrentAssignments});
             })
             .catch(function (ex) {
