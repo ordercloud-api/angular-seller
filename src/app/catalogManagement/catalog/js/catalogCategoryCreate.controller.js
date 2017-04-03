@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CreateCategoryModalCtrl', CreateCategoryModalController)
 ;
 
-function CreateCategoryModalController($exceptionHandler, $uibModalInstance, OrderCloud, ParentID, CatalogID){
+function CreateCategoryModalController($exceptionHandler, $uibModalInstance, sdkOrderCloud, ParentID, CatalogID){
     var vm = this;
     vm.category = {};
     vm.category.ParentID = ParentID;
@@ -11,7 +11,7 @@ function CreateCategoryModalController($exceptionHandler, $uibModalInstance, Ord
     vm.patchImage = patchImage;
 
     function patchImage(imageXP){
-        return OrderCloud.Categories.Patch(vm.category.ID, {xp: imageXP});
+        return sdkOrderCloud.Categories.Patch(CatalogID, vm.category.ID, {xp: imageXP});
     }
 
     vm.cancel = function(){
@@ -22,7 +22,7 @@ function CreateCategoryModalController($exceptionHandler, $uibModalInstance, Ord
         if (vm.category.ParentID === '') {
             vm.category.ParentID = null;
         }
-        vm.loading = OrderCloud.Categories.Create(vm.category, vm.catalogid)
+        vm.loading = sdkOrderCloud.Categories.Create(vm.catalogid, vm.category)
             .then(function(category) {
                 $uibModalInstance.close(category);
             })

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CatalogProductsCtrl', CatalogProductsController)
 ;
 
-function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocCatalog, ocParameters, Parameters, CurrentAssignments, ProductList) {
+function CatalogProductsController($state, $stateParams, toastr, sdkOrderCloud, ocCatalog, ocParameters, Parameters, CurrentAssignments, ProductList) {
     var vm = this;
     vm.list = ProductList;
     //Set parameters
@@ -45,7 +45,8 @@ function CatalogProductsController($state, $stateParams, toastr, OrderCloud, ocC
     };
 
     vm.loadMore = function() {
-        return OrderCloud.Products.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return sdkOrderCloud.Products.List(parameters)
             .then(function(data) {
                 var mappedData = ocCatalog.Products.MapAssignments(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);

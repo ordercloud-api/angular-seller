@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocCatalogTree', OrderCloudCatalogTreeService)
     .config(OrderCloudCatalogTreeConfig)
 ;
-function OrderCloudCatalogTreeService($q, OrderCloud) {
+function OrderCloudCatalogTreeService($q, sdkOrderCloud) {
     return {
         Get: _getTree,
         UpdateCategoryNode: update

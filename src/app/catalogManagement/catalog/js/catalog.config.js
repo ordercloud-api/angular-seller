@@ -63,8 +63,8 @@ function CatalogConfig($stateProvider) {
             controller: 'CatalogCategoryCtrl',
             controllerAs: 'catalogCategory',
             resolve: {
-                SelectedCategory: function($stateParams, OrderCloud) {
-                    return OrderCloud.Categories.Get($stateParams.categoryid, $stateParams.catalogid);
+                SelectedCategory: function($stateParams, sdkOrderCloud) {
+                    return sdkOrderCloud.Categories.Get($stateParams.catalogid, $stateParams.categoryid);
                 }
             }
         })
@@ -80,8 +80,8 @@ function CatalogConfig($stateProvider) {
                 CurrentAssignments: function($q, $stateParams, ocCatalog) {
                     return ocCatalog.Products.GetAssignments($stateParams.categoryid, $stateParams.catalogid);
                 },
-                ProductList: function(OrderCloud, ocCatalog, Parameters, CurrentAssignments) {
-                    return OrderCloud.Products.List(Parameters.search, Parameters.page, Parameters.pageSize || 10, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+                ProductList: function(sdkOrderCloud, ocCatalog, Parameters, CurrentAssignments) {
+                    return sdkOrderCloud.Products.List(Parameters)
                         .then(function(data) {
                             return ocCatalog.Products.MapAssignments(CurrentAssignments, data);
                         })
