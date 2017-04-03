@@ -4,6 +4,7 @@ angular.module('orderCloud')
 function SelectPriceModalController($exceptionHandler, $uibModalInstance, sdkOrderCloud, ocProductPricing, SelectPriceData) {
     var vm = this;
     vm.buyerName = SelectPriceData.Buyer.Name;
+    vm.userGroupName = SelectPriceData.UserGroup ? SelectPriceData.UserGroup.Name : null;
     vm.product = SelectPriceData.Product;
     vm.selectedPriceSchedule = angular.copy(SelectPriceData.Product.SelectedPrice);
     vm.availablePriceSchedules = SelectPriceData.PriceScheduleList.Items;
