@@ -18,7 +18,7 @@ function BuyerCreateModalController($uibModalInstance, $exceptionHandler, sdkOrd
                 $uibModalInstance.close(data);
             })
             .catch(function(ex) {
-                if (ex.status == 409) {
+                if (ex.status === 409) {
                     vm.form.ID.$setValidity('Buyer.UnavailableID', false);
                     vm.form.ID.$$element[0].focus();
                 } else {
