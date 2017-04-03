@@ -51,7 +51,7 @@ function UserGroupsController($state, $stateParams, toastr, ocUserGroups, sdkOrd
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, vm.list.Meta.Page + 1);
-        return OrderCloud.UserGroups.List($stateParams.buyerid, Parameters)
+        return sdkOrderCloud.UserGroups.List($stateParams.buyerid, Parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;

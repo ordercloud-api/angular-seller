@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('SecurityCtrl', SecurityController)
 ;
 
-function SecurityController($exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, OrderCloud) {
+function SecurityController($exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, sdkOrderCloud) {
     var vm = this;
     vm.assignments = Assignments;
     vm.profiles = AvailableProfiles;
@@ -12,11 +12,12 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
 
     vm.updateAssignment = function(scope) {
         if (scope.profile.selected) {
-            OrderCloud.SecurityProfiles.SaveAssignment({
-                SecurityProfileID: scope.profile.ID,
-                BuyerID: $stateParams.buyerid,
-                UserGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
-            })
+            var assignment = {
+                securityProfileID: scope.profile.ID,
+                buyerID: $stateParams.buyerid,
+                userGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
+            }
+            sdkOrderCloud.SecurityProfiles.SaveAssignment(assignment)
                 .then(function() {
                     toastr.success(scope.profile.Name + ' was enabled.');
                 })
@@ -25,7 +26,11 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
                     $exceptionHandler(ex);
                 });
         } else {
-            OrderCloud.SecurityProfiles.DeleteAssignment(scope.profile.ID, null, $stateParams.usergroupid || $stateParams.adminusergroupid, $stateParams.buyerid)
+            var options = {
+                buyerID: $stateParams.buyerid,
+                userGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
+            };
+            sdkOrderCloud.SecurityProfiles.DeleteAssignment(scope.profile.ID, options)
                 .then(function() {
                     toastr.success(scope.profile.Name + ' was disabled.');
                 })

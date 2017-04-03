@@ -71,7 +71,7 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, sdkOrderCloud) {
                 while(currentPage < totalPages) {
                     currentPage++;
                     options.page = currentPage;
-                    queue.push(OrderCloud.Promotions.ListAssignments(options));
+                    queue.push(sdkOrderCloud.Promotions.ListAssignments(options));
                 }
                 $q.all(queue)
                     .then(function(results) {
