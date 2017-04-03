@@ -534,66 +534,71 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
     function _selectPrice(SelectPriceData, selectedPriceSchedule, availablePriceSchedules) {
         var df = $q.defer();
 
-        if (SelectPriceData.Product.DefaultPriceScheduleID === selectedPriceSchedule.ID) {
-            //Default Price Selected
-            var check = _exists(SelectPriceData);
-            var defaultPriceSchedule = _.findWhere(availablePriceSchedules, {ID: SelectPriceData.Product.DefaultPriceScheduleID});
+        function select() {
+            if (SelectPriceData.Product.DefaultPriceScheduleID === selectedPriceSchedule.ID) {
+                //Default Price Selected
+                var check = _exists(SelectPriceData);
+                var defaultPriceSchedule = _.findWhere(availablePriceSchedules, {ID: SelectPriceData.Product.DefaultPriceScheduleID});
 
-            if (check.DoesExist) {
-                //Other assignments to previous price schedule exist
-                sdkOrderCloud.Products.DeleteAssignment(SelectPriceData.Product.ID, SelectPriceData.Buyer.ID)
-                    .then(function() {
-                        SelectPriceData.CurrentAssignments.splice(check.Index, 1);
-                        df.resolve({SelectedPrice: defaultPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
-                    });
+                if (check.DoesExist) {
+                    //Other assignments to previous price schedule exist
+                    sdkOrderCloud.Products.DeleteAssignment(SelectPriceData.Product.ID, SelectPriceData.Buyer.ID)
+                        .then(function() {
+                            SelectPriceData.CurrentAssignments.splice(check.Index, 1);
+                            df.resolve({SelectedPrice: defaultPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
+                        });
+                } else {
+                    //No other assignments to previous price schedule exist
+                    sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
+                        .then(function() {
+                            SelectPriceData.CurrentAssignments.splice(check.Index, 1);
+                            df.resolve({SelectedPrice: defaultPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
+                        });
+                }
             } else {
-                //No other assignments to previous price schedule exist
-                sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
+                //Price schedule selected - Not default
+                var assignment = {
+                    BuyerID: SelectPriceData.Buyer.ID,
+                    ProductID: SelectPriceData.Product.ID,
+                    PriceScheduleID: selectedPriceSchedule.ID
+                };
+                sdkOrderCloud.Products.SaveAssignment(assignment)
                     .then(function() {
-                        SelectPriceData.CurrentAssignments.splice(check.Index, 1);
-                        df.resolve({SelectedPrice: defaultPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
+                        var check = _exists(SelectPriceData);
+                        if (!check.DoesExist && SelectPriceData.Product.SelectedPrice) {
+                            sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
+                                .then(function() {
+                                    _complete(true);
+                                });
+                        } else {
+                            _complete(false);
+                        }
+
+                        function _complete(wasDeleted) {
+                            wasDeleted ? (SelectPriceData.CurrentAssignments.splice(check.Index, 1)) :
+                                (check.Index > -1 ? (SelectPriceData.CurrentAssignments[check.Index] = assignment) : SelectPriceData.CurrentAssignments.push(assignment));
+                            df.resolve({SelectedPrice: selectedPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
+                        }
+                        
+                    })
+                    .catch(function(ex) {
+                        if (ex.response.body.Errors[0].ErrorCode === 'Product.CannotAssignNotInBuyerCatalog') {
+                            //Product has not been assigned to the catalog
+                            sdkOrderCloud.Catalogs.SaveProductAssignment({
+                                catalogID: SelectPriceData.Buyer.DefaultCatalogID,
+                                productID: SelectPriceData.Product.ID
+                            }).then(function() {
+                                //Rerun select() now that product is assigned to catalog
+                                select();
+                            });
+                        } else {
+                            df.reject(ex);
+                        }
                     });
             }
-        } else {
-            //Price schedule selected - Not default
-            var assignment = {
-                BuyerID: SelectPriceData.Buyer.ID,
-                ProductID: SelectPriceData.Product.ID,
-                PriceScheduleID: selectedPriceSchedule.ID
-            };
-            sdkOrderCloud.Products.SaveAssignment(assignment)
-                .then(function() {
-                    var check = _exists(SelectPriceData);
-                    if (!check.DoesExist && SelectPriceData.Product.SelectedPrice) {
-                        sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
-                            .then(function() {
-                                _complete(true);
-                            });
-                    } else {
-                        _complete(false);
-                    }
-
-                    function _complete(wasDeleted) {
-                        wasDeleted ? (SelectPriceData.CurrentAssignments.splice(check.Index, 1)) :
-                            (check.Index > -1 ? (SelectPriceData.CurrentAssignments[check.Index] = assignment) : SelectPriceData.CurrentAssignments.push(assignment));
-                        df.resolve({SelectedPrice: selectedPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
-                    }
-                    
-                })
-                .catch(function(ex) {
-                    if (ex.response.body.Errors[0].ErrorCode === 'Product.CannotAssignNotInBuyerCatalog') {
-                        //Product has not been assigned to the catalog
-                        sdkOrderCloud.Catalogs.SaveProductAssignment({
-                            catalogID: SelectPriceData.Buyer.DefaultCatalogID,
-                            productID: SelectPriceData.Product.ID
-                        }).then(function() {
-                            _selectPrice(SelectPriceData, selectedPriceSchedule, availablePriceSchedules);
-                        });
-                    } else {
-                        df.reject(ex);
-                    }
-                });
         }
+
+        select();
 
         return df.promise;
     }
