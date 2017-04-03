@@ -248,7 +248,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
         priceSchedule = _setMinMax(priceSchedule);
 
         OrderCloud.PriceSchedules.Create(priceSchedule)
-            .then(function(ps) {
+            .then(function (ps) {
                 var assignment = {
                     ProductID: product.ID,
                     PriceScheduleID: ps.ID,
@@ -263,19 +263,18 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                     NewPriceSchedule: ps
                 };
                 sdkOrderCloud.Catalogs.SaveProductAssignment(catalogAssignment)
-                    .then(function() {
-                        if (selectedBuyer && (selectedUserGroups == null || selectedUserGroups.length == 0 )) {
+                    .then(function () {
+                        if (selectedBuyer && (selectedUserGroups == null || selectedUserGroups.length == 0)) {
                             OrderCloud.Products.SaveAssignment(assignment)
-                                .then(function(data){
+                                .then(function (data) {
                                     deferred.resolve(result);
                                 })
                                 .catch(function (error) {
                                     deferred.reject(error);
                                 });
-                        }
-                        else if (selectedBuyer && selectedUserGroups.length > 0 ) {
+                        } else if (selectedBuyer && selectedUserGroups.length > 0) {
                             var assignmentQueue = [];
-                            angular.forEach(selectedUserGroups, function(usergroup) {
+                            angular.forEach(selectedUserGroups, function (usergroup) {
                                 var userGroupAssignment = angular.copy(assignment);
                                 userGroupAssignment.UserGroupID = usergroup.ID;
                                 assignmentQueue.push(sdkOrderCloud.Products.SaveAssignment(userGroupAssignment));
@@ -289,7 +288,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                                 });
                         }
                     });
-                
+
             })
             .catch(function (ex) {
                 deferred.reject(ex);
@@ -449,7 +448,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                         if (!productID) cachedProductAssignmentResults.results = data1.Items;
                         df.resolve(data1.Items);
                     })
-                    .catch(function(ex) {
+                    .catch(function (ex) {
                         df.reject(ex);
                     });
                 return df.promise;
@@ -473,7 +472,8 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
 
         function _retrievePriceSchedules(priceScheduleIDs) {
             function chunks(list) {
-                var i, j, listChunks = [], chunkSize = 80;
+                var i, j, listChunks = [],
+                    chunkSize = 80;
                 for (i = 0, j = list.length; i < j; i += chunkSize) {
                     listChunks.push(list.slice(i, i + chunkSize));
                 }
@@ -485,7 +485,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
             var priceQueue = [];
             var fullPriceList = [];
 
-            angular.forEach(priceChunks, function(chunk) {
+            angular.forEach(priceChunks, function (chunk) {
                 priceQueue.push(sdkOrderCloud.PriceSchedules.List({
                     pageSize: 100,
                     filters: {
@@ -494,8 +494,8 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                 }));
             });
 
-            $q.all(priceQueue).then(function(results) {
-                angular.forEach(results, function(result) {
+            $q.all(priceQueue).then(function (results) {
+                angular.forEach(results, function (result) {
                     fullPriceList = fullPriceList.concat(result.Items);
                 });
                 df.resolve(fullPriceList);
@@ -506,8 +506,15 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
     function _mapAssignments(buyerID, userGroupID, productList, priceList, BuyerProductAssignments, UserGroupProductAssignments) {
         if (!UserGroupProductAssignments) UserGroupProductAssignments = [];
         _.each(productList.Items, function (product) {
-            var assignedBuyerPrice = _.findWhere(BuyerProductAssignments, {ProductID: product.ID, BuyerID: buyerID, UserGroupID: null});
-            var assignedUserGroupPrice = _.findWhere(UserGroupProductAssignments, {ProductID: product.ID, UserGroupID: userGroupID});
+            var assignedBuyerPrice = _.findWhere(BuyerProductAssignments, {
+                ProductID: product.ID,
+                BuyerID: buyerID,
+                UserGroupID: null
+            });
+            var assignedUserGroupPrice = _.findWhere(UserGroupProductAssignments, {
+                ProductID: product.ID,
+                UserGroupID: userGroupID
+            });
             if (assignedUserGroupPrice) {
                 product.SelectedPrice = _.findWhere(priceList, {
                     ID: assignedUserGroupPrice.PriceScheduleID
@@ -529,30 +536,35 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
     }
 
     function _exists(SelectPriceData) {
-        var otherAssignmentsExist = _.filter(SelectPriceData.CurrentAssignments, function(assignment) {
+        var otherAssignmentsExist = _.filter(SelectPriceData.CurrentAssignments, function (assignment) {
             return (SelectPriceData.Product.SelectedPrice && (assignment.ProductID === SelectPriceData.Product.ID) && (assignment.PriceScheduleID === SelectPriceData.Product.SelectedPrice.ID));
         }).length > 1;
 
-        var index = _.findIndex(SelectPriceData.CurrentAssignments, function(assignment) {
+        var index = _.findIndex(SelectPriceData.CurrentAssignments, function (assignment) {
             return (assignment.ProductID === SelectPriceData.Product.ID && assignment.BuyerID === SelectPriceData.Buyer.ID && ((SelectPriceData.UserGroup && SelectPriceData.UserGroup.ID == assignment.UserGroupID) || !assignment.UserGroupID));
         });
 
-        return {DoesExist: otherAssignmentsExist, Index: index};
+        return {
+            DoesExist: otherAssignmentsExist,
+            Index: index
+        };
     }
 
     function _updateProductPrice(product, SelectedBuyer, CurrentAssignments, SelectedUserGroup) {
         var priceScheduleIDs = _.unique((product.DefaultPriceScheduleID ? [product.DefaultPriceScheduleID] : [])
-                                        .concat(_.pluck(_.filter(CurrentAssignments, {ProductID: product.ID}), 'PriceScheduleID')));
-        
-        if (priceScheduleIDs.length === 1 && priceScheduleIDs[0] === product.DefaultPriceScheduleID) {
-            return _createProductPrice(product, SelectedBuyer, CurrentAssignments);
+            .concat(_.pluck(_.filter(CurrentAssignments, {
+                ProductID: product.ID
+            }), 'PriceScheduleID')));
+
+        if (!priceScheduleIDs.length || priceScheduleIDs.length === 1 && (priceScheduleIDs[0] === product.DefaultPriceScheduleID || product.SelectedPrice.Inherited)) {
+            return _createProductPrice(product, SelectedBuyer, CurrentAssignments, [SelectedUserGroup]);
         } else {
             return $uibModal.open({
                 templateUrl: 'productManagement/buyerProducts/templates/selectPrice.modal.html',
                 controller: 'SelectPriceModalCtrl',
                 controllerAs: 'selectPriceModal',
                 resolve: {
-                    SelectPriceData: function() {
+                    SelectPriceData: function () {
                         var df = $q.defer();
                         var result = {
                             Buyer: SelectedBuyer,
@@ -560,8 +572,24 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                             Product: product,
                             CurrentAssignments: CurrentAssignments
                         };
-                        sdkOrderCloud.PriceSchedules.List({filters: {ID: priceScheduleIDs.join('|')}})
-                            .then(function(data) {
+                        sdkOrderCloud.PriceSchedules.List({
+                                filters: {
+                                    ID: priceScheduleIDs.join('|')
+                                }
+                            })
+                            .then(function (data) {
+                                if (SelectedUserGroup) {
+                                    //Find if price schedule would be inherited
+                                    angular.forEach(data.Items, function (priceSchedule) {
+                                        var buyerAssignment = _.findWhere(CurrentAssignments, {
+                                            ProductID: product.ID,
+                                            PriceScheduleID: priceSchedule.ID,
+                                            BuyerID: SelectedBuyer.ID,
+                                            UserGroupID: null
+                                        });
+                                        if (buyerAssignment) priceSchedule.Inherited = true;
+                                    });
+                                }
                                 result.PriceScheduleList = data;
                                 df.resolve(result);
                             });
@@ -578,7 +606,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
             controller: 'CreatePriceModalCtrl',
             controllerAs: 'createPriceModal',
             resolve: {
-                SelectPriceData: function() {
+                SelectPriceData: function () {
                     return {
                         Buyer: SelectedBuyer,
                         UserGroup: SelectedUserGroup,
@@ -597,64 +625,93 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
             if (SelectPriceData.Product.DefaultPriceScheduleID === selectedPriceSchedule.ID) {
                 //Default Price Selected
                 var check = _exists(SelectPriceData);
-                var defaultPriceSchedule = _.findWhere(availablePriceSchedules, {ID: SelectPriceData.Product.DefaultPriceScheduleID});
+                var defaultPriceSchedule = _.findWhere(availablePriceSchedules, {
+                    ID: SelectPriceData.Product.DefaultPriceScheduleID
+                });
 
                 if (check.DoesExist) {
                     //Other assignments to previous price schedule exist
                     sdkOrderCloud.Products.DeleteAssignment(SelectPriceData.Product.ID, SelectPriceData.Buyer.ID)
-                        .then(function() {
+                        .then(function () {
                             SelectPriceData.CurrentAssignments.splice(check.Index, 1);
-                            df.resolve({SelectedPrice: defaultPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
+                            df.resolve({
+                                SelectedPrice: defaultPriceSchedule,
+                                UpdatedAssignments: SelectPriceData.CurrentAssignments
+                            });
                         });
                 } else {
                     //No other assignments to previous price schedule exist
                     sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
-                        .then(function() {
+                        .then(function () {
                             SelectPriceData.CurrentAssignments.splice(check.Index, 1);
-                            df.resolve({SelectedPrice: defaultPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
+                            df.resolve({
+                                SelectedPrice: defaultPriceSchedule,
+                                UpdatedAssignments: SelectPriceData.CurrentAssignments
+                            });
                         });
                 }
             } else {
                 //Price schedule selected - Not default
-                var assignment = {
-                    BuyerID: SelectPriceData.Buyer.ID,
-                    UserGroupID: SelectPriceData.UserGroup ? SelectPriceData.UserGroup.ID : null,
-                    ProductID: SelectPriceData.Product.ID,
-                    PriceScheduleID: selectedPriceSchedule.ID
-                };
-                sdkOrderCloud.Products.SaveAssignment(assignment)
-                    .then(function() {
-                        var check = _exists(SelectPriceData);
-                        if (!check.DoesExist && SelectPriceData.Product.SelectedPrice) {
-                            sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
-                                .then(function() {
-                                    _complete(true);
-                                });
-                        } else {
-                            _complete(false);
-                        }
-
-                        function _complete(wasDeleted) {
-                            wasDeleted ? (SelectPriceData.CurrentAssignments.splice(check.Index, 1)) :
-                                (check.Index > -1 ? (SelectPriceData.CurrentAssignments[check.Index] = assignment) : SelectPriceData.CurrentAssignments.push(assignment));
-                            df.resolve({SelectedPrice: selectedPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
-                        }
-                        
-                    })
-                    .catch(function(ex) {
-                        if (ex.response.body.Errors[0].ErrorCode === 'Product.CannotAssignNotInBuyerCatalog') {
-                            //Product has not been assigned to the catalog
-                            sdkOrderCloud.Catalogs.SaveProductAssignment({
-                                catalogID: SelectPriceData.Buyer.DefaultCatalogID,
-                                productID: SelectPriceData.Product.ID
-                            }).then(function() {
-                                //Rerun select() now that product is assigned to catalog
-                                select();
+                if (selectedPriceSchedule.Inherited) {
+                    //Price schedule selected is already inherited from buyer -- delete current if no other assignments
+                    var check = _exists(SelectPriceData);
+                    if (!check.DoesExist && SelectPriceData.Product.SelectedPrice) {
+                        sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
+                            .then(function () {
+                                _complete(true);
                             });
-                        } else {
-                            df.reject(ex);
-                        }
+                    } else {
+                        var options = {
+                            userGroupID: SelectPriceData.UserGroup.ID
+                        };
+                        sdkOrderCloud.Products.DeleteAssignment(SelectPriceData.Product.ID, SelectPriceData.Buyer.ID, options)
+                            .then(function () {
+                                _complete(false);
+                            });
+                    }
+                } else {
+                    var assignment = {
+                        BuyerID: SelectPriceData.Buyer.ID,
+                        UserGroupID: SelectPriceData.UserGroup ? SelectPriceData.UserGroup.ID : null,
+                        ProductID: SelectPriceData.Product.ID,
+                        PriceScheduleID: selectedPriceSchedule.ID
+                    };
+                    sdkOrderCloud.Products.SaveAssignment(assignment)
+                        .then(function () {
+                            var check = _exists(SelectPriceData);
+                            if (!check.DoesExist && SelectPriceData.Product.SelectedPrice) {
+                                sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
+                                    .then(function () {
+                                        _complete(true);
+                                    });
+                            } else {
+                                _complete(false);
+                            }
+                        })
+                        .catch(function (ex) {
+                            if (ex.response.body.Errors[0].ErrorCode === 'Product.CannotAssignNotInBuyerCatalog') {
+                                //Product has not been assigned to the catalog
+                                sdkOrderCloud.Catalogs.SaveProductAssignment({
+                                    catalogID: SelectPriceData.Buyer.DefaultCatalogID,
+                                    productID: SelectPriceData.Product.ID
+                                }).then(function () {
+                                    //Rerun select() now that product is assigned to catalog
+                                    select();
+                                });
+                            } else {
+                                df.reject(ex);
+                            }
+                        });
+                }
+
+                function _complete(wasDeleted) {
+                    wasDeleted ? (SelectPriceData.CurrentAssignments.splice(check.Index, 1)) :
+                        (check.Index > -1 ? (SelectPriceData.CurrentAssignments[check.Index] = assignment) : SelectPriceData.CurrentAssignments.push(assignment));
+                    df.resolve({
+                        SelectedPrice: selectedPriceSchedule,
+                        UpdatedAssignments: SelectPriceData.CurrentAssignments
                     });
+                }
             }
         }
 

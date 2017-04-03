@@ -10,6 +10,7 @@
                 <div class="row">
                     <div class="col-xs-5">
                         <span class="text-info" ng-if="price.ID == selectPriceModal.product.DefaultPriceScheduleID">(DEFAULT)</span>
+                        <span class="text-info" ng-if="(price.ID == selectPriceModal.product.SelectedPrice.ID && selectPriceModal.product.SelectedPrice.Inherited) || price.Inherited">(INHERITED)</span>
                         <b>{{price.Name}}</b>
                         <br>
                         <span class="text-info">{{price.RestrictedQuantity ? 'Restricted' : 'Open'}} Quantity</span> <br> Min:
@@ -30,7 +31,7 @@
         </div>
         <button class="btn btn-default btn-block" ng-click="selectPriceModal.createNewPrice()"><i class="fa fa-plus-circle"></i> New Price</button>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer" ng-if="selectPriceModal.availablePriceSchedules.length > 1 || (selectPriceModal.availablePriceSchedules[0].ID != selectPriceModal.product.SelectedPrice.ID)">
         <button class="btn btn-primary btn-block" ng-click="selectPriceModal.submit()" cg-busy="selectPriceModal.loading">Save Selection</button>
     </div>
 </form>
