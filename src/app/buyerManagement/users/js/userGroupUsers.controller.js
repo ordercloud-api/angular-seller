@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserGroupUsersCtrl', UserGroupUsersController)
 ;
 
-function UserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocUsers, OrderCloud, ocParameters, UserList, CurrentAssignments, Parameters ) {
+function UserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocUsers, sdkOrderCloud, ocParameters, UserList, CurrentAssignments, Parameters) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;

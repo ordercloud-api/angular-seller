@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserGroupCreateModalCtrl', UserGroupCreateModalController)
 ;
 
-function UserGroupCreateModalController($uibModalInstance, $exceptionHandler, OrderCloud, SelectedBuyerID) {
+function UserGroupCreateModalController($uibModalInstance, $exceptionHandler, sdkOrderCloud, SelectedBuyerID) {
     var vm = this;
 
     vm.submit = function() {
