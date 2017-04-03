@@ -6,7 +6,8 @@ function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloud, sdkOrderCloud)
     var service = {
         Create: _create,
         CreateDefaultPrice: _createDefaultPrice,
-        Delete: _delete
+        Delete: _delete,
+        CheckOtherAssignments: _checkOtherAssignments
     };
 
     function _create() {
@@ -54,6 +55,18 @@ function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloud, sdkOrderCloud)
             .then(function() {
                 return OrderCloud.Products.Delete(product.ID)
             })
+    }
+
+    function _checkOtherAssignments(SelectPriceData) {
+        var otherAssignmentsExist = _.filter(SelectPriceData.CurrentAssignments, function(assignment) {
+            return (SelectPriceData.Product.SelectedPrice && (assignment.ProductID === SelectPriceData.Product.ID) && (assignment.PriceScheduleID === SelectPriceData.Product.SelectedPrice.ID));
+        }).length > 1;
+
+        var index = _.findIndex(SelectPriceData.CurrentAssignments, function(assignment) {
+            return (assignment.ProductID === SelectPriceData.Product.ID && assignment.BuyerID === SelectPriceData.Buyer.ID && !assignment.UserGroupID);
+        });
+
+        return {DoesExist: otherAssignmentsExist, Index: index};
     }
 
     return service;

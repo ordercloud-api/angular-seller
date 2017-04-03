@@ -254,12 +254,16 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                     catalogID: selectedBuyer.DefaultCatalogID,
                     productID: product.ID
                 };
+                var result = {
+                    Assignment: assignment,
+                    NewPriceSchedule: ps
+                };
                 sdkOrderCloud.Catalogs.SaveProductAssignment(catalogAssignment)
                     .then(function() {
                         if (selectedBuyer && (selectedUserGroups == null || selectedUserGroups.length == 0 )) {
                             OrderCloud.Products.SaveAssignment(assignment)
                                 .then(function(data){
-                                    deferred.resolve(data);
+                                    deferred.resolve(result);
                                 })
                                 .catch(function (error) {
                                     deferred.reject(error);
@@ -274,7 +278,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                             });
                             $q.all(assignmentQueue)
                                 .then(function (data) {
-                                    deferred.resolve(data);
+                                    deferred.resolve(result);
                                 })
                                 .catch(function (error) {
                                     deferred.reject(error);

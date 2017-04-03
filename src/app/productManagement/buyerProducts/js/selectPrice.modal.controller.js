@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('SelectPriceModalCtrl', SelectPriceModalController);
 
-function SelectPriceModalController($exceptionHandler, sdkOrderCloud, $uibModalInstance, SelectPriceData) {
+function SelectPriceModalController($exceptionHandler, $uibModalInstance, sdkOrderCloud, ocProducts, SelectPriceData) {
     var vm = this;
     vm.buyerName = SelectPriceData.Buyer.Name;
     vm.product = SelectPriceData.Product;
@@ -17,32 +17,20 @@ function SelectPriceModalController($exceptionHandler, sdkOrderCloud, $uibModalI
     };
 
     vm.submit = function () {
-        function _checkOtherAssignments() {
-            var otherAssignmentsExist = _.filter(SelectPriceData.CurrentAssignments, function(assignment) {
-                return (SelectPriceData.Product.SelectedPrice && (assignment.ProductID === SelectPriceData.Product.ID) && (assignment.PriceScheduleID === SelectPriceData.Product.SelectedPrice.ID));
-            }).length > 1;
-
-            var index = _.findIndex(SelectPriceData.CurrentAssignments, function(assignment) {
-                return (assignment.ProductID === SelectPriceData.Product.ID && assignment.BuyerID === SelectPriceData.Buyer.ID && !assignment.UserGroupID);
-            });
-
-            return {doesExist: otherAssignmentsExist, index: index};
-        }
-
         if (SelectPriceData.Product.DefaultPriceScheduleID === vm.selectedPriceSchedule.ID) {
-            var check = _checkOtherAssignments();
+            var check = ocProducts.CheckOtherAssignments(SelectPriceData);
             var defaultPriceSchedule = _.findWhere(vm.availablePriceSchedules, {ID: SelectPriceData.Product.DefaultPriceScheduleID});
 
-            if (check.doesExist) {
+            if (check.DoesExist) {
                 sdkOrderCloud.Products.DeleteAssignment(SelectPriceData.Product.ID, SelectPriceData.Buyer.ID)
                     .then(function() {
-                        SelectPriceData.CurrentAssignments.splice(check.index, 1);
+                        SelectPriceData.CurrentAssignments.splice(check.Index, 1);
                         $uibModalInstance.close({SelectedPrice: defaultPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
                     });
             } else {
                 sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
                     .then(function() {
-                        SelectPriceData.CurrentAssignments.splice(check.index, 1);
+                        SelectPriceData.CurrentAssignments.splice(check.Index, 1);
                         $uibModalInstance.close({SelectedPrice: defaultPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
                     });
             }
@@ -54,8 +42,8 @@ function SelectPriceModalController($exceptionHandler, sdkOrderCloud, $uibModalI
             };
             vm.loading = sdkOrderCloud.Products.SaveAssignment(assignment)
                 .then(function() {
-                    var check = _checkOtherAssignments();
-                    if (!check.doesExist && SelectPriceData.Product.SelectedPrice) {
+                    var check = ocProducts.CheckOtherAssignments(SelectPriceData);
+                    if (!check.DoesExist && SelectPriceData.Product.SelectedPrice) {
                         sdkOrderCloud.PriceSchedules.Delete(SelectPriceData.Product.SelectedPrice.ID)
                             .then(function() {
                                 _complete(true);
@@ -65,8 +53,8 @@ function SelectPriceModalController($exceptionHandler, sdkOrderCloud, $uibModalI
                     }
 
                     function _complete(wasDeleted) {
-                        wasDeleted ? (SelectPriceData.CurrentAssignments.splice(check.index, 1)) :
-                            (check.index > -1 ? (SelectPriceData.CurrentAssignments[check.index] = assignment) : SelectPriceData.CurrentAssignments.push(assignment));
+                        wasDeleted ? (SelectPriceData.CurrentAssignments.splice(check.Index, 1)) :
+                            (check.Index > -1 ? (SelectPriceData.CurrentAssignments[check.Index] = assignment) : SelectPriceData.CurrentAssignments.push(assignment));
                         $uibModalInstance.close({SelectedPrice:vm.selectedPriceSchedule, UpdatedAssignments: SelectPriceData.CurrentAssignments});
                     }
                     

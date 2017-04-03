@@ -53,7 +53,7 @@ function ProductCreateAssignmentController($state, toastr, OrderCloud, ocProduct
         ocProductPricing.CreatePrice(vm.product, vm.priceSchedule, vm.selectedBuyer, vm.selectedUserGroups)
             .then(function(data) {
                 toastr.success(vm.priceSchedule.ID + 'was created.');
-                $state.go('^.pricing', {pricescheduleid:data.PriceScheduleID});
+                $state.go('^.pricing', {pricescheduleid:data.NewPriceSchedule.ID});
             })
             .catch(function (ex) {
                 toastr.error('An error occurred while trying to save your product assignment', 'Error');
