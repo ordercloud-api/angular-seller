@@ -142,6 +142,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary btn-block" ng-click="createPriceModal.submit()" cg-busy="createPriceModal.loading">Save Selection</button>
+        <button class="btn btn-primary btn-block" ng-disabled="createPriceModal.form.$invalid" ng-click="createPriceModal.submit()" cg-busy="createPriceModal.loading">Save Selection</button>
     </div>
 </form>

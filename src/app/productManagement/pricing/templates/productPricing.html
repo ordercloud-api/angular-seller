@@ -147,7 +147,7 @@
             <!--==== Assignments ====-->
             <div ng-show="productPricing.activeTab == 'availability'">
                 <div class="alert alert-info" ng-if="productDetail.product.DefaultPriceScheduleID == productPricing.selectedPrice.PriceSchedule.ID">
-                    This is the default price schedule. All buyer user can order this product if available in one of their catalogs.
+                    This is the default price schedule. All buyer users can order this product if available in one of their catalogs.
                 </div>
                 <div class="panel panel-default" ng-repeat="buyer in productPricing.selectedPrice.Availability" cg-busy="productPricing.availabilityLoading[$index]">
                     <div class="panel-body">

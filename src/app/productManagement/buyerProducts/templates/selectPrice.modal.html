@@ -5,7 +5,12 @@
         <h4 class="modal-title">Product: <b>{{selectPriceModal.product.Name}}</b></h4>
     </div>
     <div class="modal-body">
-        <div class="panel panel-default" style="border-width:2px;" ng-click="selectPriceModal.selectedPriceSchedule = price" ng-repeat="price in selectPriceModal.availablePriceSchedules" ng-class="{'panel-primary': price.ID == selectPriceModal.selectedPriceSchedule.ID}">
+        <div class="panel panel-default" style="border-width:2px;" ng-if="selectPriceModal.showRemovePriceOption" ng-click="selectPriceModal.removeCurrentPrice()" ng-class="{'panel-primary': selectPriceModal.removePrice}">
+            <div class="panel-body text-center">
+                <b>Remove Pricing for {{(selectPriceModal.userGroupName || selectPriceModal.buyerName)}}</b>
+            </div>
+        </div>
+        <div class="panel panel-default" style="border-width:2px;" ng-click="selectPriceModal.selectNewPrice(this)" ng-repeat="price in selectPriceModal.availablePriceSchedules" ng-class="{'panel-primary': price.ID == selectPriceModal.selectedPriceSchedule.ID}">
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-5">
@@ -31,7 +36,9 @@
         </div>
         <button class="btn btn-default btn-block" ng-click="selectPriceModal.createNewPrice()"><i class="fa fa-plus-circle"></i> New Price</button>
     </div>
-    <div class="modal-footer" ng-if="selectPriceModal.availablePriceSchedules.length > 1 || (selectPriceModal.availablePriceSchedules[0].ID != selectPriceModal.product.SelectedPrice.ID)">
-        <button class="btn btn-primary btn-block" ng-click="selectPriceModal.submit()" cg-busy="selectPriceModal.loading">Save Selection</button>
+    <div class="modal-footer">
+        <button class="btn btn-primary btn-block" ng-click="selectPriceModal.submit()" 
+        ng-disabled="(!selectPriceModal.selectedPriceSchedule && !selectPriceModal.removePrice) || selectPriceModal.selectedPriceSchedule.ID === selectPriceModal.product.SelectedPrice.ID" 
+        cg-busy="selectPriceModal.loading">Save Selection</button>
     </div>
 </form>

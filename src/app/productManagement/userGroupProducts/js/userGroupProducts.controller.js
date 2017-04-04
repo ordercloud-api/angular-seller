@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserGroupProductsCtrl', UserGroupProductsController)
 ;
 
-function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams, $uibModal, toastr, OrderCloud, sdkOrderCloud, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, SelectedUserGroup, ProductList, Parameters, MappedProductList, BuyerProductAssignments, UserGroupProductAssignments) {
+function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams, $uibModal, $filter, toastr, OrderCloud, sdkOrderCloud, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, SelectedUserGroup, ProductList, Parameters, MappedProductList, BuyerProductAssignments, UserGroupProductAssignments) {
     var vm = this;
     vm.list = MappedProductList;
     //Set parameters
@@ -76,6 +76,10 @@ function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams
     vm.updateProductPrice = function(scope) {
         ocProductPricing.UpdateProductPrice(scope.product, SelectedBuyer, BuyerProductAssignments.concat(UserGroupProductAssignments), SelectedUserGroup)
             .then(function(data) {
+                var message = scope.product.Name + ' price was ' + (data.SelectedPrice ? 
+                    'updated to ' + $filter('currency')(data.SelectedPrice.PriceBreaks[0].Price) : 
+                    'removed ') + ' for ' + SelectedUserGroup.Name;
+                toastr.success(message);
                 CurrentAssignments = data.UpdatedAssignments;
                 scope.product.SelectedPrice = data.SelectedPrice;
             })
@@ -83,6 +87,7 @@ function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams
                 if (ex === 'CREATE') {
                     ocProductPricing.CreateProductPrice(scope.product, SelectedBuyer, BuyerProductAssignments.concat(UserGroupProductAssignments), SelectedUserGroup)
                         .then(function(data) {
+                            toastr.success(scope.product.Name + ' price was updated to ' + $filter('currency')(data.SelectedPrice.PriceBreaks[0].Price) + ' for ' + SelectedUserGroup.Name);
                             CurrentAssignments = data.UpdatedAssignments;
                             scope.product.SelectedPrice = data.SelectedPrice;
                         })

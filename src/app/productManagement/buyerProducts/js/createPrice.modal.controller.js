@@ -47,7 +47,8 @@ function CreatePriceModalController($exceptionHandler, $uibModalInstance, Select
     };
 
     vm.submit = function() {
-        ocProductPricing.CreatePrice(vm.product, vm.priceSchedule, vm.selectedBuyer, [vm.selectedUserGroup], SelectPriceData.DefaultPriceSchedule)
+        var userGroups = vm.selectedUserGroup ? [vm.selectedUserGroup] : [];
+        vm.loading = ocProductPricing.CreatePrice(vm.product, vm.priceSchedule, vm.selectedBuyer, userGroups, SelectPriceData.DefaultPriceSchedule)
             .then(function(data) {
                 if (!SelectPriceData.DefaultPriceSchedule) {
                     SelectPriceData.CurrentAssignments.push(data.Assignment);
