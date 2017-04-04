@@ -10,7 +10,8 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     vm.list = AssignmentList;
     vm.listAssignments = AssignmentData;
 
-    vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
+    vm.noPricesSet = !_.keys(vm.listAssignments).length;
+    vm.noOverridesSet = _.keys(vm.listAssignments).length === 1 && SelectedProduct.DefaultPriceScheduleID;
 
     vm.selectPrice = function(scope) {
         vm.loadingPrice = ocProductPricing.AssignmentDataDetail(vm.listAssignments, scope.assignment.PriceSchedule.ID)
@@ -21,7 +22,9 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
             });
     };
 
-    if ($stateParams.pricescheduleid && vm.listAssignments[$stateParams.pricescheduleid]) {
+    if (SelectedProduct.DefaultPriceScheduleID && !$stateParams.pricescheduleid) {
+        vm.selectPrice({assignment:vm.listAssignments[SelectedProduct.DefaultPriceScheduleID]});
+    } else if ($stateParams.pricescheduleid && vm.listAssignments[$stateParams.pricescheduleid]) {
         vm.selectPrice({assignment:vm.listAssignments[$stateParams.pricescheduleid]});
     } else if (_.keys(vm.listAssignments).length) {
         vm.selectPrice({assignment:vm.listAssignments[_.keys(vm.listAssignments)[0]]});
@@ -119,7 +122,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                     if (vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups && vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups.length) {
                         vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups.push({UserGroupID:assignment.UserGroup.ID, BuyerID:assignment.Buyer.ID});
                     } else {
-                        vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups = [{UserGroupID:assignment.UserGroup.ID, BuyerID:assignment.Buyer.ID}]
+                        vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups = [{UserGroupID:assignment.UserGroup.ID, BuyerID:assignment.Buyer.ID}];
                     }
                 } else {
                     assignment.Buyer.Assigned = true;
@@ -131,7 +134,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                                 .then(function() {
                                     delete vm.listAssignments[key];
                                     vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
-                                })
+                                });
                         }
                     });
                     vm.listAssignments[assignment.PriceScheduleID].Buyers.push(assignment.Buyer.ID);
@@ -144,7 +147,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
         vm.availabilityLoading = [];
         if (vm.selectedPrice.Availability.length == 1) {
             ocConfirm.Confirm({
-                message: "Removing the last buyer organization will remove this price from the product entirely. Do you wish to continue?"
+                message: 'Removing the last buyer organization will remove this price from the product entirely. Do you wish to continue?'
                 })
                 .then(function() {
                     vm.availabilityLoading[scope.$index] = OrderCloud.PriceSchedules.Delete(vm.selectedPrice.PriceSchedule.ID)
@@ -152,7 +155,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                             delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
                             vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
                             vm.selectedPrice = null;
-                        })
+                        });
                 });
         } else if (!scope.buyer.Assigned) {
             //delete all user group assignments
@@ -192,7 +195,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                                     .then(function() {
                                         delete vm.listAssignments[key];
                                         vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
-                                    })
+                                    });
                             }
                         });
                     });
@@ -213,7 +216,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     };
 
     vm.selectAllUserGroups = function(scope) {
-        _.map(scope.buyer.UserGroups, function(ug) { ug.selected = scope.buyer.allGroupsSelected });
+        _.map(scope.buyer.UserGroups, function(ug) { ug.selected = scope.buyer.allGroupsSelected; });
     };
 
     vm.selectUserGroup = function(buyer, scope) {
@@ -221,7 +224,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
     };
 
     vm.removeUserGroupAssignments = function(scope) {
-        if (scope.buyer.allGroupsSelected || (_.filter(scope.buyer.UserGroups, function(ug){ return ug.selected}).length == scope.buyer.UserGroups.length)) {
+        if (scope.buyer.allGroupsSelected || (_.filter(scope.buyer.UserGroups, function(ug){ return ug.selected;}).length == scope.buyer.UserGroups.length)) {
             ocConfirm.Confirm({
                 message: 'Would you like to assign this price to the buyer <b>' + scope.buyer.Name + '</b>?',
                 confirmText: 'Yes',
@@ -235,7 +238,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                             BuyerID: scope.buyer.ID,
                             PriceScheduleID: vm.selectedPrice.PriceSchedule.ID
                         }));
-                    angular.forEach(_.filter(scope.buyer.UserGroups, function(ug){ return ug.selected}), function(ug) {
+                    angular.forEach(_.filter(scope.buyer.UserGroups, function(ug){ return ug.selected;}), function(ug) {
                         queue.push(OrderCloud.Products.DeleteAssignment($stateParams.productid, null, ug.ID, scope.buyer.ID));
                     });
                     vm.availabilityLoading[scope.$index] = $q.all(queue)
@@ -249,7 +252,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                                         .then(function() {
                                             delete vm.listAssignments[key];
                                             vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
-                                        })
+                                        });
                                 }
                             });
                             vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].Buyers.push(scope.buyer.ID);
@@ -266,7 +269,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
             var queue = [];
             var listAssignmentUserGroups = vm.listAssignments[vm.selectedPrice.PriceSchedule.ID].UserGroups;
             var availabilityUserGroups = vm.selectedPrice.Availability[scope.$index].UserGroups;
-            angular.forEach(_.filter(scope.buyer.UserGroups, function(ug){ return ug.selected}), function(ug) {
+            angular.forEach(_.filter(scope.buyer.UserGroups, function(ug){ return ug.selected;}), function(ug) {
                 listAssignmentUserGroups = _.filter(listAssignmentUserGroups, function(group) {
                     return !((group.UserGroupID == ug.ID) && (group.BuyerID == scope.buyer.ID));
                 });
@@ -281,7 +284,7 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                     vm.selectedPrice.Availability[scope.$index].UserGroups = availabilityUserGroups;
                 });
         }
-    }
+    };
 }
 
 function PriceScheduleEditModalController($uibModalInstance, SelectedPriceSchedule, OrderCloud) {
@@ -293,12 +296,12 @@ function PriceScheduleEditModalController($uibModalInstance, SelectedPriceSchedu
         vm.loading = OrderCloud.PriceSchedules.Update(SelectedPriceSchedule.ID, vm.data)
             .then(function(updatedPriceSchdule) {
                 $uibModalInstance.close(updatedPriceSchdule);
-            })
+            });
     };
 
     vm.cancel = function() {
         $uibModalInstance.dismiss();
-    }
+    };
 }
 
 function PriceSchedulePriceBreakCreateController($uibModalInstance, OrderCloud, PriceScheduleID) {
