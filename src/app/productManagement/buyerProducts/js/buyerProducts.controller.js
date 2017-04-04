@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('BuyerProductsCtrl', BuyerProductsController);
 
-function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, toastr, OrderCloud, sdkOrderCloud, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, ProductList, Parameters, MappedProductList, CurrentAssignments, $uibModal) {
+function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, $filter, toastr, OrderCloud, sdkOrderCloud, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, ProductList, Parameters, MappedProductList, CurrentAssignments, $uibModal) {
     var vm = this;
     vm.list = MappedProductList;
     //Set parameters
@@ -56,7 +56,7 @@ function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, to
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1, filters:{Active:undefined}});
         return sdkOrderCloud.Products.List(parameters)
             .then(function (data) {
-                vm.list.Items = vm.list.Items.concat(data.Items);
+                vm.list.Items = vm.list.Items.concat(ocProductPricing.Assignments.Map($stateParams.buyerid, null, data, CurrentAssignments, data));
                 vm.list.Meta = data.Meta;
             });
     }
@@ -74,6 +74,10 @@ function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, to
     vm.updateProductPrice = function(scope) {
         ocProductPricing.UpdateProductPrice(scope.product, SelectedBuyer, CurrentAssignments)
             .then(function(data) {
+                var message = scope.product.Name + ' price was ' + (data.SelectedPrice ? 
+                    'updated to ' + $filter('currency')(data.SelectedPrice.PriceBreaks[0].Price) : 
+                    'removed ') + ' for ' + SelectedBuyer.Name;
+                toastr.success(message);
                 CurrentAssignments = data.UpdatedAssignments;
                 scope.product.SelectedPrice = data.SelectedPrice;
             })
@@ -81,6 +85,7 @@ function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, to
                 if (ex === 'CREATE') {
                     ocProductPricing.CreateProductPrice(scope.product, SelectedBuyer, CurrentAssignments)
                         .then(function(data) {
+                            toastr.success(scope.product.Name + ' price was updated to ' + $filter('currency')(data.SelectedPrice.PriceBreaks[0].Price) + ' for ' + SelectedBuyer.Name);
                             CurrentAssignments = data.UpdatedAssignments;
                             scope.product.SelectedPrice = data.SelectedPrice;
                         })

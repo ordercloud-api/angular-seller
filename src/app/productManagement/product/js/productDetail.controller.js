@@ -17,16 +17,18 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProdu
     }
 
     function updateProduct() {
+        var currentPrice = angular.copy(vm.product.DefaultPriceSchedule);
         var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
         vm.productUpdateLoading = OrderCloud.Products.Patch(SelectedProduct.ID, partial)
             .then(function(data) {
                 vm.product = angular.copy(data);
+                vm.product.DefaultPriceSchedule = currentPrice;
                 vm.productName = angular.copy(data.Name);
                 vm.inventoryEnabled = angular.copy(data.InventoryEnabled);
                 SelectedProduct = data;
                 vm.InfoForm.$setPristine();
                 toastr.success(data.Name + ' was updated');
-            })
+            });
     }
 
     function deleteProduct(){
@@ -40,6 +42,7 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProdu
     function createDefaultPrice() {
         ocProductPricing.CreateProductPrice(vm.product, null, null, null, true)
             .then(function(data) {
+                toastr.success('Default price was successfully added to ' + vm.product.Name);
                 $state.go('productDetail.pricing.priceScheduleDetail', {pricescheduleid: data.SelectedPrice.ID}, {reload: true});
             });
     }

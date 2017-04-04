@@ -79,10 +79,12 @@
                             <td ng-if="product.SelectedPrice" class="text-center">{{product.SelectedPrice.MinQuantity}}</td>
                             <td ng-if="product.SelectedPrice" class="text-center" ng-class="{'text-muted':!product.SelectedPrice.MaxQuantity}">{{product.SelectedPrice.MaxQuantity || 'N/A'}}</td>
                             <td ng-if="product.SelectedPrice" class="text-right text-primary">
-                                <small class="text-info" ng-if="product.DefaultPriceScheduleID == product.SelectedPrice.ID">(Default) </small>
-                                <b>
-                                    {{product.SelectedPrice.PriceBreaks[0].Price | currency}} 
-                                </b>
+                                <a ui-sref="productDetail.pricing({productid:product.ID, pricescheduleid:product.SelectedPrice.ID})">
+                                    <small class="text-info" ng-if="product.DefaultPriceScheduleID == product.SelectedPrice.ID">(Default) </small>
+                                    <b>
+                                        {{product.SelectedPrice.PriceBreaks[0].Price | currency}} 
+                                    </b>
+                                </a>
                                 <button style="margin-left:5px;" class="btn btn-default btn-xs" ng-click="buyerProducts.updateProductPrice(this)">
                                     {{product.DefaultPriceScheduleID == product.SelectedPrice.ID ? 'Override' : 'Change'}}</button>
                             </td>
