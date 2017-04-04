@@ -6,7 +6,7 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProdu
     var vm = this;
     vm.product = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
-    vm.inventoryEnabled = angular.copy(SelectedProduct.InventoryEnabled);
+    vm.inventoryEnabled = angular.copy(SelectedProduct.Inventory ? SelectedProduct.Inventory.Enabled : false);
     vm.updateProduct = updateProduct;
     vm.deleteProduct = deleteProduct;
     vm.patchImage = patchImage;
@@ -17,7 +17,7 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloud, ocProdu
     }
 
     function updateProduct() {
-        var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'InventoryEnabled', 'Active']);
+        var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
         vm.productUpdateLoading = OrderCloud.Products.Patch(SelectedProduct.ID, partial)
             .then(function(data) {
                 vm.product = angular.copy(data);
