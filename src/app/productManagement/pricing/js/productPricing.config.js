@@ -33,20 +33,6 @@ function ProductPricingConfig($stateProvider) {
                 }
             }
         })
-        .state('productDetail.createAssignment', {
-            url: '/new-price',
-            templateUrl: 'productManagement/pricing/templates/productCreateAssignment.html',
-            controller: 'ProductCreateAssignmentCtrl',
-            controllerAs: 'productCreateAssignment',
-            data: {
-                pageTitle: 'Create New Price'
-            },
-            resolve: {
-                Buyers: function(OrderCloud){
-                    return OrderCloud.Buyers.List();
-                }
-            }
-        })
         .state('productDetail.pricing.priceScheduleDetail', {
             url: '/:pricescheduleid',
             templateUrl: 'productManagement/pricing/templates/priceScheduleDetail.html',
