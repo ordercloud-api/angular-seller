@@ -11,11 +11,6 @@ function ProductInventoryConfig($stateProvider) {
             controllerAs: 'productInventory',
             data: {
                 pageTitle: 'Product Inventory'
-            },
-            resolve: {
-                ProductInventory: function($stateParams, OrderCloud) {
-                    return OrderCloud.Products.GetInventory($stateParams.productid);
-                }
             }
         })
     ;
