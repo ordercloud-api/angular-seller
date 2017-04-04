@@ -7,6 +7,9 @@
         <h3 class="l-page-header__title">
             <span class="text-muted">Product:</span> {{productDetail.productName}}
         </h3>
+        <div class="l-page-header__btns">
+            <button type="button" class="btn btn-danger" ng-click="productDetail.deleteProduct()"><i class="fa fa-trash-o"></i> Delete Product</button>
+        </div>
     </header>
     <ul class="nav nav-tabs">
         <li ng-class="{active:application.$state.is('productDetail')}">
@@ -50,7 +53,13 @@
     <br>
     <div ui-view cg-busy="application.stateLoading('productDetail')">
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-4 col-sm-push-8">
+                <fieldset class="form-group">
+                    <label>Product Image</label>
+                    <oc-file-upload model="productDetail.product" label="Image:" patch="productDetail.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                </fieldset>
+            </div>
+            <div class="col-sm-8 col-sm-pull-4">
                 <form name="productDetail.InfoForm" autocomplete="off" ng-submit="productDetail.updateProduct()" novalidate class="form-horizontal"
                     oc-readonly-roles="ProductAdmin">
                     <fieldset class="form-group">
@@ -89,12 +98,6 @@
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
-                        <label class="col-sm-3 control-label">Image</label>
-                        <div class="col-sm-9">
-                            <oc-file-upload model="productDetail.product" label="Image:" patch="productDetail.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
-                        </div>
-                    </fieldset>
-                    <fieldset class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
                             <div class="checkbox">
                                 <label for="InventoryEnabled">
@@ -113,8 +116,6 @@
                             <button type="submit" cg-busy="productDetail.productUpdateLoading" class="btn btn-primary btn-block">Update Product Info</button>
                         </div>
                     </fieldset>
-                    <hr>
-                    <button type="button" class="btn btn-danger btn-block" ng-click="productDetail.deleteProduct()"><i class="fa fa-trash-o"></i> Delete Product</button>
                 </form>
             </div>
         </div>

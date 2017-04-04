@@ -1,7 +1,7 @@
 <!--==== No Prices Defined ====-->
 <div class="no-matches" ng-if="productPricing.noPricesSet">
     This product does not have any pricing. <br>
-    <a href="" ui-sref="^.createAssignment">Create one now</a>
+    Create a <a ng-click="productDetail.createDefaultPrice()">default price</a> or create individual prices <a ui-sref="buyers">for your buyer companies</a>.
 </div>
 <div class="row" ng-if="!productPricing.noPricesSet">
     <div class="col-sm-5">
