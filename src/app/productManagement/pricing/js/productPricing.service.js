@@ -1,13 +1,11 @@
 angular.module('orderCloud')
     .factory('ocProductPricing', ocProductPricingService);
 
-function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocConfirm) {
+function ocProductPricingService($q, $uibModal, sdkOrderCloud, ocConfirm) {
     var service = {
         AssignmentList: _assignmentList,
         AssignmentData: _assignmentData,
         AssignmentDataDetail: _assignmentDataDetail,
-        CreateAssignment: _createAssignment,
-        CreateUserGroupAssignment: _createUserGroupAssignment,
         CreatePrice: _createPrice,
         EditPrice: _editPrice,
         DeletePrice: _deletePrice,
@@ -34,9 +32,12 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
     function _assignmentList(productid) {
         var deferred = $q.defer();
 
-        var page = 1;
-        var pageSize = 100;
-        OrderCloud.Products.ListAssignments(productid, null, null, null, null, page, pageSize, null)
+        var options = {
+            productID: productid,
+            page: 1,
+            pageSize: 100
+        };
+        sdkOrderCloud.Products.ListAssignments(options)
             .then(function (data) {
                 var queue = [];
                 var assignments = data;
@@ -44,7 +45,8 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                     page = data.Meta.Page;
                     while (page < data.Meta.TotalPages) {
                         page += 1;
-                        queue.push(OrderCloud.Products.ListAssignments(productid, null, null, null, null, page, data.Meta.PageSize, null));
+                        options.page = page;
+                        queue.push(sdkOrderCloud.Products.ListAssignments(options));
                     }
                     return $q.all(queue)
                         .then(function (results) {
@@ -71,7 +73,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
         var schedules = _.uniq(_.pluck(assignments.Items, 'PriceScheduleID'));
 
         angular.forEach(schedules, function (id) {
-            psQueue.push(OrderCloud.PriceSchedules.Get(id));
+            psQueue.push(sdkOrderCloud.PriceSchedules.Get(id));
         });
         $q.all(psQueue)
             .then(function (results) {
@@ -132,9 +134,12 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
         var userGroupQueue = [];
 
         angular.forEach(buyerChunks, function (chunk) {
-            buyerQueue.push(OrderCloud.Buyers.List(null, null, null, null, null, {
-                ID: chunk.join('|')
-            }));
+            var options = {
+                page: 1,
+                pageSize: 100,
+                filters: {ID: chunk.join('|')}
+            };
+            buyerQueue.push(sdkOrderCloud.Buyers.List(options));
         });
 
         angular.forEach(userGroupChunks, function (chunk) {
@@ -142,9 +147,12 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                 var d = $q.defer();
                 var buyerID = chunk[0].BuyerID;
 
-                OrderCloud.UserGroups.List(null, null, null, null, null, {
-                        ID: _.pluck(chunk, 'UserGroupID').join('|')
-                    }, buyerID)
+                var options = {
+                    page: 1,
+                    pageSize: 100,
+                    filters: {ID: _.pluck(chunk, 'UserGroupID').join('|')}
+                };
+                sdkOrderCloud.UserGroups.List(buyerID, options)
                     .then(function (data) {
                         angular.forEach(_.where(result.Buyers, {
                             ID: buyerID
@@ -187,60 +195,6 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
         }
 
         return deferred.promise;
-    }
-
-    function _createAssignment(selectedPrice) {
-        return $uibModal.open({
-            templateUrl: 'productManagement/pricing/templates/priceScheduleAssignment.modal.html',
-            size: 'md',
-            controller: 'PriceScheduleCreateAssignmentCtrl',
-            controllerAs: 'priceScheduleAssignment',
-            resolve: {
-                Buyers: function () {
-                    return OrderCloud.Buyers.List(null, 1, 100);
-                },
-                SelectedPrice: function () {
-                    return selectedPrice;
-                },
-                SelectedBuyer: function () {
-                    return null;
-                },
-                BuyerUserGroups: function () {
-                    return null;
-                },
-                AssignedUserGroups: function () {
-                    return null;
-                }
-            }
-        }).result;
-    }
-
-    function _createUserGroupAssignment(scope, selectedPrice) {
-        return $uibModal.open({
-            templateUrl: 'productManagement/pricing/templates/priceScheduleAssignment.modal.html',
-            size: 'md',
-            controller: 'PriceScheduleCreateAssignmentCtrl',
-            controllerAs: 'priceScheduleAssignment',
-            resolve: {
-                Buyers: function () {
-                    return {
-                        Items: [scope.buyer]
-                    };
-                },
-                SelectedPrice: function () {
-                    return selectedPrice;
-                },
-                SelectedBuyer: function () {
-                    return scope.buyer;
-                },
-                BuyerUserGroups: function () {
-                    return OrderCloud.UserGroups.List(null, 1, 20, null, null, null, scope.buyer.ID);
-                },
-                AssignedUserGroups: function () {
-                    return scope.buyer.UserGroups;
-                }
-            }
-        }).result;
     }
 
     function _createPrice(product, priceSchedule, selectedBuyer, selectedUserGroups, defaultPriceSchedule) {
@@ -328,7 +282,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                 type: 'delete'
             })
             .then(function () {
-                return OrderCloud.PriceSchedules.Delete(priceSchedule.ID);
+                return sdkOrderCloud.PriceSchedules.Delete(priceSchedule.ID);
             });
     }
 
@@ -379,9 +333,9 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, OrderCloud, ocCon
                 type: 'delete'
             })
             .then(function () {
-                return OrderCloud.PriceSchedules.DeletePriceBreak(priceSchedule.ID, priceBreak.Quantity)
+                return sdkOrderCloud.PriceSchedules.DeletePriceBreak(priceSchedule.ID, priceBreak.Quantity)
                     .then(function () {
-                        return OrderCloud.PriceSchedules.Get(priceSchedule.ID)
+                        return sdkOrderCloud.PriceSchedules.Get(priceSchedule.ID)
                             .then(function (updatedPriceSchedule) {
                                 return updatedPriceSchedule;
                             });

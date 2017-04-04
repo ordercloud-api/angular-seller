@@ -18,7 +18,7 @@
         <li ui-sref-active="active">
             <a href="" ui-sref=".specs"><i class="fa fa-edit"></i> Specs</a>
         </li>
-        <li class="hidden-xs" ng-class="{active:application.$state.includes('productDetail.pricing') || application.$state.is('productDetail.createAssignment')}"
+        <li class="hidden-xs" ng-class="{active:application.$state.includes('productDetail.pricing')}"
             oc-if-roles="['ProductAdmin', 'ProductAssignmentAdmin']">
             <a href="" ui-sref=".pricing"><i class="fa fa-dollar"></i> Pricing</a>
         </li>
@@ -36,7 +36,7 @@
             <!--Mobile dropdown menu-->
             <a uib-dropdown-toggle>More <i class="fa fa-caret-down"></i></a>
             <ul class="dropdown-menu-right" uib-dropdown-menu>
-                <li ng-class="{active:application.$state.includes('productDetail.pricing') || application.$state.is('productDetail.createAssignment')}"
+                <li ng-class="{active:application.$state.includes('productDetail.pricing')}"
                     oc-if-roles="['ProductAdmin', 'ProductAssignmentAdmin']">
                     <a href="" ui-sref=".pricing"><i class="fa fa-dollar"></i> Pricing</a>
                 </li>

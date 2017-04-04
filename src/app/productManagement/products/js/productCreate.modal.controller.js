@@ -123,7 +123,7 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
         }
 
         function _createProduct() {
-            if (vm.product.Inventory && vm.product.Inventory.Enabled) delete vm.product.Inventory;
+            if (vm.product.Inventory && !vm.product.Inventory.Enabled) delete vm.product.Inventory;
             sdkOrderCloud.Products.Create(vm.product)
                 .then(function (data) {
                         $uibModalInstance.close(data);

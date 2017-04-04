@@ -52,7 +52,7 @@ function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloud, sdkOrderCloud)
                 confirmText: 'Delete product',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Products.Delete(product.ID)
+                return sdkOrderCloud.Products.Delete(product.ID)
             })
     }
 

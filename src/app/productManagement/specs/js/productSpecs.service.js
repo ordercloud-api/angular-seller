@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocProductSpecs', ocProductsSpecsService)
 ;
 
-function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
+function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
     var service = {
         ProductSpecsDetail: _productSpecsDetail,
         UpdateSpecListOrder: _updateSpecListOrder,
@@ -18,7 +18,12 @@ function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
     function _productSpecsDetail(productid) {
         var deferred = $q.defer();
 
-        OrderCloud.Specs.ListProductAssignments(null, productid, 1, 100)
+        var options = {
+            productID: productid,
+            page: 1,
+            pageSize: 100
+        };
+        sdkOrderCloud.Specs.ListProductAssignments(options)
             .then(function(data) {
                 if (data.Items.length) {
                     getSpecs(data);
@@ -28,7 +33,12 @@ function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
             });
 
         function getSpecs(data) {
-            OrderCloud.Specs.List(null, null, null, null, null, {ID: _.pluck(data.Items, 'SpecID').join('|')})
+            var options = {
+                page: 1,
+                pageSize: 100,
+                filters: {ID: _.pluck(data.Items, 'SpecID').join('|')}
+            };
+            sdkOrderCloud.Specs.List(options)
                 .then(function(details) {
                     getSpecOptions(data, details);
                 });
@@ -39,11 +49,14 @@ function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
             angular.forEach(data.Items, function(specAssignment) {
                 specAssignment.Spec = _.where(details.Items, {ID: specAssignment.SpecID})[0];
                 if (specAssignment.Spec && specAssignment.Spec.OptionCount) {
-                    //OrderCloud.Specs.ListOptions(specAssignment.Spec.ID, null, 1, 100)
                     optionQueue.push((function() {
                         var d = $q.defer();
 
-                        OrderCloud.Specs.ListOptions(specAssignment.Spec.ID, null, 1, 100)
+                        var options = {
+                            page: 1,
+                            pageSize: 100
+                        };
+                        sdkOrderCloud.Specs.ListOptions(specAssignment.Spec.ID, options)
                             .then(function(oData) {
                                 specAssignment.Options = oData.Items;
                                 _.map(specAssignment.Options, function(option) { option.DefaultOption = (specAssignment.DefaultOptionID == option.ID) });
@@ -70,7 +83,7 @@ function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
 
         angular.forEach(nodeList, function(node, index) {
             queue.push((function() {
-                return OrderCloud.Specs.Patch(node.Spec.ID, {ListOrder: index});
+                return sdkOrderCloud.Specs.Patch(node.Spec.ID, {listOrder: index});
             }));
         });
 
@@ -99,7 +112,7 @@ function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
 
         angular.forEach(nodeList, function(node, index) {
             queue.push((function() {
-                return OrderCloud.Specs.PatchOption(specID, node.ID, {ListOrder: index});
+                return sdkOrderCloud.Specs.PatchOption(specID, node.ID, {listOrder: index});
             }));
         });
 
@@ -153,7 +166,7 @@ function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
                 confirmText: 'Delete spec',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Specs.Delete(specID);
+                return sdkOrderCloud.Specs.Delete(specID);
             });
     }
 
@@ -200,7 +213,7 @@ function ocProductsSpecsService($q, $uibModal, OrderCloud, ocConfirm) {
                 confirmText: 'Delete spec option',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Specs.DeleteOption(specID, specOptionID);
+                return sdkOrderCloud.Specs.DeleteOption(specID, specOptionID);
             });
     }
 
