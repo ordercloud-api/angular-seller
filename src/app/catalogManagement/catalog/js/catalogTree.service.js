@@ -64,9 +64,7 @@ function OrderCloudCatalogTreeService($q, sdkOrderCloud) {
                 nodeQueue = [];
             angular.forEach(nodeList, function(cat, index) {
                 nodeQueue.push((function() {
-                    return OrderCloud.Categories.Patch(cat.ID, {
-                        ListOrder: index
-                    }, catalogid);
+                    return sdkOrderCloud.Categories.Patch(catalogid, cat.ID, {listOrder: index});
                 }));
             });
 
@@ -97,7 +95,7 @@ function OrderCloudCatalogTreeService($q, sdkOrderCloud) {
                 parentID = null;
             }
             event.source.nodeScope.node.ParentID = parentID;
-            OrderCloud.Categories.Update(event.source.nodeScope.node.ID, event.source.nodeScope.node, catalogid)
+            sdkOrderCloud.Categories.Update(catalogid, event.source.nodeScope.node.ID, event.source.nodeScope.node)
                 .then(function() {
                     deferred.resolve();
                 });

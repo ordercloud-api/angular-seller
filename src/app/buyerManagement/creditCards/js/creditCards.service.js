@@ -71,7 +71,7 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, sdkOrderCloud, ocAuthNe
                 while(currentPage < totalPages) {
                     currentPage++;
                     options.page = currentPage;
-                    queue.push(OrderCloud.CreditCards.ListAssignments(buyerid, options));
+                    queue.push(sdkOrderCloud.CreditCards.ListAssignments(buyerid, options));
                 }
                 $q.all(queue)
                     .then(function(results) {
