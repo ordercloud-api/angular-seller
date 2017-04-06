@@ -12,13 +12,14 @@
                     <th></th>
                     <th>ID</th>
                     <th>Product</th>
+                    <th>Ship To</th>
                     <th>Quantity in Shipment</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-class="{'active': (lineItem.QuantityShipped == lineItem.Quantity || lineItem.ExistingShipmentItem)}" ng-repeat="lineItem in orderShipmentsCreateItems.lineItems.Items | ocCachedList:orderShipmentsCreateItems.selectedLineItemPage">
                     <th class="text-center">
-                        <input type="checkbox" ng-model="lineItem.Selected" ng-disabled="lineItem.Quantity == lineItem.QuantityShipped || lineItem.ExistingShipmentItem" ng-change="orderShipmentsCreateItems.itemChange()" />
+                        <input type="checkbox" ng-model="lineItem.Selected" ng-disabled="lineItem.Quantity == lineItem.QuantityShipped || lineItem.ExistingShipmentItem" ng-change="orderShipmentsCreateItems.itemChange(lineItem)" />
                     </th>
                     <td>{{lineItem.ID}}</td>
                     <td>
@@ -26,10 +27,13 @@
                         <small class="text-muted">({{lineItem.Product.ID}})</small>
                     </td>
                     <td>
+                        <div ng-bind-html="lineItem.ShippingAddress | address:'full'"></div>
+                    </td>
+                    <td>
                         <span ng-if="lineItem.QuantityShipped == lineItem.Quantity">Shipped</span>
                         <span ng-if="lineItem.ExistingShipmentItem">Existing Item</span>
                         <div class="input-group input-group-sm" ng-if="lineItem.QuantityShipped < lineItem.Quantity && !lineItem.ExistingShipmentItem">
-                            <input type="number" class="form-control" ng-model="lineItem.ShipQuantity" ng-change="orderShipmentsCreateItems.itemChange()">
+                            <input type="number" class="form-control" ng-model="lineItem.ShipQuantity" ng-change="orderShipmentsCreateItems.itemChange(lineItem)">
                             <span class="input-group-addon">of {{lineItem.Quantity}}</span>
                         </div>
                     </td>

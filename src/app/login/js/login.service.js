@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('LoginService', LoginService)
 ;
 
-function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, sdkOrderCloud, ocRolesService, clientid, scope, defaultstate) {
+function LoginService($q, $window, $state, $cookies, toastr, OrderCloudSDK, ocRolesService, clientid, scope, defaultstate) {
     return {
         SendVerificationCode: _sendVerificationCode,
         ResetPassword: _resetPassword,
@@ -14,12 +14,12 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, sdkOrde
         var deferred = $q.defer();
 
         var passwordResetRequest = {
-            Email: email,
-            ClientID: clientid,
+            email: email,
+            clientID: clientid,
             URL: encodeURIComponent($window.location.href) + '{0}'
         };
 
-        OrderCloud.PasswordResets.SendVerificationCode(passwordResetRequest)
+        OrderCloudSDK.PasswordResets.SendVerificationCode(passwordResetRequest)
             .then(function() {
                 deferred.resolve();
             })
@@ -34,12 +34,12 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, sdkOrde
         var deferred = $q.defer();
 
         var passwordReset = {
-            ClientID: clientid,
-            Username: resetPasswordCredentials.ResetUsername,
-            Password: resetPasswordCredentials.NewPassword
+            clientID: clientid,
+            username: resetPasswordCredentials.ResetUsername,
+            password: resetPasswordCredentials.NewPassword
         };
 
-        OrderCloud.PasswordResets.ResetPassword(verificationCode, passwordReset).
+        OrderCloudSDK.PasswordResets.ResetPassword(verificationCode, passwordReset).
             then(function() {
                 deferred.resolve();
             })
@@ -59,12 +59,12 @@ function LoginService($q, $window, $state, $cookies, toastr, OrderCloud, sdkOrde
     }
 
     function _rememberMe(currentState) {
-        var availableRefreshToken = sdkOrderCloud.GetRefreshToken() || null;
+        var availableRefreshToken = OrderCloudSDK.GetRefreshToken() || null;
 
         if (availableRefreshToken) {
-            sdkOrderCloud.Auth.RefreshToken(availableRefreshToken, clientid, scope)
+            OrderCloudSDK.Auth.RefreshToken(availableRefreshToken, clientid, scope)
                 .then(function(data) {
-                    sdkOrderCloud.Auth.SetToken(data.access_token);
+                    OrderCloudSDK.Auth.SetToken(data.access_token);
                     var redirectTo = currentState || defaultstate;
                     $state.go(redirectTo);
                 })

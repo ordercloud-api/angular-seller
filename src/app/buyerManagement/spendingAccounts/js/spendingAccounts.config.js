@@ -20,13 +20,13 @@ function SpendingAccountsConfig($stateProvider) {
                 CurrentAssignments: function($q, ocSpendingAccounts, $stateParams) {
                     return ocSpendingAccounts.Assignments.Get('company', $stateParams.buyerid);
                 },
-                SpendingAccountList: function($stateParams, sdkOrderCloud, Parameters, CurrentAssignments, ocSpendingAccounts) {
+                SpendingAccountList: function($stateParams, OrderCloudSDK, Parameters, CurrentAssignments, ocSpendingAccounts) {
                     var parameters = angular.copy(Parameters);
                     parameters.filters = angular.extend((parameters.filters || {}), {RedemptionCode: '!*'});
-                    return sdkOrderCloud.SpendingAccounts.List($stateParams.buyerid, parameters)
+                    return OrderCloudSDK.SpendingAccounts.List($stateParams.buyerid, parameters)
                         .then(function(data) {
                             return ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);
-                        })
+                        });
                 }
             }
         })
@@ -45,13 +45,13 @@ function SpendingAccountsConfig($stateProvider) {
                 CurrentAssignments: function($q, ocSpendingAccounts, $stateParams) {
                     return ocSpendingAccounts.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);
                 },
-                SpendingAccountList: function($stateParams, sdkOrderCloud, Parameters, CurrentAssignments, ocSpendingAccounts) {
+                SpendingAccountList: function($stateParams, OrderCloudSDK, Parameters, CurrentAssignments, ocSpendingAccounts) {
                     var parameters = angular.copy(Parameters);
                     parameters.filters = angular.extend((parameters.filters || {}), {RedemptionCode: '!*'});
-                    return sdkOrderCloud.SpendingAccounts.List($stateParams.buyerid, parameters)
+                    return OrderCloudSDK.SpendingAccounts.List($stateParams.buyerid, parameters)
                         .then(function(data) {
                             return ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);
-                        })
+                        });
                 }
             }
         })

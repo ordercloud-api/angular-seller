@@ -14,7 +14,7 @@ function OrderShipmentsConfig($stateProvider) {
             },
             resolve: {
                 OrderShipments: function($stateParams, ocOrderShipmentsService) {
-                    return ocOrderShipmentsService.List($stateParams.orderid, $stateParams.buyerid);
+                    return ocOrderShipmentsService.List($stateParams.orderid);
                 }
             }
         })
@@ -28,7 +28,7 @@ function OrderShipmentsConfig($stateProvider) {
             },
             resolve: {
                 ShipmentLineItems: function($stateParams, ocOrderShipmentsService) {
-                    return ocOrderShipmentsService.ListLineItems($stateParams.orderid, $stateParams.buyerid);
+                    return ocOrderShipmentsService.ListLineItems($stateParams.orderid);
                 }
             }
         })

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUsersCtrl', AdminUsersController)
 ;
 
-function AdminUsersController($state, toastr, sdkOrderCloud, ocAdminUsers, ocParameters, AdminUsersList, Parameters) {
+function AdminUsersController($state, toastr, OrderCloudSDK, ocAdminUsers, ocParameters, AdminUsersList, Parameters) {
     var vm = this;
     vm.list = AdminUsersList;
     vm.parameters = Parameters;
@@ -51,7 +51,7 @@ function AdminUsersController($state, toastr, sdkOrderCloud, ocAdminUsers, ocPar
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.AdminUsers.List(parameters)
+        return OrderCloudSDK.AdminUsers.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -65,7 +65,7 @@ function AdminUsersController($state, toastr, sdkOrderCloud, ocAdminUsers, ocPar
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
                 toastr.success(newAdminUser.Username + ' was created.');
-            })
+            });
     };
 
     vm.editUser = function(scope) {
@@ -73,7 +73,7 @@ function AdminUsersController($state, toastr, sdkOrderCloud, ocAdminUsers, ocPar
             .then(function(updatedAdminUser) {
                 vm.list.Items[scope.$index] = updatedAdminUser;
                 toastr.success(updatedAdminUser.Username + ' was updated.');
-            })
+            });
     };
 
     vm.deleteUser = function(scope) {
@@ -83,6 +83,6 @@ function AdminUsersController($state, toastr, sdkOrderCloud, ocAdminUsers, ocPar
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
                 toastr.success(scope.user.Username + ' was deleted.');
-            })
-    }
+            });
+    };
 }

@@ -3,7 +3,7 @@ angular.module('orderCloud')
     .controller('ProductSpecOptionEditCtrl', ProductSpecOptionEditController)
 ;
 
-function ProductSpecOptionCreateController($uibModalInstance, OrderCloud, ProductID, SpecID) {
+function ProductSpecOptionCreateController($uibModalInstance, OrderCloudSDK, ProductID, SpecID) {
     var vm = this;
     vm.markupTypes = [
         {Label: 'None', Value: 'NoMarkup'},
@@ -17,10 +17,10 @@ function ProductSpecOptionCreateController($uibModalInstance, OrderCloud, Produc
     };
 
     vm.submit = function() {
-        vm.loading = OrderCloud.Specs.CreateOption(SpecID, vm.specOption)
+        vm.loading = OrderCloudSDK.Specs.CreateOption(SpecID, vm.specOption)
             .then(function(data) {
                 if (vm.specOption.DefaultOption) {
-                    return OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: SpecID, DefaultOptionID: data.ID})
+                    return OrderCloudSDK.Specs.SaveProductAssignment({productID: ProductID, specID: SpecID, defaultOptionID: data.ID})
                         .then(function() {
                             data.DefaultOption = true;
                             $uibModalInstance.close(data);
@@ -38,7 +38,7 @@ function ProductSpecOptionCreateController($uibModalInstance, OrderCloud, Produc
     };
 }
 
-function ProductSpecOptionEditController($uibModalInstance, OrderCloud, ProductID, SpecID, SpecOption) {
+function ProductSpecOptionEditController($uibModalInstance, OrderCloudSDK, ProductID, SpecID, SpecOption) {
     var vm = this;
     vm.specOption = angular.copy(SpecOption);
     vm.specOptionValue = angular.copy(SpecOption.Value);
@@ -51,10 +51,10 @@ function ProductSpecOptionEditController($uibModalInstance, OrderCloud, ProductI
 
     vm.submit = function() {
         var partial = _.pick(vm.specOption, ['ID', 'Value', 'IsOpenText', 'PriceMarkupType', 'PriceMarkup']);
-        vm.loading = OrderCloud.Specs.PatchOption(SpecID, SpecOption.ID, partial)
+        vm.loading = OrderCloudSDK.Specs.PatchOption(SpecID, SpecOption.ID, partial)
             .then(function(data) {
                 if (vm.specOption.DefaultOption && (vm.specOption.DefaultOption != SpecOption.DefaultOption)) {
-                    return OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: SpecID, DefaultOptionID: data.ID})
+                    return OrderCloudSDK.Specs.SaveProductAssignment({productID: ProductID, specID: SpecID, defaultOptionID: data.ID})
                         .then(function() {
                             data.DefaultOption = true;
                             data.OriginalID = SpecOption.ID;

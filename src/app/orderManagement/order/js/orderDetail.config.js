@@ -17,11 +17,11 @@ function OrderConfig($stateProvider) {
                 SelectedOrder: function($stateParams, ocOrderDetailService) {
                     return ocOrderDetailService.GetOrderDetails($stateParams.orderid);
                 },
-                OrderLineItems: function($stateParams, sdkOrderCloud) {
+                OrderLineItems: function($stateParams, OrderCloudSDK) {
                     var options = {
                         page: 1
                     };
-                    return sdkOrderCloud.LineItems.List('incoming', $stateParams.orderid, options);
+                    return OrderCloudSDK.LineItems.List('incoming', $stateParams.orderid, options);
                 }
             }
         })

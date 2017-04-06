@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocOrderApprovalsService', OrderCloudApprovalsService)
 ;
 
-function OrderCloudApprovalsService($q, sdkOrderCloud) {
+function OrderCloudApprovalsService($q, OrderCloudSDK) {
     var service = {
         List: _list
     };
@@ -15,9 +15,9 @@ function OrderCloudApprovalsService($q, sdkOrderCloud) {
             pageSize: pageSize,
             sortBy: 'Status'
         };
-        sdkOrderCloud.Orders.ListApprovals('incoming', orderID, options)
+        OrderCloudSDK.Orders.ListApprovals('incoming', orderID, options)
             .then(function(data) {
-                getApprovingUserGroups(data)
+                getApprovingUserGroups(data);
             });
 
         function getApprovingUserGroups(data) {
@@ -27,7 +27,7 @@ function OrderCloudApprovalsService($q, sdkOrderCloud) {
                 pageSize: 100,
                 filters: {ID: userGroupIDs.join('|')}
             };
-            sdkOrderCloud.UserGroups.List(buyerID, options)
+            OrderCloudSDK.UserGroups.List(buyerID, options)
                 .then(function(userGroupData) {
                     angular.forEach(data.Items, function(approval) {
                         approval.ApprovingUserGroup = _.findWhere(userGroupData.Items, {ID: approval.ApprovingGroupID});
@@ -46,7 +46,7 @@ function OrderCloudApprovalsService($q, sdkOrderCloud) {
                 pageSize: 100,
                 filters: {ID: approvalRuleIDs.join('|')}
             };
-            sdkOrderCloud.ApprovalRules.List(buyerID, options)
+            OrderCloudSDK.ApprovalRules.List(buyerID, options)
                 .then(function(approvalRuleData) {
                     angular.forEach(data.Items, function(approval) {
                         approval.ApprovalRule = _.findWhere(approvalRuleData.Items, {ID: approval.ApprovalRuleID});

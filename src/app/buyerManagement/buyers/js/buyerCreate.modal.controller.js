@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCreateModalCtrl', BuyerCreateModalController)
 ;
 
-function BuyerCreateModalController($uibModalInstance, $exceptionHandler, sdkOrderCloud) {
+function BuyerCreateModalController($uibModalInstance, $exceptionHandler, OrderCloudSDK) {
     var vm = this;
     vm.submit = submit;
     vm.cancel = cancel;
@@ -13,12 +13,12 @@ function BuyerCreateModalController($uibModalInstance, $exceptionHandler, sdkOrd
     }
 
     function submit() {
-        vm.loading = sdkOrderCloud.Buyers.Create(vm.buyer)
+        vm.loading = OrderCloudSDK.Buyers.Create(vm.buyer)
             .then(function(data) {
                 $uibModalInstance.close(data);
             })
             .catch(function(ex) {
-                if (ex.status == 409) {
+                if (ex.status === 409) {
                     vm.form.ID.$setValidity('Buyer.UnavailableID', false);
                     vm.form.ID.$$element[0].focus();
                 } else {

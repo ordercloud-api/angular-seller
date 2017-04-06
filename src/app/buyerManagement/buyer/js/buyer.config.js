@@ -14,9 +14,9 @@ function BuyerConfig($stateProvider) {
                 pageTitle: 'Buyer Settings'
             },
             resolve: {
-                SelectedBuyer: function ($stateParams, sdkOrderCloud) {
-                    return sdkOrderCloud.Buyers.Get($stateParams.buyerid);
+                SelectedBuyer: function ($stateParams, OrderCloudSDK) {
+                    return OrderCloudSDK.Buyers.Get($stateParams.buyerid);
                 }
             }
-        })
+        });
 }

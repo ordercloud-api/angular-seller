@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUserGroupUsersCtrl', AdminUserGroupUsersController)
 ;
 
-function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocAdminUsers, sdkOrderCloud, ocParameters, ocRolesService, UserList, CurrentAssignments, Parameters ) {
+function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocAdminUsers, OrderCloudSDK, ocParameters, ocRolesService, UserList, CurrentAssignments, Parameters ) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
@@ -50,8 +50,8 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        var parameters = angular.extend(Parameters, {page: vm.list.Meta.Page + 1})
-        return sdkOrderCloud.AdminUsers.List(parameters)
+        var parameters = angular.extend(Parameters, {page: vm.list.Meta.Page + 1});
+        return OrderCloudSDK.AdminUsers.List(parameters)
             .then(function(data) {
                 var mappedData = ocAdminUsers.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -73,7 +73,7 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
 
     vm.selectAllItems = function() {
         vm.allItemsSelected = !vm.allItemsSelected;
-        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected });
+        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected; });
 
         changedCheck();
     };
@@ -102,7 +102,7 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
 
                 changedCheck();
                 selectedCheck();
-            })
+            });
     };
 
     vm.createUser = function() {
@@ -115,7 +115,7 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = sdkOrderCloud.AdminUserGroups.SaveUserAssignment(newAssignment)
+                    vm.searchLoading = OrderCloudSDK.AdminUserGroups.SaveUserAssignment(newAssignment)
                         .then(function() {
                             newAdminUser.Assigned = true;
                             CurrentAssignments.push(newAssignment);
@@ -154,7 +154,7 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
                     changedCheck();
                 }
                 toastr.success(updatedAdminUser.Username + ' was updated.');
-            })
+            });
     };
 
     vm.deleteUser = function(scope) {
@@ -166,6 +166,6 @@ function AdminUserGroupUsersController($exceptionHandler, $filter, $state, $stat
                 vm.list.Meta.ItemRange[1]--;
 
                 changedCheck();
-            })
+            });
     };
 }

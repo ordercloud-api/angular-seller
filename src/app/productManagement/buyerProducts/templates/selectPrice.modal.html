@@ -1,0 +1,43 @@
+<form name="selectPriceModal.form">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="selectPriceModal.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span class="text-muted">{{'Pricing for ' + (selectPriceModal.userGroupName || selectPriceModal.buyerName)}}</span>
+        <h4 class="modal-title">Product: <b>{{selectPriceModal.product.Name}}</b></h4>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default" style="border-width:2px;" ng-if="selectPriceModal.showRemovePriceOption" ng-click="selectPriceModal.removeCurrentPrice()"
+            ng-class="{'panel-primary': selectPriceModal.removePrice}">
+            <div class="panel-body text-center">
+                <b>Remove Pricing for {{(selectPriceModal.userGroupName || selectPriceModal.buyerName)}}</b>
+            </div>
+        </div>
+        <div class="panel panel-default" style="border-width:2px;" ng-click="selectPriceModal.selectNewPrice(this)" ng-repeat="price in selectPriceModal.availablePriceSchedules"
+            ng-class="{'panel-primary': price.ID == selectPriceModal.selectedPriceSchedule.ID}">
+            <div class="panel-body">
+                <span class="text-info" ng-if="price.ID == selectPriceModal.product.DefaultPriceScheduleID">(DEFAULT)</span>
+                <span class="text-info" ng-if="(price.ID == selectPriceModal.product.SelectedPrice.ID && selectPriceModal.product.SelectedPrice.Inherited) || price.Inherited">(INHERITED)</span>
+                <b>{{price.Name}}</b>
+                <div class="row">
+                    <div class="col-xs-5">
+                        <span class="text-info">{{price.RestrictedQuantity ? 'Restricted' : 'Open'}} Quantity</span> <br>                        Min: {{price.MinQuantity}} <span ng-if="price.MaxQuantity">| Max: {{price.MaxQuantity}}</span>
+                        <br>
+                        <span ng-if="price.ApplyTax || price.ApplyShipping"><i class="fa fa-info"></i> Applies </span>
+                        <span ng-if="price.ApplyTax"> Tax</span><span ng-if="price.ApplyShipping && price.ApplyTax"> & </span>
+                        <span ng-if="price.ApplyShipping">Shipping</span>
+                    </div>
+                    <div class="col-xs-7 text-right">
+                        <small><b>Price Breaks</b></small><br>
+                        <div class="btn btn-sm btn-labeled btn-default" style="cursor:default; margin-left:2px; margin-bottom:2px;" disabled ng-repeat="pb in price.PriceBreaks">
+                            <span class="btn-label">{{pb.Quantity}}</span>{{pb.Price | currency}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-default btn-block" ng-click="selectPriceModal.createNewPrice()"><i class="fa fa-plus-circle"></i> New Price</button>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary btn-block" ng-click="selectPriceModal.submit()" ng-disabled="(!selectPriceModal.selectedPriceSchedule && !selectPriceModal.removePrice) || selectPriceModal.selectedPriceSchedule.ID === selectPriceModal.product.SelectedPrice.ID"
+            cg-busy="selectPriceModal.loading">Save Selection</button>
+    </div>
+</form>

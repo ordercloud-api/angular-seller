@@ -17,8 +17,8 @@ function UserGroupsConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                UserGroupList: function($stateParams, sdkOrderCloud, Parameters) {
-                    return sdkOrderCloud.UserGroups.List($stateParams.buyerid, Parameters);
+                UserGroupList: function($stateParams, OrderCloudSDK, Parameters) {
+                    return OrderCloudSDK.UserGroups.List($stateParams.buyerid, Parameters);
                 }
             }
         })
@@ -32,8 +32,8 @@ function UserGroupsConfig($stateProvider) {
                 pageTitle: 'Buyer User Group'
             },
             resolve: {
-                SelectedUserGroup: function($stateParams, sdkOrderCloud) {
-                    return sdkOrderCloud.UserGroups.Get($stateParams.buyerid, $stateParams.usergroupid);
+                SelectedUserGroup: function($stateParams, OrderCloudSDK) {
+                    return OrderCloudSDK.UserGroups.Get($stateParams.buyerid, $stateParams.usergroupid);
                 }
             }
         })

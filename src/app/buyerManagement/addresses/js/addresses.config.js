@@ -20,8 +20,8 @@ function AddressesConfig($stateProvider){
                 CurrentAssignments: function($q, ocAddresses, $stateParams) {
                     return ocAddresses.Assignments.Get('company', $stateParams.buyerid);
                 },
-                AddressList: function(ocAddresses, sdkOrderCloud, Parameters, CurrentAssignments) {
-                    return sdkOrderCloud.Addresses.List(Parameters.buyerid, Parameters)
+                AddressList: function(ocAddresses, OrderCloudSDK, Parameters, CurrentAssignments) {
+                    return OrderCloudSDK.Addresses.List(Parameters.buyerid, Parameters)
                         .then(function(data) {
                             return ocAddresses.Assignments.Map(CurrentAssignments, data);
                         });
@@ -43,12 +43,12 @@ function AddressesConfig($stateProvider){
                 CurrentAssignments: function($q, ocAddresses, $stateParams) {
                     return ocAddresses.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);
                 },
-                AddressList: function(ocAddresses, sdkOrderCloud, Parameters, CurrentAssignments) {
-                    return sdkOrderCloud.Addresses.List(Parameters.buyerid, Parameters)
+                AddressList: function(ocAddresses, OrderCloudSDK, Parameters, CurrentAssignments) {
+                    return OrderCloudSDK.Addresses.List(Parameters.buyerid, Parameters)
                         .then(function(data) {
                             return ocAddresses.Assignments.Map(CurrentAssignments, data);
                         });
                 }
             }
-        })
+        });
 }

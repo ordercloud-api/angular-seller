@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CreditCardsCtrl', CreditCardsController)
 ;
 
-function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, sdkOrderCloud, ocParameters, ocCreditCards, CreditCardList, CurrentAssignments, Parameters) {
+function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, OrderCloudSDK, ocParameters, ocCreditCards, CreditCardList, CurrentAssignments, Parameters) {
     var vm = this;
     vm.list = CreditCardList;
     vm.parameters = Parameters;
@@ -52,7 +52,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.CreditCards.List($stateParams.buyerid, parameters)
+        return OrderCloudSDK.CreditCards.List($stateParams.buyerid, parameters)
             .then(function(data) {
                 var mappedData = ocCreditCards.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -74,7 +74,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
 
     vm.selectAllItems = function() {
         vm.allItemsSelected = !vm.allItemsSelected;
-        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected });
+        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected; });
 
         changedCheck();
     };
@@ -105,7 +105,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
                 selectedCheck();
 
                 toastr.success('Credit card assignments updated.');
-            })
+            });
     };
 
     vm.createCreditCard = function() {
@@ -118,7 +118,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = sdkOrderCloud.CreditCards.SaveAssignment($stateParams.buyerid, newAssignment)
+                    vm.searchLoading = OrderCloudSDK.CreditCards.SaveAssignment($stateParams.buyerid, newAssignment)
                         .then(function() {
                             creditCard.Assigned = true;
                             CurrentAssignments.push(newAssignment);

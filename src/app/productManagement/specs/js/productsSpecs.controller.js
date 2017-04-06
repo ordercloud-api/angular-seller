@@ -119,13 +119,13 @@ function ProductSpecsController($rootScope, toastr, ocProductSpecs, ProductSpecs
     }
 }
 
-function ProductSpecCreateController($uibModalInstance, toastr, OrderCloud, ProductID) {
+function ProductSpecCreateController($uibModalInstance, toastr, OrderCloudSDK, ProductID) {
     var vm = this;
 
     vm.submit = function() {
-        vm.loading = OrderCloud.Specs.Create(vm.spec)
+        vm.loading = OrderCloudSDK.Specs.Create(vm.spec)
             .then(function(data) {
-                OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: data.ID})
+                OrderCloudSDK.Specs.SaveProductAssignment({productID: ProductID, specID: data.ID})
                     .then(function(assignment) {
                         assignment.Spec = data;
                         toastr.success('Spec: ' + data.Name + ' created');

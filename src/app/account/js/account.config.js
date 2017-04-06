@@ -1,6 +1,5 @@
 angular.module('orderCloud')
-	.config(AccountConfig)
-;
+	.config(AccountConfig);
 
 function AccountConfig($stateProvider) {
 	$stateProvider
@@ -11,8 +10,7 @@ function AccountConfig($stateProvider) {
 			controller: 'AccountCtrl',
 			controllerAs: 'account',
 			data: {
-				pageTitle: "My Account"
+				pageTitle: 'My Account'
 			}
-		})
-	;
+		});
 }

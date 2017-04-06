@@ -2,9 +2,10 @@ angular.module('orderCloud')
     .factory('ocProducts', OrderCloudProducts)
 ;
 
-function OrderCloudProducts($uibModal, ocConfirm, OrderCloud) {
+function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
+        CreateDefaultPrice: _createDefaultPrice,
         Delete: _delete
     };
 
@@ -13,7 +14,36 @@ function OrderCloudProducts($uibModal, ocConfirm, OrderCloud) {
             templateUrl: 'productManagement/products/templates/productCreate.modal.html',
             controller: 'ProductCreateModalCtrl',
             controllerAs: 'productCreateModal'
-        }).result
+        }).result;
+    }
+
+    function _createDefaultPrice(product) {
+        var df = $q.defer();
+
+        var priceSchedule = {
+            name: product.Name + ' Default Price',
+            minQuantity: 1,
+            priceBreaks: [
+                {
+                    quantity: 1,
+                    price: product.DefaultPrice
+                }
+            ]
+        };
+        OrderCloudSDK.PriceSchedules.Create(priceSchedule)
+            .then(function(defaultPriceSchedule) {
+                setDefaultPriceSchedule(defaultPriceSchedule);
+            });
+
+        function setDefaultPriceSchedule(defaultPriceSchedule) {
+            product.DefaultPriceScheduleID = defaultPriceSchedule.ID;
+            OrderCloudSDK.Products.Patch(product.ID, {defaultPriceScheduleID: defaultPriceSchedule.ID})
+                .then(function(product) {
+                    df.resolve(product);
+                });
+        }
+
+        return df.promise;
     }
 
     function _delete(product) {
@@ -22,8 +52,8 @@ function OrderCloudProducts($uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete product',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Products.Delete(product.ID)
-            })
+                return OrderCloudSDK.Products.Delete(product.ID);
+            });
     }
 
     return service;

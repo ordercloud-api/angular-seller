@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('OrdersCtrl', OrdersController)
 ;
 
-function OrdersController($state, $ocMedia, sdkOrderCloud, ocParameters, ocOrdersService, Parameters, OrderList, BuyerCompanies) {
+function OrdersController($state, $ocMedia, OrderCloudSDK, ocParameters, ocOrdersService, Parameters, OrderList, BuyerCompanies) {
     var vm = this;
     if (Parameters.fromDate) Parameters.fromDate = new Date(Parameters.fromDate);
     if (Parameters.toDate) Parameters.toDate = new Date(Parameters.toDate);
@@ -98,7 +98,7 @@ function OrdersController($state, $ocMedia, sdkOrderCloud, ocParameters, ocOrder
             page: 1,
             pageSize: 100
         };
-        return sdkOrderCloud.Buyers.List(options)
+        return OrderCloudSDK.Buyers.List(options)
             .then(function(data){
                 vm.buyerCompanies = data;
             });

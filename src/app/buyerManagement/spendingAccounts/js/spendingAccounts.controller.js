@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('SpendingAccountsCtrl', SpendingAccountsController)
 ;
 
-function SpendingAccountsController($exceptionHandler, $state, $stateParams, toastr, sdkOrderCloud, ocParameters, ocSpendingAccounts, CurrentAssignments, SpendingAccountList, Parameters) {
+function SpendingAccountsController($exceptionHandler, $state, $stateParams, toastr, OrderCloudSDK, ocParameters, ocSpendingAccounts, CurrentAssignments, SpendingAccountList, Parameters) {
     var vm = this;
     vm.list = SpendingAccountList;
     vm.parameters = Parameters;
@@ -52,7 +52,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.SpendingAccounts.List($stateParams.buyerid, parameters)
+        return OrderCloudSDK.SpendingAccounts.List($stateParams.buyerid, parameters)
             .then(function(data) {
                 var mappedData = ocSpendingAccounts.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -74,7 +74,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
 
     vm.selectAllItems = function() {
         vm.allItemsSelected = !vm.allItemsSelected;
-        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected });
+        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected; });
 
         changedCheck();
     };
@@ -105,7 +105,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
                 selectedCheck();
 
                 toastr.success('Spending account assignments updated.');
-            })
+            });
     };
 
     vm.createSpendingAccount = function() {
@@ -118,7 +118,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = sdkOrderCloud.SpendingAccounts.SaveAssignment($stateParams.buyerid, newAssignment)
+                    vm.searchLoading = OrderCloudSDK.SpendingAccounts.SaveAssignment($stateParams.buyerid, newAssignment)
                         .then(function() {
                             newSpendingAccount.Assigned = true;
                             CurrentAssignments.push(newAssignment);
@@ -156,7 +156,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
                     changedCheck();
                 }
                 toastr.success(updatedSpendingAccount.Name + ' was updated.');
-            })
+            });
     };
 
     vm.deleteSpendingAccount = function(scope) {
@@ -168,6 +168,6 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
                 vm.list.Meta.ItemRange[1]--;
 
                 changedCheck();
-            })
+            });
     };
 }

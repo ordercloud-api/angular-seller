@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocAdminUserGroups', OrderCloudAdminUserGroups)
 ;
 
-function OrderCloudAdminUserGroups($uibModal, ocConfirm, sdkOrderCloud) {
+function OrderCloudAdminUserGroups($uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         Delete: _delete
@@ -13,7 +13,7 @@ function OrderCloudAdminUserGroups($uibModal, ocConfirm, sdkOrderCloud) {
             templateUrl: 'adminUserGroups/templates/adminUserGroupCreate.modal.html',
             controller: 'AdminUserGroupCreateModalCtrl',
             controllerAs: 'adminUserGroupCreateModal'
-        }).result
+        }).result;
     }
 
     function _delete(userGroup) {
@@ -22,8 +22,8 @@ function OrderCloudAdminUserGroups($uibModal, ocConfirm, sdkOrderCloud) {
                 confirmText: 'Delete admin user group',
                 type: 'delete'})
             .then(function() {
-                return sdkOrderCloud.AdminUserGroups.Delete(userGroup.ID)
-            })
+                return OrderCloudSDK.AdminUserGroups.Delete(userGroup.ID);
+            });
     }
 
     return service;

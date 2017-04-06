@@ -2,12 +2,12 @@ angular.module('orderCloud')
     .controller('CostCenterCreateModalCtrl', CostCenterCreateModalController)
 ;
 
-function CostCenterCreateModalController($uibModalInstance, sdkOrderCloud, SelectedBuyerID) {
+function CostCenterCreateModalController($uibModalInstance, OrderCloudSDK, SelectedBuyerID) {
     var vm = this;
     vm.costCenter = {};
 
     vm.submit = function() {
-        vm.loading = sdkOrderCloud.CostCenters.Create(SelectedBuyerID, vm.costCenter)
+        vm.loading = OrderCloudSDK.CostCenters.Create(SelectedBuyerID, vm.costCenter)
             .then(function(newCostCenter) {
                 $uibModalInstance.close(newCostCenter);
             });
@@ -15,5 +15,5 @@ function CostCenterCreateModalController($uibModalInstance, sdkOrderCloud, Selec
 
     vm.cancel = function() {
         $uibModalInstance.dismiss();
-    }
+    };
 }

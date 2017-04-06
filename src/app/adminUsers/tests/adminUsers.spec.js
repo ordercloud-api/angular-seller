@@ -16,16 +16,16 @@ describe('Component: AdminUsers', function() {
     }));
     beforeEach(module('orderCloud'));
     beforeEach(module('orderCloud.sdk'));
-    beforeEach(inject(function($q, $rootScope, OrderCloud, ocAdminUsers) {
+    beforeEach(inject(function($q, $rootScope, ocAdminUsers) {
         q = $q;
         scope = $rootScope.$new();
         adminUser = {
-            "Username": "TestAdminUser",
-            "ID": "TestAdminUser123456789",
-            "Email": "testadmin@four51.com",
-            "Password": "Fails345",
-            "FirstName": "Test",
-            "LastName": "Test"
+            'Username': 'TestAdminUser',
+            'ID': 'TestAdminUser123456789',
+            'Email': 'testadmin@four51.com',
+            'Password': 'Fails345',
+            'FirstName': 'Test',
+            'LastName': 'Test'
         };
         adminUserList = {
             Meta: {
@@ -92,11 +92,11 @@ describe('Component: AdminUsers', function() {
             it('should resolve AdminUserList', function() {
                 expect(oc.AdminUsers.List).toHaveBeenCalled();
             });
-            it ('should call ocAdminUsers.Assignments.Map()', inject(function(CurrentAssignments) {
+            it('should call ocAdminUsers.Assignments.Map()', inject(function(CurrentAssignments) {
                 scope.$digest();
                 expect(ocAdminUsersSvc.Assignments.Map).toHaveBeenCalledWith(CurrentAssignments, adminUserList);
             }));
-        })
+        });
     });
     
     describe('Service: ocAdminUsers', function(){
@@ -107,35 +107,35 @@ describe('Component: AdminUsers', function() {
         }));
 
         describe('Create', function() {
-            it('should open adminUserCreateModal using $uibModal')
+            it('should open adminUserCreateModal using $uibModal');
         });
 
         describe('Edit', function() {
             it('should open adminUserEditModal using $uibModal');
-            it('should pass the SelectedUser to the $uibModal resolve')
+            it('should pass the SelectedUser to the $uibModal resolve');
         });
 
         describe('Delete', function() {
             it('should call ocConfirm.Confirm');
-            it('should call OrderCloud.AdminUsers.Delete() if they confirm')
+            it('should call OrderCloud.AdminUsers.Delete() if they confirm');
         });
         
         describe('Assignments', function() {
             describe('Get', function() {
-                it ('should get the first 100 admin user groups');
-                it ('should get the remaining pages if any');
+                it('should get the first 100 admin user groups');
+                it('should get the remaining pages if any');
             });
             describe('Map', function() {
-                it ('should set user.Assigned to true if they are in the CurrentAssignments');
+                it('should set user.Assigned to true if they are in the CurrentAssignments');
             });
             describe('Compare', function() {
-                it ('should return a changed assignments array based on new or removed user.Assigned');
+                it('should return a changed assignments array based on new or removed user.Assigned');
             });
             describe('Update', function() {
-                it ('should add new user assignments to the assignmentQueue');
-                it ('should add removed user assignments to the assignmentQueue');
-                it ('should execute the assignmentQueue');
-            })
+                it('should add new user assignments to the assignmentQueue');
+                it('should add removed user assignments to the assignmentQueue');
+                it('should execute the assignmentQueue');
+            });
         });
     });
 
@@ -154,7 +154,7 @@ describe('Component: AdminUsers', function() {
                 ocParameters: ocParametersSvc,
                 AdminUsersList: adminUserList,
                 Parameters: Parameters
-            })
+            });
         }));
         describe('Initialize', function() {
             it('should set vm.list to AdminUsersList');
@@ -230,7 +230,7 @@ describe('Component: AdminUsers', function() {
                 ocRolesService: ocRolesService,
                 CurrentAssignments: currentAssignments,
                 Parameters: Parameters
-            })
+            });
         }));
         describe('Initialize', function() {
             it('should set vm.list to UserList');
@@ -313,17 +313,17 @@ describe('Component: AdminUsers', function() {
                 });
             }));
             describe('Initialize', function() {
-                it ('should set vm.user to a copy of the SelectedUser');
-                it ('should set vm.username equal to SelectedUser.Username');
-                it ('should set vm.fullName equal to SelectedUser.FirstName + SelectedUser.LastName');
+                it('should set vm.user to a copy of the SelectedUser');
+                it('should set vm.username equal to SelectedUser.Username');
+                it('should set vm.fullName equal to SelectedUser.FirstName + SelectedUser.LastName');
             });
             describe('Function: vm.submit()', function() {
-                it ('should call OrderCloud.AdminUsers.Update()');
-                it ('should close the modal with the updatedUser');
+                it('should call OrderCloud.AdminUsers.Update()');
+                it('should close the modal with the updatedUser');
             });
             describe('Function: vm.cancel()', function() {
-                it ('should dismiss the modal');
-            })
+                it('should dismiss the modal');
+            });
         });
         describe('Controller: AdminUserCreateModalCtrl', function() {
             var adminUserCreateModalCtrl;
@@ -336,15 +336,15 @@ describe('Component: AdminUsers', function() {
                 });
             }));
             describe('Initialize', function() {
-                it ('should set vm.user to a new object {Active:false}');
+                it('should set vm.user to a new object {Active:false}');
             });
             describe('Function: vm.submit()', function() {
-                it ('should call OrderCloud.AdminUsers.Create()');
-                it ('should close the modal with the newUser');
+                it('should call OrderCloud.AdminUsers.Create()');
+                it('should close the modal with the newUser');
             });
             describe('Function: vm.cancel()', function() {
-                it ('should dismiss the modal');
-            })
+                it('should dismiss the modal');
+            });
         });
     });
 });

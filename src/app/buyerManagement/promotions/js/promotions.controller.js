@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('PromotionsCtrl', PromotionsController)
 ;
 
-function PromotionsController($exceptionHandler, $state, $stateParams, toastr, sdkOrderCloud, ocParameters, ocPromotions, CurrentAssignments, PromotionList, Parameters) {
+function PromotionsController($exceptionHandler, $state, $stateParams, toastr, OrderCloudSDK, ocParameters, ocPromotions, CurrentAssignments, PromotionList, Parameters) {
     var vm = this;
     vm.list = PromotionList;
     vm.parameters = Parameters;
@@ -52,7 +52,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, s
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.Promotions.List(parameters)
+        return OrderCloudSDK.Promotions.List(parameters)
             .then(function(data) {
                 var mappedData = ocPromotions.Assignments.Map(CurrentAssignments, data, $stateParams.buyerid);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -74,7 +74,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, s
 
     vm.selectAllItems = function() {
         vm.allItemsSelected = !vm.allItemsSelected;
-        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected });
+        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected; });
 
         changedCheck();
     };
@@ -105,7 +105,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, s
                 selectedCheck();
 
                 toastr.success('Promotion assignments updated.');
-            })
+            });
     };
 
     vm.createPromotion = function() {
@@ -119,7 +119,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, s
                     };
 
                     //Automatically assign the new user to this user group
-                    vm.searchLoading = sdkOrderCloud.Promotions.SaveAssignment(newAssignment)
+                    vm.searchLoading = OrderCloudSDK.Promotions.SaveAssignment(newAssignment)
                         .then(function() {
                             newPromotion.Assigned = true;
                             CurrentAssignments.push(newAssignment);
@@ -157,7 +157,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, s
                     changedCheck();
                 }
                 toastr.success(updatedPromotion.Code + ' was updated.');
-            })
+            });
     };
 
     vm.deletePromotion = function(scope) {
@@ -169,6 +169,6 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, s
                 vm.list.Meta.ItemRange[1]--;
 
                 changedCheck();
-            })
+            });
     };
 }

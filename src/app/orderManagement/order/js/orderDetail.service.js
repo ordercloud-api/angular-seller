@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocOrderDetailService', OrderCloudOrderDetailService)
 ;
 
-function OrderCloudOrderDetailService($q, $uibModal, $exceptionHandler, sdkOrderCloud) {
+function OrderCloudOrderDetailService($q, $uibModal, $exceptionHandler, OrderCloudSDK) {
     var service = {
         GetOrderDetails: _getOrderDetails,
         EditLineItem: _editLineItem
@@ -11,13 +11,13 @@ function OrderCloudOrderDetailService($q, $uibModal, $exceptionHandler, sdkOrder
     function _getOrderDetails(orderID) {
         var deferred = $q.defer();
 
-        sdkOrderCloud.Orders.Get('incoming', orderID)
+        OrderCloudSDK.Orders.Get('incoming', orderID)
             .then(function(data) {
                 getBuyerCompany(data);
             });
 
         function getBuyerCompany(data) {
-            sdkOrderCloud.Buyers.Get(data.FromCompanyID)
+            OrderCloudSDK.Buyers.Get(data.FromCompanyID)
                 .then(function(buyer) {
                     data.FromCompany = buyer;
                     deferred.resolve(data);
@@ -45,7 +45,7 @@ function OrderCloudOrderDetailService($q, $uibModal, $exceptionHandler, sdkOrder
                     return lineItem;
                 },
                 Product: function() {
-                    return sdkOrderCloud.Products.Get(lineItem.ProductID)
+                    return OrderCloudSDK.Products.Get(lineItem.ProductID)
                         .then(function(data) {
                             return data;
                         })

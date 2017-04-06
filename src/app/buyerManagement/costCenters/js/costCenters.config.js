@@ -20,8 +20,8 @@ function CostCentersConfig($stateProvider) {
                 CurrentAssignments: function($q, ocCostCenters, $stateParams) {
                     return ocCostCenters.Assignments.Get('company', $stateParams.buyerid);
                 },
-                CostCentersList: function(sdkOrderCloud, ocCostCenters, Parameters, CurrentAssignments) {
-                    return sdkOrderCloud.CostCenters.List(Parameters.buyerid, Parameters)
+                CostCentersList: function(OrderCloudSDK, ocCostCenters, Parameters, CurrentAssignments) {
+                    return OrderCloudSDK.CostCenters.List(Parameters.buyerid, Parameters)
                         .then(function(data) {
                             return ocCostCenters.Assignments.Map(CurrentAssignments, data);
                         });
@@ -43,8 +43,8 @@ function CostCentersConfig($stateProvider) {
                 CurrentAssignments: function($q, ocCostCenters, $stateParams) {
                     return ocCostCenters.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);
                 },
-                CostCentersList: function(sdkOrderCloud, ocCostCenters, Parameters, CurrentAssignments) {
-                    return sdkOrderCloud.CostCenters.List(Parameters.buyerid, Parameters)
+                CostCentersList: function(OrderCloudSDK, ocCostCenters, Parameters, CurrentAssignments) {
+                    return OrderCloudSDK.CostCenters.List(Parameters.buyerid, Parameters)
                         .then(function(data) {
                             return ocCostCenters.Assignments.Map(CurrentAssignments, data);
                         });

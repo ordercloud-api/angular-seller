@@ -37,8 +37,8 @@ module.exports = {
     ],
     appFiles: [
         build + '**/app.module.js',
-        build + '**/common/config/routing.js',
-        build + '**/common/config/*.js',
+        build + '**/common/config/**/routing.js',
+        build + '**/common/config/**/*.js',
         build + '**/*s.config.js',
         build + '**/*.config.js',
         build + '**/app.run.js',
@@ -117,9 +117,9 @@ function _checkBootswatchTheme() {
 
     if (theme) {
         bootswatchBower.main = [
-            "./" + theme + "/bootswatch.less",
-            "./" + theme + "/variables.less"
-        ]
+            './' + theme + '/bootswatch.less',
+            './' + theme + '/variables.less'
+        ];
     }
 
     return bootswatchBower;

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ApprovalRulesCtrl', ApprovalRulesController)
 ;
 
-function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, sdkOrderCloud, ocApprovalRules, ocParameters, ApprovalRuleList, Parameters) {
+function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCloudSDK, ocApprovalRules, ocParameters, ApprovalRuleList, Parameters) {
     var vm = this;
     vm.list = ApprovalRuleList;
     vm.parameters = Parameters;
@@ -60,7 +60,7 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, sdkOrde
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.ApprovalRules.List(parameters.buyerid, parameters)
+        return OrderCloudSDK.ApprovalRules.List(parameters.buyerid, parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -72,7 +72,7 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, sdkOrde
             .then(function(updatedApprovalRule) {
                 vm.list.Items[scope.$index] = updatedApprovalRule;
                 toastr.success(updatedApprovalRule.Name + ' was updated.');
-            })
+            });
     };
 
     vm.createApprovalRule = function() {
@@ -82,7 +82,7 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, sdkOrde
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
                 toastr.success(newApprovalRule.Name + ' was created.');
-            })
+            });
     };
 
     vm.deleteApprovalRule = function(scope) {
@@ -92,6 +92,6 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, sdkOrde
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-            })
+            });
     };
 }

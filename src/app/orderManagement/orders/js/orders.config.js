@@ -20,12 +20,12 @@ function OrdersConfig($stateProvider) {
                 OrderList: function(ocOrdersService, Parameters) {
                     return ocOrdersService.List(Parameters);
                 },
-                BuyerCompanies: function(sdkOrderCloud) {
+                BuyerCompanies: function(OrderCloudSDK) {
                     var options = {
                         page: 1,
                         pageSize: 100
                     };
-                    return sdkOrderCloud.Buyers.List(options);
+                    return OrderCloudSDK.Buyers.List(options);
                 }
             }
         })

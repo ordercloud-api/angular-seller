@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('BuyersCtrl', BuyersController);
 
-function BuyersController($exceptionHandler, $state, toastr, ocBuyers, sdkOrderCloud, ocParameters, Parameters, BuyerList) {
+function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderCloudSDK, ocParameters, Parameters, BuyerList) {
     var vm = this;
     vm.list = BuyerList;
     vm.parameters = Parameters;
@@ -50,7 +50,7 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, sdkOrderC
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.Buyers.List(parameters)
+        return OrderCloudSDK.Buyers.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -62,7 +62,7 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, sdkOrderC
             .then(function(data) {
                 toastr.success(data.Name + ' was created.');
                 $state.go('buyer', {buyerid: data.ID});
-            })
+            });
     };
 
     vm.deleteBuyer = function(scope) {
@@ -75,8 +75,8 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, sdkOrderC
             })
             .catch(function(ex) {
                 $exceptionHandler(ex);
-            })
-    }
+            });
+    };
 }
 
 
