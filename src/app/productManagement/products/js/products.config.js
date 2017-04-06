@@ -17,8 +17,8 @@ function ProductsConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                ProductList: function(sdkOrderCloud, Parameters) {
-                    return sdkOrderCloud.Products.List(Parameters);
+                ProductList: function(OrderCloudSDK, Parameters) {
+                    return OrderCloudSDK.Products.List(Parameters);
                 }
             }
         })

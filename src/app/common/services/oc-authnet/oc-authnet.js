@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocAuthNet', AuthorizeNet)
 ;
 
-function AuthorizeNet($q, $resource, sdkOrderCloud, apiurl, ocCreditCardUtility) {
+function AuthorizeNet($q, $resource, OrderCloudSDK, apiurl, ocCreditCardUtility) {
     var service = {
         CreateCreditCard: _createCreateCard,
         UpdateCreditCard: _updateCreditCard,
@@ -61,7 +61,7 @@ function AuthorizeNet($q, $resource, sdkOrderCloud, apiurl, ocCreditCardUtility)
             callApi: {
                 method: method,
                 headers: {
-                    'Authorization': 'Bearer ' + sdkOrderCloud.GetToken()
+                    'Authorization': 'Bearer ' + OrderCloudSDK.GetToken()
                 }
             }
         }).callApi(requestBody).$promise

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocProducts', OrderCloudProducts)
 ;
 
-function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloud, sdkOrderCloud) {
+function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         CreateDefaultPrice: _createDefaultPrice,
@@ -14,7 +14,7 @@ function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloud, sdkOrderCloud)
             templateUrl: 'productManagement/products/templates/productCreate.modal.html',
             controller: 'ProductCreateModalCtrl',
             controllerAs: 'productCreateModal'
-        }).result
+        }).result;
     }
 
     function _createDefaultPrice(product) {
@@ -30,14 +30,14 @@ function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloud, sdkOrderCloud)
                 }
             ]
         };
-        sdkOrderCloud.PriceSchedules.Create(priceSchedule)
+        OrderCloudSDK.PriceSchedules.Create(priceSchedule)
             .then(function(defaultPriceSchedule) {
                 setDefaultPriceSchedule(defaultPriceSchedule);
             });
 
         function setDefaultPriceSchedule(defaultPriceSchedule) {
             product.DefaultPriceScheduleID = defaultPriceSchedule.ID;
-            sdkOrderCloud.Products.Patch(product.ID, {defaultPriceScheduleID: defaultPriceSchedule.ID})
+            OrderCloudSDK.Products.Patch(product.ID, {defaultPriceScheduleID: defaultPriceSchedule.ID})
                 .then(function(product) {
                     df.resolve(product);
                 });
@@ -52,8 +52,8 @@ function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloud, sdkOrderCloud)
                 confirmText: 'Delete product',
                 type: 'delete'})
             .then(function() {
-                return sdkOrderCloud.Products.Delete(product.ID)
-            })
+                return OrderCloudSDK.Products.Delete(product.ID);
+            });
     }
 
     return service;

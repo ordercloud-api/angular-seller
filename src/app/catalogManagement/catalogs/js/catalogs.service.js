@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocCatalogs', CatalogsService)
 ;
 
-function CatalogsService($uibModal, ocConfirm, sdkOrderCloud) {
+function CatalogsService($uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         Delete: _delete
@@ -14,7 +14,7 @@ function CatalogsService($uibModal, ocConfirm, sdkOrderCloud) {
             controller: 'CatalogCreateModalCtrl',
             controllerAs: 'buyerCreateModal',
             bindToController: true
-        }).result
+        }).result;
     }
 
 
@@ -24,8 +24,8 @@ function CatalogsService($uibModal, ocConfirm, sdkOrderCloud) {
                 confirmText: 'Delete catalog',
                 type: 'delete'})
             .then(function() {
-                return sdkOrderCloud.Catalogs.Delete(catalog.ID)
-            })
+                return OrderCloudSDK.Catalogs.Delete(catalog.ID);
+            });
     }
 
     return service;

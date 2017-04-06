@@ -14,15 +14,15 @@ function UserGroupCatalogConfig($stateProvider) {
                 pageTitle: 'User Group Catalog'
             },
             resolve: {
-                SelectedCatalog: function($stateParams, sdkOrderCloud) {
-                    return sdkOrderCloud.Catalogs.Get($stateParams.catalogid);
+                SelectedCatalog: function($stateParams, OrderCloudSDK) {
+                    return OrderCloudSDK.Catalogs.Get($stateParams.catalogid);
                 },
-                CatalogAssignment: function($stateParams, sdkOrderCloud) {
+                CatalogAssignment: function($stateParams, OrderCloudSDK) {
                     var options = {
                         catalogID: $stateParams.catalogid,
                         userGroupID: $stateParams.userGroupid
-                    }
-                    return sdkOrderCloud.Catalogs.ListAssignments(options)
+                    };
+                    return OrderCloudSDK.Catalogs.ListAssignments(options)
                         .then(function(data) {
                             return data.Items[0];
                         });
@@ -44,12 +44,12 @@ function UserGroupCatalogConfig($stateProvider) {
                     angular.forEach(userGroupMappedData, function(category) {
                         var index = _.findIndex(buyerMappedData, function(cat) {
                             return cat.ID == category.ID;
-                        })
+                        });
                         if (!buyerMappedData[index].Assigned) buyerMappedData[index] = category;
-                    })
+                    });
 
                     return ocCatalogTree.Get(buyerMappedData);
                 }
             }
-        })
+        });
 }

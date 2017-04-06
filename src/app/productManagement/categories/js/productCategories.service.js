@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocProductCategories', OrderCloudProductCategoriesService)
 ;
 
-function OrderCloudProductCategoriesService($q, sdkOrderCloud) {
+function OrderCloudProductCategoriesService($q, OrderCloudSDK) {
     var service = {
         Assignments: {
             Get: _get,
@@ -18,7 +18,7 @@ function OrderCloudProductCategoriesService($q, sdkOrderCloud) {
             productID: productID,
             pageSize: 100
         };
-        sdkOrderCloud.Categories.ListProductAssignments(catalogID, options)
+        OrderCloudSDK.Categories.ListProductAssignments(catalogID, options)
             .then(function(data) {
                 if (data.Meta.TotalPages == 1) {
                     df.resolve(data.Items);
@@ -30,7 +30,7 @@ function OrderCloudProductCategoriesService($q, sdkOrderCloud) {
                     while (currentPage < totalPages) {
                         currentPage++;
                         options.page = currentPage;
-                        queue.push(sdkOrderCloud.Categories.ListProductAssignments(catalogID, options));
+                        queue.push(OrderCloudSDK.Categories.ListProductAssignments(catalogID, options));
                     }
                     $q.all(queue)
                         .then(function(results) {
@@ -50,11 +50,11 @@ function OrderCloudProductCategoriesService($q, sdkOrderCloud) {
             categoryID: categoryID,
             productID: productID
         };
-        return sdkOrderCloud.Categories.SaveProductAssignment(catalogID, assignment);
+        return OrderCloudSDK.Categories.SaveProductAssignment(catalogID, assignment);
     }
 
     function _delete(catalogID, categoryID, productID) {
-        return sdkOrderCloud.Categories.DeleteProductAssignment(catalogID, categoryID, productID);
+        return OrderCloudSDK.Categories.DeleteProductAssignment(catalogID, categoryID, productID);
     }
 
     return service;

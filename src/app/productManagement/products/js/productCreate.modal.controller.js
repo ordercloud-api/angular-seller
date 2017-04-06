@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('ProductCreateModalCtrl', ProductCreateModalController);
 
-function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, toastr, ocProductPricing, ocProducts, sdkOrderCloud) {
+function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, toastr, ocProductPricing, ocProducts, OrderCloudSDK) {
     var vm = this;
     vm.steps = [{
             form: 'info',
@@ -65,7 +65,7 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
     vm.listAllAdminAddresses = listAllAdminAddresses;
 
     function listAllAdminAddresses(search) {
-        return sdkOrderCloud.AdminAddresses.List({
+        return OrderCloudSDK.AdminAddresses.List({
                 search: search
             })
             .then(function (data) {
@@ -80,7 +80,7 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
         if (vm.enableDefaultPricing) {
             var priceSchedule = angular.copy(vm.product.DefaultPriceSchedule);
             priceSchedule.Name = vm.product.Name + ' Default Price';
-            sdkOrderCloud.PriceSchedules.Create(priceSchedule)
+            OrderCloudSDK.PriceSchedules.Create(priceSchedule)
                 .then(function (data) {
                     vm.product.DefaultPriceScheduleID = data.ID;
                     _createProduct();
@@ -94,7 +94,7 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
 
         function _createProduct() {
             if (vm.product.Inventory && !vm.product.Inventory.Enabled) delete vm.product.Inventory;
-            sdkOrderCloud.Products.Create(vm.product)
+            OrderCloudSDK.Products.Create(vm.product)
                 .then(function (data) {
                         $uibModalInstance.close(data);
                 });

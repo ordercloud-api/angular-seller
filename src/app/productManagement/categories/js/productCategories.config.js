@@ -16,8 +16,8 @@ function ProductCategoriesConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                CatalogList: function(Parameters, sdkOrderCloud) {
-                    return sdkOrderCloud.Catalogs.List(Parameters);
+                CatalogList: function(Parameters, OrderCloudSDK) {
+                    return OrderCloudSDK.Catalogs.List(Parameters);
                 }
             }
         })
@@ -27,8 +27,8 @@ function ProductCategoriesConfig($stateProvider) {
             controller: 'ProductCategoriesCtrl',
             controllerAs: 'productCategories',
             resolve: {
-                SelectedCatalog: function($stateParams, sdkOrderCloud) {
-                    return sdkOrderCloud.Catalogs.Get($stateParams.catalogid);
+                SelectedCatalog: function($stateParams, OrderCloudSDK) {
+                    return OrderCloudSDK.Catalogs.Get($stateParams.catalogid);
                 },
                 CategoryAssignments: function($stateParams, ocProductCategories) {
                     return ocProductCategories.Assignments.Get($stateParams.catalogid, $stateParams.productid);
@@ -40,5 +40,5 @@ function ProductCategoriesConfig($stateProvider) {
                     return ocCatalogTree.Get(ocCatalogCategories.Assignments.Map(CategoryList, CategoryAssignments));
                 }
             }
-        })
+        });
 }

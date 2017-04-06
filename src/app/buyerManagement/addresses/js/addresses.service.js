@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocAddresses', OrderCloudAddresses)
 ;
 
-function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
+function OrderCloudAddresses($q, $uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -25,7 +25,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                     return buyerid;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _edit(address, buyerid) {
@@ -36,13 +36,13 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
             bindToController: true,
             resolve: {
                 SelectedAddress: function() {
-                    return address
+                    return address;
                 },
                 SelectedBuyerID: function() {
                     return buyerid;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _delete(address, buyerid) {
@@ -51,8 +51,8 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
             confirmText: 'Delete address',
             type: 'delete'})
             .then(function() {
-                return sdkOrderCloud.Addresses.Delete(buyerid, address.ID)
-            })
+                return OrderCloudSDK.Addresses.Delete(buyerid, address.ID);
+            });
     }
 
     function _getAssignments(level, buyerid, usergroupid) {
@@ -61,7 +61,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
             level: level,
             pageSize: 100
         };
-        return sdkOrderCloud.Addresses.ListAssignments(buyerid, options)
+        return OrderCloudSDK.Addresses.ListAssignments(buyerid, options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -70,7 +70,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                 while(currentPage < totalPages) {
                     currentPage++;
                     options.page = currentPage;
-                    queue.push(sdkOrderCloud.Addresses.ListAssignments(buyerid, options));
+                    queue.push(OrderCloudSDK.Addresses.ListAssignments(buyerid, options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -80,7 +80,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                         df.resolve(data1.Items);
                     });
                 return df.promise;
-            })
+            });
     }
 
     function _mapAssignments(allAssignments, addressList) {
@@ -103,24 +103,24 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
             var existingAssignment = _.where(allAssignments, {AddressID:address.ID})[0];
             if (existingAssignment && (existingAssignment.IsShipping != address.shipping ||  existingAssignment.IsBilling != address.billing)) {
                 changedAssignments.push({
-                    "old": existingAssignment,
-                    "new": {
+                    'old': existingAssignment,
+                    'new': {
                         UserGroupID: existingAssignment.UserGroupID,
                         AddressID: existingAssignment.AddressID,
                         IsShipping: address.shipping,
                         IsBilling: address.billing
                     }
-                })
+                });
             } else if (!existingAssignment && (address.shipping || address.billing)) {
                 changedAssignments.push({
-                    "old": null,
-                    "new": {
+                    'old': null,
+                    'new': {
                         UserGroupID: userGroupID,
                         AddressID:address.ID,
                         IsShipping:address.shipping,
                         IsBilling:address.billing
                     }
-                })
+                });
             }
         });
 
@@ -137,7 +137,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    sdkOrderCloud.Addresses.SaveAssignment(buyerid, diff.new) // -- Create new Address Assignment
+                    OrderCloudSDK.Addresses.SaveAssignment(buyerid, diff.new) // -- Create new Address Assignment
                         .then(function() {
                             allAssignments.push(diff.new); //add the new assignment to the assignment list
                             d.resolve();
@@ -148,12 +148,12 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                         });
 
                     return d.promise;
-                })())
+                })());
             } else if (diff.new.IsBilling || diff.new.IsShipping) { // -- Update existing Address Assignment
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    sdkOrderCloud.Addresses.SaveAssignment(buyerid, diff.new)
+                    OrderCloudSDK.Addresses.SaveAssignment(buyerid, diff.new)
                         .then(function() {
                             allAssignments[allAssignments.indexOf(diff.old)] = diff.new; //replace the old assignment in the assignment list
                             d.resolve();
@@ -164,7 +164,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                         });
 
                     return d.promise;
-                })())
+                })());
             } else { // -- Delete existing Address Assignment
                 assignmentQueue.push((function() {
                     var d = $q.defer();
@@ -173,7 +173,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                         userID: diff.new.UserID,
                         userGroupID: diff.new.UserGroupID
                     };
-                    sdkOrderCloud.Addresses.DeleteAssignment(buyerid, diff.new.AddressID, options)
+                    OrderCloudSDK.Addresses.DeleteAssignment(buyerid, diff.new.AddressID, options)
                         .then(function() {
                             allAssignments.splice(allAssignments.indexOf(diff.old), 1); //remove the old assignment from the assignment list
                             d.resolve();
@@ -184,7 +184,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, sdkOrderCloud) {
                         });
 
                     return d.promise;
-                })())
+                })());
             }
         });
 

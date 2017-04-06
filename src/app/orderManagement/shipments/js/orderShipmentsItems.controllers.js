@@ -3,7 +3,7 @@ angular.module('orderCloud')
     .controller('OrderShipmentsEditItemCtrl', OrderShipmentsEditItemController)
 ;
 
-function OrderShipmentsCreateItemsController($q, $uibModalInstance, $exceptionHandler, $timeout, toastr, sdkOrderCloud, ocOrderShipmentsService, ShipmentLineItems, Shipment, OrderID, BuyerID) {
+function OrderShipmentsCreateItemsController($q, $uibModalInstance, $exceptionHandler, $timeout, toastr, OrderCloudSDK, ocOrderShipmentsService, ShipmentLineItems, Shipment, OrderID, BuyerID) {
     var vm = this;
     vm.lineItems = ShipmentLineItems;
     vm.shipment = Shipment;
@@ -16,7 +16,7 @@ function OrderShipmentsCreateItemsController($q, $uibModalInstance, $exceptionHa
 
     vm.pageChanged = function() {
         //Store line items for selections over multiple pages
-        var cachedItems = _.filter(vm.lineItems.Items, function(item) { return item.MetaPage && item.MetaPage == vm.lineItems.Meta.Page});
+        var cachedItems = _.filter(vm.lineItems.Items, function(item) { return item.MetaPage && item.MetaPage == vm.lineItems.Meta.Page;});
         if (!cachedItems.length) {
             ocOrderShipmentsService.ListLineItems(OrderID, vm.lineItems.Meta.Page, vm.lineItems.Meta.PageSize)
                 .then(function(data) {
@@ -84,7 +84,7 @@ function OrderShipmentsCreateItemsController($q, $uibModalInstance, $exceptionHa
                     dateNeeded: lineItem.DatNeeded,
                     product: product
                 };
-                queue.push(sdkOrderCloud.Shipments.SaveItem(Shipment.ID, shipmentItem));
+                queue.push(OrderCloudSDK.Shipments.SaveItem(Shipment.ID, shipmentItem));
             }
         });
 
@@ -105,7 +105,7 @@ function OrderShipmentsCreateItemsController($q, $uibModalInstance, $exceptionHa
     };
 }
 
-function OrderShipmentsEditItemController($uibModalInstance, sdkOrderCloud, ShipmentItem, ShipmentID) {
+function OrderShipmentsEditItemController($uibModalInstance, OrderCloudSDK, ShipmentItem, ShipmentID) {
     var vm = this;
     vm.shipmentItem = angular.copy(ShipmentItem);
     vm.itemID = ShipmentItem.ID;
@@ -128,7 +128,7 @@ function OrderShipmentsEditItemController($uibModalInstance, sdkOrderCloud, Ship
             dateNeeded: vm.shipmentItem.DatNeeded,
             product: product
         };
-        vm.loading = sdkOrderCloud.Shipments.SaveItem(ShipmentID, vm.shipmentItem)
+        vm.loading = OrderCloudSDK.Shipments.SaveItem(ShipmentID, vm.shipmentItem)
             .then(function(data) {
                 $uibModalInstance.close(vm.shipmentItem);
             })

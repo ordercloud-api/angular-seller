@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCatalogsCtrl', BuyerCatalogsController)
 ;
 
-function BuyerCatalogsController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, sdkOrderCloud, ocParameters, Parameters, CatalogList, SelectedBuyer) {
+function BuyerCatalogsController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, OrderCloudSDK, ocParameters, Parameters, CatalogList, SelectedBuyer) {
     var vm = this;
         var vm = this;
     vm.list = CatalogList;
@@ -52,7 +52,7 @@ function BuyerCatalogsController($exceptionHandler, $state, $stateParams, toastr
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.Catalogs.List(parameters)
+        return OrderCloudSDK.Catalogs.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;

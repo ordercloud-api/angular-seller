@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocOrderShipmentsService', OrderCloudOrderShipmentsService)
 ;
 
-function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, sdkOrderCloud) {
+function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         List: _list,
         ListLineItems: _listLineItems,
@@ -22,7 +22,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
             page: page,
             pageSize: pageSize
         };
-        sdkOrderCloud.Shipments.List(options)
+        OrderCloudSDK.Shipments.List(options)
             .then(function(data) {
                 getShipmentItems(data);
             });
@@ -34,7 +34,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
                 queue.push((function() {
                     var d = $q.defer();
 
-                    sdkOrderCloud.Shipments.ListItems(shipment.ID)
+                    OrderCloudSDK.Shipments.ListItems(shipment.ID)
                         .then(function(shipmentItems) {
                             shipment.Items = shipmentItems.Items;
                             d.resolve();
@@ -50,13 +50,13 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
         }
 
         function getLineItems(data) {
-            var lineItemIDs = _.uniq(_.flatten(_.map(data.Items, function(shipment) { return _.pluck(shipment.Items, 'LineItemID')})));
+            var lineItemIDs = _.uniq(_.flatten(_.map(data.Items, function(shipment) { return _.pluck(shipment.Items, 'LineItemID');})));
             var options = {
                 page: 1,
                 pageSize: 100,
                 filters: {ID: lineItemIDs.join('|')}
             };
-            sdkOrderCloud.LineItems.List('incoming', orderID, options)
+            OrderCloudSDK.LineItems.List('incoming', orderID, options)
                 .then(function(lineItemData) {
                     angular.forEach(data.Items, function(shipment) {
                         angular.forEach(shipment.Items, function(shipmentItem) {
@@ -70,7 +70,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
 
         function analyzeShippingAddresses(data) {
             angular.forEach(data.Items, function(shipment) {
-                var shippingAddressCount = _.uniq(_.map(shipment.Items, function(item) { return (item.LineItem.ShippingAddress ? (item.LineItem.ShippingAddress.ID ? item.LineItem.ShippingAddress.ID : item.LineItem.ShippingAddress.Street1) : item.LineItem.ShippingAddressID) })).length;
+                var shippingAddressCount = _.uniq(_.map(shipment.Items, function(item) { return (item.LineItem.ShippingAddress ? (item.LineItem.ShippingAddress.ID ? item.LineItem.ShippingAddress.ID : item.LineItem.ShippingAddress.Street1) : item.LineItem.ShippingAddressID); })).length;
                 shipment.ShippingAddress = (shippingAddressCount == 1) ? shipment.Items[0].LineItem.ShippingAddress : null;
             });
 
@@ -87,7 +87,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
             page: page,
             pageSize: pageSize
         };
-        sdkOrderCloud.LineItems.List('incoming', orderID, options)
+        OrderCloudSDK.LineItems.List('incoming', orderID, options)
             .then(function(data) {
                  analyzeShipments(data);
             });
@@ -125,7 +125,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
         };
         toAddressID ? (shipmentModel.ShipToAddressID = toAddressID) : (shipmentModel.ToAddress = toAddress);
 
-        sdkOrderCloud.Shipments.Create(shipmentModel)
+        OrderCloudSDK.Shipments.Create(shipmentModel)
             .then(function(data) {
                 createShipmentItems(data);
             });
@@ -154,7 +154,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
                             dateNeeded: lineItem.DatNeeded,
                             product: product
                         };
-                        sdkOrderCloud.Shipments.SaveItem(shipmentData.ID, shipmentItem)
+                        OrderCloudSDK.Shipments.SaveItem(shipmentData.ID, shipmentItem)
                             .then(function(item) {
                                 d.resolve(item);
                             });
@@ -186,7 +186,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
                     return buyerID;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _delete(shipmentID) {
@@ -195,7 +195,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
                 confirmText: 'Delete shipment',
                 type: 'delete'})
             .then(function() {
-                return sdkOrderCloud.Shipments.Delete(shipmentID);
+                return OrderCloudSDK.Shipments.Delete(shipmentID);
             });
     }
 
@@ -219,7 +219,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
                     return buyerID;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _editItem(item, shipmentID) {
@@ -235,7 +235,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
                     return shipmentID;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _deleteItem(shipmentID, orderID, lineItemID) {
@@ -243,7 +243,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud, s
             message:'Are you sure you want to delete this shipment item? <br>' + lineItemID,
             confirmText: 'Delete shipment item'})
             .then(function() {
-                return sdkOrderCloud.Shipments.DeleteItem(shipmentID, orderID, lineItemID);
+                return OrderCloudSDK.Shipments.DeleteItem(shipmentID, orderID, lineItemID);
             });
     }
 

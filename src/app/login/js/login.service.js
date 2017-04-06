@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('LoginService', LoginService)
 ;
 
-function LoginService($q, $window, $state, $cookies, toastr, sdkOrderCloud, ocRolesService, clientid, scope, defaultstate) {
+function LoginService($q, $window, $state, $cookies, toastr, OrderCloudSDK, ocRolesService, clientid, scope, defaultstate) {
     return {
         SendVerificationCode: _sendVerificationCode,
         ResetPassword: _resetPassword,
@@ -19,7 +19,7 @@ function LoginService($q, $window, $state, $cookies, toastr, sdkOrderCloud, ocRo
             URL: encodeURIComponent($window.location.href) + '{0}'
         };
 
-        sdkOrderCloud.PasswordResets.SendVerificationCode(passwordResetRequest)
+        OrderCloudSDK.PasswordResets.SendVerificationCode(passwordResetRequest)
             .then(function() {
                 deferred.resolve();
             })
@@ -39,7 +39,7 @@ function LoginService($q, $window, $state, $cookies, toastr, sdkOrderCloud, ocRo
             password: resetPasswordCredentials.NewPassword
         };
 
-        sdkOrderCloud.PasswordResets.ResetPassword(verificationCode, passwordReset).
+        OrderCloudSDK.PasswordResets.ResetPassword(verificationCode, passwordReset).
             then(function() {
                 deferred.resolve();
             })
@@ -59,12 +59,12 @@ function LoginService($q, $window, $state, $cookies, toastr, sdkOrderCloud, ocRo
     }
 
     function _rememberMe(currentState) {
-        var availableRefreshToken = sdkOrderCloud.GetRefreshToken() || null;
+        var availableRefreshToken = OrderCloudSDK.GetRefreshToken() || null;
 
         if (availableRefreshToken) {
-            sdkOrderCloud.Auth.RefreshToken(availableRefreshToken, clientid, scope)
+            OrderCloudSDK.Auth.RefreshToken(availableRefreshToken, clientid, scope)
                 .then(function(data) {
-                    sdkOrderCloud.Auth.SetToken(data.access_token);
+                    OrderCloudSDK.Auth.SetToken(data.access_token);
                     var redirectTo = currentState || defaultstate;
                     $state.go(redirectTo);
                 })

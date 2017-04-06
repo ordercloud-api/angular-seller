@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .service('ocCatalogCategories', OrderCloudCatalogCategoriesSerivce)
 ;
 
-function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
+function OrderCloudCatalogCategoriesSerivce($q, OrderCloudSDK) {
     var service = {
         GetAll: _getAllCategories,
         Assignments: {
@@ -11,14 +11,14 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
             Save: _saveAssignment,
             Delete: _deleteAssignment
         }
-    }
+    };
 
     function _getAllCategories(catalogID) {
         var options = {
             pageSize: 100,
             depth: 'all'
         };
-        return sdkOrderCloud.Categories.List(catalogID, options)
+        return OrderCloudSDK.Categories.List(catalogID, options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -27,7 +27,7 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
                 while(currentPage < totalPages) {
                     currentPage++;
                     options.page = currentPage;
-                    queue.push(sdkOrderCloud.Categories.List(catalogID, options));
+                    queue.push(OrderCloudSDK.Categories.List(catalogID, options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -37,7 +37,7 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
                         df.resolve(data1.Items);
                     });
                 return df.promise;
-            })
+            });
     }
 
     function _getAssignments(catalogID, buyerID, userGroupID) {
@@ -48,7 +48,7 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
             pageSize: 100,
             level: level
         };
-        return sdkOrderCloud.Categories.ListAssignments(catalogID, options)
+        return OrderCloudSDK.Categories.ListAssignments(catalogID, options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -57,7 +57,7 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
                 while(currentPage < totalPages) {
                     currentPage++;
                     options.page = currentPage;
-                    queue.push(sdkOrderCloud.Categories.ListAssignments(catalogID, options));
+                    queue.push(OrderCloudSDK.Categories.ListAssignments(catalogID, options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -67,7 +67,7 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
                         df.resolve(data1.Items);
                     });
                 return df.promise;
-            })
+            });
     }
 
     function _mapAssignments(categoryList, currentAssignments, markInherited) {
@@ -76,13 +76,13 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
         if (currentAssignments === true) {
             _.map(copiedList, function(category) {
                 category.Assigned = true;
-            })
+            });
         } else if (currentAssignments) {
             var categoryIDs = _.pluck(currentAssignments, 'CategoryID');
             _.map(copiedList, function(category) {
                 category.Assigned = categoryIDs.indexOf(category.ID) > -1;
                 if (category.Assigned && markInherited) category.Inherited = true;
-            })
+            });
         }
         return copiedList;
     }
@@ -92,12 +92,12 @@ function OrderCloudCatalogCategoriesSerivce($q, sdkOrderCloud) {
             categoryID: categoryID,
             buyerID: buyerID, 
             userGroupID: userGroupID
-        }
-        return sdkOrderCloud.Categories.SaveAssignment(catalogID, assignment);
+        };
+        return OrderCloudSDK.Categories.SaveAssignment(catalogID, assignment);
     }
 
     function _deleteAssignment(catalogID, categoryID, buyerID, userGroupID) {
-        return sdkOrderCloud.Categories.DeleteAssignment(catalogID, categoryID, buyerID, {userGroupID: userGroupID});
+        return OrderCloudSDK.Categories.DeleteAssignment(catalogID, categoryID, buyerID, {userGroupID: userGroupID});
     }
 
     return service;

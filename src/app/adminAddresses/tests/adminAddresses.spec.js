@@ -8,23 +8,23 @@ describe('Component: AdminAddresses', function(){
     beforeEach(module('orderCloud'));
     beforeEach(module('orderCloud.sdk'));
     beforeEach(module(function($provide) {
-        $provide.value('Parameters', {search:null, page: null, pageSize: null, searchOn: null, sortBy: null, userID: null, userGroupID: null, level: null, buyerID: null})
+        $provide.value('Parameters', {search:null, page: null, pageSize: null, searchOn: null, sortBy: null, userID: null, userGroupID: null, level: null, buyerID: null});
     }));
-    beforeEach(inject(function($q, $rootScope, OrderCloud, ocGeography) {
+    beforeEach(inject(function($q, $rootScope, ocGeography) {
         scope = $rootScope.$new();
         q = $q;
         adminAddress = {
-            CompanyName: "TestComp",
-            FirstName: "Test",
-            LastName: "Testing",
-            Street1: "123 4th Ave N",
-            Street2: "#200",
-            City: "Minneapolis",
-            State: "MN",
-            Zip: "55403",
-            Country: "US",
-            AddressName: "TestAddressTest",
-            ID: "TestAddress123456789"
+            CompanyName: 'TestComp',
+            FirstName: 'Test',
+            LastName: 'Testing',
+            Street1: '123 4th Ave N',
+            Street2: '#200',
+            City: 'Minneapolis',
+            State: 'MN',
+            Zip: '55403',
+            Country: 'US',
+            AddressName: 'TestAddressTest',
+            ID: 'TestAddress123456789'
         };
         adminAddressList = {
             Meta: {
@@ -53,7 +53,7 @@ describe('Component: AdminAddresses', function(){
         it('should resolve AddressList', inject(function($injector){
             $injector.invoke(state.resolve.AddressList);
             expect(oc.AdminAddresses.List).toHaveBeenCalled();
-        }))
+        }));
     });
     describe('Service: ocAdminAddresses', function(){
         var uibModal, confirm;
@@ -63,18 +63,18 @@ describe('Component: AdminAddresses', function(){
         }));
 
         describe('Create', function() {
-            it('should open adminAddressCreateModal using $uibModal')
+            it('should open adminAddressCreateModal using $uibModal');
         });
 
         describe('Edit', function() {
             it('should open adminAddressEditModal using $uibModal');
-            it('should pass the SelectedAddress to the $uibModal resolve')
+            it('should pass the SelectedAddress to the $uibModal resolve');
         });
 
         describe('Delete', function() {
             it('should call ocConfirm.Confirm');
-            it('should call OrderCloud.AdminAddresses.Delete() if they confirm')
-        })
+            it('should call OrderCloud.AdminAddresses.Delete() if they confirm');
+        });
     });
     describe('Controller: AdminAddressesCtrl', function() {
         var adminAddresses, stateSvc, toastrSvc, ocAdminAddressesSvc, ocParametersSvc;
@@ -91,7 +91,7 @@ describe('Component: AdminAddresses', function(){
                 ocParameters: ocParametersSvc,
                 AddressList: adminAddressList,
                 Parameters: Parameters
-            })
+            });
         }));
         describe('Initialize', function() {
             it('should set vm.list to AddressList');
@@ -157,17 +157,17 @@ describe('Component: AdminAddresses', function(){
                 });
             }));
             describe('Initialize', function() {
-                it ('should set vm.adminAddress to a copy of the SelectedAddress');
-                it ('should set vm.adminAddressName equal to SelectedAddress.AddressName');
-                it ('should set vm.countries and vm.states to ocGeography countries and states');
+                it('should set vm.adminAddress to a copy of the SelectedAddress');
+                it('should set vm.adminAddressName equal to SelectedAddress.AddressName');
+                it('should set vm.countries and vm.states to ocGeography countries and states');
             });
             describe('Function: vm.submit()', function() {
-                it ('should call OrderCloud.AdminAddresses.Update()');
-                it ('should close the modal with the updatedAddress');
+                it('should call OrderCloud.AdminAddresses.Update()');
+                it('should close the modal with the updatedAddress');
             });
             describe('Function: vm.cancel()', function() {
-                it ('should dismiss the modal');
-            })
+                it('should dismiss the modal');
+            });
         });
         describe('Controller: AdminAddressCreateModalCtrl', function() {
             var adminAddressCreateModalCtrl;
@@ -181,16 +181,16 @@ describe('Component: AdminAddresses', function(){
                 });
             }));
             describe('Initialize', function() {
-                it ('should set vm.adminAddress to a new object {Country:"US"}');
-                it ('should set vm.countries and vm.states to ocGeography countries and states');
+                it('should set vm.adminAddress to a new object {Country:"US"}');
+                it('should set vm.countries and vm.states to ocGeography countries and states');
             });
             describe('Function: vm.submit()', function() {
-                it ('should call OrderCloud.AdminAddresses.Create()');
-                it ('should close the modal with the newAddress');
+                it('should call OrderCloud.AdminAddresses.Create()');
+                it('should close the modal with the newAddress');
             });
             describe('Function: vm.cancel()', function() {
-                it ('should dismiss the modal');
-            })
+                it('should dismiss the modal');
+            });
         });
     });
 });

@@ -19,11 +19,11 @@ function UserGroupProductsConfig($stateProvider) {
                 UserGroupProductAssignments: function($stateParams, ocProductPricing) {
                     return ocProductPricing.Assignments.Get(null, 'group', $stateParams.usergroupid, $stateParams.buyerid, $stateParams.usergroupid);
                 },
-                ProductList: function (sdkOrderCloud, Parameters) {
+                ProductList: function (OrderCloudSDK, Parameters) {
                     Parameters.filters = angular.extend(Parameters.filters, {
                         Active: true
                     });
-                    return sdkOrderCloud.Products.List(Parameters);
+                    return OrderCloudSDK.Products.List(Parameters);
                 },
                 MappedProductList: function ($stateParams, ocProductPricing, ProductList, BuyerProductAssignments, UserGroupProductAssignments) {
                     return ocProductPricing.GetProductListPriceSchedules(ProductList, BuyerProductAssignments, UserGroupProductAssignments)

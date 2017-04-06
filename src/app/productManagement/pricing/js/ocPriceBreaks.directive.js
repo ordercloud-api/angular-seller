@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .directive('ocPriceBreaks', OrderCloudPriceBreaksDirective);
 
-function OrderCloudPriceBreaksDirective($filter, ocProductPricing, sdkOrderCloud, toastr) {
+function OrderCloudPriceBreaksDirective($filter, ocProductPricing, OrderCloudSDK, toastr) {
     var directive = {
         scope: {
             priceschedule: '='

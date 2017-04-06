@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductsCtrl', ProductsController)
 ;
 
-function ProductsController($state, toastr, sdkOrderCloud, ocParameters, ocProducts, ProductList, Parameters) {
+function ProductsController($state, toastr, OrderCloudSDK, ocParameters, ocProducts, ProductList, Parameters) {
     var vm = this;
     vm.list = ProductList;
     //Set parameters
@@ -53,7 +53,7 @@ function ProductsController($state, toastr, sdkOrderCloud, ocParameters, ocProdu
 
     function loadMore() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.Products.List(parameters)
+        return OrderCloudSDK.Products.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -65,7 +65,7 @@ function ProductsController($state, toastr, sdkOrderCloud, ocParameters, ocProdu
             .then(function(newProduct) {
                 toastr.success(newProduct.Name + ' was created.');
                 $state.go('productDetail', {productid: newProduct.ID});
-            })
+            });
     };
 
     vm.deleteProduct = function(scope) {
@@ -75,7 +75,7 @@ function ProductsController($state, toastr, sdkOrderCloud, ocParameters, ocProdu
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
                 toastr.success(scope.product.Name + ' was deleted.');
-            })
-    }
+            });
+    };
 
 }

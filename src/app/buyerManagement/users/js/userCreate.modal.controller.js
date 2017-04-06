@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserCreateModalCtrl', UserCreateModalController)
 ;
 
-function UserCreateModalController($exceptionHandler, $uibModalInstance, sdkOrderCloud, SelectedBuyerID) {
+function UserCreateModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, SelectedBuyerID) {
     var vm = this;
     vm.user = {Email: '', Password: '', Active: false};
 
@@ -10,16 +10,16 @@ function UserCreateModalController($exceptionHandler, $uibModalInstance, sdkOrde
         vm.user.TermsAccepted = new Date();
 
         vm.loading = {backdrop:false};
-        vm.loading.promise = sdkOrderCloud.Users.Create(SelectedBuyerID, vm.user)
+        vm.loading.promise = OrderCloudSDK.Users.Create(SelectedBuyerID, vm.user)
             .then(function(newUser) {
                 $uibModalInstance.close(newUser);
             })
             .catch(function(ex) {
-                $exceptionHandler(ex)
+                $exceptionHandler(ex);
             });
     };
 
     vm.cancel = function() {
         $uibModalInstance.dismiss();
-    }
+    };
 }

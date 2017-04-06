@@ -17,9 +17,9 @@ function CatalogsConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                CatalogList: function(Parameters, sdkOrderCloud) {
-                    return sdkOrderCloud.Catalogs.List(Parameters);
+                CatalogList: function(Parameters, OrderCloudSDK) {
+                    return OrderCloudSDK.Catalogs.List(Parameters);
                 }
             }
-        })
+        });
 }

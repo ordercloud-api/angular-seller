@@ -18,7 +18,7 @@ function OrderCloudUserGroups($uibModal, ocConfirm, OrderCloud) {
                     return buyerid;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _delete(userGroup, buyerid) {
@@ -27,8 +27,8 @@ function OrderCloudUserGroups($uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete user group',
                 type: 'delete'})
             .then(function() {
-                return sdkOrderCloud.UserGroups.Delete(buyerid, userGroup.ID)
-            })
+                return OrderCloudSDK.UserGroups.Delete(buyerid, userGroup.ID);
+            });
     }
 
     return service;

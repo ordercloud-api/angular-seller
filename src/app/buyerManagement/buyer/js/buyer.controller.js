@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCtrl', BuyerController)
 ;
 
-function BuyerController($state, $exceptionHandler, toastr, sdkOrderCloud, ocBuyers, SelectedBuyer){
+function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuyers, SelectedBuyer){
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.settings = angular.copy(SelectedBuyer);
@@ -12,7 +12,7 @@ function BuyerController($state, $exceptionHandler, toastr, sdkOrderCloud, ocBuy
     };
 
     vm.updateBuyer = function() {
-        vm.updateLoading = sdkOrderCloud.Buyers.Update(SelectedBuyer.ID, vm.settings)
+        vm.updateLoading = OrderCloudSDK.Buyers.Update(SelectedBuyer.ID, vm.settings)
             .then(function(data) {
                 vm.selectedBuyer = data;
                 vm.settings = angular.copy(data);

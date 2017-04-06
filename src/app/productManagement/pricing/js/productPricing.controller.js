@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductPricingCtrl', ProductPricingController)
     .controller('PriceScheduleEditModalCtrl', PriceScheduleEditModalController);
 
-function ProductPricingController($q, $rootScope, $stateParams, $uibModal, toastr, AssignmentList, AssignmentData, ocProductPricing, ocConfirm, OrderCloud, SelectedProduct) {
+function ProductPricingController($q, $rootScope, $stateParams, $uibModal, toastr, AssignmentList, AssignmentData, ocProductPricing, ocConfirm, SelectedProduct) {
     var vm = this;
     vm.list = AssignmentList;
     vm.listAssignments = AssignmentData;
@@ -63,7 +63,7 @@ function ProductPricingController($q, $rootScope, $stateParams, $uibModal, toast
     };
 }
 
-function PriceScheduleEditModalController($q, $uibModalInstance, sdkOrderCloud, SelectedPriceSchedule, IsDefault, ocProductPricing) {
+function PriceScheduleEditModalController($q, $uibModalInstance, OrderCloudSDK, SelectedPriceSchedule, IsDefault, ocProductPricing) {
     var vm = this;
     vm.data = angular.copy(SelectedPriceSchedule);
     vm.priceScheduleName = SelectedPriceSchedule.Name;
@@ -86,7 +86,7 @@ function PriceScheduleEditModalController($q, $uibModalInstance, sdkOrderCloud, 
 
         angular.forEach(current, function (price, quantity) {
             if (!previous[quantity] || (previous[quantity] && previous[quantity] !== price)) {
-                createQueue.push(sdkOrderCloud.PriceSchedules.SavePriceBreak(SelectedPriceSchedule.ID, {
+                createQueue.push(OrderCloudSDK.PriceSchedules.SavePriceBreak(SelectedPriceSchedule.ID, {
                     Quantity: quantity,
                     Price: price
                 }));
@@ -94,14 +94,14 @@ function PriceScheduleEditModalController($q, $uibModalInstance, sdkOrderCloud, 
         });
 
         angular.forEach(previous, function (price, quantity) {
-            if (!current[quantity]) deleteQueue.push(sdkOrderCloud.PriceSchedules.DeletePriceBreak(SelectedPriceSchedule.ID, quantity));
+            if (!current[quantity]) deleteQueue.push(OrderCloudSDK.PriceSchedules.DeletePriceBreak(SelectedPriceSchedule.ID, quantity));
         });
 
         vm.loading = $q.all(createQueue)
             .then(function () {
                 return $q.all(deleteQueue)
                     .then(function () {
-                        return sdkOrderCloud.PriceSchedules.Update(SelectedPriceSchedule.ID, vm.data)
+                        return OrderCloudSDK.PriceSchedules.Update(SelectedPriceSchedule.ID, vm.data)
                             .then(function (updatedPriceSchedule) {
                                 ocProductPricing.PriceBreaks.FormatQuantities(updatedPriceSchedule.PriceBreaks);
                                 $uibModalInstance.close(updatedPriceSchedule);

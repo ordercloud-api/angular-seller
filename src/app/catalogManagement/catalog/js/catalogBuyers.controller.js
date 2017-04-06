@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CatalogBuyersCtrl', CatalogBuyersController)
 ;
 
-function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, sdkOrderCloud, SelectedCatalog, ocParameters, Parameters, BuyerList, CurrentAssignments) {
+function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, OrderCloudSDK, SelectedCatalog, ocParameters, Parameters, BuyerList, CurrentAssignments) {
     var vm = this;
     vm.list = BuyerList;
     vm.parameters = Parameters;
@@ -51,7 +51,7 @@ function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.Buyers.List(parameters)
+        return OrderCloudSDK.Buyers.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -70,7 +70,7 @@ function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr
 
     vm.selectAllItems = function() {
         vm.allItemsSelected = !vm.allItemsSelected;
-        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected });
+        _.map(vm.list.Items, function(i) { i.Assigned = vm.allItemsSelected; });
 
         changedCheck();
     };
@@ -101,7 +101,7 @@ function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr
                 selectedCheck();
 
                 toastr.success('Catalog assignments updated.');
-            })
+            });
     };
 
     vm.updateAssignment = function(buyer, type) {

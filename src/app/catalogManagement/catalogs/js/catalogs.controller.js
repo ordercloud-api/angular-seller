@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CatalogsCtrl', CatalogsController)
 ;
 
-function CatalogsController($exceptionHandler, $state, toastr, ocCatalogs, sdkOrderCloud, ocParameters, Parameters, CatalogList) {
+function CatalogsController($exceptionHandler, $state, toastr, ocCatalogs, OrderCloudSDK, ocParameters, Parameters, CatalogList) {
     var vm = this;
         var vm = this;
     vm.list = CatalogList;
@@ -52,7 +52,7 @@ function CatalogsController($exceptionHandler, $state, toastr, ocCatalogs, sdkOr
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.Catalogs.List(parameters)
+        return OrderCloudSDK.Catalogs.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -64,7 +64,7 @@ function CatalogsController($exceptionHandler, $state, toastr, ocCatalogs, sdkOr
             .then(function(data) {
                 toastr.success(data.Name + ' was created.');
                 $state.go('buyer', {buyerid: data.ID});
-            })
+            });
     };
 
     vm.deleteCatalog = function(scope) {
@@ -77,6 +77,6 @@ function CatalogsController($exceptionHandler, $state, toastr, ocCatalogs, sdkOr
             })
             .catch(function(ex) {
                 $exceptionHandler(ex);
-            })
-    }
+            });
+    };
 }

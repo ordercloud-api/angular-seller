@@ -99,16 +99,16 @@ function OrderShipmentsCreateController($state, $stateParams, $timeout, toastr, 
     var vm = this;
     vm.lineItems = ShipmentLineItems;
     vm.selectedLineItemPage = ShipmentLineItems.Meta.Page;
-    _.each(vm.lineItems.Items, function(item) { item.MetaPage = vm.lineItems.Meta.Page});
+    _.each(vm.lineItems.Items, function(item) { item.MetaPage = vm.lineItems.Meta.Page;});
 
     vm.pageChanged = function() {
         //Store line items for selections over multiple pages
-        var cachedItems = _.filter(vm.lineItems.Items, function(item) { return item.MetaPage && item.MetaPage == vm.lineItems.Meta.Page});
+        var cachedItems = _.filter(vm.lineItems.Items, function(item) { return item.MetaPage && item.MetaPage == vm.lineItems.Meta.Page;});
         if (!cachedItems.length) {
             ocOrderShipmentsService.ListLineItems($stateParams.orderid, vm.lineItems.Meta.Page, vm.lineItems.Meta.PageSize)
                 .then(function(data) {
                     vm.selectedLineItemPage = data.Meta.Page;
-                    _.each(data.Items, function(item) { item.MetaPage = data.Meta.Page });
+                    _.each(data.Items, function(item) { item.MetaPage = data.Meta.Page; });
                     vm.lineItems.Items = vm.lineItems.Items.concat(data.Items);
                 });
         }
@@ -156,7 +156,7 @@ function OrderShipmentsCreateController($state, $stateParams, $timeout, toastr, 
     };
 }
 
-function OrderShipmentsEditController($uibModalInstance, sdkOrderCloud, OrderShipment) {
+function OrderShipmentsEditController($uibModalInstance, OrderCloudSDK, OrderShipment) {
     var vm = this;
     vm.shipment = angular.copy(OrderShipment);
     vm.shipmentID = OrderShipment.ID;
@@ -182,7 +182,7 @@ function OrderShipmentsEditController($uibModalInstance, sdkOrderCloud, OrderShi
         var toAddressID = partial.ShippingAddress ? partial.ShippingAddress.ID : null;
         var toAddress = partial.ShippingAddress;
         toAddressID ? (shipmentPartial.toAddressID = toAddressID) : (shipmentPartial.toAddress = toAddress);
-        vm.loading = sdkOrderCloud.Shipments.Patch(OrderShipment.ID, shipmentPartial)
+        vm.loading = OrderCloudSDK.Shipments.Patch(OrderShipment.ID, shipmentPartial)
             .then(function(data) {
                 var result = _.pick(data, ['ID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered']);
                 result.OriginalShipmentID = OrderShipment.ID;

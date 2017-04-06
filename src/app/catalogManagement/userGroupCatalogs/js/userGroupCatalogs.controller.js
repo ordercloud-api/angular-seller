@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserGroupCatalogsCtrl', UserGroupCatalogsController)
 ;
 
-function UserGroupCatalogsController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, sdkOrderCloud, ocParameters, Parameters, CatalogList, SelectedUserGroup) {
+function UserGroupCatalogsController($exceptionHandler, $state, $stateParams, toastr, ocCatalog, OrderCloudSDK, ocParameters, Parameters, CatalogList, SelectedUserGroup) {
     var vm = this;
     vm.list = CatalogList;
     vm.parameters = Parameters;
@@ -51,7 +51,7 @@ function UserGroupCatalogsController($exceptionHandler, $state, $stateParams, to
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.Catalogs.List(parameters)
+        return OrderCloudSDK.Catalogs.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;

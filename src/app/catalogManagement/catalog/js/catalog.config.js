@@ -1,5 +1,5 @@
 angular.module('orderCloud')
-    .config(CatalogConfig)
+    .config(CatalogConfig);
 
 function CatalogConfig($stateProvider) {
     $stateProvider
@@ -11,8 +11,8 @@ function CatalogConfig($stateProvider) {
             controller: 'CatalogCtrl',
             controllerAs: 'catalog',
             resolve: {
-                SelectedCatalog: function($stateParams, sdkOrderCloud) {
-                    return sdkOrderCloud.Catalogs.Get($stateParams.catalogid);
+                SelectedCatalog: function($stateParams, OrderCloudSDK) {
+                    return OrderCloudSDK.Catalogs.Get($stateParams.catalogid);
                 }
             }
         })
@@ -28,8 +28,8 @@ function CatalogConfig($stateProvider) {
                 CurrentAssignments: function($stateParams, ocCatalog) {
                     return ocCatalog.Assignments.Get($stateParams.catalogid);
                 },
-                BuyerList: function(sdkOrderCloud, ocCatalog, Parameters, CurrentAssignments) {
-                    return sdkOrderCloud.Buyers.List(Parameters)
+                BuyerList: function(OrderCloudSDK, ocCatalog, Parameters, CurrentAssignments) {
+                    return OrderCloudSDK.Buyers.List(Parameters)
                         .then(function(data) {
                             return ocCatalog.Assignments.Map(CurrentAssignments, data);
                         });
@@ -63,8 +63,8 @@ function CatalogConfig($stateProvider) {
             controller: 'CatalogCategoryCtrl',
             controllerAs: 'catalogCategory',
             resolve: {
-                SelectedCategory: function($stateParams, sdkOrderCloud) {
-                    return sdkOrderCloud.Categories.Get($stateParams.catalogid, $stateParams.categoryid);
+                SelectedCategory: function($stateParams, OrderCloudSDK) {
+                    return OrderCloudSDK.Categories.Get($stateParams.catalogid, $stateParams.categoryid);
                 }
             }
         })
@@ -80,11 +80,11 @@ function CatalogConfig($stateProvider) {
                 CurrentAssignments: function($q, $stateParams, ocCatalog) {
                     return ocCatalog.Products.GetAssignments($stateParams.categoryid, $stateParams.catalogid);
                 },
-                ProductList: function(sdkOrderCloud, ocCatalog, Parameters, CurrentAssignments) {
-                    return sdkOrderCloud.Products.List(Parameters)
+                ProductList: function(OrderCloudSDK, ocCatalog, Parameters, CurrentAssignments) {
+                    return OrderCloudSDK.Products.List(Parameters)
                         .then(function(data) {
                             return ocCatalog.Products.MapAssignments(CurrentAssignments, data);
-                        })
+                        });
                 }
             }
         })

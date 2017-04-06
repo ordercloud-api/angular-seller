@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UsersCtrl', UsersController)
 ;
 
-function UsersController($state, $stateParams, toastr, $ocMedia, sdkOrderCloud, ocUsers, ocParameters, UserList, Parameters) {
+function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloudSDK, ocUsers, ocParameters, UserList, Parameters) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
@@ -50,8 +50,8 @@ function UsersController($state, $stateParams, toastr, $ocMedia, sdkOrderCloud, 
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1})
-        return sdkOrderCloud.Users.List($stateParams.buyerid, Parameters)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return OrderCloudSDK.Users.List($stateParams.buyerid, Parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -63,7 +63,7 @@ function UsersController($state, $stateParams, toastr, $ocMedia, sdkOrderCloud, 
             .then(function(updatedUser) {
                 vm.list.Items[scope.$index] = updatedUser;
                 toastr.success(updatedUser.Username + ' was updated.');
-            })
+            });
     };
 
     vm.createUser = function() {
@@ -73,7 +73,7 @@ function UsersController($state, $stateParams, toastr, $ocMedia, sdkOrderCloud, 
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
                 toastr.success(newUser.Username + ' was created.');
-            })
+            });
     };
 
     vm.deleteUser = function(scope) {
@@ -83,6 +83,6 @@ function UsersController($state, $stateParams, toastr, $ocMedia, sdkOrderCloud, 
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-            })
+            });
     };
 }

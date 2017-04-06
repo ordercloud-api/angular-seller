@@ -20,11 +20,11 @@ function BuyerCatalogsConfig($stateProvider) {
                 CurrentAssignments: function($stateParams, ocCatalog) {
                     return ocCatalog.Assignments.Get(null, $stateParams.buyerid);
                 },
-                CatalogList: function(Parameters, CurrentAssignments, sdkOrderCloud) {
+                CatalogList: function(Parameters, CurrentAssignments, OrderCloudSDK) {
                     var catalogIDs = _.pluck(CurrentAssignments, 'CatalogID');
                     Parameters.filters.ID = catalogIDs.join('|');
                     Parameters.pageSize = 100;
-                    return sdkOrderCloud.Catalogs.List(Parameters)
+                    return OrderCloudSDK.Catalogs.List(Parameters)
                         .then(function(data) {
                             angular.forEach(data.Items, function(catalog) {
                                 var assignment = _.findWhere(CurrentAssignments, {CatalogID: catalog.ID});
@@ -32,8 +32,8 @@ function BuyerCatalogsConfig($stateProvider) {
                                 catalog.ViewAllCategories = assignment.ViewAllCategories;
                             });
                             return data;
-                        })
+                        });
                 }
             }
-        })
+        });
 }

@@ -14,13 +14,13 @@ function ProductDetailConfig($stateProvider) {
                 pageTitle: 'Product Info'
             },
             resolve: {
-                SelectedProduct: function ($stateParams, sdkOrderCloud) {
-                    return sdkOrderCloud.Products.Get($stateParams.productid)
+                SelectedProduct: function ($stateParams, OrderCloudSDK) {
+                    return OrderCloudSDK.Products.Get($stateParams.productid)
                         .then(function(product) {
                             if (!product.DefaultPriceScheduleID) {
                                 return product;
                             } else {
-                                return sdkOrderCloud.PriceSchedules.Get(product.DefaultPriceScheduleID)
+                                return OrderCloudSDK.PriceSchedules.Get(product.DefaultPriceScheduleID)
                                     .then(function(priceSchedule) {
                                         product.DefaultPriceSchedule = priceSchedule;
                                         return product;

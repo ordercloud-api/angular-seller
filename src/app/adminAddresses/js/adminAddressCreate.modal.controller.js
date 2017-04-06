@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('AdminAddressCreateModalCtrl', AdminAddressCreateModalController);
 
-function AdminAddressCreateModalController($timeout, $uibModalInstance, $exceptionHandler, $scope, sdkOrderCloud, ocGeography) {
+function AdminAddressCreateModalController($timeout, $uibModalInstance, $exceptionHandler, $scope, OrderCloudSDK, ocGeography) {
     var vm = this;
     vm.adminAddress = {
         Country: 'US' // this is to default 'create' addresses to the country US
@@ -21,7 +21,7 @@ function AdminAddressCreateModalController($timeout, $uibModalInstance, $excepti
     });
 
     vm.submit = function () {
-        vm.loading = sdkOrderCloud.AdminAddresses.Create(vm.adminAddress)
+        vm.loading = OrderCloudSDK.AdminAddresses.Create(vm.adminAddress)
             .then(function (newAddress) {
                 $uibModalInstance.close(newAddress);
             })

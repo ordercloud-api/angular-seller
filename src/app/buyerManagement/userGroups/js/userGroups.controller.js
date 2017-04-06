@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserGroupsCtrl', UserGroupsController)
 ;
 
-function UserGroupsController($state, $stateParams, toastr, ocUserGroups, sdkOrderCloud, ocParameters, UserGroupList, Parameters) {
+function UserGroupsController($state, $stateParams, toastr, ocUserGroups, OrderCloudSDK, ocParameters, UserGroupList, Parameters) {
     var vm = this;
     vm.list = UserGroupList;
     vm.parameters = Parameters;
@@ -51,7 +51,7 @@ function UserGroupsController($state, $stateParams, toastr, ocUserGroups, sdkOrd
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, vm.list.Meta.Page + 1);
-        return sdkOrderCloud.UserGroups.List($stateParams.buyerid, Parameters)
+        return OrderCloudSDK.UserGroups.List($stateParams.buyerid, Parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -63,7 +63,7 @@ function UserGroupsController($state, $stateParams, toastr, ocUserGroups, sdkOrd
             .then(function(newUserGroup) {
                 toastr.success(newUserGroup.Name + ' was created.');
                 $state.go('userGroup', {usergroupid:newUserGroup.ID});
-            })
+            });
     };
 
     vm.deleteGroup = function(scope) {
@@ -73,6 +73,6 @@ function UserGroupsController($state, $stateParams, toastr, ocUserGroups, sdkOrd
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-            })
+            });
     };
 }

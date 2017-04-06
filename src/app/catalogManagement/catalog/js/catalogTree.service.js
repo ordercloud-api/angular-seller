@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocCatalogTree', OrderCloudCatalogTreeService)
     .config(OrderCloudCatalogTreeConfig)
 ;
-function OrderCloudCatalogTreeService($q, sdkOrderCloud) {
+function OrderCloudCatalogTreeService($q, OrderCloudSDK) {
     return {
         Get: _getTree,
         UpdateCategoryNode: update
@@ -64,7 +64,7 @@ function OrderCloudCatalogTreeService($q, sdkOrderCloud) {
                 nodeQueue = [];
             angular.forEach(nodeList, function(cat, index) {
                 nodeQueue.push((function() {
-                    return sdkOrderCloud.Categories.Patch(catalogid, cat.ID, {listOrder: index});
+                    return OrderCloudSDK.Categories.Patch(catalogid, cat.ID, {listOrder: index});
                 }));
             });
 
@@ -95,7 +95,7 @@ function OrderCloudCatalogTreeService($q, sdkOrderCloud) {
                 parentID = null;
             }
             event.source.nodeScope.node.ParentID = parentID;
-            sdkOrderCloud.Categories.Update(catalogid, event.source.nodeScope.node.ID, event.source.nodeScope.node)
+            OrderCloudSDK.Categories.Update(catalogid, event.source.nodeScope.node.ID, event.source.nodeScope.node)
                 .then(function() {
                     deferred.resolve();
                 });

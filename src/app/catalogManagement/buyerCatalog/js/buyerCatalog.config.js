@@ -14,15 +14,15 @@ function BuyerCatalogConfig($stateProvider) {
                 pageTitle: 'Buyer Catalog'
             },
             resolve: {
-                SelectedCatalog: function($stateParams, sdkOrderCloud) {
-                    return sdkOrderCloud.Catalogs.Get($stateParams.catalogid);
+                SelectedCatalog: function($stateParams, OrderCloudSDK) {
+                    return OrderCloudSDK.Catalogs.Get($stateParams.catalogid);
                 },
-                CatalogAssignment: function($stateParams, sdkOrderCloud) {
+                CatalogAssignment: function($stateParams, OrderCloudSDK) {
                     var options = {
                         catalogID: $stateParams.catalogid,
                         buyerID: $stateParams.buyerid
-                    }
-                    return sdkOrderCloud.Catalogs.ListAssignments(options)
+                    };
+                    return OrderCloudSDK.Catalogs.ListAssignments(options)
                         .then(function(data) {
                             return data.Items[0];
                         });
@@ -37,5 +37,5 @@ function BuyerCatalogConfig($stateProvider) {
                     return ocCatalogTree.Get(ocCatalogCategories.Assignments.Map(CategoryList, CatalogAssignment.ViewAllCategories ? true : CategoryAssignments));
                 }
             }
-        })
+        });
 }

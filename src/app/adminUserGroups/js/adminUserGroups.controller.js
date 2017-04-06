@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminUserGroupsCtrl', AdminUserGroupsController)
 ;
 
-function AdminUserGroupsController($state, toastr, sdkOrderCloud, ocAdminUserGroups, ocParameters, AdminUserGroupList, Parameters){
+function AdminUserGroupsController($state, toastr, OrderCloudSDK, ocAdminUserGroups, ocParameters, AdminUserGroupList, Parameters){
     var vm = this;
     vm.list = AdminUserGroupList;
     vm.parameters = Parameters;
@@ -51,7 +51,7 @@ function AdminUserGroupsController($state, toastr, sdkOrderCloud, ocAdminUserGro
     //load the next page of results with all the same parameters
     vm.loadMore = function() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
-        return sdkOrderCloud.AdminUserGroups.List(parameters)
+        return OrderCloudSDK.AdminUserGroups.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -73,6 +73,6 @@ function AdminUserGroupsController($state, toastr, sdkOrderCloud, ocAdminUserGro
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
                 toastr.success(scope.adminUserGroup.Name + ' was deleted.');
-            })
-    }
+            });
+    };
 }

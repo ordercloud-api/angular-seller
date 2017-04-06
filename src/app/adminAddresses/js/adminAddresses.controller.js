@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AdminAddressesCtrl', AdminAddressesController)
 ;
 
-function AdminAddressesController($state, toastr, sdkOrderCloud, ocAdminAddresses, ocParameters, AddressList, Parameters){
+function AdminAddressesController($state, toastr, OrderCloudSDK, ocAdminAddresses, ocParameters, AddressList, Parameters){
     var vm = this;
     vm.list = AddressList;
     vm.parameters = Parameters;
@@ -50,8 +50,8 @@ function AdminAddressesController($state, toastr, sdkOrderCloud, ocAdminAddresse
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1})
-        return sdkOrderCloud.AdminAddresses.List(parameters)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return OrderCloudSDK.AdminAddresses.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -83,6 +83,6 @@ function AdminAddressesController($state, toastr, sdkOrderCloud, ocAdminAddresse
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
                 toastr.success(scope.adminAddress.AddressName + ' was deleted.');
-            })
-    }
+            });
+    };
 }

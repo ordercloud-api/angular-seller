@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('SecurityCtrl', SecurityController)
 ;
 
-function SecurityController($exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, sdkOrderCloud) {
+function SecurityController($exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, OrderCloudSDK) {
     var vm = this;
     vm.assignments = Assignments;
     vm.profiles = AvailableProfiles;
@@ -16,8 +16,8 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
                 securityProfileID: scope.profile.ID,
                 buyerID: $stateParams.buyerid,
                 userGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
-            }
-            sdkOrderCloud.SecurityProfiles.SaveAssignment(assignment)
+            };
+            OrderCloudSDK.SecurityProfiles.SaveAssignment(assignment)
                 .then(function() {
                     toastr.success(scope.profile.Name + ' was enabled.');
                 })
@@ -30,7 +30,7 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
                 buyerID: $stateParams.buyerid,
                 userGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
             };
-            sdkOrderCloud.SecurityProfiles.DeleteAssignment(scope.profile.ID, options)
+            OrderCloudSDK.SecurityProfiles.DeleteAssignment(scope.profile.ID, options)
                 .then(function() {
                     toastr.success(scope.profile.Name + ' was disabled.');
                 })
@@ -39,5 +39,5 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
                     $exceptionHandler(ex);
                 });
         }
-    }
+    };
 }

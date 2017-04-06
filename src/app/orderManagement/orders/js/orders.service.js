@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocOrdersService', OrderCloudOrdersService)
 ;
 
-function OrderCloudOrdersService($q, $filter, sdkOrderCloud) {
+function OrderCloudOrdersService($q, $filter, OrderCloudSDK) {
     var service = {
         List: _list
     };
@@ -27,7 +27,7 @@ function OrderCloudOrdersService($q, $filter, sdkOrderCloud) {
         //TODO: uncomment when ! operator is fixed in API
         //angular.extend(parameters.filters, {status: '!Unsubmitted'});
 
-        sdkOrderCloud.Orders.List('incoming', parameters)
+        OrderCloudSDK.Orders.List('incoming', parameters)
             .then(function(data) {
                 gatherBuyerCompanies(data);
             });
@@ -38,8 +38,8 @@ function OrderCloudOrdersService($q, $filter, sdkOrderCloud) {
                 page: 1,
                 pageSize: 100,
                 filters: {ID: buyerIDs.join('|')}
-            }
-            sdkOrderCloud.Buyers.List(options)
+            };
+            OrderCloudSDK.Buyers.List(options)
                 .then(function(buyerData) {
                     _.map(data.Items, function(order) {
                         order.FromCompany = _.findWhere(buyerData.Items, {ID: order.FromCompanyID});

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocAdminAddresses', OrderCloudAdminAddresses)
 ;
 
-function OrderCloudAdminAddresses($uibModal, ocConfirm, sdkOrderCloud) {
+function OrderCloudAdminAddresses($uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -14,7 +14,7 @@ function OrderCloudAdminAddresses($uibModal, ocConfirm, sdkOrderCloud) {
             templateUrl: 'adminAddresses/templates/adminAddressCreate.modal.html',
             controller: 'AdminAddressCreateModalCtrl',
             controllerAs: 'adminAddressCreateModal'
-        }).result
+        }).result;
     }
 
     function _edit(address) {
@@ -24,10 +24,10 @@ function OrderCloudAdminAddresses($uibModal, ocConfirm, sdkOrderCloud) {
             controllerAs: 'adminAddressEditModal',
             resolve: {
                 SelectedAddress: function() {
-                    return address
+                    return address;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _delete(address) {
@@ -36,8 +36,8 @@ function OrderCloudAdminAddresses($uibModal, ocConfirm, sdkOrderCloud) {
                 confirmText: 'Delete admin address',
                 type: 'delete'})
             .then(function() {
-                return sdkOrderCloud.AdminAddresses.Delete(address.ID)
-            })
+                return OrderCloudSDK.AdminAddresses.Delete(address.ID);
+            });
     }
 
     return service;

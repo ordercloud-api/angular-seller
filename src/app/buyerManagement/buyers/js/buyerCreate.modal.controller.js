@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCreateModalCtrl', BuyerCreateModalController)
 ;
 
-function BuyerCreateModalController($uibModalInstance, $exceptionHandler, sdkOrderCloud) {
+function BuyerCreateModalController($uibModalInstance, $exceptionHandler, OrderCloudSDK) {
     var vm = this;
     vm.submit = submit;
     vm.cancel = cancel;
@@ -13,7 +13,7 @@ function BuyerCreateModalController($uibModalInstance, $exceptionHandler, sdkOrd
     }
 
     function submit() {
-        vm.loading = sdkOrderCloud.Buyers.Create(vm.buyer)
+        vm.loading = OrderCloudSDK.Buyers.Create(vm.buyer)
             .then(function(data) {
                 $uibModalInstance.close(data);
             })

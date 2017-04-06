@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserGroupProductsCtrl', UserGroupProductsController)
 ;
 
-function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams, $uibModal, $filter, toastr, OrderCloud, sdkOrderCloud, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, SelectedUserGroup, ProductList, Parameters, MappedProductList, BuyerProductAssignments, UserGroupProductAssignments) {
+function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams, $uibModal, $filter, toastr, OrderCloudSDK, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, SelectedUserGroup, ProductList, Parameters, MappedProductList, BuyerProductAssignments, UserGroupProductAssignments) {
     var vm = this;
     vm.list = MappedProductList;
     //Set parameters
@@ -56,7 +56,7 @@ function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams
 
     function loadMore() {
         var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1, filters:{Active:undefined}});
-        return sdkOrderCloud.Products.List(parameters)
+        return OrderCloudSDK.Products.List(parameters)
             .then(function (data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;

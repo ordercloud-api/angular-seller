@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocProductSpecs', ocProductsSpecsService)
 ;
 
-function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
+function ocProductsSpecsService($q, $uibModal, OrderCloudSDK, ocConfirm) {
     var service = {
         ProductSpecsDetail: _productSpecsDetail,
         UpdateSpecListOrder: _updateSpecListOrder,
@@ -25,7 +25,7 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
             page: 1,
             pageSize: 100
         };
-        sdkOrderCloud.Specs.ListProductAssignments(options)
+        OrderCloudSDK.Specs.ListProductAssignments(options)
             .then(function(data) {
                 if (data.Items.length) {
                     getSpecs(data);
@@ -40,7 +40,7 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
                 pageSize: 100,
                 filters: {ID: _.pluck(data.Items, 'SpecID').join('|')}
             };
-            sdkOrderCloud.Specs.List(options)
+            OrderCloudSDK.Specs.List(options)
                 .then(function(details) {
                     getSpecOptions(data, details);
                 });
@@ -58,7 +58,7 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
                             page: 1,
                             pageSize: 100
                         };
-                        sdkOrderCloud.Specs.ListOptions(specAssignment.Spec.ID, options)
+                        OrderCloudSDK.Specs.ListOptions(specAssignment.Spec.ID, options)
                             .then(function(oData) {
                                 specAssignment.Options = oData.Items;
                                 _.map(specAssignment.Options, function(option) { option.DefaultOption = (specAssignment.DefaultOptionID == option.ID); });
@@ -85,7 +85,7 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
 
         angular.forEach(nodeList, function(node, index) {
             queue.push((function() {
-                return sdkOrderCloud.Specs.Patch(node.Spec.ID, {listOrder: index});
+                return OrderCloudSDK.Specs.Patch(node.Spec.ID, {listOrder: index});
             }));
         });
 
@@ -114,7 +114,7 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
 
         angular.forEach(nodeList, function(node, index) {
             queue.push((function() {
-                return sdkOrderCloud.Specs.PatchOption(specID, node.ID, {listOrder: index});
+                return OrderCloudSDK.Specs.PatchOption(specID, node.ID, {listOrder: index});
             }));
         });
 
@@ -168,7 +168,7 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
                 confirmText: 'Delete spec',
                 type: 'delete'})
             .then(function() {
-                return sdkOrderCloud.Specs.Delete(specID);
+                return OrderCloudSDK.Specs.Delete(specID);
             });
     }
 
@@ -215,7 +215,7 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
                 confirmText: 'Delete spec option',
                 type: 'delete'})
             .then(function() {
-                return sdkOrderCloud.Specs.DeleteOption(specID, specOptionID);
+                return OrderCloudSDK.Specs.DeleteOption(specID, specOptionID);
             });
     }
 

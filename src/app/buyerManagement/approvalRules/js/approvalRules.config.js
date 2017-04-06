@@ -17,8 +17,8 @@ function ApprovalRulesConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                ApprovalRuleList: function(sdkOrderCloud, Parameters) {
-                    return sdkOrderCloud.ApprovalRules.List(Parameters.buyerid, Parameters);
+                ApprovalRuleList: function(OrderCloudSDK, Parameters) {
+                    return OrderCloudSDK.ApprovalRules.List(Parameters.buyerid, Parameters);
                 }
             }
         })
