@@ -1,8 +1,18 @@
 {
-  "name": "ordercloud-seed",
-  "version": "1.0.0",
-  "description": "A seed project for custom Four51 Solutions built on AngularJS",
-  "main": "app.module.js",
+  "name": "angular-seller-application",
+  "version": "1.0.44-staging",
+  "description": "A fully functional, open source starter application built for seller users on the OrderCloud.io platform",
+  "author": "Four51, Inc.",
+  "homepage": "https://github.com/ordercloud-api/angular-seller",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ordercloud-api/angular-seller.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ordercloud-api/angular-seller/issues"
+  },
+  "license": "MIT",
+  "main": "index",
   "engines": {
     "node": "5.6.0",
     "npm": "3.6.0"
@@ -18,10 +28,6 @@
     "build-all": "gulp inject index --gulpfile ./heroku.gulpfile.js",
     "test": "gulp test:unit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ordercloud-api/angular-admin.git"
-  },
   "keywords": [
     "OrderCloud",
     "Four51",
@@ -29,12 +35,6 @@
     "Angular",
     "B2B"
   ],
-  "author": "Four51 Inc.",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ordercloud-api/angular-admin/issues"
-  },
-  "homepage": "https://github.com/ordercloud-api/angular-admin",
   "dependencies": {
     "browser-sync": "2.11.1",
     "del": "2.2.0",

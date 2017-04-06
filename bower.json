@@ -1,20 +1,25 @@
 {
-  "name": "OrderCloud-Seed",
-  "authors": [
-    "Four51"
-  ],
-  "description": "A seed project for custom Four51 Solutions built on AngularJS",
+  "name": "angular seller application",
+  "author": "Four51, Inc.",
+  "homepage": "https://github.com/ordercloud-api/angular-seller",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ordercloud-api/angular-seller.git"
+  },
+  "description": "A fully functional, open source starter application built for seller users on the OrderCloud.io platform",
   "main": "index",
   "moduleType": [],
   "keywords": [
     "OrderCloud",
+    "OrderCloud.io",
     "Four51",
     "AngularJS",
     "Angular",
-    "B2B"
+    "Seller",
+    "B2B",
+    "API"
   ],
   "license": "MIT",
-  "homepage": "https://devcenter.ordercloud.io/home",
   "ignore": [
     "**/.*",
     "node_modules",
