@@ -10,10 +10,6 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, ocConfirm) {
         EditPrice: _editPrice,
         DeletePrice: _deletePrice,
         PriceBreaks: {
-            Create: _createPriceBreak,
-            Edit: _editPriceBreak,
-            SetMinMax: _setMinMax,
-            Delete: _deletePriceBreak,
             FormatQuantities: _formatQuantities
         },
         GetProductListPriceSchedules: _getProductListPriceSchedules,
