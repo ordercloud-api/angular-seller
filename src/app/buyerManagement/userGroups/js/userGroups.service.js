@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocUserGroups', OrderCloudUserGroups)
 ;
 
-function OrderCloudUserGroups($uibModal, ocConfirm, OrderCloud) {
+function OrderCloudUserGroups($uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         Delete: _delete
