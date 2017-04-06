@@ -36,7 +36,7 @@
 				<input id="Username" name="Username" ng-change="account.usernameChange()" type="text" class="form-control" ng-model="account.profile.Username"
 				    required>
 				<p class="help-block">Your user ID is <code>{{account.profile.ID}}</code> and can be changed
-					<a ui-sref="adminUsers" oc-if-roles="AdminUserReader || AdminUserAdmin">in admin users</a>
+					<a ui-sref="sellerUsers" oc-if-roles="AdminUserReader || AdminUserAdmin">in admin users</a>
 					<span ng-if="!application.userIsAuthorized(['AdminUserReader', 'AdminUserAdmin'], true)">by the site administrator.</span>
 				</p>
 			</fieldset>

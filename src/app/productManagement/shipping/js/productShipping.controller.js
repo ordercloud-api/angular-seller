@@ -20,7 +20,7 @@ function ProductShippingController(toastr, OrderCloudSDK, ocRolesService) {
         if (ocRolesService.UserIsAuthorized(['AddressAdmin'])) {
             return OrderCloudSDK.AdminAddresses.List({search: search})
                 .then(function(data){
-                    vm.adminAddresses = data;
+                    vm.sellerAddresses = data;
                 });
         }
     }

@@ -28,13 +28,13 @@ function SecurityConfig($stateProvider) {
                 }
             }
         })
-        .state('adminUserGroup.security', {
+        .state('sellerUserGroup.security', {
             url: '/security',
             templateUrl: 'security/templates/security.html',
             controller: 'SecurityCtrl',
             controllerAs: 'security',
             data: {
-                pageTitle: 'Admin User Group Security'
+                pageTitle: 'Seller User Group Security'
             },
             resolve: {
                 Assignments: function($stateParams, OrderCloudSDK) {

@@ -1,0 +1,57 @@
+<form name="sellerUserEditModal.form" class="form-horizontal" ng-submit="sellerUserEditModal.submit()" novalidate ng-disabled="sellerUserEditModal.loading" oc-readonly-roles="AdminUserAdmin">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="sellerUserEditModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span>{{sellerUserEditModal.fullName || sellerUserEditModal.username}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="ID" class="control-label col-sm-3">ID</label>
+            <div class="col-sm-9">
+                <input id="ID" name="ID" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="sellerUserEditModal.user.ID"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Name" class="control-label col-sm-3">Username</label>
+            <div class="col-sm-9">
+                <input id="Name" name="Name" type="text" class="form-control" ng-model="sellerUserEditModal.user.Username" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="FirstName" class="control-label col-sm-3">First Name</label>
+            <div class="col-sm-9">
+                <input id="FirstName" name="FirstName" type="text" class="form-control" ng-model="sellerUserEditModal.user.FirstName" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="LastName" class="control-label col-sm-3">Last Name</label>
+            <div class="col-sm-9">
+                <input id="LastName" name="LastName" type="text" class="form-control" ng-model="sellerUserEditModal.user.LastName" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Phone" class="control-label col-sm-3">Phone Number</label>
+            <div class="col-sm-9">
+                <input id="Phone" name="Phone" type="tel" class="form-control" ng-model="sellerUserEditModal.user.Phone" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Email" class="control-label col-sm-3">Email Address</label>
+            <div class="col-sm-9">
+                <input id="Email" name="Email" type="email" class="form-control" ng-model="sellerUserEditModal.user.Email" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <div class="checkbox">
+                    <label for="Active">
+                        <input id="Active" name="Active" type="checkbox" ng-model="sellerUserEditModal.user.Active"/>
+                        Active
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" >
+        <button type="submit" class="btn btn-block btn-primary" cg-busy="sellerUserEditModal.loading">Update</button>
+    </div>
+</form>
