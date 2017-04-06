@@ -1,0 +1,89 @@
+<form name="sellerAddressEditModal.form" class="form-horizontal" ng-submit="sellerAddressEditModal.submit()" cg-busy="sellerAddressEditModal.loading" autocomplete="off" novalidate oc-readonly-roles="AddressAdmin">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="sellerAddressEditModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span> {{sellerAddressEditModal.sellerAddressName}}</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressID">Address ID</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressID" name="ID" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="sellerAddressEditModal.sellerAddress.ID" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressName">Address Name</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressName" name="AddressName" ng-model="sellerAddressEditModal.sellerAddress.AddressName" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressCompanyName">Company Name</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressCompanyName" name="CompanyName" placeholder="(Optional)" ng-model="sellerAddressEditModal.sellerAddress.CompanyName" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressFirstName">First Name</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressFirstName" name="FirstName" placeholder="(Optional)" ng-model="sellerAddressEditModal.sellerAddress.FirstName" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressLastName">Last Name</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressLastName" name="LastName" placeholder="(Optional)" ng-model="sellerAddressEditModal.sellerAddress.LastName" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressStreet1">Street 1</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressStreet1" name="Street1" ng-model="sellerAddressEditModal.sellerAddress.Street1" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressStreet2">Street 2</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressStreet2" name="Street2" placeholder="(Optional)" ng-model="sellerAddressEditModal.sellerAddress.Street2" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressCity">City</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressCity" name="City" ng-model="sellerAddressEditModal.sellerAddress.City" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group" ng-if="(sellerAddressEditModal.states | filter:{country:sellerAddressEditModal.sellerAddress.Country}).length">
+            <label class="col-sm-3 control-label" for="addressState">State</label>
+            <div class="col-sm-9">
+                <select id="addressState" name="State" class="form-control" ng-options="state.value as state.label for state in sellerAddressEditModal.states | filter:{country:sellerAddressEditModal.sellerAddress.Country}" ng-model="sellerAddressEditModal.sellerAddress.State" required></select>
+            </div>
+        </fieldset>
+        <fieldset class="form-group" ng-if="!(sellerAddressEditModal.states | filter:{country:sellerAddressEditModal.sellerAddress.Country}).length">
+            <label class="col-sm-3 control-label" for="addressState">State</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressState" name="State" ng-model="sellerAddressEditModal.sellerAddress.State" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressZip">Zip</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="addressZip" name="Zip" ng-model="sellerAddressEditModal.sellerAddress.Zip" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressID">Country</label>
+            <div class="col-sm-9">
+                <select id="addressCountry" name="Country" class="form-control" ng-options="country.value as country.label for country in sellerAddressEditModal.countries" ng-model="sellerAddressEditModal.sellerAddress.Country" required></select>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="addressPhone">Phone</label>
+            <div class="col-sm-9">
+                <input type="tel" class="form-control" id="addressPhone" name="Phone" ng-model="sellerAddressEditModal.sellerAddress.Phone" />
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block">Save</button>
+    </div>
+</form>

@@ -7,17 +7,17 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
         AssignmentData: _assignmentData,
         AssignmentDataDetail: _assignmentDataDetail,
         CreatePrice: _createPrice,
-        EditPrice: _editPrice,
         DeletePrice: _deletePrice,
-        PriceBreaks: {
-            FormatQuantities: _formatQuantities
-        },
-        GetProductListPriceSchedules: _getProductListPriceSchedules,
         Assignments: {
             Get: _getAssignments,
             Map: _mapAssignments,
             Exists: _exists
         },
+        GetProductListPriceSchedules: _getProductListPriceSchedules,
+        PriceBreaks: {
+            FormatQuantities: _formatQuantities
+        },
+        EditProductPrice: _editProductPricePrice,
         UpdateProductPrice: _updateProductPrice,
         CreateProductPrice: _createProductPrice,
         SelectPrice: _selectPrice,
@@ -258,22 +258,6 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
         return deferred.promise;
     }
 
-    function _editPrice(priceSchedule, isDefault) {
-        return $uibModal.open({
-            templateUrl: 'productManagement/pricing/templates/priceScheduleEdit.modal.html',
-            controller: 'PriceScheduleEditModalCtrl',
-            controllerAs: 'priceScheduleEditModal',
-            resolve: {
-                SelectedPriceSchedule: function () {
-                    return priceSchedule;
-                },
-                IsDefault: function() {
-                    return isDefault;
-                }
-            }
-        }).result;
-    }
-
     function _deletePrice(priceSchedule) {
         return ocConfirm.Confirm({
                 message: 'Are you sure you want to delete <br> <b>' + priceSchedule.Name + '</b>?',
@@ -285,37 +269,6 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
             });
     }
 
-    function _createPriceBreak(priceSchedule) {
-        return $uibModal.open({
-            templateUrl: 'productManagement/pricing/templates/priceSchedulePriceBreakCreate.modal.html',
-            size: 'md',
-            controller: 'PriceSchedulePriceBreakCreateCtrl',
-            controllerAs: 'priceBreakCreate',
-            resolve: {
-                PriceScheduleID: function () {
-                    return priceSchedule.ID;
-                }
-            }
-        }).result;
-    }
-
-    function _editPriceBreak(priceSchedule, priceBreak) {
-        return $uibModal.open({
-            templateUrl: 'productManagement/pricing/templates/priceSchedulePriceBreakEdit.modal.html',
-            size: 'md',
-            controller: 'PriceSchedulePriceBreakEditCtrl',
-            controllerAs: 'priceBreakEdit',
-            resolve: {
-                PriceScheduleID: function () {
-                    return priceSchedule.ID;
-                },
-                PriceBreak: function () {
-                    return priceBreak;
-                }
-            }
-        }).result;
-    }
-
     function _setMinMax(priceSchedule) {
         var quantities = _.pluck(priceSchedule.PriceBreaks, 'Quantity');
         priceSchedule.MinQuantity = _.min(quantities);
@@ -323,23 +276,6 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
             priceSchedule.MaxQuantity = _.max(quantities);
         }
         return priceSchedule;
-    }
-
-    function _deletePriceBreak(priceSchedule, priceBreak) {
-        return ocConfirm.Confirm({
-                message: 'Are you sure you want to delete this price break?<br> <b>Quantity: ' + priceBreak.Quantity + '</b>?',
-                confirmText: 'Delete price break',
-                type: 'delete'
-            })
-            .then(function () {
-                return OrderCloudSDK.PriceSchedules.DeletePriceBreak(priceSchedule.ID, priceBreak.Quantity)
-                    .then(function () {
-                        return OrderCloudSDK.PriceSchedules.Get(priceSchedule.ID)
-                            .then(function (updatedPriceSchedule) {
-                                return updatedPriceSchedule;
-                            });
-                    });
-            });
     }
 
     function _formatQuantities(priceBreaks) {
@@ -510,6 +446,22 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
         };
     }
 
+    function _editProductPricePrice(priceSchedule, isDefault) {
+        return $uibModal.open({
+            templateUrl: 'productManagement/pricing/templates/editProductPrice.modal.html',
+            controller: 'EditProductPriceModalCtrl',
+            controllerAs: 'editProductPriceModal',
+            resolve: {
+                SelectedPriceSchedule: function () {
+                    return priceSchedule;
+                },
+                IsDefault: function() {
+                    return isDefault;
+                }
+            }
+        }).result;
+    }
+
     function _updateProductPrice(product, SelectedBuyer, CurrentAssignments, SelectedUserGroup) {
         var priceScheduleIDs = _.unique((product.DefaultPriceScheduleID ? [product.DefaultPriceScheduleID] : [])
             .concat(_.pluck(_.filter(CurrentAssignments, {
@@ -520,9 +472,9 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
             return _createProductPrice(product, SelectedBuyer, CurrentAssignments, [SelectedUserGroup]);
         } else {
             return $uibModal.open({
-                templateUrl: 'productManagement/buyerProducts/templates/selectPrice.modal.html',
-                controller: 'SelectPriceModalCtrl',
-                controllerAs: 'selectPriceModal',
+                templateUrl: 'productManagement/pricing/templates/updateProductPrice.modal.html',
+                controller: 'UpdateProductPriceModalCtrl',
+                controllerAs: 'updateProductPriceModal',
                 resolve: {
                     SelectPriceData: function () {
                         var df = $q.defer();
@@ -562,9 +514,9 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
 
     function _createProductPrice(product, SelectedBuyer, CurrentAssignments, SelectedUserGroup, DefaultPriceSchedule) {
         return $uibModal.open({
-            templateUrl: 'productManagement/buyerProducts/templates/createPrice.modal.html',
-            controller: 'CreatePriceModalCtrl',
-            controllerAs: 'createPriceModal',
+            templateUrl: 'productManagement/pricing/templates/createProductPrice.modal.html',
+            controller: 'CreateProductPriceModalCtrl',
+            controllerAs: 'createProductPriceModal',
             resolve: {
                 SelectPriceData: function () {
                     return {

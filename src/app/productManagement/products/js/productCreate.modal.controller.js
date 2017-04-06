@@ -2,7 +2,18 @@ angular.module('orderCloud')
     .controller('ProductCreateModalCtrl', ProductCreateModalController);
 
 function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, toastr, ocProductPricing, ocProducts, OrderCloudSDK) {
-    var vm = this;
+    var vm = this;   
+
+    vm.product = {
+        DefaultPriceSchedule: {
+            RestrictedQuantity: false,
+            PriceBreaks: [],
+            MinQuantity: 1,
+            OrderType: 'Standard'
+        },
+        Active: true,
+        QuantityMultiplier: 1
+    };
     vm.steps = [{
             form: 'info',
             name: 'Basic Information'
@@ -43,24 +54,8 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
         vm.showPrev = vm.currentStep > 0;
     }
 
-    vm.product = {
-        DefaultPriceSchedule: {
-            RestrictedQuantity: false,
-            PriceBreaks: [],
-            MinQuantity: 1,
-            OrderType: 'Standard'
-        },
-        Active: true,
-        QuantityMultiplier: 1
-    };
-
     vm.submit = submit;
     vm.cancel = cancel;
-
-    //Price form
-    vm.validatePricingForm = function () {
-        vm.form.pricing.$setValidity('nopricebreaks', vm.enableDefaultPricing ? vm.product.DefaultPriceSchedule.PriceBreaks.length > 0 : true);
-    };
 
     vm.listAllAdminAddresses = listAllAdminAddresses;
 
@@ -69,7 +64,7 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
                 search: search
             })
             .then(function (data) {
-                vm.adminAddresses = data;
+                vm.sellerAddresses = data;
             });
     }
 
