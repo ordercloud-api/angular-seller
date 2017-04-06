@@ -106,7 +106,7 @@
 
                 <hr />
                 <h4>Price Breaks</h4>
-                <oc-price-breaks priceschedule="createPriceModal.priceSchedule"></oc-price-breaks>
+                <oc-price-breaks priceschedule="productCreateModal.product.DefaultPriceSchedule"></oc-price-breaks>
             </div>
         </div>
         <div class="form-horizontal" ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'shipping'" ng-form="shipping">
@@ -199,7 +199,8 @@
                 <button type="button" class="btn btn-default btn-block" ng-click="productCreateModal.prevStep()">Back ({{productCreateModal.steps[productCreateModal.currentStep - 1].name}})</button>
             </div>
             <div ng-class="{'col-xs-6':productCreateModal.showPrev}">
-                <button type="button" ng-if="productCreateModal.showNext" class="btn btn-primary btn-block" ng-disabled="productCreateModal.form[productCreateModal.steps[productCreateModal.currentStep].form].$invalid"
+                <button type="button" ng-if="productCreateModal.showNext" class="btn btn-primary btn-block" 
+                ng-disabled="productCreateModal.form[productCreateModal.steps[productCreateModal.currentStep].form].$invalid || (productCreateModal.enableDefaultPricing && !productCreateModal.product.DefaultPriceSchedule.PriceBreaks.length)"
                     ng-click="productCreateModal.nextStep()">Next ({{productCreateModal.steps[productCreateModal.currentStep + 1].name}})</button>
                 <button ng-if="!productCreateModal.showNext" type="submit" cg-busy="productCreateModal.productUpdateLoading" ng-disabled="productCreateModal.form.$invalid || (productCreateModal.enableDefaultPricing && !productCreateModal.product.DefaultPriceSchedule.PriceBreaks.length)"
                     class="btn btn-primary btn-block">Save Product</button>

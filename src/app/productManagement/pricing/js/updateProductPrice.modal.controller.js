@@ -1,7 +1,7 @@
 angular.module('orderCloud')
-    .controller('SelectPriceModalCtrl', SelectPriceModalController);
+    .controller('UpdateProductPriceModalCtrl', UpdateProductPriceModalController);
 
-function SelectPriceModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, ocProductPricing, SelectPriceData) {
+function UpdateProductPriceModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, ocProductPricing, SelectPriceData) {
     var vm = this;
     vm.buyerName = SelectPriceData.Buyer.Name;
     vm.userGroupName = SelectPriceData.UserGroup ? SelectPriceData.UserGroup.Name : null;

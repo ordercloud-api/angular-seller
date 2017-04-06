@@ -1,7 +1,7 @@
 angular.module('orderCloud')
-    .controller('CreatePriceModalCtrl', CreatePriceModalController);
+    .controller('CreateProductPriceModalCtrl', CreateProductPriceModalController);
 
-function CreatePriceModalController($exceptionHandler, $uibModalInstance, SelectPriceData, ocProductPricing, toastr) {
+function CreateProductPriceModalController($exceptionHandler, $uibModalInstance, SelectPriceData, ocProductPricing, toastr) {
     var vm = this;
     if (!SelectPriceData.DefaultPriceSchedule) {
         vm.buyerName = SelectPriceData.Buyer.Name;
