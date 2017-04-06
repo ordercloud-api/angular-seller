@@ -1,38 +1,44 @@
 angular.module('orderCloud')
     .controller('ProductPricingCtrl', ProductPricingController)
-    .controller('PriceScheduleEditModalCtrl', PriceScheduleEditModalController)
-    .controller('PriceSchedulePriceBreakCreateCtrl', PriceSchedulePriceBreakCreateController)
-    .controller('PriceSchedulePriceBreakEditCtrl', PriceSchedulePriceBreakEditController)
-;
+    .controller('PriceScheduleEditModalCtrl', PriceScheduleEditModalController);
 
-function ProductPricingController($q, $stateParams, $uibModal, toastr, AssignmentList, AssignmentData, ocProductPricing, ocConfirm, OrderCloud, SelectedProduct) {
+function ProductPricingController($q, $rootScope, $stateParams, $uibModal, toastr, AssignmentList, AssignmentData, ocProductPricing, ocConfirm, OrderCloud, SelectedProduct) {
     var vm = this;
     vm.list = AssignmentList;
     vm.listAssignments = AssignmentData;
+    var isDefault;
 
     vm.noPricesSet = !_.keys(vm.listAssignments).length;
     vm.noOverridesSet = _.keys(vm.listAssignments).length === 1 && SelectedProduct.DefaultPriceScheduleID;
 
-    vm.selectPrice = function(scope) {
+    vm.selectPrice = function (scope) {
         vm.loadingPrice = ocProductPricing.AssignmentDataDetail(vm.listAssignments, scope.assignment.PriceSchedule.ID)
-            .then(function(data) {
+            .then(function (data) {
                 vm.selectedPrice = scope.assignment;
                 vm.selectedPrice.PriceSchedule = data.PriceSchedule;
                 vm.selectedPrice.Availability = data.Buyers;
+                isDefault = SelectedProduct.DefaultPriceScheduleID === data.PriceSchedule.ID;
             });
     };
 
     if (SelectedProduct.DefaultPriceScheduleID && !$stateParams.pricescheduleid) {
-        vm.selectPrice({assignment:vm.listAssignments[SelectedProduct.DefaultPriceScheduleID]});
+        vm.selectPrice({
+            assignment: vm.listAssignments[SelectedProduct.DefaultPriceScheduleID]
+        });
     } else if ($stateParams.pricescheduleid && vm.listAssignments[$stateParams.pricescheduleid]) {
-        vm.selectPrice({assignment:vm.listAssignments[$stateParams.pricescheduleid]});
+        vm.selectPrice({
+            assignment: vm.listAssignments[$stateParams.pricescheduleid]
+        });
     } else if (_.keys(vm.listAssignments).length) {
-        vm.selectPrice({assignment:vm.listAssignments[_.keys(vm.listAssignments)[0]]});
+        vm.selectPrice({
+            assignment: vm.listAssignments[_.keys(vm.listAssignments)[0]]
+        });
     }
 
-    vm.editPrice = function() {
-        ocProductPricing.EditPrice(vm.selectedPrice.PriceSchedule)
-            .then(function(updatedPriceSchedule) {
+    vm.editPrice = function () {
+        ocProductPricing.EditPrice(vm.selectedPrice.PriceSchedule, isDefault)
+            .then(function (updatedPriceSchedule) {
+                if (isDefault && updatedPriceSchedule.ID !== vm.selectedPrice.PriceSchedule.ID) $rootScope.$broadcast('OC:DefaultPriceUpdated', updatedPriceSchedule.ID);
                 var oldAssignment = angular.copy(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID]);
                 oldAssignment.PriceSchedule = updatedPriceSchedule;
                 oldAssignment.PriceScheduleID = updatedPriceSchedule.ID;
@@ -42,120 +48,69 @@ function ProductPricingController($q, $stateParams, $uibModal, toastr, Assignmen
                 vm.listAssignments[updatedPriceSchedule.ID] = oldAssignment;
                 vm.selectedPrice = oldAssignment;
                 vm.selectedPrice.PriceSchedule = updatedPriceSchedule;
+                toastr.success(vm.selectedPrice.Name + ' was updated.');
             });
     };
 
-    vm.deletePrice = function() {
+    vm.deletePrice = function () {
         ocProductPricing.DeletePrice(vm.selectedPrice.PriceSchedule)
-            .then(function() {
+            .then(function () {
                 delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
-                vm.noPricesSet = _.keys(vm.listAssignments).length == 0;
+                vm.noPricesSet = _.keys(vm.listAssignments).length === 0;
                 toastr.success(vm.selectedPrice.PriceSchedule.Name + ' was deleted');
                 vm.selectedPrice = null;
             });
     };
-
-    //====== Price Breaks =======
-    vm.createPriceBreak = function() {
-        ocProductPricing.PriceBreaks.Create(vm.selectedPrice.PriceSchedule)
-            .then(function(updatedPriceSchedule) {
-                var oldAssignment = angular.copy(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID]);
-                oldAssignment.PriceSchedule = updatedPriceSchedule;
-                oldAssignment.PriceScheduleID = updatedPriceSchedule.ID;
-
-                delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
-
-                vm.listAssignments[updatedPriceSchedule.ID] = oldAssignment;
-                vm.selectedPrice = oldAssignment;
-                ocProductPricing.PriceBreaks.DisplayQuantity(updatedPriceSchedule);
-                vm.selectedPrice.PriceSchedule = updatedPriceSchedule;
-                toastr.success('Price Break was created.');
-            });
-    };
-
-    vm.editPriceBreak = function(scope) {
-        ocProductPricing.PriceBreaks.Edit(vm.selectedPrice.PriceSchedule, scope.pricebreak)
-            .then(function(updatedPriceSchedule) {
-                var oldAssignment = angular.copy(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID]);
-                oldAssignment.PriceSchedule = updatedPriceSchedule;
-                oldAssignment.PriceScheduleID = updatedPriceSchedule.ID;
-
-                delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
-
-                vm.listAssignments[updatedPriceSchedule.ID] = oldAssignment;
-                vm.selectedPrice = oldAssignment;
-                ocProductPricing.PriceBreaks.DisplayQuantity(updatedPriceSchedule);
-                vm.selectedPrice.PriceSchedule = updatedPriceSchedule;
-                toastr.success('Price Break Quantity ' + scope.pricebreak.displayQuantity + ' was updated.');
-            });
-    };
-
-    vm.deletePriceBreak = function(scope) {
-        ocProductPricing.PriceBreaks.Delete(vm.selectedPrice.PriceSchedule, scope.pricebreak)
-            .then(function(updatedPriceSchedule) {
-                var oldAssignment = angular.copy(vm.listAssignments[vm.selectedPrice.PriceSchedule.ID]);
-                oldAssignment.PriceSchedule = updatedPriceSchedule;
-                oldAssignment.PriceScheduleID = updatedPriceSchedule.ID;
-
-                delete vm.listAssignments[vm.selectedPrice.PriceSchedule.ID];
-
-                vm.listAssignments[updatedPriceSchedule.ID] = oldAssignment;
-                vm.selectedPrice = oldAssignment;
-                ocProductPricing.PriceBreaks.DisplayQuantity(updatedPriceSchedule);
-                vm.selectedPrice.PriceSchedule = updatedPriceSchedule;
-                toastr.success('Price Break Quantity ' + scope.pricebreak.Quantity + ' was deleted.');
-            });
-    };
 }
 
-function PriceScheduleEditModalController($uibModalInstance, sdkOrderCloud, SelectedPriceSchedule) {
+function PriceScheduleEditModalController($q, $uibModalInstance, sdkOrderCloud, SelectedPriceSchedule, IsDefault, ocProductPricing) {
     var vm = this;
     vm.data = angular.copy(SelectedPriceSchedule);
     vm.priceScheduleName = SelectedPriceSchedule.Name;
+    vm.isDefault = IsDefault;
 
-    vm.submit = function() {
-        vm.loading = sdkOrderCloud.PriceSchedules.Update(SelectedPriceSchedule.ID, vm.data)
-            .then(function(updatedPriceSchdule) {
-                $uibModalInstance.close(updatedPriceSchdule);
+    vm.submit = function () {
+        var previous = {},
+            current = {};
+
+        _.each(SelectedPriceSchedule.PriceBreaks, function (pb) {
+            previous[pb.Quantity] = pb.Price;
+        });
+
+        _.each(vm.data.PriceBreaks, function (pb) {
+            current[pb.Quantity] = pb.Price;
+        });
+
+        var createQueue = [];
+        var deleteQueue = [];
+
+        angular.forEach(current, function (price, quantity) {
+            if (!previous[quantity] || (previous[quantity] && previous[quantity] !== price)) {
+                createQueue.push(sdkOrderCloud.PriceSchedules.SavePriceBreak(SelectedPriceSchedule.ID, {
+                    Quantity: quantity,
+                    Price: price
+                }));
+            }
+        });
+
+        angular.forEach(previous, function (price, quantity) {
+            if (!current[quantity]) deleteQueue.push(sdkOrderCloud.PriceSchedules.DeletePriceBreak(SelectedPriceSchedule.ID, quantity));
+        });
+
+        vm.loading = $q.all(createQueue)
+            .then(function () {
+                return $q.all(deleteQueue)
+                    .then(function () {
+                        return sdkOrderCloud.PriceSchedules.Update(SelectedPriceSchedule.ID, vm.data)
+                            .then(function (updatedPriceSchedule) {
+                                ocProductPricing.PriceBreaks.FormatQuantities(updatedPriceSchedule.PriceBreaks);
+                                $uibModalInstance.close(updatedPriceSchedule);
+                            });
+                    });
             });
     };
 
-    vm.cancel = function() {
-        $uibModalInstance.dismiss();
-    };
-}
-
-function PriceSchedulePriceBreakCreateController($uibModalInstance, sdkOrderCloud, PriceScheduleID) {
-    var vm = this;
-    vm.priceBreak = {
-        Quantity: 1,
-        Price: null
-    };
-
-    vm.confirm = function() {
-        vm.loading = sdkOrderCloud.PriceSchedules.SavePriceBreak(PriceScheduleID, vm.priceBreak)
-            .then(function(priceSchedule) {
-                $uibModalInstance.close(priceSchedule);
-            });
-    };
-
-    vm.cancel = function() {
-        $uibModalInstance.dismiss();
-    };
-}
-
-function PriceSchedulePriceBreakEditController($uibModalInstance, sdkOrderCloud, PriceScheduleID, PriceBreak) {
-    var vm = this;
-    vm.priceBreak = angular.copy(PriceBreak);
-
-    vm.confirm = function() {
-        vm.loading = sdkOrderCloud.PriceSchedules.SavePriceBreak(PriceScheduleID, vm.priceBreak)
-            .then(function(priceSchedule) {
-                $uibModalInstance.close(priceSchedule);
-            });
-    };
-
-    vm.cancel = function() {
+    vm.cancel = function () {
         $uibModalInstance.dismiss();
     };
 }

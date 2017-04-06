@@ -1,4 +1,4 @@
-<form name="createPriceModal.form">
+<form name="createPriceModal.form" autocomplete="off" novalidate pretty-submit>
     <div class="modal-header">
         <button type="button" class="close" ng-click="createPriceModal.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <span class="text-muted">{{(createPriceModal.buyerName ? 'Pricing for ' : 'Default pricing for ') + (createPriceModal.userGroupName || createPriceModal.buyerName)}}</span>
@@ -6,13 +6,13 @@
     </div>
     <div class="modal-body">
         <div class="form-horizontal">
-            <fieldset class="form-group">
+            <fieldset class="form-group" ng-if="createPriceModal.buyerName">
                 <label for="ID" class="col-sm-3 control-label">Price ID</label>
                 <div class="col-sm-9">
                     <input id="ID" name="ID" type="text" placeholder="(Optional)" class="form-control" ng-model="createPriceModal.priceSchedule.ID"/>
                 </div>
             </fieldset>
-            <fieldset class="form-group">
+            <fieldset class="form-group" ng-if="createPriceModal.buyerName">
                 <label for="Name" class="col-sm-3 control-label">Name</label>
                 <div class="col-sm-9">
                     <input id="Name" name="Name" type="text" class="form-control" ng-model="createPriceModal.priceSchedule.Name" required/>
@@ -70,78 +70,9 @@
 
         <hr />
         <h4>Price Breaks</h4>
-        <div class="row">
-            <div class="form-group col-sm-5">
-                <label for="priceSchedulePBQInput">Quantity</label>
-                <input id="priceSchedulePBQInput" type="number" min="1" class="form-control"
-                    ng-model="createPriceModal.quantity" />
-            </div>
-            <div class="form-group col-sm-5">
-                <label for="priceSchedulePBPInput">Price (each)</label>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <i class="fa fa-dollar"></i>
-                    </span>
-                    <input id="priceSchedulePBPInput" type="number" placeholder="0.00" step="0.01" min="0" class="form-control"
-                        ng-model="createPriceModal.price" />
-                </div>
-            </div>
-            <div class="form-group col-sm-2">
-                <br>
-                <button type="button" class="btn btn-default form-control addps"
-                        ng-disabled="!createPriceModal.price || !createPriceModal.quantity"
-                        ng-click="createPriceModal.addPriceBreak()"><i class="fa fa-plus-circle"></i> Add
-                </button>
-            </div>
-        </div>
-        <div class="form-group" ng-if="createPriceModal.priceSchedule.PriceBreaks.length">
-            <div class="panel panel-default table-responsive">
-                <section class="table-fixed-header">
-                    <div class="table-header-bg"></div>
-                    <div class="table-container">
-                        <table class="table table-striped">
-                            <colgroup>
-                                <col class="action-column"/>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>
-                                    <div>Quantity</div>
-                                </th>
-                                <th>
-                                    <div>Price</div>
-                                </th>
-                                <th>
-                                    <div></div>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="pricebreak in createPriceModal.priceSchedule.PriceBreaks | orderBy: 'Quantity' track by $index">
-                                <td ng-if="createPriceModal.priceSchedule.RestrictedQuantity">
-                                    {{pricebreak.Quantity}}
-                                </td>
-                                <td ng-if="!createPriceModal.priceSchedule.RestrictedQuantity">
-                                    {{pricebreak.displayQuantity}}
-                                </td>
-                                <td ng-if="createPriceModal.priceSchedule.RestrictedQuantity">
-                                    {{pricebreak.Price * pricebreak.Quantity | currency}}
-                                </td>
-                                <td ng-if="!createPriceModal.priceSchedule.RestrictedQuantity">
-                                    {{pricebreak.Price | currency}}
-                                </td>
-                                <td class="text-center">
-                                    <a class="fa fa-trash" ng-click="createPriceModal.deletePriceBreak($index)"></a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-            </div>
-        </div>
+        <oc-price-breaks priceschedule="createPriceModal.priceSchedule"></oc-price-breaks>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary btn-block" ng-disabled="createPriceModal.form.$invalid" ng-click="createPriceModal.submit()" cg-busy="createPriceModal.loading">Save Selection</button>
+        <button class="btn btn-primary btn-block" ng-disabled="createPriceModal.form.$invalid || !createPriceModal.priceSchedule.PriceBreaks.length" ng-click="createPriceModal.submit()" cg-busy="createPriceModal.loading">Save Selection</button>
     </div>
 </form>

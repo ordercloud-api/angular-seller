@@ -62,36 +62,6 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
         vm.form.pricing.$setValidity('nopricebreaks', vm.enableDefaultPricing ? vm.product.DefaultPriceSchedule.PriceBreaks.length > 0 : true);
     };
 
-    vm.addPriceBreak = addPriceBreak;
-    vm.deletePriceBreak = deletePriceBreak;
-
-    function addPriceBreak() {
-        var numberExist = _.findWhere(vm.product.DefaultPriceSchedule.PriceBreaks, {
-            Quantity: vm.quantity
-        });
-        if (vm.quantity > vm.product.DefaultPriceSchedule.MaxQuantity) {
-            toastr.error('Max quantity exceeded', 'Error');
-        } else {
-            numberExist === undefined ?
-                vm.product.DefaultPriceSchedule.PriceBreaks.push({
-                    Price: vm.price,
-                    Quantity: vm.quantity
-                }) :
-                toastr.error('Quantity already exists. Please delete and re-enter quantity and price to edit', 'Error');
-        }
-        ocProductPricing.PriceBreaks.DisplayQuantity(vm.product.DefaultPriceSchedule);
-        vm.product.DefaultPriceSchedule = ocProductPricing.PriceBreaks.SetMinMax(vm.product.DefaultPriceSchedule);
-        vm.form.pricing.$setValidity('nopricebreaks', true);
-        vm.quantity = null;
-        vm.price = null;
-    }
-
-    function deletePriceBreak(index) {
-        vm.product.DefaultPriceSchedule.PriceBreaks.splice(index, 1);
-        vm.product.DefaultPriceSchedule = ocProductPricing.PriceBreaks.SetMinMax(vm.product.DefaultPriceSchedule);
-        vm.form.pricing.$setValidity('nopricebreaks', vm.product.DefaultPriceSchedule.PriceBreaks.length > 0);
-    }
-
     vm.listAllAdminAddresses = listAllAdminAddresses;
 
     function listAllAdminAddresses(search) {

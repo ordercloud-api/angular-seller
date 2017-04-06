@@ -19,7 +19,9 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
         var deferred = $q.defer();
 
         var options = {
-            productID: productid,
+            filters: {
+                productID: productid
+            },
             page: 1,
             pageSize: 100
         };
@@ -59,7 +61,7 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
                         sdkOrderCloud.Specs.ListOptions(specAssignment.Spec.ID, options)
                             .then(function(oData) {
                                 specAssignment.Options = oData.Items;
-                                _.map(specAssignment.Options, function(option) { option.DefaultOption = (specAssignment.DefaultOptionID == option.ID) });
+                                _.map(specAssignment.Options, function(option) { option.DefaultOption = (specAssignment.DefaultOptionID == option.ID); });
                                 d.resolve();
                             });
 
@@ -157,7 +159,7 @@ function ocProductsSpecsService($q, $uibModal, sdkOrderCloud, ocConfirm) {
                     return spec;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _deleteSpec(specID) {

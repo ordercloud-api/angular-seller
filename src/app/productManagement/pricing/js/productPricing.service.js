@@ -14,8 +14,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, ocConfirm) {
             Edit: _editPriceBreak,
             SetMinMax: _setMinMax,
             Delete: _deletePriceBreak,
-            AddDisplayQuantity: _addDisplayQuantity,
-            DisplayQuantity: displayQuantity
+            FormatQuantities: _formatQuantities
         },
         GetProductListPriceSchedules: _getProductListPriceSchedules,
         Assignments: {
@@ -41,6 +40,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, ocConfirm) {
             .then(function (data) {
                 var queue = [];
                 var assignments = data;
+                var page;
                 if (data.Meta.TotalPages > data.Meta.Page) {
                     page = data.Meta.Page;
                     while (page < data.Meta.TotalPages) {
@@ -82,7 +82,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, ocConfirm) {
                         PriceScheduleID: ps.ID
                     }), function (p) {
                         p.PriceSchedule = ps;
-                        displayQuantity(p.PriceSchedule);
+                        _formatQuantities(p.PriceSchedule.PriceBreaks);
                     });
                 });
                 groupBy();
@@ -262,7 +262,7 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, ocConfirm) {
         return deferred.promise;
     }
 
-    function _editPrice(priceSchedule) {
+    function _editPrice(priceSchedule, isDefault) {
         return $uibModal.open({
             templateUrl: 'productManagement/pricing/templates/priceScheduleEdit.modal.html',
             controller: 'PriceScheduleEditModalCtrl',
@@ -270,6 +270,9 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, ocConfirm) {
             resolve: {
                 SelectedPriceSchedule: function () {
                     return priceSchedule;
+                },
+                IsDefault: function() {
+                    return isDefault;
                 }
             }
         }).result;
@@ -343,39 +346,34 @@ function ocProductPricingService($q, $uibModal, sdkOrderCloud, ocConfirm) {
             });
     }
 
-    function _addDisplayQuantity(priceSchedule) {
-        displayQuantity(priceSchedule);
-        return _setMinMax(priceSchedule);
-    }
-
-    function displayQuantity(priceSchedule) {
+    function _formatQuantities(priceBreaks) {
         //Organize the priceschedule array in order of quantity
-        priceSchedule.PriceBreaks.sort(function (a, b) {
+        priceBreaks.sort(function (a, b) {
             return a.Quantity - b.Quantity;
         });
         //find out the max quantity in the array
-        var maxQuantity = Math.max.apply(Math, priceSchedule.PriceBreaks.map(function (object) {
+        var maxQuantity = Math.max.apply(Math, priceBreaks.map(function (object) {
             return object.Quantity;
         }));
         // go through each item in the priceschedule array
-        for (var i = 0; i < priceSchedule.PriceBreaks.length; i++) {
+        for (var i = 0; i < priceBreaks.length; i++) {
             //if max number is unique, display max number  with + symbol
-            if (priceSchedule.PriceBreaks[i].Quantity == maxQuantity) {
-                priceSchedule.PriceBreaks[i].displayQuantity = priceSchedule.PriceBreaks[i].Quantity + '+';
+            if (priceBreaks[i].Quantity == maxQuantity) {
+                priceBreaks[i].displayQuantity = priceBreaks[i].Quantity + '+';
             } else {
                 //otherwise get the range of numbers between the current index quantity , and the next index Quantity
-                var itemQuantityRange = _.range(priceSchedule.PriceBreaks[i].Quantity, priceSchedule.PriceBreaks[i + 1].Quantity);
+                var itemQuantityRange = _.range(priceBreaks[i].Quantity, priceBreaks[i + 1].Quantity);
                 itemQuantityRange;
                 // If the difference between the range of numbers is only 1 . then just display that quantity number
                 if (itemQuantityRange.length === 1) {
-                    priceSchedule.PriceBreaks[i].displayQuantity = itemQuantityRange[0];
+                    priceBreaks[i].displayQuantity = itemQuantityRange[0];
                 } else {
                     //the last quantity in the array of PriceBreaks minus the 1st quantity in the calculate range is less than or =1 , add only the first number in the Item
-                    if (((priceSchedule.PriceBreaks[priceSchedule.PriceBreaks.length - 1]).Quantity - itemQuantityRange[0]) <= 1) {
-                        priceSchedule.PriceBreaks[i].displayQuantity = itemQuantityRange[0];
+                    if (((priceBreaks[priceBreaks.length - 1]).Quantity - itemQuantityRange[0]) <= 1) {
+                        priceBreaks[i].displayQuantity = itemQuantityRange[0];
                         //displays range between two quantities in the array
                     } else {
-                        priceSchedule.PriceBreaks[i].displayQuantity = itemQuantityRange[0] + ' - ' + itemQuantityRange[itemQuantityRange.length - 1];
+                        priceBreaks[i].displayQuantity = itemQuantityRange[0] + ' - ' + itemQuantityRange[itemQuantityRange.length - 1];
                     }
                 }
             }

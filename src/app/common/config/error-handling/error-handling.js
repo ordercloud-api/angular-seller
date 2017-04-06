@@ -10,7 +10,12 @@ angular.module('orderCloud')
             'Buyer.UnavailableID': 'This ID is already in use.',
             'LineItem.UnavailableID': 'This ID is already in use.',
             'User.UsernameMustBeUnique': 'This username is already in use.',
-            'step': 'Please enter a valid dollar amount.'
+            'step': 'Please enter a valid dollar amount.',
+            'priceBreakRequired': 'At least one price break is required.',
+            'priceBreakExceedsMaxQuantity': 'Must be less than the maximum quantity.',
+            'priceBreakQuantityConflict': 'This quantity already has a price.',
+            'priceBreakStartingQuantity': 'First price break must equal the minimum quantity.',
+            'priceBreakOtherQuantity': 'Must be greater than the minimum quantity.'
         });
 
         $provide.decorator('$exceptionHandler', handler);

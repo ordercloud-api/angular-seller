@@ -1,6 +1,5 @@
 angular.module('orderCloud')
-    .controller('ProductDetailCtrl', ProductDetailController)
-;
+    .controller('ProductDetailCtrl', ProductDetailController);
 
 function ProductDetailController($rootScope, $state, toastr, sdkOrderCloud, ocProducts, ocProductPricing, SelectedProduct) {
     var vm = this;
@@ -12,17 +11,29 @@ function ProductDetailController($rootScope, $state, toastr, sdkOrderCloud, ocPr
     vm.patchImage = patchImage;
     vm.createDefaultPrice = createDefaultPrice;
 
-    function patchImage(imageXP){
-       return sdkOrderCloud.Products.Patch(vm.product.ID, {xp: imageXP});
+    function patchImage(imageXP) {
+        return sdkOrderCloud.Products.Patch(vm.product.ID, {
+            xp: imageXP
+        });
     }
 
     function updateProduct() {
         var currentPrice = angular.copy(vm.product.DefaultPriceSchedule);
         var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
         vm.productUpdateLoading = sdkOrderCloud.Products.Patch(SelectedProduct.ID, partial)
-            .then(function(data) {
+            .then(function (data) {
+
                 vm.product = angular.copy(data);
-                vm.product.DefaultPriceSchedule = currentPrice;
+                if (currentPrice && data.Name !== SelectedProduct.Name) {
+                    sdkOrderCloud.PriceSchedules.Patch(currentPrice.ID, {
+                            Name: data.Name + ' Default Price'
+                        })
+                        .then(function (updatedPrice) {
+                            vm.product.DefaultPriceSchedule = updatedPrice;
+                        });
+                } else {
+                    vm.product.DefaultPriceSchedule = currentPrice;
+                }
                 vm.productName = angular.copy(data.Name);
                 vm.inventoryEnabled = angular.copy(data.InventoryEnabled);
                 SelectedProduct = data;
@@ -31,23 +42,33 @@ function ProductDetailController($rootScope, $state, toastr, sdkOrderCloud, ocPr
             });
     }
 
-    function deleteProduct(){
+    function deleteProduct() {
         ocProducts.Delete(SelectedProduct)
-            .then(function() {
+            .then(function () {
                 toastr.success(SelectedProduct.Name + ' was deleted.');
-                $state.go('products', {}, {reload: true});
+                $state.go('products', {}, {
+                    reload: true
+                });
             });
     }
 
     function createDefaultPrice() {
         ocProductPricing.CreateProductPrice(vm.product, null, null, null, true)
-            .then(function(data) {
+            .then(function (data) {
                 toastr.success('Default price was successfully added to ' + vm.product.Name);
-                $state.go('productDetail.pricing.priceScheduleDetail', {pricescheduleid: data.SelectedPrice.ID}, {reload: true});
+                $state.go('productDetail.pricing.priceScheduleDetail', {
+                    pricescheduleid: data.SelectedPrice.ID
+                }, {
+                    reload: true
+                });
             });
     }
 
-    $rootScope.$on('ProductManagement:SpecCountChanged', function(event, action) {
+    $rootScope.$on('ProductManagement:SpecCountChanged', function (event, action) {
         vm.product.SpecCount += (action == 'increment') ? 1 : -1;
+    });
+
+    $rootScope.$on('OC:DefaultPriceUpdated', function (event, newID) {
+        vm.product.DefaultPriceScheduleID = newID;
     });
 }

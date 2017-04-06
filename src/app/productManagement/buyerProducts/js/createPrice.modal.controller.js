@@ -1,6 +1,5 @@
 angular.module('orderCloud')
-    .controller('CreatePriceModalCtrl', CreatePriceModalController)
-;
+    .controller('CreatePriceModalCtrl', CreatePriceModalController);
 
 function CreatePriceModalController($exceptionHandler, $uibModalInstance, SelectPriceData, ocProductPricing, toastr) {
     var vm = this;
@@ -19,41 +18,22 @@ function CreatePriceModalController($exceptionHandler, $uibModalInstance, Select
         OrderType: 'Standard'
     };
 
-    vm.addPriceBreak = addPriceBreak;
-    vm.deletePriceBreak = deletePriceBreak;
-
-    function addPriceBreak() {
-        var numberExist = _.findWhere(vm.priceSchedule.PriceBreaks, {Quantity: vm.quantity});
-        if (vm.quantity > vm.priceSchedule.MaxQuantity) {
-            toastr.error('Max quantity exceeded', 'Error');
-        } else {
-            numberExist === undefined
-                ? vm.priceSchedule.PriceBreaks.push({Price: vm.price, Quantity: vm.quantity})
-                : toastr.error('Quantity already exists. Please delete and re-enter quantity and price to edit', 'Error');
-        }
-        ocProductPricing.PriceBreaks.DisplayQuantity(vm.priceSchedule);
-        vm.priceSchedule = ocProductPricing.PriceBreaks.SetMinMax(vm.priceSchedule);
-        vm.quantity = null;
-        vm.price = null;
-    }
-
-    function deletePriceBreak(index) {
-        vm.priceSchedule.PriceBreaks.splice(index, 1);
-        vm.priceSchedule = ocProductPricing.PriceBreaks.SetMinMax(vm.priceSchedule);
-    }
-
     vm.cancel = function () {
         $uibModalInstance.dismiss();
     };
 
-    vm.submit = function() {
+    vm.submit = function () {
         var userGroups = vm.selectedUserGroup ? [vm.selectedUserGroup] : [];
+        if (SelectPriceData.DefaultPriceSchedule) vm.priceSchedule.Name = vm.product.Name + ' Default Price';
         vm.loading = ocProductPricing.CreatePrice(vm.product, vm.priceSchedule, vm.selectedBuyer, userGroups, SelectPriceData.DefaultPriceSchedule)
-            .then(function(data) {
+            .then(function (data) {
                 if (!SelectPriceData.DefaultPriceSchedule) {
                     SelectPriceData.CurrentAssignments.push(data.Assignment);
                 }
-                $uibModalInstance.close({SelectedPrice: data.NewPriceSchedule, UpdatedAssignments:SelectPriceData.CurrentAssignments});
+                $uibModalInstance.close({
+                    SelectedPrice: data.NewPriceSchedule,
+                    UpdatedAssignments: SelectPriceData.CurrentAssignments
+                });
             })
             .catch(function (ex) {
                 $exceptionHandler(ex);

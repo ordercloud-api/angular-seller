@@ -44,7 +44,8 @@
         <div ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'image'" ng-form="image">
             <fieldset>
                 <label class="sr-only" for="image">Upload a product image</label>
-                <oc-file-upload model="productCreateModal.product" upload-text="'Choose a product image'" label="Image:" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                <oc-file-upload model="productCreateModal.product" upload-text="'Choose a product image'" label="Image:" keyname="image"
+                    extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
             </fieldset>
         </div>
         <div ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'pricing'" ng-form="pricing">
@@ -56,77 +57,6 @@
                 </div>
             </fieldset>
             <div ng-if="productCreateModal.enableDefaultPricing">
-                <hr>
-                <h4>Price Breaks</h4>
-                <div class="row">
-                    <div class="form-group col-sm-5">
-                        <label for="priceSchedulePBQInput">Quantity</label>
-                        <input id="priceSchedulePBQInput" type="number" min="1" class="form-control" ng-model="productCreateModal.quantity" />
-                    </div>
-                    <div class="form-group col-sm-5">
-                        <label for="priceSchedulePBPInput">Price (each)</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                        <i class="fa fa-dollar"></i>
-                    </span>
-                            <input id="priceSchedulePBPInput" type="number" placeholder="0.00" step="0.01" min="0" class="form-control" ng-model="productCreateModal.price"
-                            />
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-2">
-                        <br>
-                        <button type="button" class="btn btn-default form-control addps" ng-disabled="!productCreateModal.price || !productCreateModal.quantity"
-                            ng-click="productCreateModal.addPriceBreak()"><i class="fa fa-plus-circle"></i> Add
-                </button>
-                    </div>
-                </div>
-                <div class="form-group" ng-if="productCreateModal.product.DefaultPriceSchedule.PriceBreaks.length">
-                    <div class="panel panel-default table-responsive">
-                        <section class="table-fixed-header">
-                            <div class="table-header-bg"></div>
-                            <div class="table-container">
-                                <table class="table table-striped">
-                                    <colgroup>
-                                        <col class="action-column" />
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <div>Quantity</div>
-                                            </th>
-                                            <th>
-                                                <div>Price</div>
-                                            </th>
-                                            <th>
-                                                <div></div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-repeat="pricebreak in productCreateModal.product.DefaultPriceSchedule.PriceBreaks | orderBy: 'Quantity' track by $index">
-                                            <td ng-if="productCreateModal.product.DefaultPriceSchedule.RestrictedQuantity">
-                                                {{pricebreak.Quantity}}
-                                            </td>
-                                            <td ng-if="!productCreateModal.product.DefaultPriceSchedule.RestrictedQuantity">
-                                                {{pricebreak.displayQuantity}}
-                                            </td>
-                                            <td ng-if="productCreateModal.product.DefaultPriceSchedule.RestrictedQuantity">
-                                                {{pricebreak.Price * pricebreak.Quantity | currency}}
-                                            </td>
-                                            <td ng-if="!productCreateModal.product.DefaultPriceSchedule.RestrictedQuantity">
-                                                {{pricebreak.Price | currency}}
-                                            </td>
-                                            <td class="text-center">
-                                                <a class="fa fa-trash" ng-click="productCreateModal.deletePriceBreak($index)"></a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-                <hr />
                 <div class="form-horizontal">
                     <fieldset class="form-group">
                         <label for="MinQuantity" class="col-sm-3 control-label">Min Quantity</label>
@@ -173,7 +103,10 @@
                         </div>
                     </fieldset>
                 </div>
-                
+
+                <hr />
+                <h4>Price Breaks</h4>
+                <oc-price-breaks priceschedule="createPriceModal.priceSchedule"></oc-price-breaks>
             </div>
         </div>
         <div class="form-horizontal" ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'shipping'" ng-form="shipping">
@@ -268,7 +201,7 @@
             <div ng-class="{'col-xs-6':productCreateModal.showPrev}">
                 <button type="button" ng-if="productCreateModal.showNext" class="btn btn-primary btn-block" ng-disabled="productCreateModal.form[productCreateModal.steps[productCreateModal.currentStep].form].$invalid"
                     ng-click="productCreateModal.nextStep()">Next ({{productCreateModal.steps[productCreateModal.currentStep + 1].name}})</button>
-                <button ng-if="!productCreateModal.showNext" type="submit" cg-busy="productCreateModal.productUpdateLoading" ng-disabled="productCreateModal.form.$invalid"
+                <button ng-if="!productCreateModal.showNext" type="submit" cg-busy="productCreateModal.productUpdateLoading" ng-disabled="productCreateModal.form.$invalid || (productCreateModal.enableDefaultPricing && !productCreateModal.product.DefaultPriceSchedule.PriceBreaks.length)"
                     class="btn btn-primary btn-block">Save Product</button>
             </div>
         </div>
