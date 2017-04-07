@@ -138,7 +138,7 @@ function CreditCardsController($state, $stateParams, $exceptionHandler, toastr, 
             vm.list.Items.push(n);
             vm.list.Meta.TotalCount++;
             vm.list.Meta.ItemRange[1]++;
-            toastr.success('Credit card ending in ' + n.PartialAccountNumber + ' was created.');
+            toastr.success('Credit card ending in ' + n.PartialAccountNumber + ' was saved.');
         }
     };
 

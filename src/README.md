@@ -44,7 +44,7 @@ At the end of the `<head>` you will find the link for the OrderCloud favicon.
 
 ### `<body>`
 The body element contains the `ui-view` in which all other application templates will be loaded.
-Within the `<ui-view>` element we've placed the HTML used by [cg-busy]() to display a
+Within the `<ui-view>` element we've placed the HTML used by [angular-busy](src/app/common/config/angular-busy/angular-busy.js) to display a
 loading indicator while angular bootstraps itself.
 
 At the end of the body we again have some important comment markup that is used to

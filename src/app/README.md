@@ -28,7 +28,7 @@ then define a route of `/products/:id`, ad infinitum.
 
 This small, yet powerful file host a JSON object of key value pairs to be used
 throughout the application. From this object, the build process will generate
-a file containing AngularJS constants [here](https://github.com/ordercloud-api/angular-admin/blob/development/gulp.config.js#L73), which can then be injected into your
+a file containing AngularJS constants [here](https://github.com/ordercloud-api/angular-seller/blob/development/gulp.config.js#L73), which can then be injected into your
 various AngularJS controllers, factories, providers, etc. Think of it as a base
 configuration or settings file for your application.
 
@@ -40,12 +40,12 @@ Constant | Type | Description
 `environment` | string | A string declaring the OrderCloud environment the application will point to. Currently, only `production` is available; however, when a large release consisting of breaking changes is scheduled, a `staging` environment will be provided.
 `defaultstate` | string | The default ui-router state within the application that users will be directed to should they attempt to access a state that does not exist.
 `html5mode` | bool | True/false whether you want HTML5 Mode enable within the application.
-`bootswatchtheme` | string | The Bootswatch theme that is automatically applied to the application during the build process. A list of available themes can be found [here](https://bootswatch.com/). A value of `null` will apply the default angular-admin theme.
+`bootswatchtheme` | string | The Bootswatch theme that is automatically applied to the application during the build process. A list of available themes can be found [here](https://bootswatch.com/). A value of `null` will apply the default angular-seller theme.
 
 
 ### Process Environment Variable Overrides
 
-The constants provided above can be overwritten within your hosting providers application settings. For example, within Heroku, you can override these constants using their [Config Variables](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application). This is accomplished in the [`gulp.config.js`](https://github.com/ordercloud-api/angular-admin/blob/development/gulp.config.js#L103) file, which can be customized to include additional application constants.
+The constants provided above can be overwritten within your hosting providers application settings. For example, within Heroku, you can override these constants using their [Config Variables](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application). This is accomplished in the [`gulp.config.js`](https://github.com/ordercloud-api/angular-seller/blob/development/gulp.config.js#L103) file, which can be customized to include additional application constants.
 
 
 ### Connecting to Your Seller Organization
@@ -131,7 +131,7 @@ function AppRun(ocStateLoading, defaultErrorMessageResolver, ocErrorMessages, va
 
 ## `app.spec.js`
 
-One of the design philosophies of `angular-admin` is that tests should exist
+One of the design philosophies of `angular-seller` is that tests should exist
 alongside the code they test and that the build system should be smart enough to
 know the difference and react accordingly. As such, the unit test for `app.*.js`
 is `app.spec.js`.

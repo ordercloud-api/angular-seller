@@ -1,7 +1,7 @@
 {
   "appname": "Angular Seller",
-  "scope": ["AddressAdmin", "AdminUserAdmin", "AdminUserGroupAdmin", "ApprovalRuleAdmin", "BuyerAdmin", "BuyerUserAdmin", "CatalogAdmin", "CategoryAdmin", "CostCenterAdmin", "CreditCardAdmin", "InventoryAdmin", "MeAdmin", "MessageConfigAssignmentAdmin", "MeXpAdmin", "OrderAdmin", "ShipmentAdmin", "PriceScheduleAdmin", "ProductAdmin", "ProductAssignmentAdmin", "PromotionAdmin", "SpendingAccountAdmin", "SupplierAdmin", "SupplierUserAdmin", "SupplierUserGroupAdmin", "UnsubmittedOrderReader", "UserGroupAdmin", "ProductReader", "BuyerReader", "CatalogReader", "CategoryReader", "AddressReader", "CostCenterReader", "PromotionReader", "PriceScheduleReader", "SpendingAccountReader", "BuyerUserReader", "UserGroupReader", "ApprovalRuleReader", "PermissionAdmin", "AdminUserReader", "AdminUserGroupReader", "OverrideUnitPrice", "OverrideShipping", "OverrideTax"],
-  "clientid": "D89E2196-CC75-4312-A4A9-67E4CC4BEDFB",
+  "scope": ["AddressAdmin", "AdminUserAdmin", "AdminUserGroupAdmin", "ApprovalRuleAdmin", "BuyerAdmin", "BuyerUserAdmin", "CatalogAdmin", "CategoryAdmin", "CostCenterAdmin", "CreditCardAdmin", "InventoryAdmin", "MeAdmin", "MessageConfigAssignmentAdmin", "MeXpAdmin", "OrderAdmin", "ShipmentAdmin", "PriceScheduleAdmin", "ProductAdmin", "ProductAssignmentAdmin", "PromotionAdmin", "SpendingAccountAdmin", "SupplierAdmin", "SupplierUserAdmin", "SupplierUserGroupAdmin", "UnsubmittedOrderReader", "UserGroupAdmin", "ProductReader", "BuyerReader", "CatalogReader", "CategoryReader", "AddressReader", "CostCenterReader", "PromotionReader", "PriceScheduleReader", "SpendingAccountReader", "BuyerUserReader", "UserGroupReader", "ApprovalRuleReader", "PermissionAdmin", "AdminUserReader", "AdminUserGroupReader", "OverrideUnitPrice", "OverrideShipping", "OverrideTax", "SetSecurityProfile"],
+  "clientid": "559AA24A-FFE3-411F-962B-9C1613D256FC",
   "environment": "staging",
   "defaultstate": "home",
   "html5mode": false,
