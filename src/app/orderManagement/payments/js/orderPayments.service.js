@@ -44,12 +44,6 @@ function OrderCloudOrderPaymentsService($q, OrderCloudSDK) {
                                 d.resolve();
                             })
                             .catch(function() {
-                                payment.Details = {
-                                    CardholderName: 'Kyle Olson',
-                                    ExpirationDate: new Date().toISOString(),
-                                    CardType: 'Visa',
-                                    PartialAccountNumber: '1111'
-                                };
                                 d.resolve();
                             });
                     }
