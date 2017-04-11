@@ -7,10 +7,6 @@
         Category Assignment
     </h3>
 </div>
-
-<div ng-if="!buyerCatalog.tree.length" class="no-matches">
-    <b>There are no categories in this catalog. <span oc-if-roles="CategoryAdmin"><a ng-click="buyerCatalog.createCategory()">Create one now.</a></span></b>
-</div>
 <div class="row" cg-busy="buyerCatalog.loading">
     <div class="col-sm-7 col-sm-push-5">
         <div class="panel panel-default">
@@ -19,19 +15,29 @@
             </div>
             <div class="panel-body">
                 <fieldset class="form-group">
-                    <label for="ViewAllProducts" class="control-label">
-                        <input id="ViewAllProducts" type="checkbox" ng-model="buyerCatalog.viewAllProducts" ng-change="buyerCatalog.updateCatalogAssignment('products')"> View All Products
-                    </label>
-                </fieldset>
-                <fieldset class="form-group">
-                    <label for="ViewAllCategories" class="control-label">
-                        <input id="ViewAllCategories" type="checkbox" ng-model="buyerCatalog.viewAllCategories" ng-change="buyerCatalog.updateCatalogAssignment('categories')"> View All Categories
-                    </label>
+                    <div class="checkbox">
+                        <label for="ViewAllProducts" class="control-label">
+                            <input id="ViewAllProducts" type="checkbox" ng-model="buyerCatalog.viewAllProducts" ng-change="buyerCatalog.updateCatalogAssignment('products')"> View All Products
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label for="ViewAllCategories" class="control-label">
+                            <input id="ViewAllCategories" type="checkbox" ng-model="buyerCatalog.viewAllCategories" ng-change="buyerCatalog.updateCatalogAssignment('categories')"> View All Categories
+                        </label>
+                    </div>
                 </fieldset>
             </div>
         </div>
     </div>
     <div class="col-sm-5 col-sm-pull-7">
+        <div ng-if="!buyerCatalog.tree.length" class="no-matches">
+            <b>There are no categories in this catalog. 
+                <span oc-if-roles="CategoryAdmin"> 
+                    <br>
+                    Categories can be added in <a ui-sref="categories({catalogid: buyerCatalog.selectedCatalog.ID})">catalog management</a>.
+                </span>
+            </b>
+        </div>
         <script type="text/ng-template" id="nodes_renderer.html">
             <div class="tree-node tree-node-content" cg-busy="node.loading" ng-class="{'inactive-node': !node.Active, 'selected-node': node.ID == buyerCatalog.selectedCategoryID}">
                 <i ng-if="node.children && node.children.length > 0" class="fa" ng-click="toggle(this)" ng-class="{
