@@ -1,4 +1,4 @@
-<form class="form-horizontal" ng-submit="orderShipmentsEditItem.submit()" name="orderShipmentsEditItem.form" cg-busy="orderShipmentsEditItem.loading">
+<form class="form-horizontal" ng-submit="orderShipmentsEditItem.submit()" name="orderShipmentsEditItem.form" cg-busy="orderShipmentsEditItem.loading" oc-readonly-roles="ShipmentAdmin">
     <div class="modal-header">
         <button type="button" class="close" ng-click="orderShipmentsEditItem.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title"><span class="text-muted">Editing: </span> Shipment Item {{orderShipmentsEditItem.itemID}}</h4>
@@ -7,7 +7,7 @@
         <fieldset class="form-group">
             <label for="shipmentItemQuantityShipped" class="col-sm-4 control-label">Quantity Shipped</label>
             <div class="col-sm-8">
-                <input id="shipmentItemQuantityShipped" name="QuantityShipped" type="number" class="form-control" ng-model="orderShipmentsEditItem.shipmentItem.QuantityShipped" min="0" max="{{orderShipmentsEditItem.shipmentItem.LineItem.Quantity}}" required />
+                <input id="shipmentItemQuantityShipped" name="QuantityShipped" type="number" class="form-control" ng-model="orderShipmentsEditItem.shipmentItem.QuantityShipped" min="1" ng-max="orderShipmentsEditItem.shipmentItem.LineItem.Quantity" required />
             </div>
         </fieldset>
     </div>
