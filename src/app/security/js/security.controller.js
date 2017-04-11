@@ -15,7 +15,7 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
             var assignment = {
                 securityProfileID: scope.profile.ID,
                 buyerID: $stateParams.buyerid,
-                userGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
+                userGroupID: $stateParams.usergroupid || $stateParams.sellerusergroupid
             };
             OrderCloudSDK.SecurityProfiles.SaveAssignment(assignment)
                 .then(function() {
@@ -28,7 +28,7 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
         } else {
             var options = {
                 buyerID: $stateParams.buyerid,
-                userGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
+                userGroupID: $stateParams.usergroupid || $stateParams.sellerusergroupid
             };
             OrderCloudSDK.SecurityProfiles.DeleteAssignment(scope.profile.ID, options)
                 .then(function() {
