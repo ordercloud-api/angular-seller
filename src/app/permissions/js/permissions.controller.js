@@ -1,9 +1,10 @@
 angular.module('orderCloud')
-    .controller('SecurityCtrl', SecurityController)
+    .controller('PermissionsCtrl', PermissionsController)
 ;
 
-function SecurityController($exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, OrderCloudSDK) {
+function PermissionsController($state, $exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, OrderCloudSDK) {
     var vm = this;
+    vm.pageTitle = $state.current.data.pageTitle;
     vm.assignments = Assignments;
     vm.profiles = AvailableProfiles;
     vm.buyerid = $stateParams.buyerid;

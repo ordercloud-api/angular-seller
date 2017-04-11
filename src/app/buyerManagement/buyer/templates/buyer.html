@@ -19,7 +19,7 @@
             <a ui-sref="buyer"><i class="fa fa-cog"></i> Settings</a>
         </li>
         <li role="presentation" ui-sref-active="active">
-            <a ui-sref="buyerSecurity"><i class="fa fa-lock"></i> Security</a>
+            <a ui-sref="buyerPermissions"><i class="fa fa-lock"></i> Permissions</a>
         </li>
         <li role="presentation" ng-class="{active: application.$state.includes('buyerCatalog') || application.$state.is('buyerCatalogs')}"> <!-- TODO: oc-if-roles="CatalogRoles"-->
             <a ui-sref="buyerCatalogs({ search: '', sortBy: ''})"><i class="fa fa-sitemap"></i> Catalogs</a>
