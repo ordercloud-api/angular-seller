@@ -78,7 +78,8 @@
             <fieldset class="form-group">
                 <label for="buyerNewCatalogID" class="control-label col-sm-3">Catalog ID</label>
                 <div class="col-sm-9">
-                    <input placeholder="(Optional)" id="buyerNewCatalogID" ng-change="buyerCreateModal.updateValidity('CatalogID')" name="NewCatalogID" type="text" ng-model="buyerCreateModal.defaultCatalog.ID"
+                    <input placeholder="(Optional)" id="buyerNewCatalogID" ng-change="buyerCreateModal.updateValidity('CatalogID')" pattern="([A-Za-z0-9\-\_]+)"
+                    pattern-err-type="ID_Name" name="NewCatalogID" type="text" ng-model="buyerCreateModal.defaultCatalog.ID"
                         class="form-control">
                 </div>
             </fieldset>

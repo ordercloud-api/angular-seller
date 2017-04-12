@@ -10,10 +10,9 @@ function CatalogsService($uibModal, ocConfirm, OrderCloudSDK) {
 
     function _create() {
         return $uibModal.open({
-            templateUrl: 'buyerManagement/buyers/templates/buyerCreate.modal.html',
+            templateUrl: 'catalogManagement/catalogs/templates/catalogCreate.modal.html',
             controller: 'CatalogCreateModalCtrl',
-            controllerAs: 'buyerCreateModal',
-            bindToController: true
+            controllerAs: 'catalogCreateModal'
         }).result;
     }
 

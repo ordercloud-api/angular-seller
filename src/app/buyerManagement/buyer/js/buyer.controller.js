@@ -13,7 +13,7 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuy
     vm.searchCatalogs = searchCatalogs;
 
     function updateValidity() {
-        if (vm.settingsForm.buyerIDinput.$error['UnavailableID']) vm.settingsForm.buyerIDinput.$setValidity('Buyer.UnavailableID', true);
+        if (vm.settingsForm.buyerIDinput.$error['UnavailableID']) vm.settingsForm.buyerIDinput.$setValidity('UnavailableID', true);
     }
 
     function updateBuyer() {

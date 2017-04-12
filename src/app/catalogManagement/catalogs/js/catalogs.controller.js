@@ -63,7 +63,7 @@ function CatalogsController($exceptionHandler, $state, toastr, ocCatalogs, Order
         ocCatalogs.Create()
             .then(function(data) {
                 toastr.success(data.Name + ' was created.');
-                $state.go('buyer', {buyerid: data.ID});
+                $state.go('catalog', {catalogid: data.ID});
             });
     };
 
