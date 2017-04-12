@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UsersCtrl', UsersController)
 ;
 
-function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocUsers, ocParameters, UserList, Parameters) {
+function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloudSDK, ocUsers, ocParameters, UserList, Parameters) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
@@ -24,15 +24,6 @@ function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocU
     //Clear the search parameter, reload the state & reset the page
     vm.clearSearch = function() {
         vm.parameters.search = null;
-        vm.filter(true);
-    };
-
-    //Clear relevant filters, reload the state & reset the page
-    vm.clearFilters = function() {
-        vm.parameters.filters = null;
-        vm.parameters.from = null;
-        vm.parameters.to = null;
-        $ocMedia('max-width:767px') ? vm.parameters.sortBy = null : angular.noop(); //Clear out sort by on mobile devices
         vm.filter(true);
     };
 
@@ -59,7 +50,8 @@ function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocU
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Users.List(null, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return OrderCloudSDK.Users.List($stateParams.buyerid, Parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -71,7 +63,7 @@ function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocU
             .then(function(updatedUser) {
                 vm.list.Items[scope.$index] = updatedUser;
                 toastr.success(updatedUser.Username + ' was updated.');
-            })
+            });
     };
 
     vm.createUser = function() {
@@ -81,7 +73,7 @@ function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocU
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
                 toastr.success(newUser.Username + ' was created.');
-            })
+            });
     };
 
     vm.deleteUser = function(scope) {
@@ -91,6 +83,6 @@ function UsersController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocU
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-            })
+            });
     };
 }

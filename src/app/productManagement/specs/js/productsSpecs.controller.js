@@ -1,6 +1,5 @@
 angular.module('orderCloud')
     .controller('ProductSpecsCtrl', ProductSpecsController)
-    .controller('ProductSpecCreateCtrl', ProductSpecCreateController)
 ;
 
 function ProductSpecsController($rootScope, toastr, ocProductSpecs, ProductSpecs) {
@@ -117,24 +116,4 @@ function ProductSpecsController($rootScope, toastr, ocProductSpecs, ProductSpecs
                 vm.selectedSpec.Options.splice(specOptionIndex, 1);
             });
     }
-}
-
-function ProductSpecCreateController($uibModalInstance, toastr, OrderCloud, ProductID) {
-    var vm = this;
-
-    vm.submit = function() {
-        vm.loading = OrderCloud.Specs.Create(vm.spec)
-            .then(function(data) {
-                OrderCloud.Specs.SaveProductAssignment({ProductID: ProductID, SpecID: data.ID})
-                    .then(function(assignment) {
-                        assignment.Spec = data;
-                        toastr.success('Spec: ' + data.Name + ' created');
-                        $uibModalInstance.close(assignment);
-                    });
-            });
-    };
-
-    vm.cancel = function() {
-        $uibModalInstance.dismiss();
-    };
 }

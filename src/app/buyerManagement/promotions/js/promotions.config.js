@@ -20,11 +20,11 @@ function PromotionsConfig($stateProvider) {
                 CurrentAssignments: function($q, ocPromotions, $stateParams) {
                     return ocPromotions.Assignments.Get('company', $stateParams.buyerid);
                 },
-                PromotionList: function(OrderCloud, Parameters, CurrentAssignments, ocPromotions) {
-                    return OrderCloud.Promotions.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+                PromotionList: function(OrderCloudSDK, Parameters, CurrentAssignments, ocPromotions) {
+                    return OrderCloudSDK.Promotions.List(Parameters)
                         .then(function(data) {
                             return ocPromotions.Assignments.Map(CurrentAssignments, data, Parameters.buyerid);
-                        })
+                        });
                 }
             }
         })
@@ -43,11 +43,11 @@ function PromotionsConfig($stateProvider) {
                 CurrentAssignments: function($q, ocPromotions, $stateParams) {
                     return ocPromotions.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);
                 },
-                PromotionList: function(OrderCloud, Parameters, CurrentAssignments, ocPromotions) {
-                    return OrderCloud.Promotions.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+                PromotionList: function(OrderCloudSDK, Parameters, CurrentAssignments, ocPromotions) {
+                    return OrderCloudSDK.Promotions.List(Parameters)
                         .then(function(data) {
                             return ocPromotions.Assignments.Map(CurrentAssignments, data, Parameters.buyerid);
-                        })
+                        });
                 }
             }
         })

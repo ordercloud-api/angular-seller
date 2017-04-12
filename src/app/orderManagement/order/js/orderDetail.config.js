@@ -15,11 +15,13 @@ function OrderConfig($stateProvider) {
             },
             resolve: {
                 SelectedOrder: function($stateParams, ocOrderDetailService) {
-                    //return OrderCloud.Orders.Get($stateParams.orderid, $stateParams.buyerid);
-                    return ocOrderDetailService.GetOrderDetails($stateParams.orderid, $stateParams.buyerid);
+                    return ocOrderDetailService.GetOrderDetails($stateParams.orderid);
                 },
-                OrderLineItems: function($stateParams, OrderCloud) {
-                    return OrderCloud.LineItems.List($stateParams.orderid, null, 1, null, null, null, null, $stateParams.buyerid);
+                OrderLineItems: function($stateParams, OrderCloudSDK) {
+                    var options = {
+                        page: 1
+                    };
+                    return OrderCloudSDK.LineItems.List('incoming', $stateParams.orderid, options);
                 }
             }
         })

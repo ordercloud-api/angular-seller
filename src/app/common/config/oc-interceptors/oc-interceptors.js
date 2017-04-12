@@ -5,7 +5,8 @@ angular.module('orderCloud')
             return {
                 'responseError': function(rejection) {
                     if (rejection.config.url.indexOf('ordercloud.io') > -1 && rejection.status == 401) {
-                        $injector.get('LoginService').RememberMe();
+                        var currentState = $injector.get('$state').current.name;
+                        $injector.get('LoginService').RememberMe(currentState);
                     }
                     if (rejection.config.url.indexOf('ordercloud.io') > -1 && rejection.status == 403){
                         rejection.data.Errors[0].Message = 'You do not have permission to do this.';

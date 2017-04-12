@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocPromotions', OrderCloudPromotions)
 ;
 
-function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
+function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -25,7 +25,7 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                     return buyerid;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _edit(promotion, buyerid) {
@@ -36,13 +36,13 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
             bindToController: true,
             resolve: {
                 SelectedPromotion: function() {
-                    return promotion
+                    return promotion;
                 },
                 SelectedBuyerID: function() {
                     return buyerid;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _delete(promotion, buyerid) {
@@ -51,12 +51,18 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete promotion',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Promotions.Delete(promotion.ID, buyerid)
-            })
+                return OrderCloudSDK.Promotions.Delete(promotion.ID, buyerid);
+            });
     }
 
     function _getAssignments(level, buyerid, usergroupid) {
-        return OrderCloud.Promotions.ListAssignments(null, null, usergroupid, level, null, 100, buyerid)
+        var options = {
+            userGroupID:usergroupid,
+            level:level,
+            pageSize:100,
+            buyerID:buyerid
+        };
+        return OrderCloudSDK.Promotions.ListAssignments(options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -64,7 +70,8 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                     currentPage = angular.copy(data1.Meta.Page);
                 while(currentPage < totalPages) {
                     currentPage++;
-                    queue.push(OrderCloud.Promotions.ListAssignments(null, null, usergroupid, level, currentPage, 100, buyerid));
+                    options.page = currentPage;
+                    queue.push(OrderCloudSDK.Promotions.ListAssignments(options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -74,7 +81,7 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                         df.resolve(data1.Items);
                     });
                 return df.promise;
-            })
+            });
     }
 
     function _mapAssignments(allAssignments, promotionList, buyerID) {
@@ -95,18 +102,18 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
             var existingAssignment = _.where(allAssignments, {PromotionID:promotion.ID, BuyerID:buyerID})[0];
             if (existingAssignment && !promotion.Assigned) {
                 changedAssignments.push({
-                    "old": existingAssignment,
-                    "new": null
-                })
+                    'old': existingAssignment,
+                    'new': null
+                });
             } else if (!existingAssignment && promotion.Assigned) {
                 changedAssignments.push({
-                    "old": null,
-                    "new": {
+                    'old': null,
+                    'new': {
                         BuyerID: buyerID,
                         UserGroupID: userGroupID,
                         PromotionID: promotion.ID
                     }
-                })
+                });
             }
         });
 
@@ -123,7 +130,7 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.Promotions.SaveAssignment(diff.new) // -- Create new User Assignment
+                    OrderCloudSDK.Promotions.SaveAssignment(diff.new) // -- Create new User Assignment
                         .then(function() {
                             allAssignments.push(diff.new); //add the new assignment to the assignment list
                             d.resolve();
@@ -134,12 +141,11 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                         });
 
                     return d.promise;
-                })())
+                })());
             } else if (diff.old && !diff.new) { // -- Delete existing User Assignment
                 assignmentQueue.push((function() {
                     var d = $q.defer();
-
-                    OrderCloud.Promotions.DeleteAssignment(diff.old.PromotionID, null, diff.old.UserGroupID, diff.old.BuyerID)
+                    OrderCloudSDK.Promotions.DeleteAssignment(diff.old.PromotionID, diff.old.BuyerID, {userGroupID: diff.old.UserGroupID})
                         .then(function() {
                             allAssignments.splice(allAssignments.indexOf(diff.old), 1); //remove the old assignment from the assignment list
                             d.resolve();
@@ -150,7 +156,7 @@ function OrderCloudPromotions($q, $uibModal, ocConfirm, OrderCloud) {
                         });
 
                     return d.promise;
-                })())
+                })());
             }
         });
 

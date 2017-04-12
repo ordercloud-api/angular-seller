@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocOrderApprovalsService', OrderCloudApprovalsService)
 ;
 
-function OrderCloudApprovalsService($q, OrderCloud) {
+function OrderCloudApprovalsService($q, OrderCloudSDK, ocRolesService) {
     var service = {
         List: _list
     };
@@ -10,14 +10,30 @@ function OrderCloudApprovalsService($q, OrderCloud) {
     function _list(orderID, buyerID, page, pageSize) {
         var deferred = $q.defer();
 
-        OrderCloud.Orders.ListApprovals(orderID, null, page, pageSize, null, 'Status', null, buyerID)
+        var options = {
+            page: page,
+            pageSize: pageSize,
+            sortBy: 'Status'
+        };
+        OrderCloudSDK.Orders.ListApprovals('incoming', orderID, options)
             .then(function(data) {
-                getApprovingUserGroups(data)
+                if (!data.Items.length) {
+                    deferred.resolve(data);
+                } else if (ocRolesService.UserIsAuthorized(['UserGroupReader', 'UserGroupAdmin'], true)) {
+                    getApprovingUserGroups(data);
+                } else {
+                    getApprovalRules(data);
+                }
             });
 
         function getApprovingUserGroups(data) {
             var userGroupIDs = _.pluck(data.Items, 'ApprovingGroupID');
-            OrderCloud.UserGroups.List(null, 1, 100, null, null, {ID: userGroupIDs.join('|')}, buyerID)
+            var options = {
+                page: 1,
+                pageSize: 100,
+                filters: {ID: userGroupIDs.join('|')}
+            };
+            OrderCloudSDK.UserGroups.List(buyerID, options)
                 .then(function(userGroupData) {
                     angular.forEach(data.Items, function(approval) {
                         approval.ApprovingUserGroup = _.findWhere(userGroupData.Items, {ID: approval.ApprovingGroupID});
@@ -31,7 +47,12 @@ function OrderCloudApprovalsService($q, OrderCloud) {
 
         function getApprovalRules(data) {
             var approvalRuleIDs = _.pluck(data.Items, 'ApprovalRuleID');
-            OrderCloud.ApprovalRules.List(null, 1, 100, null, null, {ID: approvalRuleIDs.join('|')}, buyerID)
+            var options = {
+                page: 1,
+                pageSize: 100,
+                filters: {ID: approvalRuleIDs.join('|')}
+            };
+            OrderCloudSDK.ApprovalRules.List(buyerID, options)
                 .then(function(approvalRuleData) {
                     angular.forEach(data.Items, function(approval) {
                         approval.ApprovalRule = _.findWhere(approvalRuleData.Items, {ID: approval.ApprovalRuleID});

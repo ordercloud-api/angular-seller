@@ -2,41 +2,24 @@ angular.module('orderCloud')
     .factory('ocProductInventory', ocProductInventoryService)
 ;
 
-function ocProductInventoryService($q, OrderCloud) {
+function ocProductInventoryService($q, OrderCloudSDK) {
     var service = {
         Update: _update
     };
 
-    function _update(product, inventory) {
+    function _update(product) {
         var deferred = $q.defer();
         var inventoryResult;
         var queue = [];
 
-        var productPartial = _.pick(product, ['InventoryNotificationPoint', 'AllowOrderExceedInventory']);
-        queue.push(OrderCloud.Products.Patch(product.ID, productPartial));
+        var productPartial = _.pick(product, ['Inventory']);
 
-        queue.push((function() {
-            var d = $q.defer();
-
-            OrderCloud.Products.UpdateInventory(product.ID, inventory.Available)
-                .then(function(data) {
-                    inventoryResult = data;
-                    d.resolve();
-                })
-                .catch(function(ex) {
-                    inventoryResult = ex;
-                    d.reject();
-                });
-
-            return d.promise;
-        })());
-
-        $q.all(queue)
-            .then(function() {
-                deferred.resolve(inventoryResult);
+        OrderCloudSDK.Products.Patch(product.ID, productPartial)
+            .then(function(updatedProduct) {
+                deferred.resolve(updatedProduct);
             })
-            .catch(function() {
-                deferred.reject(inventoryResult);
+            .catch(function(ex) {
+                deferred.reject(ex);
             });
 
         return deferred.promise;

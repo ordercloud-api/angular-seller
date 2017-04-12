@@ -1,56 +1,210 @@
-<form name="productCreateModal.form" autocomplete="off" ng-submit="productCreateModal.submit()" novalidate class="form-horizontal" cg-busy="productCreateModal.loading">
+<form name="productCreateModal.form" autocomplete="off" ng-submit="productCreateModal.submit()" novalidate cg-busy="productCreateModal.loading">
     <div class="modal-header">
         <button type="button" class="close" aria-label="Close" ng-click="productCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Create New Product</h4>
+        <h4 class="modal-title">{{productCreateModal.currentStep ? productCreateModal.product.Name : 'Create New Product'}} <span class="text-muted">- {{productCreateModal.steps[productCreateModal.currentStep].name}}</span></h4>
     </div>
-    <div class="modal-body">
-        <fieldset class="form-group">
-            <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
-            <div class="col-sm-9">
-                <input id="ProductID" pattern="([A-Za-z0-9\-\_]+)" placeholder="(Optional)" pattern-err-type="ID_Name" type="text" class="form-control" ng-model="productCreateModal.product.ID">
+    <div class="modal-body" ng-if="productCreateModal.initialized">
+        <div class="form-horizontal" ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'info'" ng-form="info">
+            <fieldset class="form-group">
+                <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
+                <div class="col-sm-9">
+                    <input id="ProductID" pattern="([A-Za-z0-9\-\_]+)" placeholder="(Optional)" pattern-err-type="ID_Name" type="text" class="form-control"
+                        autofocus ng-model="productCreateModal.product.ID">
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ProductName" class="col-sm-3 control-label">Name</label>
+                <div class="col-sm-9">
+                    <input id="ProductName" type="text" class="form-control" ng-model="productCreateModal.product.Name" required>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ProductDescription" class="col-sm-3 control-label">Description</label>
+                <div class="col-sm-9">
+                    <textarea rows="4" id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="productCreateModal.product.Description"></textarea>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier</label>
+                <div class="col-sm-9">
+                    <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="productCreateModal.product.QuantityMultiplier"
+                        required>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="checkbox">
+                        <label for="ProductActive">
+                            <input id="ProductActive" name="ProductActive" type="checkbox" ng-model="productCreateModal.product.Active"> Active
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'image'" ng-form="image">
+            <fieldset>
+                <label class="sr-only" for="image">Upload a product image</label>
+                <oc-file-upload model="productCreateModal.product" upload-text="'Choose a product image'" label="Image:" keyname="image"
+                    extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+            </fieldset>
+        </div>
+        <div ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'pricing'" ng-form="pricing">
+            <fieldset class="text-center">
+                <div class="checkbox">
+                    <label for="DefaultPriceEnabled">
+                        <input id="DefaultPriceEnabled" disable-validation-message name="DefaultPriceEnabled" type="checkbox" ng-change="productCreateModal.validatePricingForm()" ng-model="productCreateModal.enableDefaultPricing"> Set a Default Price
+                    </label>
+                </div>
+            </fieldset>
+            <div ng-if="productCreateModal.enableDefaultPricing">
+                <div class="form-horizontal">
+                    <fieldset class="form-group">
+                        <label for="MinQuantity" class="col-sm-3 control-label">Min Quantity</label>
+                        <div class="col-sm-9">
+                            <input id="MinQuantity" name="MinQuantity" type="number" class="form-control" min="1" ng-max="productCreateModal.product.DefaultPriceSchedule.MaxQuantity"
+                                ng-disabled="productCreateModal.product.DefaultPriceSchedule.RestrictedQuantity" ng-model="productCreateModal.product.DefaultPriceSchedule.MinQuantity"
+                            />
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="MaxQuantity" class="col-sm-3 control-label">Max Quantity</label>
+                        <div class="col-sm-9">
+                            <input id="MaxQuantity" name="MaxQuantity" placeholder="(Optional)" type="number" class="form-control" ng-min="productCreateModal.product.DefaultPriceSchedule.MinQuantity"
+                                ng-disabled="productCreateModal.product.DefaultPriceSchedule.RestrictedQuantity" ng-model="productCreateModal.product.DefaultPriceSchedule.MaxQuantity"
+                            />
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="checkbox">
+                                <label for="ApplyTax">
+                            <input id="ApplyTax" name="ApplyTax" type="checkbox" ng-model="productCreateModal.product.DefaultPriceSchedule.ApplyTax"> Apply Tax
+                        </label>
+                            </div>
+                            <div class="checkbox">
+                                <label for="ApplyShipping">
+                            <input id="ApplyShipping" name="ApplyShipping" type="checkbox" ng-model="productCreateModal.product.DefaultPriceSchedule.ApplyShipping"> Apply Shipping
+                        </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="radio">
+                                <label for="OpenQuantity">
+                            <input id="OpenQuantity" name="OpenQuantity" type="radio" ng-model="productCreateModal.product.DefaultPriceSchedule.RestrictedQuantity" ng-value="false"> Open Quantity
+                        </label>
+                            </div>
+                            <div class="radio">
+                                <label for="RestrictedQuantity">
+                            <input id="RestrictedQuantity" name="RestrictedQuantity" type="radio" ng-model="productCreateModal.product.DefaultPriceSchedule.RestrictedQuantity" ng-value="true"> Restricted Quantity
+                        </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <hr />
+                <h4>Price Breaks</h4>
+                <oc-price-breaks priceschedule="productCreateModal.product.DefaultPriceSchedule"></oc-price-breaks>
             </div>
-        </fieldset>
-        <fieldset class="form-group">
-            <label for="ProductName" class="col-sm-3 control-label">Name</label>
-            <div class="col-sm-9">
-                <input id="ProductName" type="text" class="form-control" ng-model="productCreateModal.product.Name" required>
-            </div>
-        </fieldset>
-        <fieldset class="form-group">
-            <label for="ProductDescription" class="col-sm-3 control-label">Description</label>
-            <div class="col-sm-9">
-                <textarea rows="4" id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="productCreateModal.product.Description"></textarea>
-            </div>
-        </fieldset>
-        <fieldset class="form-group">
-            <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier</label>
-            <div class="col-sm-9">
-                <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="productCreateModal.product.QuantityMultiplier" required>
-            </div>
-        </fieldset>
-        <fieldset class="form-group">
-            <label class="col-sm-3 control-label">Image</label>
-            <div class="col-sm-9">
-                <oc-file-upload  model="productCreateModal.product" label="Image:" patch="productCreateModal.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
-            </div>
-        </fieldset>
-        <fieldset class="form-group">
-            <div class="col-sm-offset-3 col-sm-9">
+        </div>
+        <div class="form-horizontal" ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'shipping'" ng-form="shipping">
+            <fieldset class="form-group">
+                <label for="ShipWeight" class="col-sm-3 control-label">Ship Weight</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input id="ShipWeight" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipWeight"
+                        />
+                        <span class="input-group-addon">lb(s)</span>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ShipHeight" class="col-sm-3 control-label">Ship Height</label>
+                <div class="col-sm-9">
+                    <input id="ShipHeight" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipHeight"
+                    />
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ShipWidth" class="col-sm-3 control-label">Ship Width</label>
+                <div class="col-sm-9">
+                    <input id="ShipWidth" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipWidth"
+                    />
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ShipLength" class="col-sm-3 control-label">Ship Length</label>
+                <div class="col-sm-9">
+                    <input id="ShipLength" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipLength"
+                    />
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ShipFrom" class="col-sm-3 control-label">Ship From</label>
+                <div class="col-sm-9">
+                    <ui-select ng-model="productCreateModal.product.ShipFromAddressID" close-on-select="true" id="ShipFrom">
+                        <ui-select-match placeholder="Search and select seller addresses...">
+                            <span ng-bind-html="$select.selected | address"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="address.ID as address in (productCreateModal.sellerAddresses.Items | filter: $select.search) track by $index"
+                            refresh="productCreateModal.listAllAdminAddresses($select.search)" refresh-delay="300">
+                            <span ng-bind-html="address | address:'full'"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </fieldset>
+        </div>
+        <div ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'inventory'" ng-form="inventory">
+            <fieldset class="text-center">
                 <div class="checkbox">
                     <label for="InventoryEnabled">
-                        <input id="InventoryEnabled" name="InventoryEnabled" type="checkbox" ng-model="productCreateModal.product.InventoryEnabled"> Inventory Enabled
+                        <input id="InventoryEnabled" name="InventoryEnabled" type="checkbox" ng-model="productCreateModal.product.Inventory.Enabled"> Inventory Enabled
                     </label>
                 </div>
-                <div class="checkbox">
-                    <label for="ProductActive">
-                        <input id="ProductActive" name="ProductActive" type="checkbox" ng-model="productCreateModal.product.Active"> Active
-                    </label>
-                </div>
+            </fieldset>
+            <div class="form-horizontal" ng-if="productCreateModal.product.Inventory.Enabled">
+                <hr>
+                <fieldset class="form-group">
+                    <label for="InventoryNotificationPoint" class="col-sm-3 control-label">Notification Point</label>
+                    <div class="col-sm-9">
+                        <input id="InventoryNotificationPoint" type="number" class="form-control" min="1" ng-model="productCreateModal.product.Inventory.NotificationPoint"
+                        />
+                    </div>
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="AvailableInventory" class="col-sm-3 control-label">Inventory</label>
+                    <div class="col-sm-9">
+                        <input id="AvailableInventory" type="number" class="form-control" ng-model="productCreateModal.product.Inventory.QuantityAvailable"
+                        />
+                    </div>
+                </fieldset>
+                <fieldset class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <div class="checkbox">
+                            <label for="AllowOrderExceedInventory">
+                            <input id="AllowOrderExceedInventory" name="ApplyTax" type="checkbox" ng-model="productCreateModal.product.Inventory.OrderCanExceed">
+                            Allow Order to Exceed Inventory
+                        </label>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
-        </fieldset>
+        </div>
     </div>
-    
     <div class="modal-footer">
-        <button type="submit" cg-busy="productCreateModal.productUpdateLoading" ng-disabled="productCreateModal.form.$invalid" class="btn btn-primary btn-block">Save Product</button>
+        <div ng-class="{row:productCreateModal.showPrev}">
+            <div class="col-xs-6" ng-if="productCreateModal.showPrev">
+                <button type="button" class="btn btn-default btn-block" ng-click="productCreateModal.prevStep()">Back ({{productCreateModal.steps[productCreateModal.currentStep - 1].name}})</button>
+            </div>
+            <div ng-class="{'col-xs-6':productCreateModal.showPrev}">
+                <button type="button" ng-if="productCreateModal.showNext" class="btn btn-primary btn-block" 
+                ng-disabled="productCreateModal.form[productCreateModal.steps[productCreateModal.currentStep].form].$invalid || (productCreateModal.enableDefaultPricing && !productCreateModal.product.DefaultPriceSchedule.PriceBreaks.length)"
+                    ng-click="productCreateModal.nextStep()">Next ({{productCreateModal.steps[productCreateModal.currentStep + 1].name}})</button>
+                <button ng-if="!productCreateModal.showNext" type="submit" cg-busy="productCreateModal.productUpdateLoading" ng-disabled="productCreateModal.form.$invalid || (productCreateModal.enableDefaultPricing && !productCreateModal.product.DefaultPriceSchedule.PriceBreaks.length)"
+                    class="btn btn-primary btn-block">Save Product</button>
+            </div>
+        </div>
     </div>
 </form>

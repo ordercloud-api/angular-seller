@@ -37,8 +37,8 @@ module.exports = {
     ],
     appFiles: [
         build + '**/app.module.js',
-        build + '**/common/config/routing.js',
-        build + '**/common/config/*.js',
+        build + '**/common/config/**/routing.js',
+        build + '**/common/config/**/*.js',
         build + '**/*s.config.js',
         build + '**/*.config.js',
         build + '**/app.run.js',
@@ -76,19 +76,19 @@ function getConstants() {
     var environment = process.env.environment || constants.environment;
     switch (environment) {
         case 'local':
-            result.authurl = 'http://core.four51.com:11629/oauth/token';
+            result.authurl = 'http://core.four51.com:11629';
             result.apiurl = 'http://core.four51.com:9002';
             break;
-        case 'test':
-            result.authurl = 'https://testauth.ordercloud.io/oauth/token';
-            result.apiurl = 'https://testapi.ordercloud.io';
-            break;
         case 'qa':
-            result.authurl = 'https://qaauth.ordercloud.io/oauth/token';
+            result.authurl = 'https://qaauth.ordercloud.io';
             result.apiurl = 'https://qaapi.ordercloud.io';
             break;
+        case 'staging':
+            result.authurl = 'https://stagingauth.ordercloud.io';
+            result.apiurl = 'https://stagingapi.ordercloud.io';
+            break;
         default:
-            result.authurl = 'https://auth.ordercloud.io/oauth/token';
+            result.authurl = 'https://auth.ordercloud.io';
             result.apiurl = 'https://api.ordercloud.io';
             break;
     }
@@ -117,9 +117,9 @@ function _checkBootswatchTheme() {
 
     if (theme) {
         bootswatchBower.main = [
-            "./" + theme + "/bootswatch.less",
-            "./" + theme + "/variables.less"
-        ]
+            './' + theme + '/bootswatch.less',
+            './' + theme + '/variables.less'
+        ];
     }
 
     return bootswatchBower;

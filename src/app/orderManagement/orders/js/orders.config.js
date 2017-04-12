@@ -17,11 +17,15 @@ function OrdersConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                OrderList: function(ocOrdersService, OrderCloud, Parameters) {
+                OrderList: function(ocOrdersService, Parameters) {
                     return ocOrdersService.List(Parameters);
                 },
-                BuyerCompanies: function(OrderCloud) {
-                    return OrderCloud.Buyers.List(null, 1, 100);
+                BuyerCompanies: function(OrderCloudSDK) {
+                    var options = {
+                        page: 1,
+                        pageSize: 100
+                    };
+                    return OrderCloudSDK.Buyers.List(options);
                 }
             }
         })

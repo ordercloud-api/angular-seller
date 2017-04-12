@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocBuyers', BuyersService)
 ;
 
-function BuyersService($uibModal, ocConfirm, OrderCloud) {
+function BuyersService($uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         Delete: _delete
@@ -14,7 +14,7 @@ function BuyersService($uibModal, ocConfirm, OrderCloud) {
             controller: 'BuyerCreateModalCtrl',
             controllerAs: 'buyerCreateModal',
             bindToController: true
-        }).result
+        }).result;
     }
 
 
@@ -24,8 +24,8 @@ function BuyersService($uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete buyer organization',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Buyers.Delete(buyer.ID)
-            })
+                return OrderCloudSDK.Buyers.Delete(buyer.ID);
+            });
     }
 
     return service;

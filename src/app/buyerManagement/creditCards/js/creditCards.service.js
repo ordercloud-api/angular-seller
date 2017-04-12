@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocCreditCards', OrderCloudCreditCards)
 ;
 
-function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) {
+function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloudSDK, ocAuthNet) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -25,7 +25,7 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) 
                     return buyerID;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _edit(creditCard, buyerid) {
@@ -36,13 +36,13 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) 
             bindToController: true,
             resolve: {
                 SelectedCreditCard: function() {
-                    return creditCard
+                    return creditCard;
                 },
                 SelectedBuyerID: function() {
                     return buyerid;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _delete(creditCard, buyerid) {
@@ -57,7 +57,12 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) 
     }
 
     function _getAssignments(level, buyerid, usergroupid) {
-        return OrderCloud.CreditCards.ListAssignments(null, null, usergroupid, level, null, 100, buyerid)
+        var options = {
+            userGroupID: usergroupid,
+            level: level,
+            pageSize: 100
+        };
+        return OrderCloudSDK.CreditCards.ListAssignments(buyerid, options)
             .then(function(data1) {
                 var df = $q.defer(),
                     queue = [],
@@ -65,7 +70,8 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) 
                     currentPage = angular.copy(data1.Meta.Page);
                 while(currentPage < totalPages) {
                     currentPage++;
-                    queue.push(OrderCloud.CreditCards.ListAssignments(null, null, usergroupid, level, currentPage, 100, buyerid));
+                    options.page = currentPage;
+                    queue.push(OrderCloudSDK.CreditCards.ListAssignments(buyerid, options));
                 }
                 $q.all(queue)
                     .then(function(results) {
@@ -96,13 +102,13 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) 
             var existingAssignment = _.where(allAssignments, {CreditCardID: creditCard.ID})[0];
             if (existingAssignment && !creditCard.Assigned) {
                 changedAssignments.push({
-                    "old": existingAssignment,
-                    "new": null
+                    'old': existingAssignment,
+                    'new': null
                 });
             } else if (!existingAssignment && creditCard.Assigned) {
                 changedAssignments.push({
-                    "old": null,
-                    "new": {
+                    'old': null,
+                    'new': {
                         UserGroupID: userGroupID,
                         CreditCardID: creditCard.ID
                     }
@@ -123,7 +129,7 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) 
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.CreditCards.SaveAssignment(diff.new, buyerid) // -- Create new User Assignment
+                    OrderCloudSDK.CreditCards.SaveAssignment(buyerid, diff.new) // -- Create new User Assignment
                         .then(function() {
                             allAssignments.push(diff.new); //add the new assignment to the assignment list
                             d.resolve();
@@ -134,12 +140,12 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) 
                         });
 
                     return d.promise;
-                })())
+                })());
             } else if (diff.old && !diff.new) { // -- Delete existing User Assignment
                 assignmentQueue.push((function() {
                     var d = $q.defer();
 
-                    OrderCloud.CreditCards.DeleteAssignment(diff.old.CreditCardID, null, diff.old.UserGroupID, buyerid)
+                    OrderCloudSDK.CreditCards.DeleteAssignment(buyerid, diff.old.CreditCardID, {userGroupID: diff.old.UserGroupID})
                         .then(function() {
                             allAssignments.splice(allAssignments.indexOf(diff.old), 1); //remove the old assignment from the assignment list
                             d.resolve();
@@ -150,7 +156,7 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloud, ocAuthNet) 
                         });
 
                     return d.promise;
-                })())
+                })());
             }
         });
 

@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocOrderShipmentsService', OrderCloudOrderShipmentsService)
 ;
 
-function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
+function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         List: _list,
         ListLineItems: _listLineItems,
@@ -14,17 +14,49 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
         DeleteItem: _deleteItem
     };
 
-    function _list(orderID, buyerID, page, pageSize) {
+    function _list(orderID, page, pageSize) {
         var deferred = $q.defer();
 
-        OrderCloud.Shipments.List(orderID, null, page, pageSize, null, null, null, buyerID)
+        var options = {
+            orderID: orderID,
+            page: page,
+            pageSize: pageSize
+        };
+        OrderCloudSDK.Shipments.List(options)
             .then(function(data) {
-                getLineItems(data);
+                getShipmentItems(data);
             });
 
+        function getShipmentItems(data) {
+            var queue = [];
+
+            angular.forEach(data.Items, function(shipment) {
+                queue.push((function() {
+                    var d = $q.defer();
+
+                    OrderCloudSDK.Shipments.ListItems(shipment.ID)
+                        .then(function(shipmentItems) {
+                            shipment.Items = shipmentItems.Items;
+                            d.resolve();
+                        });
+
+                    return d.promise;
+                })());
+            });
+
+            $q.all(queue).then(function() {
+                getLineItems(data);
+            });
+        }
+
         function getLineItems(data) {
-            var lineItemIDs = _.uniq(_.flatten(_.map(data.Items, function(shipment) { return _.pluck(shipment.Items, 'LineItemID')})));
-            OrderCloud.LineItems.List(orderID, null, 1, 100, null, null, {ID: lineItemIDs.join('|')}, buyerID)
+            var lineItemIDs = _.uniq(_.flatten(_.map(data.Items, function(shipment) { return _.pluck(shipment.Items, 'LineItemID');})));
+            var options = {
+                page: 1,
+                pageSize: 100,
+                filters: {ID: lineItemIDs.join('|')}
+            };
+            OrderCloudSDK.LineItems.List('incoming', orderID, options)
                 .then(function(lineItemData) {
                     angular.forEach(data.Items, function(shipment) {
                         angular.forEach(shipment.Items, function(shipmentItem) {
@@ -38,7 +70,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
 
         function analyzeShippingAddresses(data) {
             angular.forEach(data.Items, function(shipment) {
-                var shippingAddressCount = _.uniq(_.map(shipment.Items, function(item) { return (item.LineItem.ShippingAddress ? (item.LineItem.ShippingAddress.ID ? item.LineItem.ShippingAddress.ID : item.LineItem.ShippingAddress.Street1) : item.LineItem.ShippingAddressID) })).length;
+                var shippingAddressCount = _.uniq(_.map(shipment.Items, function(item) { return (item.LineItem.ShippingAddress ? (item.LineItem.ShippingAddress.ID ? item.LineItem.ShippingAddress.ID : item.LineItem.ShippingAddress.Street1) : item.LineItem.ShippingAddressID); })).length;
                 shipment.ShippingAddress = (shippingAddressCount == 1) ? shipment.Items[0].LineItem.ShippingAddress : null;
             });
 
@@ -48,10 +80,14 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
         return deferred.promise;
     }
 
-    function _listLineItems(orderID, buyerID, page, pageSize) {
+    function _listLineItems(orderID, page, pageSize) {
         var deferred = $q.defer();
 
-        OrderCloud.LineItems.List(orderID, null, page, pageSize, null, null, null, buyerID)
+        var options = {
+            page: page,
+            pageSize: pageSize
+        };
+        OrderCloudSDK.LineItems.List('incoming', orderID, options)
             .then(function(data) {
                  analyzeShipments(data);
             });
@@ -70,26 +106,69 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
 
     function _create(shipment, lineItems, orderID, buyerID) {
         var deferred = $q.defer();
-        var shipmentModel = angular.copy(shipment);
 
-        shipmentModel.Items = [];
-        angular.forEach(lineItems, function(lineItem) {
-             if (lineItem.Selected && lineItem.ShipQuantity && lineItem.ShipQuantity > 0) {
-                 shipmentModel.Items.push({
-                     LineItemID: lineItem.ID,
-                     OrderID: orderID,
-                     QuantityShipped: lineItem.ShipQuantity
-                 });
-             }
-        });
+        var shipmentCopy = angular.copy(shipment);
 
-        if (shipmentModel.DateShipped && (typeof shipmentModel.DateShipped.getDate == 'function')) shipmentModel.DateShipped = shipmentModel.DateShipped.toISOString();
-        if (shipmentModel.DateDelivered && (typeof shipmentModel.DateDelivered.getDate == 'function')) shipmentModel.DateDelivered = shipmentModel.DateDelivered.toISOString();
+        if (shipmentCopy.DateShipped && (typeof shipmentCopy.DateShipped.getDate == 'function')) shipmentCopy.DateShipped = shipmentCopy.DateShipped.toISOString();
+        if (shipmentCopy.DateDelivered && (typeof shipmentCopy.DateDelivered.getDate == 'function')) shipmentCopy.DateDelivered = shipmentCopy.DateDelivered.toISOString();
 
-        OrderCloud.Shipments.Create(shipmentModel, buyerID)
+        var toAddressID = _.findWhere(lineItems, {Selected: true}).ShippingAddressID;
+        var toAddress = _.findWhere(lineItems, {Selected: true}).ShippingAddressID;
+
+        var shipmentModel = {
+            buyerID: buyerID,
+            shipper: shipmentCopy.Shipper,
+            dateShipped: shipmentCopy.DateShipped,
+            dateDeliveryed: shipmentCopy.DateDelivered,
+            trackingNumber: shipmentCopy.TrackingNumber,
+            cost: shipmentCopy.Cost
+        };
+        toAddressID ? (shipmentModel.ShipToAddressID = toAddressID) : (shipmentModel.ToAddress = toAddress);
+
+        OrderCloudSDK.Shipments.Create(shipmentModel)
             .then(function(data) {
-                deferred.resolve(data);
+                createShipmentItems(data);
             });
+
+        function createShipmentItems(shipmentData) {
+            var queue = [];
+            angular.forEach(lineItems, function(lineItem) {
+                if (lineItem.Selected && lineItem.ShipQuantity && lineItem.ShipQuantity > 0) {
+                    queue.push((function() {
+                        var d = $q.defer();
+
+                        var product = {};
+                        _.each(lineItem.Product, function(val, key) {
+                            if (key == 'ID') {
+                                product.ID = val;
+                            } else {
+                                product[key] = val;
+                            }
+                        });
+                        var shipmentItem = {
+                            orderID: orderID,
+                            lineItemID: lineItem.ID,
+                            quantityShipped: lineItem.ShipQuantity,
+                            unitPrice: lineItem.UnitPrice,
+                            costCenter: lineItem.CostCenter,
+                            dateNeeded: lineItem.DatNeeded,
+                            product: product
+                        };
+                        OrderCloudSDK.Shipments.SaveItem(shipmentData.ID, shipmentItem)
+                            .then(function(item) {
+                                d.resolve(item);
+                            });
+
+                        return d.promise;
+                    })());
+                }
+            });
+
+            $q.all(queue).then(function(results) {
+                shipmentData.Items = results;
+                deferred.resolve(shipmentData);
+            });
+        }
 
         return deferred.promise;
     }
@@ -107,16 +186,16 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
                     return buyerID;
                 }
             }
-        }).result
+        }).result;
     }
 
-    function _delete(shipmentID, buyerID) {
+    function _delete(shipmentID) {
         return ocConfirm.Confirm({
                 message:'Are you sure you want to delete <br> <b>' + shipmentID + '</b>?',
                 confirmText: 'Delete shipment',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.Shipments.Delete(shipmentID, buyerID);
+                return OrderCloudSDK.Shipments.Delete(shipmentID);
             });
     }
 
@@ -127,11 +206,11 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
             controller: 'OrderShipmentsCreateItemsCtrl',
             controllerAs: 'orderShipmentsCreateItems',
             resolve: {
-                ShipmentLineItems: function(ocOrderShipmentsService) {
-                    return ocOrderShipmentsService.ListLineItems(orderID, buyerID);
-                },
                 Shipment: function() {
                     return shipment;
+                },
+                ShipmentLineItems: function() {
+                    return _listLineItems(orderID);
                 },
                 OrderID: function() {
                     return orderID;
@@ -140,10 +219,10 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
                     return buyerID;
                 }
             }
-        }).result
+        }).result;
     }
 
-    function _editItem(item, shipmentID, buyerID) {
+    function _editItem(item, shipmentID) {
         return $uibModal.open({
             templateUrl: 'orderManagement/shipments/templates/orderShipmentsEditItem.modal.html',
             controller: 'OrderShipmentsEditItemCtrl',
@@ -154,20 +233,17 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloud) {
                 },
                 ShipmentID: function() {
                     return shipmentID;
-                },
-                BuyerID: function() {
-                    return buyerID;
                 }
             }
-        }).result
+        }).result;
     }
 
-    function _deleteItem(shipmentID, orderID, lineItemID, buyerID) {
+    function _deleteItem(shipmentID, orderID, lineItemID) {
         return ocConfirm.Confirm({
             message:'Are you sure you want to delete this shipment item? <br>' + lineItemID,
             confirmText: 'Delete shipment item'})
             .then(function() {
-                return OrderCloud.Shipments.DeleteItem(shipmentID, orderID, lineItemID, buyerID);
+                return OrderCloudSDK.Shipments.DeleteItem(shipmentID, orderID, lineItemID);
             });
     }
 

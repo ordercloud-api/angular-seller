@@ -1,16 +1,18 @@
 <div ui-view cg-busy="application.stateLoading('shipments')">
     <div ng-if="!orderShipments.list.Items.length" class="no-matches">
         This order does not have any shipments. <br>
-        <a ui-sref=".create">Create one now</a>
+        <a ui-sref=".create" oc-if-roles="ShipmentAdmin">Create one now</a>
     </div>
     <div class="row" ng-if="orderShipments.list.Items.length">
         <div class="col-sm-5">
-            <button type="button" class="btn btn-primary" ui-sref=".create">
-                <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                New Shipment
-            </button>
-            <br>
-            <br>
+            <div oc-if-roles="ShipmentAdmin">
+                <button type="button" class="btn btn-primary" ui-sref=".create">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    New Shipment
+                </button>
+                <br>
+                <br>
+            </div>
             <ul class="list-group">
                 <li class="list-group-item" ng-class="{'active': shipment.ID == orderShipments.selectedShipment.ID}" ng-repeat="shipment in orderShipments.list.Items" ng-click="orderShipments.selectShipment(shipment)">
                     <b>{{shipment.ID}}</b>
@@ -37,16 +39,15 @@
                 Select a shipment to view details
             </div>
             <div ng-if="orderShipments.selectedShipment">
-                <header>
-                    <h3>
-                        <div class="pull-right">
-                            <button type="button" class="btn btn-default" ng-click="orderShipments.editShipment()"><i class="fa fa-edit"></i> Edit</button>
-                            <button type="button" class="btn btn-danger" ng-click="orderShipments.deleteShipment()"><i class="fa fa-trash"></i> Delete</button>
-                        </div>
+                <header class="l-page-header">
+                    <h3 class="l-page-header__title">
                         {{orderShipments.selectedShipment.ID}}
                     </h3>
+                    <div class="l-page-header__btns" oc-if-roles="ShipmentAdmin">
+                        <button type="button" class="btn btn-default" ng-click="orderShipments.editShipment()"><i class="fa fa-edit"></i> Edit</button>
+                        <button type="button" class="btn btn-danger" ng-click="orderShipments.deleteShipment()"><i class="fa fa-trash"></i> Delete</button>
+                    </div>
                 </header>
-                <br>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <b>Shipper: </b> {{orderShipments.selectedShipment.Shipper}} <br>
@@ -57,19 +58,21 @@
                     </div>
                 </div>
                 <div class="panel panel-default" ng-if="orderShipments.selectedShipment.ShippingAddress">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Shipping Address</h3>
+                    </div>
                     <div class="panel-body">
-                        <h4>Shipping Address</h4>
                         <div ng-bind-html="orderShipments.selectedShipment.ShippingAddress | address:'full'"></div>
                     </div>
                 </div>
                 <div ng-if="orderShipments.selectedShipment.Items.length">
-                    <div class="text-right">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="orderShipments.createShipmentItems()">
+                    <div oc-if-roles="ShipmentAdmin">
+                        <button type="button" class="btn btn-primary" ng-click="orderShipments.createShipmentItems()">
                             <i class="fa fa-plus-circle"></i>
                             Add Items
                         </button>
+                        <br>
                     </div>
-                    <br>
                     <div class="panel panel-default table-responsive">
                         <table class="table table-bordered l-shipmentitem-table">
                             <colgroup>
@@ -83,17 +86,19 @@
                                 <th><span class="hidden-xs">Quantity </span>Shipped</th>
                                 <th>Product</th>
                                 <th>Line Item ID</th>
-                                <th></th>
+                                <th oc-if-roles="ShipmentAdmin"></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat-start="item in orderShipments.selectedShipment.Items" ng-if="item.OrderID == orderShipments.orderID">
-                                <td ng-click="orderShipments.editShipmentItem(item)">{{item.QuantityShipped + ' of ' + item.LineItem.Quantity}}</td>
+                                <td>
+                                    <a href="" ng-click="orderShipments.editShipmentItem(item)">{{item.QuantityShipped + ' of ' + item.LineItem.Quantity}}</a>
+                                </td>
                                 <td rowspan="{{orderShipments.selectedShipment.ShippingAddress ? 1 : 2}}">
                                     {{item.LineItem.Product.Name}} <small class="text-muted">({{item.LineItem.Product.ID}})</small>
                                 </td>
                                 <td>{{item.LineItem.ID}}</td>
-                                <td class="actions-cell" rowspan="{{orderShipments.selectedShipment.ShippingAddress ? 1 : 2}}">
+                                <td rowspan="{{orderShipments.selectedShipment.ShippingAddress ? 1 : 2}}" oc-if-roles="ShipmentAdmin">
                                     <button class="btn btn-danger btn-xs btn-block" ng-click="orderShipments.deleteShipmentItem(item)"><i class="fa fa-trash"></i> <span class="hidden-xs">Delete</span></button>
                                 </td>
                             </tr>

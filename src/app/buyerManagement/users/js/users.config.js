@@ -17,8 +17,8 @@ function UsersConfig($stateProvider) {
                 Parameters: function($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
                 },
-                UserList: function(OrderCloud, Parameters) {
-                    return OrderCloud.Users.List(Parameters.userGroupID, Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid);
+                UserList: function(OrderCloudSDK, $stateParams, Parameters) {
+                    return OrderCloudSDK.Users.List($stateParams.buyerid, Parameters);
                 }
             }
         })
@@ -37,11 +37,11 @@ function UsersConfig($stateProvider) {
                 CurrentAssignments: function($stateParams, ocUsers) {
                     return ocUsers.Assignments.Get($stateParams.buyerid, $stateParams.usergroupid);
                 },
-                UserList: function(Parameters, CurrentAssignments, ocUsers, OrderCloud) {
-                    return OrderCloud.Users.List(null, Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+                UserList: function($stateParams, Parameters, CurrentAssignments, ocUsers, OrderCloudSDK) {
+                    return OrderCloudSDK.Users.List($stateParams.buyerid, Parameters)
                         .then(function(data) {
                             return ocUsers.Assignments.Map(CurrentAssignments, data);
-                        })
+                        });
                 }
             }
         })

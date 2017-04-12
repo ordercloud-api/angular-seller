@@ -2,9 +2,8 @@
 | --- | --- |
 | [![Build Status](https://travis-ci.org/ordercloud-api/angular-admin.svg?branch=master)](https://travis-ci.org/ordercloud-api/angular-admin) | [![Build Status](https://travis-ci.org/ordercloud-api/angular-admin.svg?branch=development)](https://travis-ci.org/ordercloud-api/angular-admin) |
 
-# OrderCloud Angular Admin
-An open-source starter application for custom OrderCloud administrative solutions built on AngularJS. Ideally solution
-implementers will fork or clone this repository to maintain their customized admin application through merges and
+# OrderCloud Angular Seller
+A fully functional, open source starter application built for seller users on the OrderCloud.io platform in Angular 1.X. Ideally solution implementers will fork or clone this repository to maintain their customized admin application through merges and
 pull requests after new versions are released in the base fork (this repository).
 
 - [Getting Started](#getting-started)
@@ -89,7 +88,7 @@ can be easily deployed to any hosting provider.
 ## Contributors
 The OrderCloud team welcomes any and all open-source contributors to create a pull request for bug fixes, enhancements, or new features (pending review).
 
-Prior to writing any code, be sure to [open an issue](https://github.com/ordercloud-api/angular-admin/issues) with a detailed description of
+Prior to writing any code, be sure to [open an issue](https://github.com/ordercloud-api/angular-seller/issues) with a detailed description of
 your problem or proposed enhancement. We may already be on our way to delivering what you want!
 
 The OrderCloud team uses GitHub's standard [fork, branch, pull request workflow](https://gist.github.com/Chaser324/ce0505fbed06b947d962) and

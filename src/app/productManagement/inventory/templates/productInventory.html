@@ -1,27 +1,28 @@
 <div class="row">
     <div class="col-sm-8">
-        <div class="alert alert-info" ng-if="productInventory.inventory.LastUpdated">
-            Inventory was last updated on {{productInventory.inventory.LastUpdated | date:'short'}}
+        <div class="alert alert-info" ng-if="productInventory.product.Inventory.LastUpdated">
+            Inventory was last updated on {{productInventory.product.Inventory.LastUpdated | date:'short'}}
         </div>
-        <form name="productInventory.ProductInventoryForm" ng-submit="productInventory.updateProductInventory(productDetail.product)" autocomplete="off" novalidate class="form-horizontal" oc-readonly-roles="InventoryAdmin">
+        <form name="productInventory.ProductInventoryForm" 
+              ng-submit="productInventory.updateProductInventory(productInventory.product)" 
+              autocomplete="off" novalidate class="form-horizontal" oc-readonly-roles="InventoryAdmin">
             <fieldset class="form-group">
                 <label for="InventoryNotificationPoint" class="col-sm-3 control-label">Notification Point</label>
                 <div class="col-sm-9">
-                    <input id="InventoryNotificationPoint" type="number" class="form-control" min="1" ng-model="productDetail.product.InventoryNotificationPoint" />
+                    <input id="InventoryNotificationPoint" type="number" class="form-control" min="1" ng-model="productInventory.product.Inventory.NotificationPoint" />
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="AvailableInventory" class="col-sm-3 control-label">Inventory</label>
                 <div class="col-sm-9">
-                    <input id="AvailableInventory" type="number" class="form-control" ng-model="productInventory.inventory.Available" ng-min="productDetail.product.AllowOrderExceedInventory ? 0 : productInventory.inventory.Reserved" required />
-                    <p class="help-block">{{productInventory.inventory.Reserved}} of {{productInventory.inventoryAvailable}} are reserved</p>
+                    <input id="AvailableInventory" type="number" class="form-control" ng-model="productInventory.product.Inventory.QuantityAvailable" required />
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <div class="col-sm-offset-3 col-sm-9">
                     <div class="checkbox">
                         <label for="AllowOrderExceedInventory">
-                            <input id="AllowOrderExceedInventory" name="ApplyTax" type="checkbox" ng-model="productDetail.product.AllowOrderExceedInventory">
+                            <input id="AllowOrderExceedInventory" name="ApplyTax" type="checkbox" ng-model="productInventory.product.Inventory.OrderCanExceed">
                             Allow Order to Exceed Inventory
                         </label>
                     </div>
@@ -29,7 +30,7 @@
             </fieldset>
             <fieldset class="form-group">
                 <div class="col-sm-offset-3 col-sm-9">
-                    <button type="submit" cg-busy="productInventory.productUpdateLoading" class="btn btn-primary btn-block">Update</button>
+                    <button type="submit" cg-busy="productInventory.loading" class="btn btn-primary btn-block">Update</button>
                 </div>
             </fieldset>
         </form>

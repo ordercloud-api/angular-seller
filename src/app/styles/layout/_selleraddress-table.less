@@ -1,0 +1,55 @@
+.l-selleraddress-table {
+  @media(max-width:@screen-xs-max) {
+    col {
+      &:nth-child(1) {
+        width:100%;
+      }
+      &:nth-child(2) {
+        width:1%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(1),
+      &:nth-child(3) {
+        display:none;
+      }
+      &:nth-child(2) {
+        border-left:none;
+      }
+    }
+  }
+  @media(min-width:@screen-sm-min) and (max-width:@screen-md-max) {
+    col {
+      &:nth-child(1) {
+        width:30%;
+      }
+      &:nth-child(2) {
+        width:70%;
+      }
+      &:nth-child(3) {
+        width:1%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(1) {
+        display:none;
+      }
+    }
+  }
+  @media(min-width:@screen-lg-min) {
+    col {
+      &:nth-child(1),
+      &:nth-child(2) {
+        width:20%;
+      }
+      &:nth-child(3) {
+        width:60%;
+      }
+      &:nth-child(4) {
+        width:1%;
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 // typeahead block
 .c-typeahead {
   // typeahead results element
+  position:relative;
   &__results {
     // display results
     .dropdown-menu {
@@ -20,6 +21,9 @@
     }
     // loading modifer state
     &--loading {
+      & > div {
+        &:extend(.indicator-container);
+      }
       height: 50px;
       & ~ .dropdown-menu {
         display:none !important;

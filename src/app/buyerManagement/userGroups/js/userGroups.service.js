@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocUserGroups', OrderCloudUserGroups)
 ;
 
-function OrderCloudUserGroups($uibModal, ocConfirm, OrderCloud) {
+function OrderCloudUserGroups($uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         Delete: _delete
@@ -18,7 +18,7 @@ function OrderCloudUserGroups($uibModal, ocConfirm, OrderCloud) {
                     return buyerid;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _delete(userGroup, buyerid) {
@@ -27,8 +27,8 @@ function OrderCloudUserGroups($uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete user group',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.UserGroups.Delete(userGroup.ID, buyerid)
-            })
+                return OrderCloudSDK.UserGroups.Delete(buyerid, userGroup.ID);
+            });
     }
 
     return service;

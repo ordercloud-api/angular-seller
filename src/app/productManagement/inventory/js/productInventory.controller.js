@@ -2,19 +2,20 @@ angular.module('orderCloud')
     .controller('ProductInventoryCtrl', ProductInventoryController)
 ;
 
-function ProductInventoryController(toastr, ocProductInventory, ProductInventory) {
+function ProductInventoryController($exceptionHandler, toastr, ocProductInventory, SelectedProduct) {
     var vm = this;
-    vm.inventory = angular.copy(ProductInventory);
-    vm.inventoryAvailable = angular.copy(ProductInventory.Available);
+    vm.product = angular.copy(SelectedProduct);
     vm.updateProductInventory = updateProductInventory;
 
     function updateProductInventory(product) {
-        vm.productUpdateLoading = ocProductInventory.Update(product, vm.inventory)
-            .then(function(inventory) {
-                vm.inventory = angular.copy(inventory);
-                vm.inventoryAvailable = angular.copy(inventory.Available);
+        vm.loading = ocProductInventory.Update(product)
+            .then(function(updatedProduct) {
+                vm.product = angular.copy(updatedProduct);
                 vm.ProductInventoryForm.$setPristine();
-                toastr.success(product.Name + ' inventory was updated');
-            });
+                toastr.success(updatedProduct.Name + ' inventory was updated');
+            })
+            .catch(function(ex) {
+                $exceptionHandler(ex);
+            })
     }
 }

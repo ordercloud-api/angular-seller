@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ApprovalRulesCtrl', ApprovalRulesController)
 ;
 
-function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCloud, ocApprovalRules, ocParameters, ApprovalRuleList, Parameters) {
+function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCloudSDK, ocApprovalRules, ocParameters, ApprovalRuleList, Parameters) {
     var vm = this;
     vm.list = ApprovalRuleList;
     vm.parameters = Parameters;
@@ -59,7 +59,8 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCl
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.ApprovalRules.List(null, Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return OrderCloudSDK.ApprovalRules.List(parameters.buyerid, parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -71,7 +72,7 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCl
             .then(function(updatedApprovalRule) {
                 vm.list.Items[scope.$index] = updatedApprovalRule;
                 toastr.success(updatedApprovalRule.Name + ' was updated.');
-            })
+            });
     };
 
     vm.createApprovalRule = function() {
@@ -81,7 +82,7 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCl
                 vm.list.Meta.TotalCount++;
                 vm.list.Meta.ItemRange[1]++;
                 toastr.success(newApprovalRule.Name + ' was created.');
-            })
+            });
     };
 
     vm.deleteApprovalRule = function(scope) {
@@ -91,6 +92,6 @@ function ApprovalRulesController($state, $stateParams, toastr, $ocMedia, OrderCl
                 vm.list.Items.splice(scope.$index, 1);
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
-            })
+            });
     };
 }

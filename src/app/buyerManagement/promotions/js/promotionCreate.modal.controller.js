@@ -2,18 +2,18 @@ angular.module('orderCloud')
     .controller('PromotionCreateModalCtrl', PromotionCreateModalController)
 ;
 
-function PromotionCreateModalController($uibModalInstance, OrderCloud, SelectedBuyerID) {
+function PromotionCreateModalController($uibModalInstance, OrderCloudSDK, SelectedBuyerID) {
     var vm = this;
     vm.promotion = {};
 
     vm.submit = function() {
-        vm.loading = OrderCloud.Promotions.Create(vm.promotion, SelectedBuyerID)
+        vm.loading = OrderCloudSDK.Promotions.Create(vm.promotion)
             .then(function(newPromotion) {
                 $uibModalInstance.close(newPromotion);
-            })
+            });
     };
 
     vm.cancel = function() {
         $uibModalInstance.dismiss();
-    }
+    };
 }

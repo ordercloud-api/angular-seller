@@ -3,30 +3,30 @@ angular.module('orderCloud')
 ;
 
 
-function ApprovalRuleEditModalController($exceptionHandler, $uibModalInstance, OrderCloud, SelectedApprovalRule, SelectedBuyerID) {
+function ApprovalRuleEditModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, SelectedApprovalRule, SelectedBuyerID) {
     var vm = this;
     vm.approvalRule = angular.copy(SelectedApprovalRule);
     vm.approvalRuleName = SelectedApprovalRule.Name;
 
     vm.searchGroups = function(term) {
-        return OrderCloud.UserGroups.List(term, 1, 6, null, null, null, SelectedBuyerID)
+        return OrderCloudSDK.UserGroups.List(SelectedBuyerID, term, 1, 6, null, null, null)
             .then(function(data) {
                 return data.Items;
-            })
+            });
     };
 
     vm.submit = function() {
         vm.loading = {backdrop:false};
-        vm.loading.promise = OrderCloud.ApprovalRules.Update(SelectedApprovalRule.ID, vm.approvalRule, SelectedBuyerID)
+        vm.loading.promise = OrderCloudSDK.ApprovalRules.Update(SelectedBuyerID, SelectedApprovalRule.ID, vm.approvalRule)
             .then(function(updatedApprovalRule) {
                 $uibModalInstance.close(updatedApprovalRule);
             })
             .catch(function(ex) {
-                $exceptionHandler(ex)
+                $exceptionHandler(ex);
             });
     };
 
     vm.cancel = function() {
         $uibModalInstance.dismiss();
-    }
+    };
 }

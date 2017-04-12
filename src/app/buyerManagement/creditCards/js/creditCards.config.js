@@ -20,8 +20,8 @@ function CreditCardsConfig($stateProvider) {
                 CurrentAssignments: function(ocCreditCards, $stateParams) {
                     return ocCreditCards.Assignments.Get('company', $stateParams.buyerid);
                 },
-                CreditCardList: function(OrderCloud, Parameters, CurrentAssignments, ocCreditCards) {
-                    return OrderCloud.CreditCards.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+                CreditCardList: function($stateParams, OrderCloudSDK, Parameters, CurrentAssignments, ocCreditCards) {
+                    return OrderCloudSDK.CreditCards.List($stateParams.buyerid, Parameters)
                         .then(function(data) {
                             return ocCreditCards.Assignments.Map(CurrentAssignments, data);
                         });
@@ -43,12 +43,12 @@ function CreditCardsConfig($stateProvider) {
                 CurrentAssignments: function($q, ocCreditCards, $stateParams) {
                     return ocCreditCards.Assignments.Get('group', $stateParams.buyerid, $stateParams.usergroupid);
                 },
-                CreditCardList: function(OrderCloud, Parameters, CurrentAssignments, ocCreditCards) {
-                    return OrderCloud.CreditCards.List(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.buyerid)
+                CreditCardList: function($stateParams, OrderCloudSDK, Parameters, CurrentAssignments, ocCreditCards) {
+                    return OrderCloudSDK.CreditCards.List($stateParams.buyerid, Parameters)
                         .then(function(data) {
                             return ocCreditCards.Assignments.Map(CurrentAssignments, data);
                         });
                 }
             }
-        })
+        });
 }

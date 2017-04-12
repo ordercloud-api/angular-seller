@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductsCtrl', ProductsController)
 ;
 
-function ProductsController($state, toastr, OrderCloud, ocParameters, ocProducts, ProductList, Parameters) {
+function ProductsController($state, toastr, OrderCloudSDK, ocParameters, ocProducts, ProductList, Parameters) {
     var vm = this;
     vm.list = ProductList;
     //Set parameters
@@ -52,7 +52,8 @@ function ProductsController($state, toastr, OrderCloud, ocParameters, ocProducts
     }
 
     function loadMore() {
-        return OrderCloud.Products.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return OrderCloudSDK.Products.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -64,7 +65,7 @@ function ProductsController($state, toastr, OrderCloud, ocParameters, ocProducts
             .then(function(newProduct) {
                 toastr.success(newProduct.Name + ' was created.');
                 $state.go('productDetail', {productid: newProduct.ID});
-            })
+            });
     };
 
     vm.deleteProduct = function(scope) {
@@ -74,7 +75,7 @@ function ProductsController($state, toastr, OrderCloud, ocParameters, ocProducts
                 vm.list.Meta.TotalCount--;
                 vm.list.Meta.ItemRange[1]--;
                 toastr.success(scope.product.Name + ' was deleted.');
-            })
-    }
+            });
+    };
 
 }

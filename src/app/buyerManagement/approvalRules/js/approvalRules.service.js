@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocApprovalRules', OrderCloudApprovalRules)
 ;
 
-function OrderCloudApprovalRules($q, $uibModal, ocConfirm, OrderCloud) {
+function OrderCloudApprovalRules($q, $uibModal, ocConfirm, OrderCloudSDK) {
     var service = {
         Create: _create,
         Edit: _edit,
@@ -19,7 +19,7 @@ function OrderCloudApprovalRules($q, $uibModal, ocConfirm, OrderCloud) {
                     return buyerid;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _edit(approvalRule, buyerid) {
@@ -35,7 +35,7 @@ function OrderCloudApprovalRules($q, $uibModal, ocConfirm, OrderCloud) {
                     return approvalRule;
                 }
             }
-        }).result
+        }).result;
     }
 
     function _delete(approvalRule, buyerid) {
@@ -44,8 +44,8 @@ function OrderCloudApprovalRules($q, $uibModal, ocConfirm, OrderCloud) {
                 confirmText: 'Delete approval rule',
                 type: 'delete'})
             .then(function() {
-                return OrderCloud.ApprovalRules.Delete(approvalRule.ID, buyerid)
-            })
+                return OrderCloudSDK.ApprovalRules.Delete(buyerid, approvalRule.ID);
+            });
     }
 
     return service;

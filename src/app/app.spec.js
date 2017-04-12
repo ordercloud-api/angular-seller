@@ -10,10 +10,10 @@ describe('Runtime', function() {
 
         inject(function(_ocStateLoading_) {
             ocStateLoading = _ocStateLoading_;
-        })
+        });
     });
 
-    it ('should initialize the ocStateLoading service', function() {
+    it('should initialize the ocStateLoading service', function() {
         expect(ocStateLoading.Init).toHaveBeenCalled();
     });
 });
@@ -26,7 +26,7 @@ describe('Application', function() {
     beforeEach(module('orderCloud'));
     beforeEach(module('orderCloud.sdk'));
     beforeEach(module('ui.router'));
-    beforeEach(inject(function($q, $rootScope, OrderCloud, ocStateLoading) {
+    beforeEach(inject(function($q, $rootScope, ocStateLoading) {
         q = $q;
         scope = $rootScope.$new();
         oc = OrderCloud;
@@ -50,27 +50,27 @@ describe('Application', function() {
                 ocStateLoading: stateLoading,
                 ocIsTouchDevice: isTouchDevice,
                 ocRolesService: rolesService
-            })
+            });
         }));
-        it ('should set vm.name to appname', function() {
+        it('should set vm.name to appname', function() {
             expect(appController.name).toEqual(applicationName);
         });
-        it ('should set vm.$state to $state', function() {
+        it('should set vm.$state to $state', function() {
             expect(appController.$state).toEqual(stateSvc);
         });
-        it ('should set vm.$ocMedia to $ocMedia', function() {
+        it('should set vm.$ocMedia to $ocMedia', function() {
             expect(appController.$ocMedia).toEqual(ocMedia);
         });
-        it ('should set vm.isTouchDevice to ocIsTouchDevice', function() {
+        it('should set vm.isTouchDevice to ocIsTouchDevice', function() {
             expect(appController.isTouchDevice).toEqual(isTouchDevice);
         });
-        it ('should set vm.stateLoading to ocStateLoading', function() {
+        it('should set vm.stateLoading to ocStateLoading', function() {
             expect(appController.stateLoading).toEqual(stateLoading.Watch);
         });
-        it ('should set vm.logout to LoginService.Logout', function() {
+        it('should set vm.logout to LoginService.Logout', function() {
             expect(appController.logout).toEqual(loginFactory.Logout);
         });
-        it ('should set vm.userIsAuthorized to ocRolesService.UserIsAuthorized', function() {
+        it('should set vm.userIsAuthorized to ocRolesService.UserIsAuthorized', function() {
             expect(appController.userIsAuthorized).toEqual(rolesService.UserIsAuthorized);
         });
     });

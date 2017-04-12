@@ -1,6 +1,6 @@
 <form name="orderShipmentsCreate.form" ng-submit="orderShipmentsCreate.submit()" autocomplete="off" novalidate>
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <fieldset class="form-group">
                 <label for="shipmentShipper">Shipper</label>
                 <input id="shipmentShipper" type="text" name="Shipper" class="form-control" ng-model="orderShipmentsCreate.shipment.Shipper" />
@@ -32,7 +32,7 @@
                 <button type="submit" class="btn btn-primary btn-block" ng-disabled="orderShipmentsCreate.form.$invalid">Save Shipment</button>
             </fieldset>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-9">
             <!--====== LINE ITEM LIST ======-->
             <div class="panel panel-default table-responsive">
                 <table class="table table-bordered">
@@ -41,13 +41,14 @@
                         <th></th>
                         <th>ID</th>
                         <th>Product</th>
+                        <th>Ship To</th>
                         <th>Quantity in Shipment</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-class="{'active': lineItem.QuantityShipped == lineItem.Quantity}" ng-repeat="lineItem in orderShipmentsCreate.lineItems.Items | ocCachedList:orderShipmentsCreate.selectedLineItemPage">
                         <th class="text-center">
-                            <input type="checkbox" ng-model="lineItem.Selected" ng-disabled="lineItem.Quantity == lineItem.QuantityShipped" ng-change="orderShipmentsCreate.itemChange()" />
+                            <input type="checkbox" ng-model="lineItem.Selected" ng-disabled="lineItem.Quantity == lineItem.QuantityShipped" ng-change="orderShipmentsCreate.itemChange(lineItem)" />
                         </th>
                         <td>{{lineItem.ID}}</td>
                         <td>
@@ -55,9 +56,12 @@
                             <small class="text-muted">({{lineItem.Product.ID}})</small>
                         </td>
                         <td>
+                            <div ng-bind-html="lineItem.ShippingAddress | address:'full'"></div>
+                        </td>
+                        <td>
                             <span ng-if="lineItem.QuantityShipped == lineItem.Quantity">Shipped</span>
                             <div class="input-group input-group-sm" ng-if="lineItem.QuantityShipped < lineItem.Quantity">
-                                <input type="number" class="form-control" ng-model="lineItem.ShipQuantity" ng-change="orderShipmentsCreate.itemChange()">
+                                <input type="number" class="form-control" ng-model="lineItem.ShipQuantity" ng-change="orderShipmentsCreate.itemChange(lineItem)">
                                 <span class="input-group-addon">of {{lineItem.Quantity}}</span>
                             </div>
                         </td>

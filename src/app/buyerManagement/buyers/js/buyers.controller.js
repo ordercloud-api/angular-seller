@@ -1,11 +1,11 @@
 angular.module('orderCloud')
     .controller('BuyersCtrl', BuyersController);
 
-function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderCloud, ocParameters, Parameters, BuyerList) {
+function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderCloudSDK, ocParameters, Parameters, BuyerList) {
     var vm = this;
     vm.list = BuyerList;
     vm.parameters = Parameters;
-    vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
+    vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') === 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
 
     //Check if search was used
     vm.searchResults = Parameters.search && Parameters.search.length > 0;
@@ -49,7 +49,8 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderClou
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Buyers.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return OrderCloudSDK.Buyers.List(parameters)
             .then(function(data) {
                 vm.list.Items = vm.list.Items.concat(data.Items);
                 vm.list.Meta = data.Meta;
@@ -61,7 +62,7 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderClou
             .then(function(data) {
                 toastr.success(data.Name + ' was created.');
                 $state.go('buyer', {buyerid: data.ID});
-            })
+            });
     };
 
     vm.deleteBuyer = function(scope) {
@@ -74,8 +75,8 @@ function BuyersController($exceptionHandler, $state, toastr, ocBuyers, OrderClou
             })
             .catch(function(ex) {
                 $exceptionHandler(ex);
-            })
-    }
+            });
+    };
 }
 
 

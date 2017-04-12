@@ -12,6 +12,9 @@
         {{buyer.selectedBuyer.Name}} <br>
         <small>(ID: {{buyer.selectedBuyer.ID}})</small>
     </h3>
+    <div class="l-page-header__btns">
+        <button class="btn btn-danger" type="button" ng-click="buyer.deleteBuyer()"><i class="fa fa-trash-o"></i> Delete Buyer</button>
+    </div>
 </div>
 <article>
     <ul class="nav nav-tabs">
@@ -19,10 +22,13 @@
             <a ui-sref="buyer"><i class="fa fa-cog"></i> Settings</a>
         </li>
         <li role="presentation" ui-sref-active="active">
-            <a ui-sref="buyerSecurity"><i class="fa fa-lock"></i> Security</a>
+            <a ui-sref="buyerPermissions"><i class="fa fa-lock"></i> Permissions</a>
         </li>
-        <li role="presentation" ng-class="{active: application.$state.includes('catalogManagement')}" oc-if-roles="CategoryRoles">
-            <a ui-sref="catalogManagement({ search: '', sortBy: ''})"><i class="fa fa-sitemap"></i> Catalog</a>
+        <li role="presentation" ng-class="{active: application.$state.includes('buyerCatalog') || application.$state.is('buyerCatalogs')}"> <!-- TODO: oc-if-roles="CatalogRoles"-->
+            <a ui-sref="buyerCatalogs({ search: '', sortBy: ''})"><i class="fa fa-sitemap"></i> Catalogs</a>
+        </li>
+        <li role="presentation" ng-class="{active: application.$state.is('buyerProducts')}"> <!-- TODO: oc-if-roles="CatalogRoles"-->
+            <a ui-sref="buyerProducts({ search: '', sortBy: ''})"><i class="fa fa-cube"></i> Products</a>
         </li>
         <li role="presentation" class="hidden-xs" ng-class="{active: application.$state.includes('users')}" oc-if-roles="BuyerUserRoles">
             <a ui-sref="users({ search: '', sortBy: '', filters: '', page: ''})"><i class="fa fa-user"></i> Users</a>
@@ -67,26 +73,61 @@
                 </li>
             </ul>
         </li>
-
     </ul>
     <br>
     <div ui-view cg-busy="application.stateLoading('buyer')">
         <div class="row">
             <div class="col-sm-7 col-md-6" oc-readonly-roles="BuyerAdmin">
                 <form ng-submit="buyer.updateBuyer()" class="form-horizontal" name="buyer.settingsForm" novalidate autocomplete="off">
-
-                    <div class="form-group">
+                    <fieldset class="form-group">
                         <label for="buyerIDInput" class="control-label col-sm-3">Buyer ID</label>
                         <div class="col-sm-9">
                             <input id="buyerIDInput" name="buyerIDinput" ng-change="buyer.updateValidity()" type="text" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="buyer.settings.ID" required/>
                         </div>
-                    </div>
-                    <div class="form-group">
+                    </fieldset>
+                    <fieldset class="form-group">
                         <label for="buyerNameInput" class="control-label col-sm-3">Name</label>
                         <div class="col-sm-9">
                             <input id="buyerNameInput" name="buyerNameinput" type="text" ng-model="buyer.settings.Name" class="form-control" required>
                         </div>
-                    </div>
+                    </fieldset>
+
+                    <!-- Typeahead Result Template -->
+                    <script type="text/ng-template" id="oc-catalog-result.html">
+                        <a href tabindex="-1" ng-attr-title="{{match.label}}">
+                            <span ng-bind-html="'<b>' + (match.model.Name | uibTypeaheadHighlight:query) + '</b>' + '<br/><small>' + (match.model.ID | uibTypeaheadHighlight:query) + '</small>'"></span>
+                        </a>
+                    </script>
+                    <fieldset class="form-group">
+                        <label for="SelectedDefaultCatalog" class="control-label col-sm-3">Default Catalog</label>
+                        <div class="col-sm-9">
+                            <div class="c-typeahead">
+                                <input placeholder="Select a catalog" class="form-control" id="SelectedDefaultCatalog" name="SelectedDefaultCatalog" type="text" ng-model="buyer.settings.SelectedDefaultCatalog" required
+                                    ng-model-options="{debounce:300}"
+                                    typeahead-min-length="0"
+                                    typeahead-append-to="'.c-typeahead__results'"
+                                    typeahead-no-results="buyer.noCatalogResults"
+                                    typeahead-loading="buyer.catalogsLoading"
+                                    typeahead-template-url="oc-catalog-result.html"
+                                    uib-typeahead="catalog as catalog.Name for catalog in buyer.searchCatalogs($viewValue)">
+                                <div class="c-typeahead__results">
+                                    <div class="c-typeahead__results--empty" ng-if="buyer.noCatalogResults">
+                                        <span>No matches found</span>
+                                    </div>
+                                    <div class="c-typeahead__results--loading" ng-if="buyer.catalogsLoading">
+                                        <div ng-include="'common/config/angular-busy/angular-busy.html'"></div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <label for="orderCloudUpload" class="col-sm-3 control-label">Logo</label>
+                        <div class="col-sm-9">
+                            <oc-file-upload model="buyer.settings" keyname="logo" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                        </div>
+                    </fieldset>
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
                             <div class="checkbox">
@@ -97,20 +138,12 @@
                             </div>
                         </div>
                     </div>
-                    <fieldset class="form-group">
-                        <label for="orderCloudUpload" class="col-sm-3 control-label">Logo</label>
-                        <div class="col-sm-9">
-                            <oc-file-upload model="buyer.settings" keyname="logo" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
-                        </div>
-                    </fieldset>
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
-                            <button class="btn btn-block btn-primary" cg-busy="buyer.updateLoading" type="submit">Save Changes</button>
+                            <button class="btn btn-block btn-primary" cg-busy="buyer.loading" ng-disabled="buyer.settingsForm.$invalid" type="submit">Save Changes</button>
                         </div>
                     </div>
                 </form>
-                <hr>
-                <button class="btn btn-block btn-danger" type="button" ng-click="buyer.deleteBuyer()"><i class="fa fa-trash-o"></i> Delete Buyer Organization</button>
             </div>
         </div>
     </div>

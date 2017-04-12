@@ -1,20 +1,20 @@
 angular.module('orderCloud', [
-        'ngSanitize',
         'ngAnimate',
+        'ngCookies',
         'ngMessages',
+        'ngResource',
+        'ngSanitize',
         'ngTouch',
         'ui.tree',
         'ui.router',
         'ui.select',
         'ui.bootstrap',
-        'ui.select',
-        'orderCloud.sdk',
-        'LocalForageModule',
         'toastr',
         'angular-busy',
         'jcs-autoValidate',
         'treeControl',
         'hl.sticky',
-        'angularPayments'
+        'angularPayments',
+        'ordercloud-angular-sdk'
     ]
 );

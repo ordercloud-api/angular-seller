@@ -3,7 +3,7 @@ angular.module('orderCloud')
 ;
 
 
-function UserEditModalController($exceptionHandler, $uibModalInstance, OrderCloud, SelectedUser, SelectedBuyerID) {
+function UserEditModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, SelectedUser, SelectedBuyerID) {
     var vm = this;
     vm.user = angular.copy(SelectedUser);
     vm.username = SelectedUser.Username;
@@ -17,16 +17,16 @@ function UserEditModalController($exceptionHandler, $uibModalInstance, OrderClou
         var today = new Date();
         vm.user.TermsAccepted = today;
         vm.loading = {backdrop:false};
-        vm.loading.promise = OrderCloud.Users.Update(SelectedUser.ID, vm.user, SelectedBuyerID)
+        vm.loading.promise = OrderCloudSDK.Users.Update(SelectedBuyerID, SelectedUser.ID, vm.user)
             .then(function(updatedUser) {
                 $uibModalInstance.close(updatedUser);
             })
             .catch(function(ex) {
-                $exceptionHandler(ex)
+                $exceptionHandler(ex);
             });
     };
 
     vm.cancel = function() {
         $uibModalInstance.dismiss();
-    }
+    };
 }

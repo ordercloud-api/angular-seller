@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('AddressesCtrl', AddressesController)
 ;
 
-function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, toastr, OrderCloud, ocParameters, ocAddresses, CurrentAssignments, AddressList, Parameters){
+function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, toastr, OrderCloudSDK, ocParameters, ocAddresses, CurrentAssignments, AddressList, Parameters){
     var vm = this;
     vm.list = AddressList;
     vm.parameters = Parameters;
@@ -61,7 +61,8 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
 
     //Load the next page of results with all of the same parameters
     vm.loadMore = function() {
-        return OrderCloud.Addresses.List(Parameters.search, vm.list.Meta.Page + 1, Parameters.pageSize || vm.list.Meta.PageSize, Parameters.searchOn, Parameters.filters)
+        var parameters = angular.extend(Parameters, {page:vm.list.Meta.Page + 1});
+        return OrderCloudSDK.Addresses.List(parameters.buyerid, parameters)
             .then(function(data) {
                 var mappedData = ocAddresses.Assignments.Map(CurrentAssignments, data);
                 vm.list.Items = vm.list.Items.concat(mappedData.Items);
@@ -86,12 +87,12 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
         switch(type) {
             case 'shipping':
                 vm.allShippingSelected = !vm.allShippingSelected;
-                _.map(vm.list.Items, function(a) { a.shipping = vm.allShippingSelected });
+                _.map(vm.list.Items, function(a) { a.shipping = vm.allShippingSelected; });
                 //select for shipping
                 break;
             case 'billing':
                 vm.allBillingSelected = !vm.allBillingSelected;
-                _.map(vm.list.Items, function(a) { a.billing = vm.allBillingSelected });
+                _.map(vm.list.Items, function(a) { a.billing = vm.allBillingSelected; });
                 //select for billing
                 break;
             default:
@@ -136,8 +137,8 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
                 changedCheck();
                 selectedCheck();
 
-                toastr.success('Address assignments updated.')
-            })
+                toastr.success('Address assignments updated.');
+            });
     };
 
     vm.createAddress = function() {
@@ -165,7 +166,7 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
                     vm.changedAssignments = ocAddresses.Assignments.Compare(CurrentAssignments, vm.list, $stateParams.usergroupid);
                 }
                 toastr.success(updatedAddress.AddressName + ' was updated.');
-            })
+            });
     };
 
     vm.deleteAddress = function(scope) {

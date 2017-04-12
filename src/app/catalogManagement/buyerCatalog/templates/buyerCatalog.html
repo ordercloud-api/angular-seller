@@ -1,0 +1,70 @@
+<ol class="breadcrumb">
+    <li><a href="" ui-sref="buyerCatalogs">Available Catalogs</a></li>
+    <li class="active">{{buyerCatalog.selectedCatalog.Name}}</li>
+</ol>
+<div class="l-page-header l-page-header-xs">
+    <h3 class="l-page-header__title">
+        Category Assignment
+    </h3>
+    <div class="l-page-header__btns">
+        <button type="button" class="btn btn-primary" ui-sref="categories({catalogid:buyerCatalog.selectedCatalog.ID})">Edit Categories</button>
+    </div>
+</div>
+<div class="row" cg-busy="buyerCatalog.loading">
+    <div class="col-sm-7 col-sm-push-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Catalog Settings</h3>
+            </div>
+            <div class="panel-body">
+                <fieldset class="form-group">
+                    <div class="checkbox">
+                        <label for="ViewAllProducts" class="control-label">
+                            <input id="ViewAllProducts" type="checkbox" ng-model="buyerCatalog.viewAllProducts" ng-change="buyerCatalog.updateCatalogAssignment('products')"> View All Products
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label for="ViewAllCategories" class="control-label">
+                            <input id="ViewAllCategories" type="checkbox" ng-model="buyerCatalog.viewAllCategories" ng-change="buyerCatalog.updateCatalogAssignment('categories')"> View All Categories
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-5 col-sm-pull-7">
+        <div ng-if="!buyerCatalog.tree.length" class="no-matches">
+            <b>There are no categories in this catalog. 
+                <span oc-if-roles="CategoryAdmin"> 
+                    <br>
+                    Categories can be added in <a ui-sref="categories({catalogid: buyerCatalog.selectedCatalog.ID})">catalog management</a>.
+                </span>
+            </b>
+        </div>
+        <script type="text/ng-template" id="nodes_renderer.html">
+            <div class="tree-node tree-node-content" cg-busy="node.loading" ng-class="{'inactive-node': !node.Active, 'selected-node': node.ID == buyerCatalog.selectedCategoryID}">
+                <i ng-if="node.children && node.children.length > 0" class="fa" ng-click="toggle(this)" ng-class="{
+                        'fa-folder': !collapsed,
+                        'fa-folder-open': collapsed
+                    }">
+                </i>
+                <p ng-click="buyerCatalog.categorySelected(node.ID)">{{node.Name}}</p>
+                <fieldset class="checkbox">
+                    <label class="control-label">
+                        <input type="checkbox" ng-disabled="buyerCatalog.viewAllCategories" name="{{'AssignCategory' + node.ID}}" ng-model="node.Assigned" ng-change="buyerCatalog.updateCategoryAssignment(node)">
+                    </label>
+                </fieldset>
+            </div>
+            <ol ui-tree-nodes ng-model="node.children" uib-collapse="!collapsed">
+                <li ng-repeat="node in node.children" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+            </ol>
+        </script>
+        <section ng-if="buyerCatalog.tree.length">
+            <div ui-tree id="tree-root" data-drag-enabled="false">
+                <ol ui-tree-nodes ng-model="buyerCatalog.tree">
+                    <li ng-repeat="node in buyerCatalog.tree" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+                </ol>
+            </div>
+        </section>
+    </div>
+</div>
