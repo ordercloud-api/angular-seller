@@ -1,9 +1,10 @@
 angular.module('orderCloud')
-    .controller('SecurityCtrl', SecurityController)
+    .controller('PermissionsCtrl', PermissionsController)
 ;
 
-function SecurityController($exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, OrderCloudSDK) {
+function PermissionsController($state, $exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, OrderCloudSDK) {
     var vm = this;
+    vm.pageTitle = $state.current.data.pageTitle;
     vm.assignments = Assignments;
     vm.profiles = AvailableProfiles;
     vm.buyerid = $stateParams.buyerid;
@@ -15,7 +16,7 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
             var assignment = {
                 securityProfileID: scope.profile.ID,
                 buyerID: $stateParams.buyerid,
-                userGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
+                userGroupID: $stateParams.usergroupid || $stateParams.sellerusergroupid
             };
             OrderCloudSDK.SecurityProfiles.SaveAssignment(assignment)
                 .then(function() {
@@ -28,7 +29,7 @@ function SecurityController($exceptionHandler, $stateParams, toastr, Assignments
         } else {
             var options = {
                 buyerID: $stateParams.buyerid,
-                userGroupID: $stateParams.usergroupid || $stateParams.adminusergroupid
+                userGroupID: $stateParams.usergroupid || $stateParams.sellerusergroupid
             };
             OrderCloudSDK.SecurityProfiles.DeleteAssignment(scope.profile.ID, options)
                 .then(function() {

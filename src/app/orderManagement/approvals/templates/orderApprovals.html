@@ -20,7 +20,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="approval in orderApprovals.list.Items| filter:{Status:'Pending'}">
-                    <td>{{approval.ApprovingUserGroup.Name}}</td>
+                    <td>{{approval.ApprovingUserGroup ? approval.ApprovingUserGroup.Name : approval.ApprovingGroupID}}</td>
                     <td>{{approval.DateCreated | date:'short'}}</td>
                     <td>{{approval.ApprovalRule.Name}}</td>
                     <td>{{approval.ApprovalRule.Description}}</td>

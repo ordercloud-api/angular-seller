@@ -85,10 +85,10 @@
                     <fieldset class="form-group">
                         <label for="DefaultPrice" class="col-sm-3 control-label">Default Price</label>
                         <div class="col-sm-9">
-                            <p class="form-control-static" ng-if="productDetail.product.DefaultPriceScheduleID">
-                                <a ui-sref=".pricing({pricescheduleid: productDetail.product.DefaultPriceScheduleID})">{{productDetail.product.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</a>
+                            <p class="form-control-static">
+                                <a ng-if="!productDetail.product.DefaultPriceScheduleID" ng-click="productDetail.createDefaultPrice()">Add a default price</a>
+                                <a  ng-if="productDetail.product.DefaultPriceScheduleID" ui-sref=".pricing({pricescheduleid: productDetail.product.DefaultPriceScheduleID})">{{productDetail.product.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</a>
                             </p>
-                            <a class="btn btn-link" ng-if="!productDetail.product.DefaultPriceScheduleID" ng-click="productDetail.createDefaultPrice()">Add a default price</a>
                         </div>
                     </fieldset>
                     <fieldset class="form-group">

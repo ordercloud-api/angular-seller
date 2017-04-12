@@ -5,7 +5,6 @@ function CatalogConfig($stateProvider) {
     $stateProvider
         .state('catalog', {
             parent: 'base',
-            abstract: true,
             url: '/catalog/:catalogid',
             templateUrl: 'catalogManagement/catalog/templates/catalog.html',
             controller: 'CatalogCtrl',

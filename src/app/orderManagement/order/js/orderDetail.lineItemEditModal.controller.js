@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('OrderLineItemEditModalCtrl', OrderLineItemEditModalController)
 ;
 
-function OrderLineItemEditModalController($uibModalInstance, OrderCloudSDK, OrderID, LineItem, Product) {
+function OrderLineItemEditModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, OrderID, LineItem, Product) {
     var vm = this;
     vm.lineItem = angular.copy(LineItem);
     vm.lineItemID = LineItem.ID;
@@ -10,7 +10,7 @@ function OrderLineItemEditModalController($uibModalInstance, OrderCloudSDK, Orde
     vm.product = Product;
 
     vm.updateValidity = function() {
-        if (vm.form.ID.$error['LineItem.UnavailableID']) vm.form.ID.$setValidity('LineItem.UnavailableID', true);
+        if (vm.form.ID.$error['UnavailableID']) vm.form.ID.$setValidity('UnavailableID', true);
     };
 
     vm.submit = function() {
@@ -23,7 +23,7 @@ function OrderLineItemEditModalController($uibModalInstance, OrderCloudSDK, Orde
             })
             .catch(function(ex) {
                 if (ex.status == 409) {
-                    vm.form.ID.$setValidity('LineItem.UnavailableID', false);
+                    vm.form.ID.$setValidity('UnavailableID', false);
                     vm.form.ID.$$element[0].focus();
                 } else {
                     $exceptionHandler(ex);

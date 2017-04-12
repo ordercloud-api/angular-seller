@@ -15,7 +15,15 @@ function BuyerConfig($stateProvider) {
             },
             resolve: {
                 SelectedBuyer: function ($stateParams, OrderCloudSDK) {
-                    return OrderCloudSDK.Buyers.Get($stateParams.buyerid);
+                    return OrderCloudSDK.Buyers.Get($stateParams.buyerid)
+                        .then(function(buyer) {
+                            if (!buyer.DefaultCatalogID) return buyer;
+                            return OrderCloudSDK.Catalogs.Get(buyer.DefaultCatalogID)
+                                .then(function(catalog) {
+                                    buyer.SelectedDefaultCatalog = catalog;
+                                    return buyer;
+                                });
+                        });
                 }
             }
         });

@@ -1,17 +1,17 @@
 angular.module('orderCloud')
-    .config(SecurityConfig)
+    .config(PermissionsConfig)
 ;
 
-function SecurityConfig($stateProvider) {
+function PermissionsConfig($stateProvider) {
     $stateProvider
-        .state('security', {
+        .state('permissions', {
             parent: 'base',
-            url: '/security',
-            templateUrl: 'security/templates/security.html',
-            controller: 'SecurityCtrl',
-            controllerAs: 'security',
+            url: '/permissions',
+            templateUrl: 'permissions/templates/permissions.html',
+            controller: 'PermissionsCtrl',
+            controllerAs: 'permissions',
             data: {
-                pageTitle: 'Admin Security'
+                pageTitle: 'Seller Permissions'
             },
             resolve: {
                 Assignments: function(OrderCloudSDK) {
@@ -28,13 +28,13 @@ function SecurityConfig($stateProvider) {
                 }
             }
         })
-        .state('sellerUserGroup.security', {
-            url: '/security',
-            templateUrl: 'security/templates/security.html',
-            controller: 'SecurityCtrl',
-            controllerAs: 'security',
+        .state('sellerUserGroup.permissions', {
+            url: '/permissions',
+            templateUrl: 'permissions/templates/permissions.html',
+            controller: 'PermissionsCtrl',
+            controllerAs: 'permissions',
             data: {
-                pageTitle: 'Seller User Group Security'
+                pageTitle: 'Seller User Group Permissions'
             },
             resolve: {
                 Assignments: function($stateParams, OrderCloudSDK) {
@@ -51,14 +51,14 @@ function SecurityConfig($stateProvider) {
                 }
             }
         })
-        .state('buyerSecurity', {
+        .state('buyerPermissions', {
             parent: 'buyer',
-            url: '/security',
-            templateUrl: 'security/templates/security.html',
-            controller: 'SecurityCtrl',
-            controllerAs: 'security',
+            url: '/permissions',
+            templateUrl: 'permissions/templates/permissions.html',
+            controller: 'PermissionsCtrl',
+            controllerAs: 'permissions',
             data: {
-                pageTitle: 'Buyer Security'
+                pageTitle: 'Buyer Permissions'
             },
             resolve: {
                 Assignments: function($stateParams, OrderCloudSDK) {
@@ -75,13 +75,13 @@ function SecurityConfig($stateProvider) {
                 }
             }
         })
-        .state('userGroup.security', {
-            url: '/security',
-            templateUrl: 'security/templates/security.html',
-            controller: 'SecurityCtrl',
-            controllerAs: 'security',
+        .state('userGroup.permissions', {
+            url: '/permissions',
+            templateUrl: 'permissions/templates/permissions.html',
+            controller: 'PermissionsCtrl',
+            controllerAs: 'permissions',
             data: {
-                pageTitle: 'User Group Security'
+                pageTitle: 'User Group Permissions'
             },
             resolve: {
                 Assignments: function($stateParams, OrderCloudSDK) {
