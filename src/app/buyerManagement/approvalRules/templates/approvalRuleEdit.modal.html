@@ -32,22 +32,33 @@
         <div class="form-group">
             <label for="ApprovingGroupID">Approving Group</label>
             <script type="text/ng-template" id="ocTypeahead_usergroup.html">
-                <a>
-                    <span ng-bind-html="match.model.Name | uibTypeaheadHighlight:query"></span>
-                    <code ng-bind-html="match.model.ID | uibTypeaheadHighlight:query"></code>
+                <a href tabindex="-1" ng-attr-title="{{match.label}}">
+                    <span ng-bind-html="'<b>' + (match.model.Name | uibTypeaheadHighlight:query) + '</b>' + '<br/><small>' + (match.model.ID | uibTypeaheadHighlight:query) + '</small>'"></span>
                 </a>
             </script>
-
-            <input id="ApprovingGroupID"
-                   name="ApprovingGroupID"
-                   type="text"
-                   placeholder="Approving Group ID..."
-                   class="form-control"
-                   uib-typeahead="group.ID as group.Name for group in approvalRuleEditModal.searchGroups($viewValue)"
-                   typeahead-min-length="0"
-                   typeahead-template-url="ocTypeahead_usergroup.html"
-                   ng-model-options="{debounce:1000}"
-                   ng-model="approvalRuleEditModal.approvalRule.ApprovingGroupID" required/>
+            <div class="c-typeahead">
+                <input id="ApprovingGroupID"
+                    name="ApprovingGroupID"
+                    type="text"
+                    placeholder="Approving Group ID..."
+                    class="form-control"
+                    uib-typeahead="group.ID as group.Name for group in approvalRuleEditModal.searchGroups($viewValue)"
+                    typeahead-min-length="0"
+                    typeahead-append-to="'.c-typeahead__results'"
+                    typeahead-no-results="approvalRuleEditModal.noCatalogResults"
+                    typeahead-loading="approvalRuleEditModal.catalogsLoading"
+                    typeahead-template-url="ocTypeahead_usergroup.html"
+                    ng-model-options="{debounce:1000}"
+                    ng-model="approvalRuleEditModal.approvalRule.ApprovingGroupID" required/>
+                <div class="c-typeahead__results">
+                    <div class="c-typeahead__results--empty" ng-if="approvalRuleEditModal.noCatalogResults">
+                        <span>No matches found</span>
+                    </div>
+                    <div class="c-typeahead__results--loading" ng-if="approvalRuleEditModal.catalogsLoading">
+                        <div ng-include="'common/config/angular-busy/angular-busy.html'"></div>
+                    </div>
+                </div>
+            </div>
             <small class="help-block">Enter the ID of the buyer user group that will approve these orders.</small>
         </div>
     </div>
