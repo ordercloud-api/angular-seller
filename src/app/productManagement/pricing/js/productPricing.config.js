@@ -4,7 +4,7 @@ angular.module('orderCloud')
 
 function ProductPricingConfig($stateProvider) {
     $stateProvider
-        .state('productDetail.pricing', {
+        .state('product.pricing', {
             url: '/pricing',
             params: {
                 pricescheduleid: undefined
@@ -33,7 +33,7 @@ function ProductPricingConfig($stateProvider) {
                 }
             }
         })
-        .state('productDetail.pricing.priceScheduleDetail', {
+        .state('product.pricing.priceScheduleDetail', {
             url: '/:pricescheduleid',
             templateUrl: 'productManagement/pricing/templates/priceScheduleDetail.html',
             controller: 'PriceScheduleDetailCtrl',

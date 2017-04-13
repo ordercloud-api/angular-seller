@@ -4,7 +4,7 @@ angular.module('orderCloud')
 
 function ProductShippingConfig($stateProvider) {
     $stateProvider
-        .state('productDetail.shipping', {
+        .state('product.shipping', {
             url: '/shipping',
             templateUrl: 'productManagement/shipping/templates/productShipping.html',
             controller: 'ProductShippingCtrl',

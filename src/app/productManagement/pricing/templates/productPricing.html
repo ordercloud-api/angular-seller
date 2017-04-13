@@ -1,16 +1,16 @@
 <!--==== No Prices Defined ====-->
 <div class="no-matches" ng-if="productPricing.noPricesSet">
     This product does not have any pricing. <br>
-    Create a <a ng-click="productDetail.createDefaultPrice()">default price</a> or create individual prices <a ui-sref="buyers">for your buyer organizations</a> and/or user groups.
+    Create a <a ng-click="product.createDefaultPrice()">default price</a> or create individual prices <a ui-sref="buyers">for your buyer organizations</a> and/or user groups.
 </div>
 <div class="row" ng-if="!productPricing.noPricesSet">
     <div class="col-sm-5">
         <b class="text-muted">Default Price</b>
-        <div class="no-matches" ng-if="!productDetail.product.DefaultPriceScheduleID">
-            This product does not have a default price. <a ng-click="productDetail.createDefaultPrice()">Create one now</a>
+        <div class="no-matches" ng-if="!product.model.DefaultPriceScheduleID">
+            This product does not have a default price. <a ng-click="product.createDefaultPrice()">Create one now</a>
         </div>
-        <div class="c-price-list" ng-if="productDetail.product.DefaultPriceScheduleID">
-            <div ng-repeat="assignment in productPricing.listAssignments | ocDefaultPrice:productDetail.product.DefaultPriceScheduleID:true"
+        <div class="c-price-list" ng-if="product.model.DefaultPriceScheduleID">
+            <div ng-repeat="assignment in productPricing.listAssignments | ocDefaultPrice:product.model.DefaultPriceScheduleID:true"
                 ng-class="{'active':productPricing.selectedPrice.PriceSchedule.ID == assignment.PriceSchedule.ID}" class="c-price-list__item"
                 ng-click="productPricing.selectPrice(this)">
                 <!--==== Product Price Selection ====-->
@@ -35,7 +35,7 @@
         <div ng-if="!productPricing.noOverridesSet">
             <b class="text-muted">Pricing Overrides</b>
             <div class="c-price-list">
-                <div ng-repeat="assignment in productPricing.listAssignments | ocDefaultPrice:productDetail.product.DefaultPriceScheduleID:false"
+                <div ng-repeat="assignment in productPricing.listAssignments | ocDefaultPrice:product.model.DefaultPriceScheduleID:false"
                     ng-class="{'active':productPricing.selectedPrice.PriceSchedule.ID == assignment.PriceSchedule.ID}" class="c-price-list__item"
                     ng-click="productPricing.selectPrice(this)">
                     <!--==== Product Price Selection ====-->
@@ -152,13 +152,13 @@
 
             <!--==== Assignments ====-->
             <div ng-show="productPricing.activeTab == 'availability'">
-                <div class="alert alert-info" ng-if="productDetail.product.DefaultPriceScheduleID == productPricing.selectedPrice.PriceSchedule.ID">
+                <div class="alert alert-info" ng-if="product.model.DefaultPriceScheduleID == productPricing.selectedPrice.PriceSchedule.ID">
                     This is the default price schedule. All buyer users can order this product if available in one of their catalogs.
                 </div>
                 <div class="panel panel-default" ng-repeat="buyer in productPricing.selectedPrice.Availability" cg-busy="productPricing.availabilityLoading[$index]">
                     <div class="panel-body">
                         <h5 style="margin:0;">
-                            <a ng-if="buyer.Assigned" ui-sref="buyerProducts({buyerid:buyer.ID, search:productDetail.product.ID})"><b>{{buyer.Name}}</b></a>
+                            <a ng-if="buyer.Assigned" ui-sref="buyerProducts({buyerid:buyer.ID, search:product.model.ID})"><b>{{buyer.Name}}</b></a>
                             <b ng-if="!buyer.Assigned">{{buyer.Name}}</b> <br>
                             <small>(ID: {{buyer.ID}})</small>
                         </h5>
@@ -177,7 +177,7 @@
                             <tbody>
                                 <tr ng-repeat="userGroup in buyer.UserGroups">
                                     <td>
-                                        <a ui-sref="userGroupProducts({buyerid:buyer.ID, usergroupid:userGroup.ID, search:productDetail.product.ID})">
+                                        <a ui-sref="userGroupProducts({buyerid:buyer.ID, usergroupid:userGroup.ID, search:product.model.ID})">
                                         {{userGroup.Name}}
                                     </a>
                                         <small class="text-muted">(ID: {{userGroup.ID}})</small>

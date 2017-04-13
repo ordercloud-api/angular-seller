@@ -1,7 +1,7 @@
 <nav id="GlobalNav" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-sm offcanvas-xs" role="navigation">
     <a class="navmenu-brand hidden-xs hidden-sm" href="" ui-sref="home">{{application.name}}</a>
     <ul class="nav navmenu-nav">
-        <li ng-class="{active: application.$state.is('products') || application.$state.includes('productDetail')}" oc-if-roles="ProductRoles">
+        <li ng-class="{active: application.$state.is('products') || application.$state.includes('product')}" oc-if-roles="ProductRoles">
             <a ng-click="base.selectNavItem('products')"><i class="fa fa-cube"></i> Product Management</a>
         </li>
         <li ng-class="{active: application.$state.is('catalogs') || application.$state.includes('catalog')}" oc-if-roles="ProductRoles">

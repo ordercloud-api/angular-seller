@@ -64,7 +64,7 @@ function ProductsController($state, toastr, OrderCloudSDK, ocParameters, ocProdu
         ocProducts.Create()
             .then(function(newProduct) {
                 toastr.success(newProduct.Name + ' was created.');
-                $state.go('productDetail', {productid: newProduct.ID});
+                $state.go('product', {productid: newProduct.ID});
             });
     };
 

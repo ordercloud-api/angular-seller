@@ -4,7 +4,7 @@ angular.module('orderCloud')
 
 function ProductCategoriesConfig($stateProvider) {
     $stateProvider 
-        .state('productDetail.catalogs', {
+        .state('product.catalogs', {
             url: '/categories?search&page&pageSize&searchOn&sortBy&filters',
             templateUrl: 'productManagement/categories/templates/productCatalogs.html',
             controller: 'CatalogsCtrl',
@@ -21,7 +21,7 @@ function ProductCategoriesConfig($stateProvider) {
                 }
             }
         })
-        .state('productDetail.categories', {
+        .state('product.categories', {
             url: '/categories/:catalogid',
             templateUrl: 'productManagement/categories/templates/productCategories.html',
             controller: 'ProductCategoriesCtrl',

@@ -1,0 +1,22 @@
+<ul class="nav nav-tabs">
+    <li ng-class="{active:application.$state.is('product')}">
+        <a href="" ui-sref="product"><i class="fa fa-cube"></i> <span>Product</span></a>
+    </li>
+    <li ui-sref-active="active">
+        <a href="" ui-sref=".specs"><i class="fa fa-edit"></i> Specs</a>
+    </li>
+    <li ng-class="{active:application.$state.includes('product.pricing')}"
+        oc-if-roles="['ProductAdmin', 'ProductAssignmentAdmin']">
+        <a href="" ui-sref=".pricing"><i class="fa fa-dollar"></i> Pricing</a>
+    </li>
+    <li ui-sref-active="active">
+        <a href="" ui-sref=".shipping"><i class="fa fa-truck"></i> Shipping</a>
+    </li>
+    <li ui-sref-active="active" ng-if="product.inventoryEnabled">
+        <a href="" ui-sref=".inventory"><i class="fa fa-clipboard"></i> Inventory</a>
+    </li>
+    <li ng-class="{active: application.$state.is('product.catalogs') || application.$state.is('product.categories')}"
+        oc-if-roles="CategoryRoles">
+        <a href="" ui-sref=".catalogs"><i class="fa fa-th-large"></i> Categories</a>
+    </li>
+</ul>

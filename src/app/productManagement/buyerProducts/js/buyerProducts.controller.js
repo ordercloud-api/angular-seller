@@ -65,7 +65,7 @@ function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, $f
         ocProducts.Create()
             .then(function (newProduct) {
                 toastr.success(newProduct.Name + ' was created.');
-                $state.go('productDetail', {
+                $state.go('product', {
                     productid: newProduct.ID
                 });
             });

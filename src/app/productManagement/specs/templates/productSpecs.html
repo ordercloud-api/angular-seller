@@ -1,11 +1,11 @@
 <div ng-if="!productSpecs.specs.Items.length" class="no-matches">
     This product does not have any specs. <br>
-    <a ng-click="productSpecs.createSpec(productDetail.product.ID)" oc-if-roles="ProductAdmin">Create one now</a>
+    <a ng-click="productSpecs.createSpec(product.model.ID)" oc-if-roles="ProductAdmin">Create one now</a>
 </div>
 <div class="row" ng-if="productSpecs.specs.Items.length">
     <div class="col-sm-5">
         <div oc-if-roles="ProductAdmin">
-            <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpec(productDetail.product.ID)">
+            <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpec(product.model.ID)">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 New Spec
             </button>

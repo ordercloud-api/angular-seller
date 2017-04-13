@@ -4,7 +4,7 @@ angular.module('orderCloud')
 
 function ProductSpecsConfig($stateProvider) {
     $stateProvider
-        .state('productDetail.specs', {
+        .state('product.specs', {
             url: '/specs',
             templateUrl: 'productManagement/specs/templates/productSpecs.html',
             controller: 'ProductSpecsCtrl',

@@ -9,7 +9,7 @@ angular.module('orderCloud')
 			preventOpenDuplicates: true,
 			progressBar:true,
 			tapToClose:true,
-			target: 'body',
+			target: 'main',
 			extendedTimeOut: 1000,
 			timeOut: 4000,
 			iconClasses: {

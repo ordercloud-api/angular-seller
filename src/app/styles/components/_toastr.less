@@ -1,4 +1,5 @@
 #toast-container {
+  position:absolute;
   @media(max-width:@screen-xs-max) {
     .alert {
       width:~"calc(100vw - 25px)";
@@ -57,12 +58,12 @@
     &,
     &.ng-enter.ng-enter-active {
       transition: top 255ms ease-out, opacity 255ms ease-in;
-      top:0;
+      top:-@grid-gutter-width/2;
       opacity: 1 !important;
     }
     &.ng-leave {
       opacity: 1;
-      top:0;
+      top:-@grid-gutter-width/2;
     }
     &.ng-leave.ng-leave-active {
       transition: top 255ms linear, opacity 150ms linear;
