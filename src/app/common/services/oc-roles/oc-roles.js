@@ -64,7 +64,7 @@ function OrderCloudRolesService($window, ocRoles, OrderCloudSDK) {
 
     //Returns boolean whether user's claimed roles cover a array of roles and/or Role Groups
     //Role Groups use the group's Type setting. Individual roles use the any parameter when combined
-    //Ex: ocRolesService.UserIsAuthorized(['CategoryReader', 'CatalogReader', 'RoleGroupA'], any);
+    //Ex: ocRolesService.UserIsAuthorized(['CategoryReader', 'CatalogReader', 'RoleGroupA'], true);
         //Evaluates whether user is authorized for RoleGroupA's configuration AND has either CategoryReader or CatalogReader
     function _userIsAuthorized(roleItems, any) {
         var userRoles = _get();
