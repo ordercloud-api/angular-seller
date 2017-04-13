@@ -4,7 +4,7 @@ angular.module('orderCloud')
 
 function ProductInventoryConfig($stateProvider) {
     $stateProvider
-        .state('productDetail.inventory', {
+        .state('product.inventory', {
             url: '/inventory',
             templateUrl: 'productManagement/inventory/templates/productInventory.html',
             controller: 'ProductInventoryCtrl',

@@ -67,7 +67,7 @@ function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams
         ocProducts.Create()
             .then(function (newProduct) {
                 toastr.success(newProduct.Name + ' was created.');
-                $state.go('productDetail', {
+                $state.go('product', {
                     productid: newProduct.ID
                 });
             });

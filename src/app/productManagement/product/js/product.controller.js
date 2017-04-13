@@ -1,9 +1,9 @@
 angular.module('orderCloud')
-    .controller('ProductDetailCtrl', ProductDetailController);
+    .controller('ProductCtrl', ProductController);
 
-function ProductDetailController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocProductPricing, SelectedProduct) {
+function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocProductPricing, SelectedProduct) {
     var vm = this;
-    vm.product = angular.copy(SelectedProduct);
+    vm.model = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
     vm.inventoryEnabled = angular.copy(SelectedProduct.Inventory ? SelectedProduct.Inventory.Enabled : false);
     vm.updateProduct = updateProduct;
@@ -12,27 +12,27 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloudSDK, ocPr
     vm.createDefaultPrice = createDefaultPrice;
 
     function patchImage(imageXP) {
-        return OrderCloudSDK.Products.Patch(vm.product.ID, {
+        return OrderCloudSDK.Products.Patch(vm.model.ID, {
             xp: imageXP
         });
     }
 
     function updateProduct() {
-        var currentPrice = angular.copy(vm.product.DefaultPriceSchedule);
-        var partial = _.pick(vm.product, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
-        vm.productUpdateLoading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)
+        var currentPrice = angular.copy(vm.model.DefaultPriceSchedule);
+        var partial = _.pick(vm.model, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
+        vm.modelUpdateLoading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)
             .then(function (data) {
 
-                vm.product = angular.copy(data);
+                vm.model = angular.copy(data);
                 if (currentPrice && data.Name !== SelectedProduct.Name) {
                     OrderCloudSDK.PriceSchedules.Patch(currentPrice.ID, {
                             Name: data.Name + ' Default Price'
                         })
                         .then(function (updatedPrice) {
-                            vm.product.DefaultPriceSchedule = updatedPrice;
+                            vm.model.DefaultPriceSchedule = updatedPrice;
                         });
                 } else {
-                    vm.product.DefaultPriceSchedule = currentPrice;
+                    vm.model.DefaultPriceSchedule = currentPrice;
                 }
                 vm.productName = angular.copy(data.Name);
                 vm.inventoryEnabled = angular.copy(data.InventoryEnabled);
@@ -53,10 +53,10 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloudSDK, ocPr
     }
 
     function createDefaultPrice() {
-        ocProductPricing.CreateProductPrice(vm.product, null, null, null, true)
+        ocProductPricing.CreateProductPrice(vm.model, null, null, null, true)
             .then(function (data) {
-                toastr.success('Default price was successfully added to ' + vm.product.Name);
-                $state.go('productDetail.pricing.priceScheduleDetail', {
+                toastr.success('Default price was successfully added to ' + vm.model.Name);
+                $state.go('product.pricing.priceSchedule', {
                     pricescheduleid: data.SelectedPrice.ID
                 }, {
                     reload: true
@@ -65,10 +65,10 @@ function ProductDetailController($rootScope, $state, toastr, OrderCloudSDK, ocPr
     }
 
     $rootScope.$on('ProductManagement:SpecCountChanged', function (event, action) {
-        vm.product.SpecCount += (action == 'increment') ? 1 : -1;
+        vm.model.SpecCount += (action == 'increment') ? 1 : -1;
     });
 
     $rootScope.$on('OC:DefaultPriceUpdated', function (event, newID) {
-        vm.product.DefaultPriceScheduleID = newID;
+        vm.model.DefaultPriceScheduleID = newID;
     });
 }

@@ -1,15 +1,15 @@
 angular.module('orderCloud')
-    .config(ProductDetailConfig)
+    .config(ProductConfig)
 ;
 
-function ProductDetailConfig($stateProvider) {
+function ProductConfig($stateProvider) {
     $stateProvider
-        .state('productDetail', {
+        .state('product', {
             parent: 'base',
             url: '/products/:productid',
-            templateUrl: 'productManagement/product/templates/productDetail.html',
-            controller: 'ProductDetailCtrl',
-            controllerAs: 'productDetail',
+            templateUrl: 'productManagement/product/templates/product.html',
+            controller: 'ProductCtrl',
+            controllerAs: 'product',
             data: {
                 pageTitle: 'Product Info'
             },

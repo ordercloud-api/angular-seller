@@ -1,0 +1,85 @@
+<ul class="breadcrumb">
+    <li><a href="" ui-sref="products">All Products</a></li>
+    <li class="active">{{product.productName}}</li>
+</ul>
+<article>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">
+            <span class="text-muted">Product:</span> {{product.productName}}
+        </h3>
+        <div class="l-page-header__btns">
+            <button type="button" class="btn btn-danger" ng-click="product.deleteProduct()"><i class="fa fa-trash-o"></i> Delete Product</button>
+        </div>
+    </header>
+    <div ng-include="'productManagement/product/templates/productNavigation.html'"></div>
+    <br>
+    <div ui-view cg-busy="application.stateLoading('product')">
+        <div class="row">
+            <div class="col-sm-8">
+                <form name="product.form" autocomplete="off" ng-submit="product.updateProduct()" novalidate class="form-horizontal"
+                    oc-readonly-roles="ProductAdmin">
+                    <fieldset class="form-group">
+                        <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
+                        <div class="col-sm-9">
+                            <input id="ProductID" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" type="text" class="form-control" ng-model="product.model.ID"
+                                required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="ProductName" class="col-sm-3 control-label">Name</label>
+                        <div class="col-sm-9">
+                            <input id="ProductName" type="text" class="form-control" ng-model="product.model.Name" required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="ProductDescription" class="col-sm-3 control-label">Description</label>
+                        <div class="col-sm-9">
+                            <textarea rows="4" id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="product.model.Description"></textarea>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier</label>
+                        <div class="col-sm-9">
+                            <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="product.model.QuantityMultiplier"
+                                required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="DefaultPrice" class="col-sm-3 control-label">Default Price</label>
+                        <div class="col-sm-9">
+                            <p class="form-control-static">
+                                <a ng-if="!product.model.DefaultPriceScheduleID" ng-click="product.createDefaultPrice()">Add a default price</a>
+                                <a  ng-if="product.model.DefaultPriceScheduleID" ui-sref=".pricing({pricescheduleid: product.model.DefaultPriceScheduleID})">{{product.model.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</a>
+                            </p>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="checkbox">
+                                <label for="InventoryEnabled">
+                                    <input id="InventoryEnabled" name="InventoryEnabled" type="checkbox" ng-model="product.model.Inventory.Enabled"> Inventory Enabled
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label for="ProductActive">
+                                    <input id="ProductActive" name="ProductActive" type="checkbox" ng-model="product.model.Active"> Active
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="submit" cg-busy="product.productUpdateLoading" ng-disabled="product.form.$invalid" class="btn btn-primary btn-block">Update Product Info</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="col-sm-4">
+                <fieldset class="form-group">
+                    <label>Product Image</label>
+                    <oc-file-upload model="product.model" label="Image:" patch="product.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</article>
