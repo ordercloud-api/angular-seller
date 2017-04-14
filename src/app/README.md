@@ -63,7 +63,7 @@ angular.module('orderCloud')
     .controller('AppCtrl', AppController)
 ;
 
-function AppController($state, $ocMedia, LoginService, appname, ocStateLoading, ocIsTouchDevice, ocRolesService) {
+function AppController($state, $ocMedia, LoginService, appname, ocStateLoading, ocIsTouchDevice, ocRoles) {
     var vm = this;
     vm.name = appname;
     vm.$state = $state;
@@ -71,7 +71,7 @@ function AppController($state, $ocMedia, LoginService, appname, ocStateLoading, 
     vm.isTouchDevice = ocIsTouchDevice;
     vm.stateLoading = ocStateLoading.Watch;
     vm.logout = LoginService.Logout;
-    vm.userIsAuthorized = ocRolesService.UserIsAuthorized;
+    vm.userIsAuthorized = ocRoles.UserIsAuthorized;
 }
 ```
 

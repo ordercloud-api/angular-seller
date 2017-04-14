@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CatalogCtrl', CatalogController)
 ;
 
-function CatalogController($exceptionHandler, $state, toastr, SelectedCatalog, OrderCloudSDK, ocCatalogs) {
+function CatalogController($exceptionHandler, $state, toastr, SelectedCatalog, OrderCloudSDK, ocCatalogs, ocNavItems) {
     var vm = this;
     vm.selectedCatalog = SelectedCatalog;
     vm.model = angular.copy(SelectedCatalog);
@@ -11,23 +11,7 @@ function CatalogController($exceptionHandler, $state, toastr, SelectedCatalog, O
     vm.updateCatalog = updateCatalog;
     vm.deleteCatalog = deleteCatalog;
 
-    vm.navigationItems = [{
-            icon: 'fa-sitemap',
-            state: 'catalog',
-            name: 'Catalog'
-        },
-        {
-            icon: 'fa-th-large',
-            state: 'categories',
-            name: 'Categories',
-            activeWhen: ['categories', 'categories.category', 'categories.category.products']
-        },
-        {
-            icon: 'fa-tags',
-            state: 'catalog.buyers',
-            name: 'Buyers'
-        }
-    ];
+    vm.navigationItems = ocNavItems.Catalog();
 
     function updateValidity() {
         if (vm.editForm.ID.$error['UnavailableID']) vm.editForm.ID.$setValidity('UnavailableID', true);

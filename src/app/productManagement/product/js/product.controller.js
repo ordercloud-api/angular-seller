@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('ProductCtrl', ProductController);
 
-function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocProductPricing, SelectedProduct) {
+function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocNavItems, ocProductPricing, SelectedProduct) {
     var vm = this;
     vm.model = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
@@ -11,38 +11,7 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     vm.patchImage = patchImage;
     vm.createDefaultPrice = createDefaultPrice;
     
-    vm.navigationItems = [{
-            icon: 'fa-cube',
-            state: 'product',
-            name: 'Product'
-        },
-        {
-            icon: 'fa-edit',
-            state: 'product.specs',
-            name: 'Specs'
-        },
-        {
-            icon: 'fa-truck',
-            state: 'product.shipping',
-            name: 'Shipping'
-        },
-        {
-            icon: 'fa-clipboard',
-            state: 'product.inventory',
-            name: 'Inventory'
-        },
-        {
-            icon: 'fa-dollar',
-            state: 'product.pricing',
-            name: 'Pricing'
-        },
-        {
-            icon: 'fa-th-large',
-            state: 'product.catalogs',
-            name: 'Categories',
-            activeWhen: ['product.catalogs', 'product.categories']
-        }
-    ];
+    vm.navigationItems = ocNavItems.Product();
 
     function patchImage(imageXP) {
         return OrderCloudSDK.Products.Patch(vm.model.ID, {

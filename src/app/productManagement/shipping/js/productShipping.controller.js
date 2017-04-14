@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductShippingCtrl', ProductShippingController)
 ;
 
-function ProductShippingController(toastr, OrderCloudSDK, ocRolesService) {
+function ProductShippingController(toastr, OrderCloudSDK, ocRoles) {
     var vm = this;
     vm.updateProductShipping = updateProductShipping;
     vm.listAllAdminAddresses = listAllAdminAddresses;
@@ -17,7 +17,7 @@ function ProductShippingController(toastr, OrderCloudSDK, ocRolesService) {
     }
 
     function listAllAdminAddresses(search){
-        if (ocRolesService.UserIsAuthorized(['AddressAdmin'])) {
+        if (ocRoles.UserIsAuthorized(['AddressAdmin'])) {
             return OrderCloudSDK.AdminAddresses.List({search: search})
                 .then(function(data){
                     vm.sellerAddresses = data;

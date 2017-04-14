@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCtrl', BuyerController)
 ;
 
-function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, toastr, OrderCloudSDK, ocBuyers, SelectedBuyer) {
+function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, toastr, OrderCloudSDK, ocBuyers, ocNavItems, SelectedBuyer) {
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.settings = angular.copy(SelectedBuyer);
@@ -12,59 +12,7 @@ function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, t
     vm.deleteBuyer = deleteBuyer;
     vm.searchCatalogs = searchCatalogs;
 
-    vm.navigationItems = [{
-            icon: 'fa-dollar',
-            state: 'buyerProducts',
-            name: 'Pricing'
-        },
-        {
-            icon: 'fa-sitemap',
-            state: 'buyerCatalogs',
-            name: 'Categories',
-            activeWhen: ['buyerCatalogs', 'buyerCatalog']
-        },
-        {
-            icon: 'fa-user',
-            state: 'users',
-            name: 'Users'
-        },
-        {
-            icon: 'fa-users',
-            state: 'userGroups',
-            name: 'User Groups',
-            activeWhen: ['userGroups', 'userGroup']
-        },
-        {
-            icon: 'fa-map-marker',
-            state: 'addresses',
-            name: 'Addresses'
-        },
-        {
-            icon: 'fa-credit-card',
-            state: 'creditCards',
-            name: 'Credit Cards'
-        },
-        {
-            icon: 'fa-money',
-            state: 'spendingAccounts',
-            name: 'Spending Accounts'
-        },
-        {
-            icon: 'fa-asterisk',
-            state: 'costCenters',
-            name: 'Cost Centers'
-        },
-        {
-            icon: 'fa-check-square-o',
-            state: 'approvalRules',
-            name: 'Approval Rules'
-        },
-        {
-            icon: 'fa-bullhorn',
-            state: 'promotions',
-            name: 'Promotions'
-        }
-    ];
+    vm.navigationItems = ocNavItems.Buyer();
 
     function updateValidity() {
         if (vm.settingsForm.buyerIDinput.$error['UnavailableID']) vm.settingsForm.buyerIDinput.$setValidity('UnavailableID', true);

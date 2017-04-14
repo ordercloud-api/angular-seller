@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('SellerUserGroupUsersCtrl', SellerUserGroupUsersController)
 ;
 
-function SellerUserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocSellerUsers, OrderCloudSDK, ocParameters, ocRolesService, UserList, SelectedSellerUserGroup, CurrentAssignments, Parameters ) {
+function SellerUserGroupUsersController($exceptionHandler, $filter, $state, $stateParams, toastr, ocSellerUsers, OrderCloudSDK, ocParameters, ocRoles, UserList, SelectedSellerUserGroup, CurrentAssignments, Parameters ) {
     var vm = this;
     vm.list = UserList;
     vm.parameters = Parameters;
@@ -108,7 +108,7 @@ function SellerUserGroupUsersController($exceptionHandler, $filter, $state, $sta
     vm.createUser = function() {
         ocSellerUsers.Create()
             .then(function(newSellerUser) {
-                if (ocRolesService.UserIsAuthorized(['AdminUserGroupAdmin'])) {
+                if (ocRoles.UserIsAuthorized(['AdminUserGroupAdmin'])) {
                     var newAssignment = {
                         UserID: newSellerUser.ID,
                         UserGroupID: $stateParams.sellerusergroupid

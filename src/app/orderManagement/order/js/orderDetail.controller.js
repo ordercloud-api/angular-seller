@@ -2,33 +2,12 @@ angular.module('orderCloud')
     .controller('OrderCtrl', OrderController)
 ;
 
-function OrderController($stateParams, toastr, OrderCloudSDK, ocOrderDetailService, SelectedOrder, OrderLineItems) {
+function OrderController($stateParams, toastr, OrderCloudSDK, ocOrderDetailService, ocNavItems, SelectedOrder, OrderLineItems) {
     var vm = this;
     vm.order = SelectedOrder;
     vm.lineItems = OrderLineItems;
 
-    vm.navigationItems = [{
-            icon: 'fa-file',
-            state: 'orderDetail',
-            name: 'Details'
-        },
-        {
-            icon: 'fa-dollar',
-            state: 'orderDetail.payments',
-            name: 'Payments'
-        },
-        {
-            icon: 'fa-truck',
-            state: 'orderDetail.shipments',
-            name: 'Shipments',
-            activeWhen: ['orderDetail.shipments', 'orderDetail.shipments.create']
-        },
-        {
-            icon: 'fa-check-square-o',
-            state: 'orderDetail.approvals',
-            name: 'Approvals'
-        }
-    ];
+    vm.navigationItems = ocNavItems.Order();
 
     vm.pageChanged = function() {
         var options = {
