@@ -1,0 +1,29 @@
+<form name="costCenterCreateModal.form" class="form-horizontal" ng-submit="costCenterCreateModal.submit()" cg-busy="costCenterCreateModal.loading" novalidate>
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="costCenterCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">New Cost Center</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="costCenterID" class="col-sm-3 control-label">ID</label>
+            <div class="col-sm-9">
+                <input id="costCenterID" name="ID" placeholder="(Optional)" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="costCenterCreateModal.costCenter.ID"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="costCenterName" class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+                <input id="costCenterName" name="Name" type="text" class="form-control" ng-model="costCenterCreateModal.costCenter.Name" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="costCenterDescription" class="col-sm-3 control-label">Description</label>
+            <div class="col-sm-9">
+                <textarea rows="4" id="costCenterDescription" name="Description" placeholder="(Optional)" class="form-control" ng-model="costCenterCreateModal.costCenter.Description"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block" ng-disabled="costCenterCreateModal.form.$invalid">Save</button>
+    </div>
+</form>

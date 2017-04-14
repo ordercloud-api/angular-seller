@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-sm-8">
+        <form name="productShipping.ProductShippingForm" ng-submit="productShipping.updateProductShipping(product.model)" autocomplete="off" novalidate class="form-horizontal" oc-readonly-roles="ProductAdmin">
+            <fieldset class="form-group">
+                <label for="ShipWeight" class="col-sm-3 control-label">Ship Weight</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input id="ShipWeight" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipWeight" />
+                        <span class="input-group-addon">lb(s)</span>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ShipHeight" class="col-sm-3 control-label">Ship Height</label>
+                <div class="col-sm-9">
+                    <input id="ShipHeight" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipHeight" />
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ShipWidth" class="col-sm-3 control-label">Ship Width</label>
+                <div class="col-sm-9">
+                    <input id="ShipWidth" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipWidth" />
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="ShipLength" class="col-sm-3 control-label">Ship Length</label>
+                <div class="col-sm-9">
+                    <input id="ShipLength" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipLength" />
+                </div>
+            </fieldset>
+            <fieldset class="form-group" oc-if-roles="AddressRoles">
+                <label for="ShipFrom" class="col-sm-3 control-label">Ship From</label>
+                <div class="col-sm-9">
+                    <ui-select ng-model="product.model.ShipFromAddressID" close-on-select="true" id="ShipFrom" ng-disabled="!application.userIsAuthorized(['ProductAdmin'])">
+                        <ui-select-match placeholder="Search and select seller addresses...">
+                            <span ng-bind-html="$select.selected | address"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="address.ID as address in (productShipping.sellerAddresses.Items | filter: $select.search) track by $index" refresh="productShipping.listAllAdminAddresses($select.search)" refresh-delay="300">
+                            <span ng-bind-html="address | address:'full'"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" cg-busy="productShipping.productUpdateLoading" class="btn btn-primary btn-block">Update</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

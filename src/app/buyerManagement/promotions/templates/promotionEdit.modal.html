@@ -1,0 +1,96 @@
+<form name="promotionEditModal.form" ng-submit="promotionEditModal.submit()" cg-busy="promotionEditModal.loading" novalidate oc-readonly-roles="PromotionAdmin">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="promotionEditModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span>{{promotionEditModal.promotionName}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="promotionID" class="col-sm-3 control-label">ID</label>
+                <div class="col-sm-9">
+                    <input id="promotionID" name="ID" placeholder="(Optional)" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="promotionEditModal.promotion.ID"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="promotionName" class="col-sm-3 control-label">Name</label>
+                <div class="col-sm-9">
+                    <input id="promotionName" name="Name" type="text" placeholder="(Optional)" class="form-control" ng-model="promotionEditModal.promotion.Name"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="promotionDescription" class="control-label col-sm-3">Description</label>
+                <div class="col-sm-9">
+                    <textarea rows="2" id="promotionDescription" name="Description" placeholder="(Optional) Describe your promotion..." type="text" class="form-control" ng-model="promotionEditModal.promotion.Description"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="promotionFinePrint" class="control-label col-sm-3">Fine Print</label>
+                <div class="col-sm-9">
+                    <textarea rows="2" id="promotionFinePrint" name="FinePrint" placeholder="(Optional)" type="text" class="form-control" ng-model="promotionEditModal.promotion.FinePrint"></textarea>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="promotionCode" class="col-sm-3 control-label">Code</label>
+                <div class="col-sm-9">
+                    <input id="promotionCode" name="Code" type="text" class="form-control" ng-model="promotionEditModal.promotion.Code" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="checkbox">
+                        <label for="promotionCanCombine">
+                            <input id="promotionCanCombine" name="CanCombine" type="checkbox" ng-model="promotionEditModal.promotion.CanCombine"/>
+                            Can combine with other promotions
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="promotionRedemptionLimit" class="col-sm-3 control-label">Redemption Limit</label>
+                <div class="col-sm-9">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <input id="promotionRedemptionLimit" name="RedemptionLimit" type="number" placeholder="(Optional)" step="any" min="0" class="form-control" ng-model="promotionEditModal.promotion.RedemptionLimit"/>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="input-group">
+                                <input id="promotionRedemptionLimitPerUser" name="RedemptionLimitPerUser" type="number" placeholder="(Optional)" step="any" min="0" class="form-control" ng-model="promotionEditModal.promotion.RedemptionLimitPerUser"/>
+                                <div class="input-group-addon">
+                                    Per User
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="promotionStartDate" class="col-sm-3 control-label">Start Date</label>
+                <div class="col-sm-9">
+                    <input id="promotionStartDate" ng-if="application.isTouchDevice" class="form-control"  type="date" ng-model="promotionEditModal.promotion.StartDate"/>
+                    <input id="promotionStartDate" ng-if="!application.isTouchDevice" type="text" ng-click="open1 = !open1" is-open="open1" uib-datepicker-popup="MM/dd/yyyy" class="form-control" ng-model="promotionEditModal.promotion.StartDate">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="promotionExpirationDate" class="col-sm-3 control-label">Expiration Date</label>
+                <div class="col-sm-9">
+                    <input id="promotionExpirationDate" ng-if="application.isTouchDevice" class="form-control"  type="date" ng-model="promotionEditModal.promotion.ExpirationDate"/>
+                    <input id="promotionExpirationDate" ng-if="!application.isTouchDevice" type="text" ng-click="open2 = !open2" is-open="open2" uib-datepicker-popup="MM/dd/yyyy" class="form-control" ng-model="promotionEditModal.promotion.ExpirationDate">
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="EligibleExpression">Eligible Expression</label>
+            <textarea rows="2" id="EligibleExpression" name="EligibleExpression" type="text" class="form-control" ng-model="promotionEditModal.promotion.EligibleExpression" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="ValueExpression">Value Expression</label>
+            <textarea rows="2" id="ValueExpression" name="ValueExpression" type="text" class="form-control" ng-model="promotionEditModal.promotion.ValueExpression" required></textarea>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block">Save</button>
+    </div>
+</form>

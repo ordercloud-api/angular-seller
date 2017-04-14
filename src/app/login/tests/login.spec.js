@@ -2,7 +2,6 @@ describe('Component: Login', function() {
     var scope,
         q,
         loginFactory,
-        Token_Refresh,
         oc,
         credentials = {
             Username: 'notarealusername',
@@ -10,17 +9,16 @@ describe('Component: Login', function() {
         };
     beforeEach(module('orderCloud'));
     beforeEach(module('orderCloud.sdk'));
-    beforeEach(inject(function($q, $rootScope, OrderCloud, LoginService, TokenRefresh) {
+    beforeEach(inject(function($q, $rootScope, LoginService) {
         q = $q;
         scope = $rootScope.$new();
         loginFactory = LoginService;
         oc = OrderCloud;
-        Token_Refresh = TokenRefresh;
     }));
 
     describe('Factory: LoginService', function() {
         var client_id;
-        beforeEach(inject(function(clientid, TokenRefresh) {
+        beforeEach(inject(function(clientid) {
             client_id = clientid;
         }));
         describe('SendVerificationCode', function() {
@@ -37,7 +35,7 @@ describe('Component: Login', function() {
                 spyOn(oc.PasswordResets, 'SendVerificationCode').and.returnValue(deferred.promise);
                 loginFactory.SendVerificationCode(email);
             }));
-            it ('should call the SendVerificationCode method of PasswordResets with the reset request object', function(){
+            it('should call the SendVerificationCode method of PasswordResets with the reset request object', function(){
                 expect(oc.PasswordResets.SendVerificationCode).toHaveBeenCalledWith(passwordResetRequest);
             });
         });
@@ -54,23 +52,68 @@ describe('Component: Login', function() {
                 spyOn(oc.PasswordResets, 'ResetPassword').and.returnValue(deferred.promise);
                 loginFactory.ResetPassword(creds, 'code');
             }));
-            it ('should call the ResetPassword method of the PasswordResets Service with a code and credentials', function() {
+            it('should call the ResetPassword method of the PasswordResets Service with a code and credentials', function() {
                 expect(oc.PasswordResets.ResetPassword).toHaveBeenCalledWith('code', {ClientID: client_id, Username: creds.ResetUsername, Password: creds.NewPassword});
             });
         });
 
+        describe('Logout', function() {
+            beforeEach(inject(function($state, $cookies, ocRolesService) {
+                var fakeCookies = {
+                    cookie1: 'FAKE',
+                    cookie2: 'SUPER_FAKE'
+                };
+                spyOn($cookies, 'getAll').and.returnValue(fakeCookies);
+                spyOn($cookies, 'remove').and.callThrough();
+                spyOn(ocRolesService, 'Remove').and.callThrough();
+                spyOn($state, 'go').and.callThrough();
+                loginFactory.Logout();
+            }));
+            it('should get all of the cookies', inject(function($cookies) {
+                expect($cookies.getAll).toHaveBeenCalled();
+            }));
+            it('should remove all of the cookies', inject(function($cookies) {
+                expect($cookies.remove.calls.count()).toEqual(2);
+                expect($cookies.remove).toHaveBeenCalledWith('cookie1');
+                expect($cookies.remove).toHaveBeenCalledWith('cookie2');
+            }));
+            it('should call ocRolesService.Remove()', inject(function(ocRolesService) {
+                expect(ocRolesService.Remove).toHaveBeenCalled();
+            }));
+            it('should redirect to the login state', inject(function($state) {
+                expect($state.go).toHaveBeenCalledWith('login', {}, {reload:true});
+            }));
+        });
+
         describe('RememberMe', function(){
-            beforeEach(inject(function(){
+            beforeEach(function(){
                 var deferred = q.defer();
-                deferred.resolve(true);
-                spyOn(Token_Refresh, 'GetToken').and.returnValue(deferred.promise);
+                deferred.resolve({access_token:'ACCESS_TOKEN'});
+                spyOn(oc.Refresh, 'GetToken').and.returnValue(deferred.promise);
+
+                var dfd = q.defer();
+                dfd.resolve();
+                spyOn(oc.BuyerID, 'Set').and.returnValue(dfd.promise);
+                spyOn(oc.Auth, 'SetToken').and.returnValue(dfd.promise);
+
+            });
+
+            it('should find the refresh token, refresh the access token, and store the new access token in cookies', function(){
+                spyOn(oc.Refresh, 'ReadToken').and.returnValue('REFRESH_TOKEN');
                 loginFactory.RememberMe();
 
-            }));
+                expect(oc.Refresh.ReadToken).toHaveBeenCalled();
+                expect(oc.Refresh.GetToken).toHaveBeenCalledWith('REFRESH_TOKEN');
+                scope.$digest();
+                expect(oc.Auth.SetToken).toHaveBeenCalledWith('ACCESS_TOKEN');
+            });
 
-            it('should call the TokenRefresh.GetToken method', function(){
-                expect(Token_Refresh.GetToken).toHaveBeenCalled();
-            })
+            it('should not attempt to refresh users who do not have a refresh token', function() {
+                spyOn(oc.Refresh, 'ReadToken').and.returnValue(null);
+                loginFactory.RememberMe();
+                expect(oc.Refresh.ReadToken).toHaveBeenCalled();
+                expect(oc.Refresh.GetToken).not.toHaveBeenCalled();
+            });
 
         });
     });
@@ -92,13 +135,13 @@ describe('Component: Login', function() {
         }));
 
         describe('form', function() {
-            it ('should initialize to login', function() {
+            it('should initialize to login', function() {
                 expect(loginCtrl.form).toBe('login');
             });
         });
 
         describe('setForm', function() {
-            it ('should change the value of form to the passed in value', function() {
+            it('should change the value of form to the passed in value', function() {
                 loginCtrl.setForm('reset');
                 expect(loginCtrl.form).toBe('reset');
             });
@@ -110,13 +153,13 @@ describe('Component: Login', function() {
                 loginCtrl.submit();
                 scope.$digest();
             });
-            it ('should call the GetToken method from the Auth Service with credentials', function() {
+            it('should call the GetToken method from the Auth Service with credentials', function() {
                 expect(oc.Auth.GetToken).toHaveBeenCalledWith(credentials);
             });
-            it ('should call the SetToken method from the Auth Service', function() {
+            it('should call the SetToken method from the Auth Service', function() {
                 expect(oc.Auth.SetToken).toHaveBeenCalledWith(fakeToken);
             });
-            it ('should enter the home state', inject(function($state) {
+            it('should enter the home state', inject(function($state) {
                 expect($state.go).toHaveBeenCalledWith('home');
             }));
         });
@@ -133,13 +176,13 @@ describe('Component: Login', function() {
                 loginCtrl.forgotPassword();
                 scope.$digest();
             });
-            it ('should call the LoginService SendVerificationCode with the email', function() {
+            it('should call the LoginService SendVerificationCode with the email', function() {
                 expect(loginFactory.SendVerificationCode).toHaveBeenCalledWith(email);
             });
-            it ('should set the form to verificationCodeSuccess', function() {
+            it('should set the form to verificationCodeSuccess', function() {
                 expect(loginCtrl.form).toBe('verificationCodeSuccess');
             });
-            it ('should set credentials.Email back to null', function() {
+            it('should set credentials.Email back to null', function() {
                 expect(loginCtrl.credentials.Email).toBe(null);
             });
         });
@@ -160,16 +203,16 @@ describe('Component: Login', function() {
                 loginCtrl.resetPassword();
                 scope.$digest();
             });
-            it ('should call the ResetPassword method of the LoginService with credentials and token', function() {
+            it('should call the ResetPassword method of the LoginService with credentials and token', function() {
                 expect(loginFactory.ResetPassword).toHaveBeenCalledWith(creds, token);
             });
-            it ('should set the form to resetSuccess', function() {
+            it('should set the form to resetSuccess', function() {
                 expect(loginCtrl.form).toBe('resetSuccess');
             });
-            it ('should set the token to null', function() {
+            it('should set the token to null', function() {
                 expect(loginCtrl.token).toBe(null);
             });
-            it ('should set the credentials values to null', function() {
+            it('should set the credentials values to null', function() {
                 for (key in loginCtrl.credentials) {
                     if (loginCtrl.credentials.hasOwnProperty(key)) {
                         expect(loginCtrl.credentials[key]).toBe(null);

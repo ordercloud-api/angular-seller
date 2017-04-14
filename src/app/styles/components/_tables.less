@@ -1,0 +1,20 @@
+.table {
+  > thead > tr > th {
+    &[ng-click] {
+      color:@link-color; //show sortable th as a link
+    }
+    .checkbox {
+      margin:0;
+    }
+  }
+  > tbody > tr > td {
+    vertical-align: middle;
+  }
+}
+
+.fa-circle {
+  color:@gray-light;
+  &.active {
+    color:@brand-success;
+  }
+}

@@ -1,0 +1,106 @@
+<article>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">
+            Available Products
+        </h3>
+        <!--====== CREATE ======-->
+        <div class="l-page-header__btns" oc-if-roles="ProductAdmin">
+            <button type="button" class="btn btn-primary btn-block" ng-click="buyerProducts.createProduct()"><i class="fa fa-plus-circle"></i>
+                New Product
+            </button>
+        </div>
+    </header>
+
+    <!--====== SEARCH/FILTERS ======-->
+    <div ng-if="buyerProducts.list.Items.length || (!buyerProducts.list.Items.length && buyerProducts.searchResults)">
+        <form name="buyerProducts.searchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input type="search" ng-change="buyerProducts.search()" ng-model-options="{debounce:1000}" placeholder="Search Products..."
+                        ng-model="buyerProducts.parameters.search" class="form-control">
+                    <span ng-if="buyerProducts.searchResults" class="input-group-btn">
+                        <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="buyerProducts.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <!--====== LIST ======-->
+    <div cg-busy="buyerProducts.searchLoading">
+        <div class="no-matches" ng-if="!buyerProducts.list.Items.length">
+            <b ng-if="buyerProducts.searchResults">No matches found.</b>
+            <b ng-if="!buyerProducts.searchResults">This seller organization does not have any Products.</b>
+        </div>
+        <div ng-if="buyerProducts.list.Items.length">
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-6">
+                    <p class="text-right">{{(application.$ocMedia('min-width:768px') ? buyerProducts.list.Meta.ItemRange[0] : '1') + ' - ' + buyerProducts.list.Meta.ItemRange[1]
+                        + ' of ' + buyerProducts.list.Meta.TotalCount + ' results'}}</p>
+                </div>
+            </div>
+
+            <form name="buyerProducts.form" class="panel panel-default table-responsive">
+                <table class="table table-striped table-bordered l-product-table__buyer">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th rowspan="2" ng-click="buyerProducts.updateSort('ID')">
+                                ID
+                                <i class="fa fa-caret-down" ng-show="buyerProducts.parameters.sortBy == 'ID'"></i>
+                                <i class="fa fa-caret-up" ng-show="buyerProducts.parameters.sortBy == '!ID'"></i>
+                            </th>
+                            <th rowspan="2" ng-click="buyerProducts.updateSort('Name')">
+                                Name
+                                <i class="fa fa-caret-down" ng-show="buyerProducts.parameters.sortBy == 'Name'"></i>
+                                <i class="fa fa-caret-up" ng-show="buyerProducts.parameters.sortBy == '!Name'"></i>
+                            </th>
+                            <th colspan="2" class="text-center">Quantity Options</th>
+                            <th rowspan="2" class="text-right">Base Price</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center">Min</th>
+                            <th class="text-center">Max</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="product in buyerProducts.list.Items">
+                            <td>{{product.ID}}</td>
+                            <td><a href="" ui-sref="product({productid:product.ID})">{{product.Name}}</a></td>
+                            <td ng-if="product.SelectedPrice" class="text-center">{{product.SelectedPrice.MinQuantity}}</td>
+                            <td ng-if="product.SelectedPrice" class="text-center" ng-class="{'text-muted':!product.SelectedPrice.MaxQuantity}">{{product.SelectedPrice.MaxQuantity || 'N/A'}}</td>
+                            <td ng-if="product.SelectedPrice" class="text-right text-primary">
+                                <a ui-sref="product.pricing({productid:product.ID, pricescheduleid:product.SelectedPrice.ID})">
+                                    <small class="text-info" ng-if="product.DefaultPriceScheduleID == product.SelectedPrice.ID">(Default) </small>
+                                    <b>
+                                        {{product.SelectedPrice.PriceBreaks[0].Price | currency}} 
+                                    </b>
+                                </a>
+                                <button style="margin-left:5px;" class="btn btn-default btn-xs" ng-click="buyerProducts.updateProductPrice(this)">
+                                    {{product.DefaultPriceScheduleID == product.SelectedPrice.ID ? 'Override' : 'Change'}}</button>
+                            </td>
+                            <td colspan="3" class="text-center" ng-if="!product.SelectedPrice">
+                                <button class="btn btn-primary btn-xs" ng-click="buyerProducts.updateProductPrice(this)"><i class="fa fa-plus-circle"></i> Select or Create a Price</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul uib-pagination class="pagination-sm pull-right hidden-xs" ng-if="buyerProducts.list.Meta.TotalPages > 1" total-items="buyerProducts.list.Meta.TotalCount"
+                items-per-page="buyerProducts.list.Meta.PageSize" max-size="5" boundary-links="buyerProducts.list.Meta.TotalPages > 5"
+                ng-model="buyerProducts.list.Meta.Page" ng-change="buyerProducts.pageChanged()">
+            </ul>
+            <button type="button" class="btn btn-default btn-block btn-lg visible-xs" ng-show="buyerProducts.list.Meta.Page < buyerProducts.list.Meta.TotalPages"
+                ng-click="buyerProducts.loadMore()">Load More</button>
+        </div>
+    </div>
+</article>

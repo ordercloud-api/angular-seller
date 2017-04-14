@@ -1,0 +1,52 @@
+<form name="creditCardCreateModal.form" class="form-horizontal" ng-submit="creditCardCreateModal.submit()" autocomplete="off" novalidate>
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="creditCardCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">New Credit Card</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="creditCardID">Credit Card ID</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="creditCardID" name="ID" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="creditCardCreateModal.creditCard.ID" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="creditCardCardholderName">Cardholder Name</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="creditCardCardholderName" name="CardholderName" ng-model="creditCardCreateModal.creditCard.CardholderName" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="creditCardCardNumber">Card Number</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="creditCardCardNumber"
+                       name="CardNumber" ng-model="creditCardCreateModal.creditCard.CardNumber"
+                       payments-validate="card" payments-format="card" payments-type-model="creditCardCreateModal.creditCard.CardType" ng-class="creditCardCreateModal.creditCard.CardType"
+                       disable-validation-message required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="creditCardCardCode">Security Code</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control" id="creditCardCardCode" name="CardCode" ng-model="creditCardCreateModal.creditCard.CardCode" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" form="creditCardExpirationMonth">Expiration Month</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="creditCardExpirationMonth" name="ExpirationMonth"
+                        ng-model="creditCardCreateModal.creditCard.ExpirationMonth" ng-options="month.string as month.string for month in creditCardCreateModal.creditCardInfo.ExpirationMonths" required></select>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" form="creditCardExpirationYear">Expiration Year</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="creditCardExpirationYear" name="ExpirationYear"
+                        ng-model="creditCardCreateModal.creditCard.ExpirationYear" ng-options="year as year for year in creditCardCreateModal.creditCardInfo.ExpirationYears" required></select>
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block" cg-busy="addressCreateModal.loading" ng-disabled="creditCardCreateModal.form.$invalid">Save</button>
+    </div>
+</form>

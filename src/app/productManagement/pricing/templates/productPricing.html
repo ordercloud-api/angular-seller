@@ -1,0 +1,193 @@
+<!--==== No Prices Defined ====-->
+<div class="no-matches" ng-if="productPricing.noPricesSet">
+    This product does not have any pricing. <br>
+    Create a <a ng-click="product.createDefaultPrice()">default price</a> or create individual prices <a ui-sref="buyers">for your buyer organizations</a> and/or user groups.
+</div>
+<div class="row" ng-if="!productPricing.noPricesSet">
+    <div class="col-sm-5">
+        <b class="text-muted">Default Price</b>
+        <div class="no-matches" ng-if="!product.model.DefaultPriceScheduleID">
+            This product does not have a default price. <a ng-click="product.createDefaultPrice()">Create one now</a>
+        </div>
+        <div class="c-price-list" ng-if="product.model.DefaultPriceScheduleID">
+            <div ng-repeat="assignment in productPricing.listAssignments | ocDefaultPrice:product.model.DefaultPriceScheduleID:true"
+                ng-class="{'active':productPricing.selectedPrice.PriceSchedule.ID == assignment.PriceSchedule.ID}" class="c-price-list__item"
+                ng-click="productPricing.selectPrice(this)">
+                <!--==== Product Price Selection ====-->
+                <h5 class="c-price-list__item__info">
+                    {{assignment.PriceSchedule.Name}}<br>
+                    <small>{{'ID: ' + assignment.PriceSchedule.ID}}</small>
+                </h5>
+                <div class="c-price-list__item__price">
+                    {{assignment.PriceSchedule.PriceBreaks[0].Price | currency}}
+                </div>
+                <div class="c-price-list__item__buyers">
+                    <small>Buyers</small>
+                    <br> {{assignment.Buyers.length}}
+                </div>
+                <div class="c-price-list__item__groups">
+                    <small>Groups</small>
+                    <br> {{assignment.UserGroups.length}}
+                </div>
+            </div>
+        </div>
+        <!--==== Product Price Schedule List ====-->
+        <div ng-if="!productPricing.noOverridesSet">
+            <b class="text-muted">Pricing Overrides</b>
+            <div class="c-price-list">
+                <div ng-repeat="assignment in productPricing.listAssignments | ocDefaultPrice:product.model.DefaultPriceScheduleID:false"
+                    ng-class="{'active':productPricing.selectedPrice.PriceSchedule.ID == assignment.PriceSchedule.ID}" class="c-price-list__item"
+                    ng-click="productPricing.selectPrice(this)">
+                    <!--==== Product Price Selection ====-->
+                    <h5 class="c-price-list__item__info">
+                        {{assignment.PriceSchedule.Name}}<br>
+                        <small>{{'ID: ' + assignment.PriceSchedule.ID}}</small>
+                    </h5>
+                    <div class="c-price-list__item__price">
+                        {{assignment.PriceSchedule.PriceBreaks[0].Price | currency}}
+                    </div>
+                    <div class="c-price-list__item__buyers">
+                        <small>Buyers</small>
+                        <br> {{assignment.Buyers.length}}
+                    </div>
+                    <div class="c-price-list__item__groups">
+                        <small>Groups</small>
+                        <br> {{assignment.UserGroups.length}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="col-sm-7" cg-busy="productPricing.loadingPrice">
+
+        <!--==== No Price Selected Message ====-->
+        <div class="well text-center" ng-if="!productPricing.selectedPrice">
+            Select a price to view it's details and assignments.
+        </div>
+
+        <!--==== Selected Price ====-->
+        <div ng-if="productPricing.selectedPrice">
+
+            <!--==== Basic Price Schedule Information ====-->
+            <div class="pull-right">
+                <button type="button" class="btn btn-default" ng-click="productPricing.editPrice()"><i class="fa fa-edit"></i> Edit</button>
+                <button type="button" class="btn btn-danger" ng-click="productPricing.deletePrice()"><i class="fa fa-trash"></i> Delete</button>
+            </div>
+            <h3>
+                {{productPricing.selectedPrice.PriceSchedule.Name}} <br>
+                <small>(ID: {{productPricing.selectedPrice.PriceSchedule.ID}})</small>
+            </h3>
+            <div class="row">
+                <div class="col-xs-5">
+                    <b class="text-primary" ng-if="productPricing.selectedPrice.PriceSchedule.RestrictedQuantity">
+                        <i class="fa fa-lock"></i> Restricted Quantity <br>
+                    </b>
+                    <b class="text-primary" ng-if="!productPricing.selectedPrice.PriceSchedule.RestrictedQuantity">
+                        <i class="fa fa-unlock-alt"></i> Open Quantity <br>
+                    </b>
+                    <span>
+                        <b class="text-muted">Min Quantity: </b> {{productPricing.selectedPrice.PriceSchedule.MinQuantity}}
+                        <br>
+                    </span>
+                    <span ng-if="productPricing.selectedPrice.PriceSchedule.MaxQuantity">
+                        <b class="text-muted">Max Quantity: </b> {{productPricing.selectedPrice.PriceSchedule.MaxQuantity}}
+                        <br>
+                    </span>
+                    <br>
+                </div>
+                <div class="col-xs-7">
+                    <b class="text-success" ng-if="productPricing.selectedPrice.PriceSchedule.ApplyShipping">
+                        <i class="fa fa-check"></i> Apply Shipping <br>
+                    </b>
+                    <b class="text-warning" ng-if="!productPricing.selectedPrice.PriceSchedule.ApplyShipping">
+                        <i class="fa fa-times"></i> Apply Shipping <br>
+                    </b>
+                    <b class="text-success" ng-if="productPricing.selectedPrice.PriceSchedule.ApplyTax">
+                        <i class="fa fa-check"></i> Apply Tax
+                        <br>
+                    </b>
+                    <b class="text-warning" ng-if="!productPricing.selectedPrice.PriceSchedule.ApplyTax">
+                        <i class="fa fa-times"></i> Apply Tax
+                        <br>
+                    </b>
+                </div>
+            </div>
+
+            <!--==== Price Schedule Tabs ====-->
+            <ul class="nav nav-tabs" ng-init="productPricing.activeTab = 'priceBreaks'">
+                <li ng-class="{active:productPricing.activeTab == 'priceBreaks'}"><a href="" ng-click="productPricing.activeTab = 'priceBreaks'">Price breaks</a></li>
+                <li ng-class="{active:productPricing.activeTab == 'availability'}"><a href="" ng-click="productPricing.activeTab = 'availability'">Availability</a></li>
+            </ul>
+            <br>
+
+            <!--==== Price Breaks ====-->
+            <div class="panel panel-default table-responsive" ng-show="productPricing.activeTab == 'priceBreaks'" cg-busy="productPricing.removePriceBreaksLoading">
+                <table class="table table-condensed table-striped table-bordered l-pricebreak-table">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="pricebreak in productPricing.selectedPrice.PriceSchedule.PriceBreaks | orderBy: 'Quantity' track by $index">
+                            <td>
+                                {{pricebreak.displayQuantity}}
+                            </td>
+                            <td>
+                                {{pricebreak.Price | currency}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--==== Assignments ====-->
+            <div ng-show="productPricing.activeTab == 'availability'">
+                <div class="alert alert-info" ng-if="product.model.DefaultPriceScheduleID == productPricing.selectedPrice.PriceSchedule.ID">
+                    This is the default price schedule. All buyer users can order this product if available in one of their catalogs.
+                </div>
+                <div class="panel panel-default" ng-repeat="buyer in productPricing.selectedPrice.Availability" cg-busy="productPricing.availabilityLoading[$index]">
+                    <div class="panel-body">
+                        <h5 style="margin:0;">
+                            <a ng-if="buyer.Assigned" ui-sref="buyerProducts({buyerid:buyer.ID, search:product.model.ID})"><b>{{buyer.Name}}</b></a>
+                            <b ng-if="!buyer.Assigned">{{buyer.Name}}</b> <br>
+                            <small>(ID: {{buyer.ID}})</small>
+                        </h5>
+                        <p class="small text-center text-muted" style="margin-top:15px; margin-bottom:0;" ng-if="buyer.Assigned">This price is assigned to the entire buyer organization.</p>
+                    </div>
+                    <div class="table-responsive" ng-if="buyer.UserGroups.length">
+                        <table class="table table-striped table-bordered">
+                            <colgroup>
+                                <col style="width:45px;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="2" class="text-muted">User Group Assignments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="userGroup in buyer.UserGroups">
+                                    <td>
+                                        <a ui-sref="userGroupProducts({buyerid:buyer.ID, usergroupid:userGroup.ID, search:product.model.ID})">
+                                        {{userGroup.Name}}
+                                    </a>
+                                        <small class="text-muted">(ID: {{userGroup.ID}})</small>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

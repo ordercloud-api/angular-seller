@@ -1,0 +1,106 @@
+<article>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">
+            Approval Rules
+        </h3>
+        <!--====== CREATE ======-->
+        <div class="l-page-header__btns" oc-if-roles="ApprovalRuleAdmin">
+            <button type="button" class="btn btn-primary btn-block" ng-click="approvalRules.createApprovalRule()"><i class="fa fa-plus-circle"></i>
+                New Approval Rule
+            </button>
+        </div>
+    </header>
+
+    <!--====== SEARCH ======-->
+    <div ng-if="approvalRules.list.Items.length || (!approvalRules.list.Items.length && approvalRules.searchResults)">
+        <form name="approvalRules.searchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input type="search" ng-change="approvalRules.search()" ng-model-options="{debounce:1000}" placeholder="Search approval rules..." ng-model="approvalRules.parameters.search" class="form-control">
+                    <span ng-if="approvalRules.searchResults" class="input-group-btn">
+                        <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="approvalRules.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <!--====== LIST ======-->
+    <div cg-busy="approvalRules.searchLoading">
+        <div class="no-matches" ng-if="!approvalRules.list.Items.length">
+            <b ng-if="approvalRules.searchResults">No matches found.</b>
+            <b ng-if="!approvalRules.searchResults">This buyer organization does not have any approval rules.</b>
+        </div>
+        <div ng-if="approvalRules.list.Items.length">
+            <div class="row">
+                <div class="col-xs-6">
+                    <button ng-if="approvalRules.selectedCount" class="btn btn-danger btn-xs" ng-click="approvalRules.deleteSelected()">
+                        <i class="fa fa-trash"></i> Delete {{approvalRules.selectedCount == 1 ? "Buyer User" : (approvalRules.selectedCount + " Buyer Users")}}
+                    </button>
+                </div>
+                <div class="col-xs-6">
+                    <p class="text-right">{{(application.$ocMedia('min-width:768px') ? approvalRules.list.Meta.ItemRange[0] : '1') + ' - ' +
+                        approvalRules.list.Meta.ItemRange[1] + ' of ' + approvalRules.list.Meta.TotalCount + ' results'}}</p>
+                </div>
+            </div>
+            <div class="panel panel-default table-responsive">
+                <table class="table table-striped table-bordered l-approvalrule-table">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col oc-if-roles="ApprovalRuleAdmin">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th ng-click="approvalRules.updateSort('ID')">
+                            ID
+                            <i class="fa fa-caret-down" ng-show="approvalRules.parameters.sortBy == 'ID'"></i>
+                            <i class="fa fa-caret-up" ng-show="approvalRules.parameters.sortBy == '!ID'"></i>
+                        </th>
+                        <th ng-click="approvalRules.updateSort('Name')">
+                            Name
+                            <i class="fa fa-caret-down" ng-show="approvalRules.parameters.sortBy == 'Name'"></i>
+                            <i class="fa fa-caret-up" ng-show="approvalRules.parameters.sortBy == '!Name'"></i>
+                        </th>
+                        <th ng-click="approvalRules.updateSort('ApprovingGroupID')">
+                            Approving Group
+                            <i class="fa fa-caret-down" ng-show="approvalRules.parameters.sortBy == 'ApprovingGroupID'"></i>
+                            <i class="fa fa-caret-up" ng-show="approvalRules.parameters.sortBy == '!ApprovingGroupID'"></i>
+                        </th>
+                        <th oc-if-roles="ApprovalRuleAdmin"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="approvalRule in approvalRules.list.Items">
+                        <td>{{approvalRule.ID}}</td>
+                        <td><a href="" ng-click="approvalRules.editApprovalRule(this)">{{approvalRule.Name}}</a></td>
+                        <td><a href="" ui-sref="userGroup({usergroupid:approvalRule.ApprovingGroupID})">{{approvalRule.ApprovingGroupID}}</a></td>
+                        <td oc-if-roles="ApprovalRuleAdmin">
+                            <button class="btn btn-danger btn-xs btn-block" ng-click="approvalRules.deleteApprovalRule(this)"><i class="fa fa-trash-o"></i><span class="hidden-xs"> Delete</span></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="approvalRules.list.Meta.TotalPages > 1"
+                total-items="approvalRules.list.Meta.TotalCount"
+                items-per-page="approvalRules.list.Meta.PageSize"
+                max-size="5"
+                boundary-links="approvalRules.list.Meta.TotalPages > 5"
+                ng-model="approvalRules.list.Meta.Page"
+                ng-change="approvalRules.pageChanged()">
+            </ul>
+            <button type="button"
+                    class="btn btn-default btn-block btn-lg visible-xs"
+                    ng-show="approvalRules.list.Meta.Page < approvalRules.list.Meta.TotalPages"
+                    ng-click="approvalRules.loadMore()">Load More</button>
+        </div>
+    </div>
+
+</article>

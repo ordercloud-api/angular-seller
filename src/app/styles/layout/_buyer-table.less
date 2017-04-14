@@ -1,0 +1,77 @@
+.l-buyer-table {
+  @media(max-width:@screen-xs-max) {
+    col {
+      &:nth-child(1) {
+        width:100%;
+      }
+      &:nth-child(2) {
+        width:1%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(1),
+      &:nth-child(3) {
+        display:none;
+      }
+      &:nth-child(2) {
+        border-left:none; //stops double borders from appearing
+      }
+    }
+  }
+  @media(min-width:@screen-sm-min) {
+    col {
+      &:nth-child(1) {
+        width:25%;
+      }
+      &:nth-child(2) {
+        width:75%;
+      }
+      &:nth-child(3),
+      &:nth-child(4) {
+        width:1%;
+      }
+    }
+  }
+  &__catalog {
+    col {
+      &:nth-child(1) {
+        width: 1%;
+      }
+    }
+    @media(max-width:@screen-xs-max) {
+      col {
+        &:nth-child(2) {
+          width:100%;
+        }
+        &:nth-child(3) {
+          width:1%;
+        }
+      }
+      th,
+      td {
+        &:nth-child(2),
+        &:nth-child(4) {
+          display:none;
+        }
+        &:nth-child(3) {
+          border-left:none; //stops double borders from appearing
+        }
+      }
+    }
+    @media(min-width:@screen-sm-min) {
+      col {
+        &:nth-child(2) {
+          width:25%;
+        }
+        &:nth-child(3) {
+          width:75%;
+        }
+        &:nth-child(4),
+        &:nth-child(5) {
+          width:1%;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,111 @@
+<article ui-view>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">
+            Seller Addresses
+        </h3>
+        <!--====== CREATE ======-->
+        <div class="l-page-header__btns" oc-if-roles="AddressAdmin">
+            <button type="button" class="btn btn-primary btn-block" ng-click="sellerAddresses.createAddress()"><i class="fa fa-plus-circle"></i>
+                New Seller Address
+            </button>
+        </div>
+    </header>
+
+    <!--====== SEARCH/FILTERS ======-->
+    <div ng-if="sellerAddresses.list.Items.length || (!sellerAddresses.list.Items.length && sellerAddresses.searchResults)">
+        <form name="sellerAddresses.searchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input type="search" name="search" autofocus="sellerAddresses.searchResults" ng-change="sellerAddresses.search()" ng-model-options="{debounce:1000}" placeholder="Search seller addresses..." ng-model="sellerAddresses.parameters.search" class="form-control">
+                    <span ng-if="sellerAddresses.searchResults" class="input-group-btn">
+                        <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="sellerAddresses.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <!--====== LIST ======-->
+    <div cg-busy="sellerAddresses.searchLoading">
+        <div class="no-matches" ng-if="!sellerAddresses.list.Items.length">
+            <b ng-if="sellerAddresses.searchResults">No matches found.</b>
+            <b ng-if="!sellerAddresses.searchResults">This seller organization does not have any seller addresses.</b>
+        </div>
+        <div ng-if="sellerAddresses.list.Items.length">
+            <div class="row">
+                <div class="col-xs-6">
+                    <button ng-if="sellerAddresses.selectedCount" class="btn btn-danger btn-xs" ng-click="sellerAddresses.deleteSelected()">
+                        <i class="fa fa-trash"></i> Delete {{sellerAddresses.selectedCount == 1 ? "Address" : (sellerAddresses.selectedCount + " Addresses")}}
+                    </button>
+                </div>
+                <div class="col-xs-6">
+                    <p class="text-right">{{(application.$ocMedia('min-width:768px') ? sellerAddresses.list.Meta.ItemRange[0] : '1') + ' - ' +
+                        sellerAddresses.list.Meta.ItemRange[1] + ' of ' + sellerAddresses.list.Meta.TotalCount + ' results'}}</p>
+                </div>
+            </div>
+            <div class="panel panel-default table-responsive">
+                <table class="table table-striped table-bordered l-selleraddress-table">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col oc-if-roles="AddressAdmin">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th ng-click="sellerAddresses.updateSort('ID')">
+                            ID
+                            <i class="fa fa-caret-down" ng-show="sellerAddresses.parameters.sortBy == 'ID'"></i>
+                            <i class="fa fa-caret-up" ng-show="sellerAddresses.parameters.sortBy == '!ID'"></i>
+                        </th>
+                        <th ng-click="sellerAddresses.updateSort('AddressName')">
+                            Name
+                            <i class="fa fa-caret-down" ng-show="sellerAddresses.parameters.sortBy == 'AddressName'"></i>
+                            <i class="fa fa-caret-up" ng-show="sellerAddresses.parameters.sortBy == '!AddressName'"></i>
+                        </th>
+                        <th ng-click="sellerAddresses.updateSort('Street1')">
+                            Address
+                            <i class="fa fa-caret-down" ng-show="sellerAddresses.parameters.sortBy == 'Street1'"></i>
+                            <i class="fa fa-caret-up" ng-show="sellerAddresses.parameters.sortBy == '!Street1'"></i>
+                        </th>
+                        <th oc-if-roles="AddressAdmin"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="sellerAddress in sellerAddresses.list.Items">
+                        <td>{{sellerAddress.ID}}</td>
+                        <td>
+                            <a href="" ng-click="sellerAddresses.editAddress(this)">{{sellerAddress.AddressName}}</a>
+                        </td>
+                        <td>{{sellerAddress | address}} <br ng-if="application.$ocMedia('max-width:767px')"> {{sellerAddress.City + ', ' + sellerAddress.State + ' ' +
+                            sellerAddress.Zip}}
+                        </td>
+                        <td oc-if-roles="AddressAdmin">
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="sellerAddresses.deleteAddress(this)">
+                                <i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="sellerAddresses.list.Meta.TotalPages > 1"
+                total-items="sellerAddresses.list.Meta.TotalCount"
+                items-per-page="sellerAddresses.list.Meta.PageSize"
+                max-size="5"
+                boundary-links="sellerAddresses.list.Meta.TotalPages > 5"
+                ng-model="sellerAddresses.list.Meta.Page"
+                ng-change="sellerAddresses.pageChanged()">
+            </ul>
+            <button type="button"
+                    class="btn btn-default btn-block btn-lg visible-xs"
+                    ng-show="sellerAddresses.list.Meta.Page < sellerAddresses.list.Meta.TotalPages"
+                    ng-click="sellerAddresses.loadMore()">Load More
+            </button>
+        </div>
+    </div>
+
+</article>

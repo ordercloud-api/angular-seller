@@ -1,27 +1,24 @@
 describe('Component: Base', function() {
     var q,
         scope,
-        oc,
-        underscore;
+        oc;
     beforeEach(module('orderCloud'));
     beforeEach(module('orderCloud.sdk'));
     beforeEach(module('ui.router'));
-    beforeEach(inject(function($q, $rootScope, OrderCloud, Underscore) {
+    beforeEach(module(function($provide) {
+        $provide.value('CurrentUser', {ID: 'FAKE_USER'})
+    }));
+    beforeEach(inject(function($q, $rootScope, OrderCloud) {
         q = $q;
         scope = $rootScope.$new();
         oc = OrderCloud;
-        underscore = Underscore;
     }));
-    describe('State: Base', function() {
-        var state;
-        beforeEach(inject(function($state) {
+    describe('State: base', function() {
+        var state, loginService;
+        beforeEach(inject(function($state, LoginService) {
             state = $state.get('base');
-            var dfd = q.defer();
-            dfd.resolve(true);
-            spyOn(oc.BuyerID, 'Set').and.callThrough();
-            spyOn(oc.Auth, 'RemoveToken').and.callThrough();
-            spyOn(oc.Auth, 'RemoveImpersonationToken').and.callThrough();
-            spyOn($state, 'go').and.returnValue(true);
+            loginService = LoginService;
+            spyOn(loginService, 'Logout').and.callThrough();
         }));
         //Skipped this test because Base now resolves with Auth.IsAuthenticated and THEN do a Me.Get() to confirm the token will work
         it('should resolve CurrentUser', inject(function ($injector) {
@@ -30,65 +27,28 @@ describe('Component: Base', function() {
             spyOn(oc.Me, 'Get').and.returnValue(dfd.promise);
             $injector.invoke(state.resolve.CurrentUser);
             expect(oc.Me.Get).toHaveBeenCalled();
+            scope.$digest();
+            expect(loginService.Logout).not.toHaveBeenCalled();
         }));
-        it('should remove Auth tokens, set BuyerID to null, and return to login if unauthenticated', inject(function($injector, $state) {
+        it('should call LoginService.Logout() if OrderCloud.Me.Get() failed', inject(function($injector) {
             var dfd = q.defer();
-            dfd.reject(true);
+            dfd.reject();
             spyOn(oc.Me, 'Get').and.returnValue(dfd.promise);
             $injector.invoke(state.resolve.CurrentUser);
             scope.$digest();
-            expect(oc.Auth.RemoveToken).toHaveBeenCalled();
-            expect(oc.Auth.RemoveImpersonationToken).toHaveBeenCalled();
-            expect(oc.BuyerID.Set).toHaveBeenCalledWith(null);
-            expect($state.go).toHaveBeenCalledWith('login');
-        }));
-        it ('should resolve ComponentsList', inject(function($injector, $state) {
-            var currentUser = $injector.invoke(state.resolve.CurrentUser);
-            var components = $injector.invoke(state.resolve.ComponentList, scope, {$state: $state, $q: q, Underscore: underscore, CurrentUser: currentUser});
-            expect(components.nonSpecific).not.toBe(null);
-            expect(components.buyerSpecific).not.toBe(null);
+            expect(loginService.Logout).toHaveBeenCalled();
         }));
     });
 
     describe('Controller: BaseCtrl', function(){
-        var baseCtrl,
-            fake_user = {
-                Username: 'notarealusername',
-                Password: 'notarealpassword'
-            };
-        beforeEach(inject(function($controller) {
+        var baseCtrl;
+        beforeEach(inject(function($controller, CurrentUser) {
             baseCtrl = $controller('BaseCtrl', {
-                CurrentUser: fake_user
+                CurrentUser: CurrentUser
             });
         }));
-        it ('should initialize the currentUser into its scope', function() {
-            expect(baseCtrl.currentUser).toBe(fake_user);
-        });
-    });
-
-    describe('Controller: BaseLeftCtrl', function(){
-        var baseLeftCtrl,
-            fake_components = {
-                nonSpecific: ['test1', 'test2', 'test3'],
-                buyerSpecific: ['test4', 'test5', 'test6']
-            };
-        beforeEach(inject(function($controller) {
-            baseLeftCtrl = $controller('BaseLeftCtrl', {
-                ComponentList: fake_components,
-                Order: null
-            });
+        it ('should initialize vm.currentUser to CurrentUser', inject(function(CurrentUser) {
+            expect(baseCtrl.currentUser).toBe(CurrentUser);
         }));
-        it ('should initialize the components lists', function() {
-            expect(baseLeftCtrl.catalogItems).toBe(fake_components.nonSpecific);
-            expect(baseLeftCtrl.organizationItems).toBe(fake_components.buyerSpecific);
-        });
-    });
-
-    describe('Controller: BaseTopCtrl', function(){
-        var baseTopCtrl;
-        beforeEach(inject(function($controller) {
-            baseTopCtrl = $controller('BaseTopCtrl', {});
-        }));
-        /* No tests needed */
     });
 });

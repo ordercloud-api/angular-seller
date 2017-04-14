@@ -1,0 +1,107 @@
+<header class="l-page-header">
+    <h3 class="l-page-header__title">
+        Cost Centers
+    </h3>
+    <!--====== CREATE ======-->
+    <div class="l-page-header__btns" oc-if-roles="CostCenterAdmin">
+        <button type="button" class="btn btn-primary btn-block" ng-click="costCenters.createCostCenter()"><i class="fa fa-plus-circle"></i>
+            New Cost Center
+        </button>
+    </div>
+</header>
+<!--====== SEARCH/FILTERS ======-->
+<div ng-if="costCenters.list.Items.length || (!costCenters.list.Items.length && costCenters.searchResults)">
+    <form name="costCenters.searchForm" pretty-submit>
+        <fieldset class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input type="search" ng-change="costCenters.search()" ng-model-options="{debounce:1000}" placeholder="Search cost centers..." ng-model="costCenters.parameters.search" class="form-control">
+                <span ng-if="costCenters.searchResults" class="input-group-btn">
+                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="costCenters.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+                </span>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<div cg-busy="costCenters.searchLoading">
+    <div class="no-matches" ng-if="!costCenters.list.Items.length">
+        <b ng-if="costCenters.searchResults">No matches found.</b>
+        <b ng-if="!costCenters.searchResults">This buyer organization does not have any cost centers.</b>
+    </div>
+    <div ng-if="costCenters.list.Items.length">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="btn-group" ng-if="costCenters.changedAssignments.length">
+                    <button class="btn btn-primary btn-xs" ng-click="costCenters.updateAssignments()">
+                        Update Assignments
+                    </button>
+                    <button class="btn btn-default btn-xs" ng-click="costCenters.resetAssignments()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <p class="text-right">{{(application.$ocMedia('min-width:768px') ? costCenters.list.Meta.ItemRange[0] : '1') + ' - ' +
+                    costCenters.list.Meta.ItemRange[1] + ' of ' + costCenters.list.Meta.TotalCount + ' results'}}</p>
+            </div>
+        </div>
+        <div class="panel panel-default table-responsive">
+            <table class="table table-striped table-bordered l-costcenter-table" oc-readonly-roles="CostCenterAdmin">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col oc-if-roles="CostCenterAdmin">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="text-center" ng-click="application.userIsAuthorized(['CostCenterAdmin']) ? costCenters.selectAllItems() : angular.noop()">
+                        Assign
+                    </th>
+                    <th ng-click="costCenters.updateSort('ID')">
+                        ID
+                        <i class="fa fa-caret-down" ng-show="costCenters.parameters.sortBy == 'ID'"></i>
+                        <i class="fa fa-caret-up" ng-show="costCenters.parameters.sortBy == '!ID'"></i>
+                    </th>
+                    <th ng-click="costCenters.updateSort('Name')">
+                        Name
+                        <i class="fa fa-caret-down" ng-show="costCenters.parameters.sortBy == 'Name'"></i>
+                        <i class="fa fa-caret-up" ng-show="costCenters.parameters.sortBy == '!Name'"></i>
+                    </th>
+                    <th oc-if-roles="CostCenterAdmin"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="costCenter in costCenters.list.Items">
+                    <td class="text-center">
+                        <input type="checkbox" ng-model="costCenter.Assigned" ng-change="costCenters.selectItem(this)"/>
+                    </td>
+                    <td>{{costCenter.ID}}</td>
+                    <td><a href="" ng-click="costCenters.editCostCenter(this)">{{costCenter.Name}}</a></td>
+                    <td oc-if-roles="CostCenterAdmin">
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="costCenters.deleteCostCenter(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <ul uib-pagination
+            class="pagination-sm pull-right hidden-xs"
+            boundary-links="costCenters.list.Meta.TotalPages > 5"
+            max-size="5"
+            total-items="costCenters.list.Meta.TotalCount"
+            items-per-page="costCenters.list.Meta.PageSize"
+            ng-model="costCenters.list.Meta.Page"
+            ng-if="costCenters.list.Meta.TotalPages > 1"
+            ng-change="costCenters.pageChanged()">
+        </ul>
+        <button type="button"
+                class="btn btn-default btn-block btn-lg visible-xs"
+                ng-show="costCenters.list.Meta.Page < costCenters.list.Meta.TotalPages"
+                ng-click="costCenters.loadMore()">Load More
+        </button>
+    </div>
+</div>

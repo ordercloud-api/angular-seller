@@ -1,0 +1,61 @@
+<ol class="breadcrumb">
+    <li><a href="" ui-sref="sellerUserGroups">Seller User Groups</a></li>
+    <li class="active">{{sellerUserGroup.group.Name}}</li>
+</ol>
+<div class="row">
+    <div class="col-sm-4 col-lg-3">
+        <nav class="navmenu navmenu-default navmenu-inline" role="navigation">
+            <a href="" class="navmenu-brand">
+                <i class="fa fa-bars pull-right visible-xs" ng-click="sellerUserGroup.showNav = !sellerUserGroup.showNav"></i>
+                {{sellerUserGroup.group.Name}}
+            </a>
+            <ul class="nav navmenu-nav" uib-collapse="!sellerUserGroup.showNav && (application.$ocMedia('max-width:767px'))">
+                <li ng-class="{'active':application.$state.is('sellerUserGroup')}">
+                    <a href="" ui-sref="sellerUserGroup"><i class="fa fa-cog"></i> Settings</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a href="" ui-sref=".permissions"><i class="fa fa-lock"></i> Group Permissions</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a href="" ui-sref=".users"><i class="fa fa-user"></i> Users</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <article class="col-sm-8 col-lg-9" ui-view cg-busy="application.stateLoading('sellerUserGroup')">
+        <header class="l-page-header">
+            <h3 class="l-page-header__title">Seller User Group Settings</h3>
+        </header>
+        <div class="row">
+            <div class="col-sm-9 col-lg-8">
+                <form name="sellerUserGroup.editForm" class="form-horizontal" ng-submit="sellerUserGroup.update()" oc-readonly-roles="AdminUserGroupAdmin">
+                    <fieldset class="form-group">
+                        <label for="userGroupID" class="col-sm-4 control-label">User Group ID</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="userGroupID" class="form-control" name="ID" ng-model="sellerUserGroup.model.ID" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name">
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="userGroupName" class="col-sm-4 control-label">Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="userGroupName" class="form-control" name="Name" ng-model="sellerUserGroup.model.Name" required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="userGroupDescription" class="col-sm-4 control-label">Description</label>
+                        <div class="col-sm-8">
+                            <textarea rows="4" id="userGroupDescription" class="form-control" name="Description" ng-model="sellerUserGroup.model.Description" placeholder="(Optional)"></textarea>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary btn-block">Update User Group</button>
+                        </div>
+                    </fieldset>
+                    <hr>
+                    <button type="button" class="btn btn-danger btn-block" ng-click="sellerUserGroup.delete()"><i class="fa fa-trash-o"></i> Delete User Group</button>
+                </form>
+            </div>
+        </div>
+    </article>
+</div>

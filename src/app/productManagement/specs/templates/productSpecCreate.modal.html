@@ -1,0 +1,33 @@
+<form name="ProductSpecCreateModalForm" ng-submit="productSpecCreate.submit()" class="form-horizontal" autocomplete="off" novalidate cg-busy="productSpecCreate.loading">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="productSpecCreate.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">New Spec</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label for="SpecID" class="col-sm-3 control-label">ID</label>
+            <div class="col-sm-9">
+                <input id="SpecID" placeholder="(Optional)" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="productSpecCreate.spec.ID" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="SpecName" class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+                <input id="SpecName" type="text" class="form-control" ng-model="productSpecCreate.spec.Name" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div class="col-sm-9 col-md-offset-3">
+                <div class="checkbox">
+                    <label for="SpecRequired">
+                        <input id="SpecRequired" placeholder="(Optional)" type="checkbox" ng-model="productSpecCreate.spec.Required"/>
+                        Required
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block" ng-disabled="ProductSpecCreateModalForm.$invalid">Save</button>
+    </div>
+</form>
