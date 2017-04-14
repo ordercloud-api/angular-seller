@@ -3,7 +3,7 @@ angular.module('orderCloud')
     .provider('ocRoles', OrderCloudRolesProvider)
 ;
 
-function OrderCloudRolesService($window, OrderCloudSDK) {
+function OrderCloudRolesService($window, ocRoles, OrderCloudSDK) {
     var service = {
         Set: _set,
         Get: _get,
@@ -62,25 +62,50 @@ function OrderCloudRolesService($window, OrderCloudSDK) {
         roles = null;
     }
 
-    //Returns boolean whether user's claimed roles cover a required array of roles
-    function _userIsAuthorized(requiredRoles, any) {
+    //Returns boolean whether user's claimed roles cover a array of roles and/or Role Groups
+    //Role Groups use the group's Type setting. Individual roles use the any parameter when combined
+    //Ex: ocRolesService.UserIsAuthorized(['CategoryReader', 'CatalogReader', 'RoleGroupA'], true);
+        //Evaluates whether user is authorized for RoleGroupA's configuration AND has either CategoryReader or CatalogReader
+    function _userIsAuthorized(roleItems, any) {
         var userRoles = _get();
         if (!userRoles) return;
         if (userRoles.indexOf('FullAccess') > -1) {
             return true;
         }
-        else if (any) {
-            return _.intersection(requiredRoles, userRoles).length > 0;
+
+        function analyzeRoles(roles, hasAny) {
+            if (hasAny) {
+                return _.intersection(roles, userRoles).length > 0;
+            } else {
+                return _.difference(roles, userRoles).length == 0;
+            }
         }
-        else {
-            return _.difference(requiredRoles, userRoles).length == 0;
+
+        var authorized = true;
+        var roleGroups = ocRoles.GetRoleGroups();
+        var roles = [];
+        
+        angular.forEach(roleItems, function(item) {
+            if (roleGroups[item]) {
+                var roleGroup = roleGroups[item];
+                authorized = analyzeRoles(roleGroup.Roles, roleGroup.Type == 'Any');
+            } 
+            else {
+                roles.push(item);
+            }
+        });
+
+        if (authorized && roles.length) {
+            authorized = analyzeRoles(roles, any);
         }
+
+        return authorized;
     }
 
     return service;
 }
 
-function OrderCloudRolesProvider() {
+function OrderCloudRolesProvider(scope) {
     var roleGroups = {};
 
     return {
@@ -93,6 +118,7 @@ function OrderCloudRolesProvider() {
         },
         AddRoleGroup: function(roleGroup) {
              if (!roleGroup.Name) throw 'ocRoles: RoleGroup must have a Name value';
+             if (scope.indexOf(roleGroup.Name) > -1) throw 'ocRole: RoleGroup Name cannot match an OrderCloud role name: ' + roleGroup.Name;
              if (!roleGroup.Roles || !roleGroup.Roles.length) throw 'ocRoles: RoleGroup must have Roles';
              if (!angular.isArray(roleGroup.Roles)) throw 'ocRoles: RoleGroup Roles must be an array';
              if (!roleGroup.Type || ['All', 'Any'].indexOf(roleGroup.Type) == -1) throw 'ocRoles: RoleGroup Type must be \'All\' or \'Any\'';
