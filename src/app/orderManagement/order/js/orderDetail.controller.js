@@ -7,6 +7,29 @@ function OrderController($stateParams, toastr, OrderCloudSDK, ocOrderDetailServi
     vm.order = SelectedOrder;
     vm.lineItems = OrderLineItems;
 
+    vm.navigationItems = [{
+            icon: 'fa-file',
+            state: 'orderDetail',
+            name: 'Details'
+        },
+        {
+            icon: 'fa-dollar',
+            state: 'orderDetail.payments',
+            name: 'Payments'
+        },
+        {
+            icon: 'fa-truck',
+            state: 'orderDetail.shipments',
+            name: 'Shipments',
+            activeWhen: ['orderDetail.shipments', 'orderDetail.shipments.create']
+        },
+        {
+            icon: 'fa-check-square-o',
+            state: 'orderDetail.approvals',
+            name: 'Approvals'
+        }
+    ];
+
     vm.pageChanged = function() {
         var options = {
             page: vm.lineItems.Meta.Page,

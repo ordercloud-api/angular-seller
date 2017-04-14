@@ -11,6 +11,24 @@ function CatalogController($exceptionHandler, $state, toastr, SelectedCatalog, O
     vm.updateCatalog = updateCatalog;
     vm.deleteCatalog = deleteCatalog;
 
+    vm.navigationItems = [{
+            icon: 'fa-sitemap',
+            state: 'catalog',
+            name: 'Catalog'
+        },
+        {
+            icon: 'fa-th-large',
+            state: 'categories',
+            name: 'Categories',
+            activeWhen: ['categories', 'categories.category', 'categories.category.products']
+        },
+        {
+            icon: 'fa-tags',
+            state: 'catalog.buyers',
+            name: 'Buyers'
+        }
+    ];
+
     function updateValidity() {
         if (vm.editForm.ID.$error['UnavailableID']) vm.editForm.ID.$setValidity('UnavailableID', true);
     }

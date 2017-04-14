@@ -1,23 +1,26 @@
-<ul class="breadcrumb">
-    <li><a href="" ui-sref="products">All Products</a></li>
-    <li class="active">{{product.productName}}</li>
-</ul>
-<article>
-    <header class="l-page-header">
-        <h3 class="l-page-header__title">
-            <span class="text-muted">Product:</span> {{product.productName}}
-        </h3>
-        <div class="l-page-header__btns">
-            <button type="button" class="btn btn-danger" ng-click="product.deleteProduct()"><i class="fa fa-trash-o"></i> Delete Product</button>
-        </div>
-    </header>
-    <div ng-include="'productManagement/product/templates/productNavigation.html'"></div>
-    <br>
+<header class="c-jumbotron">
+    <div class="container container-smooth">
+        <ul class="breadcrumb">
+            <li><a href="" ui-sref="products">All Products</a></li>
+            <li class="active">{{product.productName}}</li>
+        </ul>
+        <header class="l-page-header">
+            <h3 class="l-page-header__title">
+                <span class="text-muted">Product:</span> {{product.productName}}
+            </h3>
+            <div class="l-page-header__btns">
+                <button type="button" class="btn btn-danger" ng-click="product.deleteProduct()"><i class="fa fa-trash-o"></i> Delete Product</button>
+            </div>
+        </header>
+        <oc-responsive-tabs nav-items="product.navigationItems"></oc-responsive-tabs>
+    </div>
+</header>
+<br>
+<article class="container container-smooth">
     <div ui-view cg-busy="application.stateLoading('product')">
         <div class="row">
             <div class="col-sm-8">
-                <form name="product.form" autocomplete="off" ng-submit="product.updateProduct()" novalidate class="form-horizontal"
-                    oc-readonly-roles="ProductAdmin">
+                <form name="product.form" autocomplete="off" ng-submit="product.updateProduct()" novalidate class="form-horizontal" oc-readonly-roles="ProductAdmin">
                     <fieldset class="form-group">
                         <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
                         <div class="col-sm-9">
@@ -40,8 +43,7 @@
                     <fieldset class="form-group">
                         <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier</label>
                         <div class="col-sm-9">
-                            <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="product.model.QuantityMultiplier"
-                                required>
+                            <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="product.model.QuantityMultiplier" required>
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
@@ -49,7 +51,7 @@
                         <div class="col-sm-9">
                             <p class="form-control-static">
                                 <a ng-if="!product.model.DefaultPriceScheduleID" ng-click="product.createDefaultPrice()">Add a default price</a>
-                                <a  ng-if="product.model.DefaultPriceScheduleID" ui-sref=".pricing({pricescheduleid: product.model.DefaultPriceScheduleID})">{{product.model.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</a>
+                                <a ng-if="product.model.DefaultPriceScheduleID" ui-sref=".pricing({pricescheduleid: product.model.DefaultPriceScheduleID})">{{product.model.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</a>
                             </p>
                         </div>
                     </fieldset>
