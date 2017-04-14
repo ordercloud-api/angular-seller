@@ -11,11 +11,12 @@
                 </figure>
             </div>
             <h3 class="l-page-header__title">
-                {{buyer.selectedBuyer.Name}} <br>
+                <small class="text-muted">Buyer Organization</small> <br>
+                {{buyer.selectedBuyer.Name}}
             </h3>
             <div class="l-page-header__btns">
-                <button class="btn btn-default btn-sm" role="button" ui-sref="buyer"><i class="fa fa-cog"></i> Settings</button>
-                <button class="btn btn-default btn-sm" role="button" ui-sref="buyerPermissions"><i class="fa fa-lock"></i> Permissions</button>
+                <button class="btn btn-default btn-block btn-sm" role="button" ui-sref="buyer"><i class="fa fa-cog"></i> Settings</button>
+                <button class="btn btn-default btn-block btn-sm" role="button" ui-sref="buyerPermissions"><i class="fa fa-lock"></i> Permissions</button>
             </div>
         </div>
         <oc-responsive-tabs nav-items="buyer.navigationItems"></oc-responsive-tabs>
@@ -87,6 +88,10 @@
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
                             <button class="btn btn-block btn-primary" cg-busy="buyer.loading" ng-disabled="buyer.settingsForm.$invalid" type="submit">Save Changes</button>
+                        </div>
+                        <div class="col-sm-offset-3 col-sm-9" oc-if-roles="BuyerAdmin">
+                            <hr>
+                            <button class="btn btn-block btn-danger" type="button" ng-click="buyer.deleteBuyer()"><i class="fa fa-trash-o"></i> Delete Buyer Organization</button>
                         </div>
                     </div>
                 </form>

@@ -6,12 +6,9 @@
         </ul>
         <div class="l-page-header l-page-header-xs">
             <h3 class="l-page-header__title">
-                {{catalog.selectedCatalog.Name}} <br>
-                <small>(ID: {{catalog.selectedCatalog.ID}})</small>
+                <small class="text-muted">Catalog</small> <br>
+                {{catalog.selectedCatalog.Name}}
             </h3>
-            <div class="l-page-header__btns">
-                <button type="button" class="btn btn-danger" ng-click="catalog.deleteCatalog()"><i class="fa fa-trash-o"></i> Delete Catalog</button>
-            </div>
         </div>
         <oc-responsive-tabs nav-items="catalog.navigationItems"></oc-responsive-tabs>
     </div>
@@ -21,7 +18,7 @@
     <div ui-view cg-busy="application.stateLoading('catalog')">
         <div class="row">
             <div class="col-sm-7">
-                <form class="form-horizontal" name="catalog.editForm" novalidate autocomplete="off" ng-submit="catalog.updateCatalog()">
+                <form class="form-horizontal" name="catalog.editForm" novalidate autocomplete="off" oc-readonly-roles="CatalogAdmin" ng-submit="catalog.updateCatalog()">
                     <fieldset class="form-group">
                         <label for="catalogID" class="control-label col-sm-3">Catalog ID</label>
                         <div class="col-sm-9">
@@ -54,6 +51,10 @@
                     <div class="form-group">
                         <div class="col-sm-9 col-sm-offset-3">
                             <button type="submit" class="btn btn-primary btn-block" cg-busy="catalog.loading" ng-disabled="catalog.editForm.$invalid">Save Changes</button>
+                        </div>
+                        <div class="col-sm-9 col-sm-offset-3" oc-if-roles="CatalogAdmin">
+                            <hr>
+                            <button type="button" class="btn btn-danger btn-block" ng-click="catalog.deleteCatalog()"><i class="fa fa-trash-o"></i> Delete Catalog</button>
                         </div>
                     </div>
                 </form>

@@ -6,9 +6,11 @@
         </ul>
         <div class="l-page-header">
             <h3 class="l-page-header__title">
-                <small class="pull-right">Submitted on {{orderDetail.order.DateSubmitted | date}}</small>
-                <span class="text-muted">Order:</span> {{orderDetail.order.ID}} <br>
+                <small class="text-muted">Order ID</small> <br> {{orderDetail.order.ID}}
             </h3>
+            <div class="l-page-header__btns text-muted">
+                <i class="fa fa-calendar"></i> Submitted on {{orderDetail.order.DateSubmitted | date}}
+            </div>
         </div>
         <oc-responsive-tabs nav-items="orderDetail.navigationItems"></oc-responsive-tabs>
     </div>

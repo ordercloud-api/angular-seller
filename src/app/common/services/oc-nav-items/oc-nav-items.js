@@ -36,7 +36,7 @@ function OrderCloudNavItemsService(ocRoles) {
                 state: 'product.shipping',
                 name: 'Shipping',
                 roles: {
-                    Items: ['ProductRoles', 'AddressRoles'],
+                    Items: ['ProductRoles'],
                     Any: false
                 }
             },

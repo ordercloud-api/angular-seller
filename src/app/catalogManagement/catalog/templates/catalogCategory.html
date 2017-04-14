@@ -2,8 +2,6 @@
     <header class="l-page-header">
         <h3 class="l-page-header__title">
             {{catalogCategory.category.Name}}
-            <br>
-            <small>(ID: {{catalogCategory.category.ID}})</small>
         </h3>
         <div class="l-page-header__btns" oc-if-roles="CategoryAdmin">
             <button type="button" class="btn btn-default" ng-click="catalogCategory.editCategory(catalogCategory.category.ID)"><i class="fa fa-edit"></i> Edit</button>
