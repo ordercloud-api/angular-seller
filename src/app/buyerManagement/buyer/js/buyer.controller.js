@@ -13,14 +13,14 @@ function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, t
     vm.searchCatalogs = searchCatalogs;
 
     vm.navigationItems = [{
-            icon: 'fa-cube',
+            icon: 'fa-dollar',
             state: 'buyerProducts',
-            name: 'Products'
+            name: 'Pricing'
         },
         {
             icon: 'fa-sitemap',
             state: 'buyerCatalogs',
-            name: 'Catalogs',
+            name: 'Categories',
             activeWhen: ['buyerCatalogs', 'buyerCatalog']
         },
         {
@@ -45,7 +45,7 @@ function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, t
             name: 'Credit Cards'
         },
         {
-            icon: 'fa-dollar',
+            icon: 'fa-money',
             state: 'spendingAccounts',
             name: 'Spending Accounts'
         },
