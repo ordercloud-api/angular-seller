@@ -1,8 +1,8 @@
 <div class="c-jumbotron">
     <div class="container container-smooth">
         <ul class="breadcrumb">
-            <li><a href="" ui-sref="buyers">Buyers</a></li>
-            <li class="active" ui-sref="buyer">{{buyer.selectedBuyer.Name}}</li>
+            <li><a ui-sref="buyers">Buyers</a></li>
+            <li ><a ui-sref="buyer">{{buyer.selectedBuyer.Name}}</a></li>
         </ul>
         <div class="l-page-header l-page-header-xs">
             <div class="l-page-header__img" ng-if="buyer.selectedBuyer.xp && buyer.selectedBuyer.xp.image && buyer.selectedBuyer.xp.image.URL">
@@ -14,10 +14,6 @@
                 <small class="text-muted">Buyer Organization</small> <br>
                 {{buyer.selectedBuyer.Name}}
             </h3>
-            <div class="l-page-header__btns">
-                <button class="btn btn-default btn-block btn-sm" role="button" ui-sref="buyer"><i class="fa fa-cog"></i> Settings</button>
-                <button class="btn btn-default btn-block btn-sm" role="button" ui-sref="buyerPermissions"><i class="fa fa-lock"></i> Permissions</button>
-            </div>
         </div>
         <oc-responsive-tabs nav-items="buyer.navigationItems"></oc-responsive-tabs>
     </div>
