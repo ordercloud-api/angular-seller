@@ -1,0 +1,14 @@
+<ul class="nav nav-tabs oc-responsive-tabs">
+    <li role="presentation" ng-class="{active:isActive(item)}" ng-repeat="item in navItems | filter:{dropdown:false}">
+        <a ui-sref="{{item.state}}({search: '', sortBy: '', filters: '', page: '', pageSize:'', searchOn:''})"><i class="fa {{item.icon}}"></i> {{item.name}}</a>
+    </li>
+    <li uib-dropdown ng-show="!isRendered || (navItems | filter:{dropdown:true}).length" ng-class="{active:isActive('more')}">
+        <a uib-dropdown-toggle role="button">
+            More <span class="caret"></span></a>
+        <ul uib-dropdown-menu class="dropdown-menu-right">
+            <li role="presentation" ng-class="{active:isActive(item)}" ng-repeat="item in navItems | filter:{dropdown:true}">
+                <a ui-sref="{{item.state}}({search: '', sortBy: '', filters: '', page: '', pageSize:'', searchOn:''})"><i class="fa {{item.icon}}"></i> {{item.name}}</a>
+            </li>
+        </ul>
+    </li>
+</ul>

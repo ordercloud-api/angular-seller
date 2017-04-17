@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCtrl', BuyerController)
 ;
 
-function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuyers, SelectedBuyer){
+function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, toastr, OrderCloudSDK, ocBuyers, ocNavItems, SelectedBuyer) {
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.settings = angular.copy(SelectedBuyer);
@@ -12,16 +12,21 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuy
     vm.deleteBuyer = deleteBuyer;
     vm.searchCatalogs = searchCatalogs;
 
+    vm.navigationItems = ocNavItems.Buyer();
+
     function updateValidity() {
         if (vm.settingsForm.buyerIDinput.$error['UnavailableID']) vm.settingsForm.buyerIDinput.$setValidity('UnavailableID', true);
     }
 
     function updateBuyer() {
-        var options = {catalogID: vm.settings.SelectedDefaultCatalog.ID, buyerID:SelectedBuyer.ID};
+        var options = {
+            catalogID: vm.settings.SelectedDefaultCatalog.ID,
+            buyerID: SelectedBuyer.ID
+        };
         if (vm.settings.DefaultCatalogID !== vm.settings.SelectedDefaultCatalog.ID) {
             vm.settings.DefaultCatalogID = vm.settings.SelectedDefaultCatalog.ID;
             vm.loading = OrderCloudSDK.Catalogs.ListAssignments(options)
-                .then(function(data) {
+                .then(function (data) {
                     if (data.Items.length > 0) {
                         return saveBuyer();
                     } else {
@@ -33,16 +38,19 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuy
         }
 
         function createAssignment() {
-            var assignmentModel = angular.extend(options, {ViewAllCategories:true, ViewAllProducts:true});
+            var assignmentModel = angular.extend(options, {
+                ViewAllCategories: true,
+                ViewAllProducts: true
+            });
             return OrderCloudSDK.Catalogs.SaveAssignment(assignmentModel)
-                .then(function() {
+                .then(function () {
                     return saveBuyer();
                 });
         }
 
         function saveBuyer() {
             return OrderCloudSDK.Buyers.Update(SelectedBuyer.ID, vm.settings)
-                .then(function(data) {
+                .then(function (data) {
                     data.SelectedDefaultCatalog = vm.settings.SelectedDefaultCatalog;
                     vm.selectedBuyer = data;
                     SelectedBuyer = data;
@@ -50,7 +58,7 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuy
                     toastr.success(data.Name + ' was updated');
                     vm.settingsForm.$setPristine();
                 })
-                .catch(function(ex) {
+                .catch(function (ex) {
                     if (ex.status === 409) {
                         vm.settingsForm.buyerIDinput.$setValidity('UnavailableID', false);
                         vm.settingsForm.buyerIDinput.$$element[0].focus();
@@ -59,12 +67,12 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuy
                     }
                 });
         }
-        
+
     }
 
     function deleteBuyer() {
         ocBuyers.Delete(vm.selectedBuyer)
-            .then(function() {
+            .then(function () {
                 toastr.success(vm.selectedBuyer.Name + ' was deleted.');
                 $state.go('buyers');
             });
@@ -73,11 +81,11 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuy
     function searchCatalogs(term) {
         var options = {
             search: term,
-            page:1,
-            pageSize:8
+            page: 1,
+            pageSize: 8
         };
         return OrderCloudSDK.Catalogs.List(options)
-            .then(function(data) {
+            .then(function (data) {
                 return data.Items;
             });
     }

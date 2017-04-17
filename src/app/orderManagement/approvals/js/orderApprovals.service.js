@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocOrderApprovalsService', OrderCloudApprovalsService)
 ;
 
-function OrderCloudApprovalsService($q, OrderCloudSDK, ocRolesService) {
+function OrderCloudApprovalsService($q, OrderCloudSDK, ocRoles) {
     var service = {
         List: _list
     };
@@ -19,7 +19,7 @@ function OrderCloudApprovalsService($q, OrderCloudSDK, ocRolesService) {
             .then(function(data) {
                 if (!data.Items.length) {
                     deferred.resolve(data);
-                } else if (ocRolesService.UserIsAuthorized(['UserGroupReader', 'UserGroupAdmin'], true)) {
+                } else if (ocRoles.UserIsAuthorized(['UserGroupReader', 'UserGroupAdmin'], true)) {
                     getApprovingUserGroups(data);
                 } else {
                     getApprovalRules(data);

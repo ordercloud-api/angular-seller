@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('LoginCtrl', LoginController)
 ;
 
-function LoginController($state, $stateParams, $exceptionHandler, LoginService, ocRolesService, OrderCloudSDK, clientid, scope) {
+function LoginController($state, $stateParams, $exceptionHandler, LoginService, ocRoles, OrderCloudSDK, clientid, scope) {
     var vm = this;
     vm.credentials = {
         Username: null,
@@ -20,7 +20,7 @@ function LoginController($state, $stateParams, $exceptionHandler, LoginService, 
             .then(function(data) {
                 OrderCloudSDK.SetToken(data.access_token);
                 if (vm.rememberStatus) OrderCloudSDK.SetRefreshToken(data['refresh_token']);
-                var roles = ocRolesService.Set(data.access_token);
+                var roles = ocRoles.Set(data.access_token);
                 if (roles.length === 1 && roles[0] === 'PasswordReset') {
                     vm.token = data.access_token;
                     vm.form = 'resetByToken';

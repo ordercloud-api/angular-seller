@@ -1,5 +1,9 @@
 #toast-container {
-  position:absolute;
+  &.toast-top-right,
+  &.toast-top-left,
+  &.toast-top {
+    top:@body-padding-top;
+  }
   @media(max-width:@screen-xs-max) {
     .alert {
       width:~"calc(100vw - 25px)";
@@ -58,12 +62,12 @@
     &,
     &.ng-enter.ng-enter-active {
       transition: top 255ms ease-out, opacity 255ms ease-in;
-      top:-@grid-gutter-width/2;
+      top:0;
       opacity: 1 !important;
     }
     &.ng-leave {
       opacity: 1;
-      top:-@grid-gutter-width/2;
+      top:0;
     }
     &.ng-leave.ng-leave-active {
       transition: top 255ms linear, opacity 150ms linear;

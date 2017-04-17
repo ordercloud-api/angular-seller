@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('ProductCtrl', ProductController);
 
-function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocProductPricing, SelectedProduct) {
+function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocNavItems, ocProductPricing, SelectedProduct) {
     var vm = this;
     vm.model = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
@@ -10,6 +10,8 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     vm.deleteProduct = deleteProduct;
     vm.patchImage = patchImage;
     vm.createDefaultPrice = createDefaultPrice;
+    
+    vm.navigationItems = ocNavItems.Product();
 
     function patchImage(imageXP) {
         return OrderCloudSDK.Products.Patch(vm.model.ID, {

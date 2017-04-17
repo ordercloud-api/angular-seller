@@ -28,7 +28,7 @@
                     <input id="ShipLength" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipLength" />
                 </div>
             </fieldset>
-            <fieldset class="form-group" oc-if-roles="AddressAdmin">
+            <fieldset class="form-group" oc-if-roles="AddressRoles">
                 <label for="ShipFrom" class="col-sm-3 control-label">Ship From</label>
                 <div class="col-sm-9">
                     <ui-select ng-model="product.model.ShipFromAddressID" close-on-select="true" id="ShipFrom" ng-disabled="!application.userIsAuthorized(['ProductAdmin'])">

@@ -1,20 +1,29 @@
-<ul class="breadcrumb">
-    <li><a href="" ui-sref="buyers">Buyers</a></li>
-    <li class="active" ui-sref="buyer">{{buyer.selectedBuyer.Name}}</li>
-</ul>
-<div class="l-page-header l-page-header-xs">
-    <div class="l-page-header__img" ng-if="buyer.selectedBuyer.xp && buyer.selectedBuyer.xp.image && buyer.selectedBuyer.xp.image.URL">
-        <figure class="c-logo-display">
-            <div role="img" ng-style="{'background-image':'url(\'' + buyer.selectedBuyer.xp.image.URL + '\')'}"></div>
-        </figure>
+<div class="c-jumbotron">
+    <div class="container container-smooth">
+        <ul class="breadcrumb">
+            <li><a href="" ui-sref="buyers">Buyers</a></li>
+            <li class="active" ui-sref="buyer">{{buyer.selectedBuyer.Name}}</li>
+        </ul>
+        <div class="l-page-header l-page-header-xs">
+            <div class="l-page-header__img" ng-if="buyer.selectedBuyer.xp && buyer.selectedBuyer.xp.image && buyer.selectedBuyer.xp.image.URL">
+                <figure class="c-logo-display">
+                    <div role="img" ng-style="{'background-image':'url(\'' + buyer.selectedBuyer.xp.image.URL + '\')'}"></div>
+                </figure>
+            </div>
+            <h3 class="l-page-header__title">
+                <small class="text-muted">Buyer Organization</small> <br>
+                {{buyer.selectedBuyer.Name}}
+            </h3>
+            <div class="l-page-header__btns">
+                <button class="btn btn-default btn-block btn-sm" role="button" ui-sref="buyer"><i class="fa fa-cog"></i> Settings</button>
+                <button class="btn btn-default btn-block btn-sm" role="button" ui-sref="buyerPermissions"><i class="fa fa-lock"></i> Permissions</button>
+            </div>
+        </div>
+        <oc-responsive-tabs nav-items="buyer.navigationItems"></oc-responsive-tabs>
     </div>
-    <h3 class="l-page-header__title">
-        {{buyer.selectedBuyer.Name}} <br>
-    </h3>
 </div>
-<article>
-    <div ng-include="'buyerManagement/buyer/templates/buyerNavigation.html'"></div>
-    <br>
+<br>
+<article class="container container-smooth">
     <div ui-view cg-busy="application.stateLoading('buyer')">
         <div class="row">
             <div class="col-sm-7 col-md-6" oc-readonly-roles="BuyerAdmin">
@@ -22,7 +31,8 @@
                     <fieldset class="form-group">
                         <label for="buyerIDInput" class="control-label col-sm-3">Buyer ID</label>
                         <div class="col-sm-9">
-                            <input id="buyerIDInput" name="buyerIDinput" ng-change="buyer.updateValidity()" type="text" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="buyer.settings.ID" required/>
+                            <input id="buyerIDInput" name="buyerIDinput" ng-change="buyer.updateValidity()" type="text" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)"
+                                pattern-err-type="ID_Name" class="form-control" ng-model="buyer.settings.ID" required/>
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
@@ -42,13 +52,10 @@
                         <label for="SelectedDefaultCatalog" class="control-label col-sm-3">Default Catalog</label>
                         <div class="col-sm-9">
                             <div class="c-typeahead">
-                                <input placeholder="Select a catalog" class="form-control" id="SelectedDefaultCatalog" name="SelectedDefaultCatalog" type="text" ng-model="buyer.settings.SelectedDefaultCatalog" required
-                                    ng-model-options="{debounce:300}"
-                                    typeahead-min-length="0"
-                                    typeahead-append-to="'.c-typeahead__results'"
-                                    typeahead-no-results="buyer.noCatalogResults"
-                                    typeahead-loading="buyer.catalogsLoading"
-                                    typeahead-template-url="oc-catalog-result.html"
+                                <input placeholder="Select a catalog" class="form-control" id="SelectedDefaultCatalog" name="SelectedDefaultCatalog" type="text"
+                                    ng-model="buyer.settings.SelectedDefaultCatalog" required ng-model-options="{debounce:300}"
+                                    typeahead-min-length="0" typeahead-append-to="'.c-typeahead__results'" typeahead-no-results="buyer.noCatalogResults"
+                                    typeahead-loading="buyer.catalogsLoading" typeahead-template-url="oc-catalog-result.html"
                                     uib-typeahead="catalog as catalog.Name for catalog in buyer.searchCatalogs($viewValue)">
                                 <div class="c-typeahead__results">
                                     <div class="c-typeahead__results--empty" ng-if="buyer.noCatalogResults">
@@ -58,7 +65,7 @@
                                         <div ng-include="'common/config/angular-busy/angular-busy.html'"></div>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </fieldset>
 
@@ -81,6 +88,10 @@
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
                             <button class="btn btn-block btn-primary" cg-busy="buyer.loading" ng-disabled="buyer.settingsForm.$invalid" type="submit">Save Changes</button>
+                        </div>
+                        <div class="col-sm-offset-3 col-sm-9" oc-if-roles="BuyerAdmin">
+                            <hr>
+                            <button class="btn btn-block btn-danger" type="button" ng-click="buyer.deleteBuyer()"><i class="fa fa-trash-o"></i> Delete Buyer Organization</button>
                         </div>
                     </div>
                 </form>

@@ -2,10 +2,12 @@ angular.module('orderCloud')
     .controller('OrderCtrl', OrderController)
 ;
 
-function OrderController($stateParams, toastr, OrderCloudSDK, ocOrderDetailService, SelectedOrder, OrderLineItems) {
+function OrderController($stateParams, toastr, OrderCloudSDK, ocOrderDetailService, ocNavItems, SelectedOrder, OrderLineItems) {
     var vm = this;
     vm.order = SelectedOrder;
     vm.lineItems = OrderLineItems;
+
+    vm.navigationItems = ocNavItems.Order();
 
     vm.pageChanged = function() {
         var options = {

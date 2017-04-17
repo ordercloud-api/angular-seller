@@ -1,6 +1,6 @@
 [ui-sref],
 [ng-click],
-[uib-dropdown-toggle]{
+[uib-dropdown-toggle] {
   cursor: pointer;
 }
 
@@ -9,36 +9,56 @@ a[disabled] {
 }
 
 textarea {
-  resize:vertical;
+  resize: vertical;
 }
 
 .pagination {
-  margin-top:0;
-}
-
-.container-smooth {
-  margin-left:0;
+  margin-top: 0;
 }
 
 .label[ng-repeat] {
-  margin-right:3px;
-  display:inline-block;
+  margin-right: 3px;
+  display: inline-block;
 }
 
 li,
 li a,
 .list-group-item {
-  > i:not(.fa-caret-down) {
-    width:1em;
-    text-align:center;
-    margin-right:3px;
+  >i:not(.fa-caret-down) {
+    width: 1em;
+    text-align: center;
+    margin-right: 3px;
   }
 }
 
 .no-matches {
-  .panel;
-  .panel-default;
-  .panel-body;
-  color:@text-muted;
-  text-align:center;
+  .alert;
+  .alert-variant(@well-bg, @well-border, @text-muted);
+  text-align: center;
+}
+
+oc-responsive-tabs {
+  display: block;
+  width: 100%;
+}
+
+.oc-responsive-tabs {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.oc-responsive-tabs>li {
+  float: none;
+  display: inline-block;
+}
+
+.c-jumbotron {
+  border-bottom: 1px solid @table-border-color;
+  padding-top: @grid-gutter-width;
+  margin-top: -@grid-gutter-width;
+  background-color: @body-bg;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23000000' fill-opacity='0.05' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+  .nav-tabs {
+    margin-bottom:-1px;
+  }
 }

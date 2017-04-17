@@ -1,9 +1,9 @@
 angular.module('orderCloud')
-    .factory('ocRolesService', OrderCloudRolesService)
-    .provider('ocRoles', OrderCloudRolesProvider)
+    .factory('ocRoles', OrderCloudRolesService)
+    .provider('$ocRoles', OrderCloudRolesProvider)
 ;
 
-function OrderCloudRolesService($window, ocRoles, OrderCloudSDK) {
+function OrderCloudRolesService($window, $ocRoles, OrderCloudSDK) {
     var service = {
         Set: _set,
         Get: _get,
@@ -64,40 +64,38 @@ function OrderCloudRolesService($window, ocRoles, OrderCloudSDK) {
 
     //Returns boolean whether user's claimed roles cover a array of roles and/or Role Groups
     //Role Groups use the group's Type setting. Individual roles use the any parameter when combined
-    //Ex: ocRolesService.UserIsAuthorized(['CategoryReader', 'CatalogReader', 'RoleGroupA'], true);
+    //Ex: ocRoles.UserIsAuthorized(['CategoryReader', 'CatalogReader', 'RoleGroupA'], true);
         //Evaluates whether user is authorized for RoleGroupA's configuration AND has either CategoryReader or CatalogReader
     function _userIsAuthorized(roleItems, any) {
         var userRoles = _get();
+        
         if (!userRoles) return;
-        if (userRoles.indexOf('FullAccess') > -1) {
-            return true;
-        }
+        if (userRoles.indexOf('FullAccess') > -1) return true;
 
         function analyzeRoles(roles, hasAny) {
             if (hasAny) {
                 return _.intersection(roles, userRoles).length > 0;
             } else {
-                return _.difference(roles, userRoles).length == 0;
+                return _.difference(roles, userRoles).length === 0;
             }
         }
 
-        var authorized = true;
-        var roleGroups = ocRoles.GetRoleGroups();
+        var authorized = false;
+        var roleGroups = $ocRoles.GetRoleGroups();
         var roles = [];
         
         angular.forEach(roleItems, function(item) {
+            if (authorized && any) return;
             if (roleGroups[item]) {
                 var roleGroup = roleGroups[item];
-                authorized = analyzeRoles(roleGroup.Roles, roleGroup.Type == 'Any');
+                authorized = analyzeRoles(roleGroup.Roles, roleGroup.Type === 'Any');
             } 
             else {
                 roles.push(item);
             }
         });
-
-        if (authorized && roles.length) {
-            authorized = analyzeRoles(roles, any);
-        }
+        if (authorized && any) return authorized;
+        if ((!authorized || !any) && roles.length) authorized = analyzeRoles(roles, any);
 
         return authorized;
     }
