@@ -110,6 +110,24 @@ function OrderCloudNavItemsService(ocRoles) {
 
     function _buyer() {
         var buyerNavItems = [{
+                icon: 'fa-cog',
+                state: 'buyer',
+                name: 'Settings',
+                roles: {
+                    Items: ['BuyerRoles', 'CatalogRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-lock',
+                state: 'buyerPermissions',
+                name: 'Permissions',
+                roles: {
+                    Items: ['SetSecurityProfile'],
+                    Any: false
+                }
+            },
+            {
                 icon: 'fa-dollar',
                 state: 'buyerProducts',
                 name: 'Pricing',
@@ -141,7 +159,7 @@ function OrderCloudNavItemsService(ocRoles) {
                 icon: 'fa-users',
                 state: 'userGroups',
                 name: 'User Groups',
-                activeWhen: ['userGroups', 'userGroup'],
+                activeWhen: ['userGroups', 'userGroup*'],
                 roles: {
                     Items: ['UserGroupRoles'],
                     Any: false

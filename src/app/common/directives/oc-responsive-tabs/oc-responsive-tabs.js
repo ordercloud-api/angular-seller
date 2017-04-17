@@ -20,7 +20,12 @@ angular.module('orderCloud')
                     function checkNavItem(item) {
                         if (!isActive) {
                             if (!item.activeWhen) {
-                                isActive = $state.is(item.state || item);
+                                if (item.state) {
+                                    isActive = $state.is(item.state);
+                                } else {
+                                    var splitItem = item.split('*');
+                                    isActive = $state[splitItem.length > 1 ? 'includes' : 'is'](splitItem[0]);
+                                }
                             } else {
                                 _.each(item.activeWhen, checkNavItem);
                             }
@@ -64,13 +69,14 @@ angular.module('orderCloud')
                 function evaluateVisibleTabs(applyScope) {
                     var parentWidth = $element[0].clientWidth;
                     var reservedWidth = tabs[tabs.length - 1];
+                    var previousHiddenCount = _.filter($scope.navItems, {dropdown:true}).length;
 
                     angular.forEach($scope.navItems, function (item, $index) {
                         reservedWidth += tabs[$index];
                         item.dropdown = reservedWidth >= parentWidth;
                     });
 
-                    if (applyScope) $scope.$apply();
+                    if (applyScope && previousHiddenCount !== _.filter($scope.navItems, {dropdown:true}).length) $scope.$apply();
                 }
             }
         };
