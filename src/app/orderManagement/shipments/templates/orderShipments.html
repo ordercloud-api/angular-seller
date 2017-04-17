@@ -66,11 +66,12 @@
                     </div>
                 </div>
                 <div ng-if="orderShipments.selectedShipment.Items.length">
-                    <div oc-if-roles="ShipmentAdmin">
-                        <button type="button" class="btn btn-primary" ng-click="orderShipments.createShipmentItems()">
+                    <div class="clearfix" oc-if-roles="ShipmentAdmin">
+                        <button type="button" class="btn btn-primary pull-right" ng-click="orderShipments.createShipmentItems()">
                             <i class="fa fa-plus-circle"></i>
                             Add Items
                         </button>
+                        <br>
                         <br>
                     </div>
                     <div class="panel panel-default table-responsive">
