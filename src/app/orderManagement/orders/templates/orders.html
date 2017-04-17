@@ -32,7 +32,7 @@
             <div class="col-sm-3 form-group">
                 <label for="BuyerCompany">Buyer Company</label>
                 <ui-select id="BuyerCompany" ng-model="orders.parameters.filters.FromCompanyID" close-on-select="true" ng-change="orders.filter(true)">
-                    <ui-select-match placeholder="Search buyer companies...">
+                    <ui-select-match placeholder="Search buyer companies..." allow-clear="true">
                         <span ng-bind-html="$select.selected.Name"></span>
                     </ui-select-match>
                     <ui-select-choices repeat="buyer.ID as buyer in (orders.buyerCompanies.Items | filter: $select.search) track by $index" refresh="orders.searchBuyerCompanies($select.search)" refresh-delay="300">
@@ -113,7 +113,7 @@
                             <td>{{order.Status | humanize}}</td>
                             <td>{{(order.DateSubmitted || order.DateCreated) | date:'short'}}</td>
                             <td>{{order.FromCompany.Name}}</td>
-                            <td>{{order.FromUserFirstName + ' ' + order.FromUserLastName}}</td>
+                            <td>{{order.FromUser.FirstName + ' ' + order.FromUser.LastName}}</td>
                             <td>{{order.Subtotal | currency}}</td>
                         </tr>
                     </tbody>

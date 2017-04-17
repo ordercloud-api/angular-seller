@@ -24,7 +24,7 @@ function OrderCloudOrdersService($q, $filter, OrderCloudSDK) {
             parameters.filters.DateSubmitted = [('<' + convertToDate(parameters.toDate))];
         }
 
-        //TODO: uncomment when ! operator is fixed in API
+        //TODO: uncomment when ! operator is fixed in API EX-1166
         //angular.extend(parameters.filters, {status: '!Unsubmitted'});
 
         OrderCloudSDK.Orders.List('incoming', parameters)
