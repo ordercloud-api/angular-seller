@@ -5,6 +5,7 @@ angular.module('orderCloud')
 function SellerUserEditModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, SelectedUser) {
     var vm = this;
     vm.user = angular.copy(SelectedUser);
+    vm.selectedUser = SelectedUser;
     vm.username = SelectedUser.Username;
     vm.fullName = SelectedUser.FirstName ? (SelectedUser.FirstName + (SelectedUser.LastName ? ' ' + SelectedUser.LastName : '')) : (SelectedUser.LastName ? SelectedUser.LastName : null);
 
