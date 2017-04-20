@@ -4,12 +4,6 @@ var gulp = require('gulp'),
     inject = require('gulp-inject'),
     replace = require('gulp-replace-task');
 
-try {
-    var saasConfig = require('../../' + config.saas + 'gulp.config');
-} catch(ex) {
-    var saasConfig = {};
-}
-
 gulp.task('clean-index', function() {
     return del(config.compile + '**/*.html');
 });
@@ -37,7 +31,7 @@ gulp.task('index', ['clean-index', 'app-js', 'lib-js', 'app-css', 'fonts', 'imag
             patterns: [
                 {
                     match:'appModule',
-                    replacement: saasConfig.moduleName || config.moduleName
+                    replacement: config.saas.moduleName || config.moduleName
                 }
             ]
         }))
