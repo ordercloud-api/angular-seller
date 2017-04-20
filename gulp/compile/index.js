@@ -1,7 +1,14 @@
 var gulp = require('gulp'),
     config = require('../../gulp.config'),
     del = require('del'),
-    inject = require('gulp-inject');
+    inject = require('gulp-inject'),
+    replace = require('gulp-replace-task');
+
+try {
+    var saasConfig = require('../../' + config.saas + 'gulp.config');
+} catch(ex) {
+    var saasConfig = {};
+}
 
 gulp.task('clean-index', function() {
     return del(config.compile + '**/*.html');
@@ -25,6 +32,14 @@ gulp.task('index', ['clean-index', 'app-js', 'lib-js', 'app-css', 'fonts', 'imag
             empty: true,
             ignorePath: config.compile.replace('./', '').replace('/', ''),
             addRootSlash: false
+        }))
+        .pipe(replace({
+            patterns: [
+                {
+                    match:'appModule',
+                    replacement: saasConfig.moduleName || config.moduleName
+                }
+            ]
         }))
         .pipe(gulp.dest(config.compile));
 });
