@@ -47,8 +47,10 @@
                         <label for="DefaultPrice" class="col-sm-3 control-label">Default Price</label>
                         <div class="col-sm-9">
                             <p class="form-control-static">
-                                <a ng-if="!product.model.DefaultPriceScheduleID" ng-click="product.createDefaultPrice()">Add a default price</a>
-                                <a ng-if="product.model.DefaultPriceScheduleID" ui-sref=".pricing({pricescheduleid: product.model.DefaultPriceScheduleID})">{{product.model.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</a>
+                                <span ng-if="!product.model.DefaultPriceScheduleID" oc-if-roles="!ProductAdmin && !PriceScheduleAdmin" class="text-muted">No default price</span>
+                                <a ng-if="!product.model.DefaultPriceScheduleID" oc-if-roles="PriceScheduleAdmin" ng-click="product.createDefaultPrice()">Add a default price</a>
+                                <a ng-if="product.model.DefaultPriceScheduleID" oc-if-roles="ProductAdmin" ui-sref=".pricing({pricescheduleid: product.model.DefaultPriceScheduleID})"><b>{{product.model.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</b></a>
+                                <b ng-if="product.model.DefaultPriceScheduleID" oc-if-roles="!ProductAdmin" class="text-primary">{{product.model.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</b>
                             </p>
                         </div>
                     </fieldset>
@@ -66,18 +68,18 @@
                             </div>
                         </div>
                     </fieldset>
-                    <fieldset class="form-group">
+                    <fieldset class="form-group" oc-if-roles="ProductAdmin">
                         <div class="col-sm-offset-3 col-sm-9">
                             <button type="submit" cg-busy="product.productUpdateLoading" ng-disabled="product.form.$invalid" class="btn btn-primary btn-block">Update Product Info</button>
                         </div>
-                        <div class="col-sm-offset-3 col-sm-9 hidden-xs" oc-if-roles="ProductAdmin">
+                        <div class="col-sm-offset-3 col-sm-9 hidden-xs">
                         <hr>
                             <button type="submit" class="btn btn-danger btn-block" ng-click="product.deleteProduct()">Delete Product</button>
                         </div>
                     </fieldset>
                 </form>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-4" oc-readonly-roles="ProductAdmin">
                 <fieldset class="form-group">
                     <label>Product Image</label>
                     <oc-file-upload model="product.model" label="Image:" patch="product.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>

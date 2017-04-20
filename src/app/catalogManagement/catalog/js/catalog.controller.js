@@ -11,7 +11,7 @@ function CatalogController($exceptionHandler, $state, toastr, SelectedCatalog, O
     vm.updateCatalog = updateCatalog;
     vm.deleteCatalog = deleteCatalog;
 
-    vm.navigationItems = ocNavItems.Catalog();
+    vm.navigationItems = ocNavItems.Filter(ocNavItems.Catalog());
 
     function updateValidity() {
         if (vm.editForm.ID.$error['UnavailableID']) vm.editForm.ID.$setValidity('UnavailableID', true);

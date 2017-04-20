@@ -11,7 +11,7 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     vm.patchImage = patchImage;
     vm.createDefaultPrice = createDefaultPrice;
     
-    vm.navigationItems = ocNavItems.Product();
+    vm.navigationItems = ocNavItems.Filter(ocNavItems.Product());
 
     function patchImage(imageXP) {
         return OrderCloudSDK.Products.Patch(vm.model.ID, {

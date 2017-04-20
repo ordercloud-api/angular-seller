@@ -28,7 +28,7 @@
                 <p ng-click="productCategories.categorySelected(node.ID)">{{node.Name}}</p>
                 <fieldset class="checkbox">
                     <label class="control-label">
-                        <input type="checkbox" ng-disabled="productCategories.viewAllCategories || node.Inherited" name="{{'AssignCategory' + node.ID}}" ng-model="node.Assigned" ng-change="productCategories.updateAssignment(node)">
+                        <input type="checkbox" ng-disabled="productCategories.viewAllCategories || node.Inherited || !application.UserIsAuthorized('CategoryAdmin')" name="{{'AssignCategory' + node.ID}}" ng-model="node.Assigned" ng-change="productCategories.updateAssignment(node)">
                     </label>
                 </fieldset>
             </div>

@@ -10,35 +10,8 @@
                 {{userGroup.group.Name}}
             </a>
             <ul class="nav navmenu-nav" uib-collapse="!userGroup.showNav && (application.$ocMedia('max-width:767px'))">
-                <li ng-class="{'active':application.$state.is('userGroup')}">
-                    <a href="" ui-sref="userGroup"><i class="fa fa-cog"></i> Settings</a>
-                </li>                
-                <li ui-sref-active="active">
-                    <a href="" ui-sref=".permissions"><i class="fa fa-lock"></i> Group Permissions</a>
-                </li>
-                <li ui-sref-active="active">
-                    <a href="" ui-sref="userGroupProducts"><i class="fa fa-cube"></i> Products</a>
-                </li>
-                <li ng-class="{'active':application.$state.is('userGroupCatalogs') || application.$state.includes('userGroupCatalog')}">
-                    <a href="" ui-sref="userGroupCatalogs"><i class="fa fa-sitemap"></i> Catalogs</a>
-                </li>
-                <li ui-sref-active="active" oc-if-roles="BuyerUserRoles">
-                    <a href="" ui-sref=".users"><i class="fa fa-user"></i> Users</a>
-                </li>
-                <li ui-sref-active="active" oc-if-roles="AddressRoles">
-                    <a href="" ui-sref=".addresses"><i class="fa fa-map-marker"></i> Addresses</a>
-                </li>
-                <li ui-sref-active="active" oc-if-roles="CreditCardRoles">
-                    <a href="" ui-sref=".creditCards"><i class="fa fa-credit-card"></i> Credit Cards</a>
-                </li>
-                <li ui-sref-active="active" oc-if-roles="SpendingAccountRoles">
-                    <a href="" ui-sref=".spendingAccounts"><i class="fa fa-dollar"></i> Spending Accounts</a>
-                </li>
-                <li ui-sref-active="active" oc-if-roles="CostCenterRoles">
-                    <a href="" ui-sref=".costCenters"><i class="fa fa-asterisk"></i> Cost Centers</a>
-                </li>
-                <li ui-sref-active="active" oc-if-roles="PromotionRoles">
-                    <a href="" ui-sref=".promotions"><i class="fa fa-bullhorn"></i> Promotions</a>
+                <li ng-class="{'active':userGroup.isActive(navItem)}" ng-repeat="navItem in userGroup.navigationItems">
+                    <a href="" ui-sref="{{navItem.state}}({search:'', page:'', pageSize:'', searchOn:'', sortBy:'', filters:''})"><i class="fa {{navItem.icon}}"></i> {{navItem.name}}</a>
                 </li>
             </ul>
         </nav>

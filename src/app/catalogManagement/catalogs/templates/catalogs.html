@@ -4,7 +4,7 @@
             Catalog Management
         </h3>
         <!--====== CREATE ======-->
-        <div class="l-page-header__btns">
+        <div class="l-page-header__btns" oc-if-roles="CatalogAdmin">
             <button type="button" class="btn btn-primary btn-block" ng-click="catalogs.createCatalog()"><i class="fa fa-plus-circle"></i>
                 New Catalog
             </button>
@@ -63,7 +63,7 @@
                         <th>
                             Active
                         </th>
-                        <th></th>
+                        <th oc-if-roles="CatalogAdmin"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -73,7 +73,7 @@
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':catalog.Active}"></i>
                         </td>
-                        <td>
+                        <td oc-if-roles="CatalogAdmin">
                             <button class="btn btn-danger btn-xs" ng-click="catalogs.deleteCatalog(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                         </td>
                     </tr>

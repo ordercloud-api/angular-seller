@@ -7,7 +7,7 @@ function OrderController($stateParams, toastr, OrderCloudSDK, ocOrderDetailServi
     vm.order = SelectedOrder;
     vm.lineItems = OrderLineItems;
 
-    vm.navigationItems = ocNavItems.Order();
+    vm.navigationItems = ocNavItems.Filter(ocNavItems.Order());
 
     vm.pageChanged = function() {
         var options = {
