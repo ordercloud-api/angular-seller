@@ -12,7 +12,7 @@ function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, t
     vm.deleteBuyer = deleteBuyer;
     vm.searchCatalogs = searchCatalogs;
 
-    vm.navigationItems = ocNavItems.Buyer();
+    vm.navigationItems = ocNavItems.Filter(ocNavItems.Buyer());
 
     function updateValidity() {
         if (vm.settingsForm.buyerIDinput.$error['UnavailableID']) vm.settingsForm.buyerIDinput.$setValidity('UnavailableID', true);

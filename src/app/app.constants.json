@@ -16,6 +16,7 @@
     "ApprovalRuleAdmin", 
     "ApprovalRuleReader", 
     "BuyerAdmin", 
+    "BuyerImpersonation",
     "BuyerReader", 
     "BuyerUserAdmin", 
     "BuyerUserReader", 
