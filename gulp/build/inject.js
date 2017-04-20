@@ -2,7 +2,14 @@ var gulp = require('gulp'),
     config = require('../../gulp.config'),
     del = require('del'),
     inject = require('gulp-inject'),
-    mainBowerFiles = require('main-bower-files');
+    mainBowerFiles = require('main-bower-files'),
+    replace = require('gulp-replace-task');
+
+try {
+    var saasConfig = require('../../' + config.saas + 'gulp.config');
+} catch(ex) {
+    var saasConfig = {};
+}
 
 gulp.task('clean:inject', function() {
     return del(config.build + '*.html');
@@ -21,6 +28,14 @@ gulp.task('inject', ['clean:inject', 'scripts', 'assets', 'app-config', 'bower-f
         }))
         .pipe(inject(appFiles, {
             ignorePath: config.build.replace('.', '')
+        }))
+        .pipe(replace({
+            patterns: [
+                {
+                    match:'appModule',
+                    replacement: saasConfig.moduleName || config.moduleName
+                }
+            ]
         }))
         .pipe(gulp.dest(config.build));
 });

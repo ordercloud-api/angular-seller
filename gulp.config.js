@@ -1,4 +1,5 @@
 var source = './src/',
+    moduleName = 'orderCloud',
     assets = 'assets/',
     build = './build/',
     bowerFiles = './bower_components/',
@@ -10,6 +11,7 @@ var source = './src/',
     fs = require('fs');
 
 module.exports = {
+    moduleName: moduleName,
     bowerFiles: bowerFiles,
     npmFiles: npmFiles,
     src: source,
