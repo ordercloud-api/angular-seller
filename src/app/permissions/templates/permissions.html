@@ -3,6 +3,7 @@
         {{permissions.pageTitle}}
     </h3>
 </header>
+<div class="alert alert-info" ng-bind-html="permissions.message"></div>
 <form name="permissions.form" oc-readonly-roles="SetSecurityProfile">
     <fieldset class="form-group">
         <div class="checkbox" ng-repeat="profile in permissions.profiles">
