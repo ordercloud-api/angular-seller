@@ -11,7 +11,8 @@ function PermissionsConfig($stateProvider) {
             controller: 'PermissionsCtrl',
             controllerAs: 'permissions',
             data: {
-                pageTitle: 'Seller Permissions'
+                pageTitle: 'Seller Permissions',
+                message: 'Each permission enabled at this level will be inherited by <em>all seller users</em> within <b>{{application.name()}}</b>.'
             },
             resolve: {
                 Assignments: function(OrderCloudSDK) {
@@ -34,7 +35,8 @@ function PermissionsConfig($stateProvider) {
             controller: 'PermissionsCtrl',
             controllerAs: 'permissions',
             data: {
-                pageTitle: 'Seller User Group Permissions'
+                pageTitle: 'Seller User Group Permissions',
+                message: 'Each permission enabled at this level will be inherited by <em>all seller users</em> within <b>{{sellerUserGroup.group.Name}}</b>.'
             },
             resolve: {
                 Assignments: function($stateParams, OrderCloudSDK) {
@@ -58,7 +60,8 @@ function PermissionsConfig($stateProvider) {
             controller: 'PermissionsCtrl',
             controllerAs: 'permissions',
             data: {
-                pageTitle: 'Buyer Permissions'
+                pageTitle: 'Buyer Permissions',
+                message: 'Each permission enabled at this level will be inherited by <em>all buyer users</em> within <b>{{buyer.selectedBuyer.Name}}</b>.'
             },
             resolve: {
                 Assignments: function($stateParams, OrderCloudSDK) {
@@ -81,7 +84,8 @@ function PermissionsConfig($stateProvider) {
             controller: 'PermissionsCtrl',
             controllerAs: 'permissions',
             data: {
-                pageTitle: 'User Group Permissions'
+                pageTitle: 'User Group Permissions',
+                message: 'Each permission enabled at this level will be inherited by <em>all buyer users</em> within <b>{{userGroup.group.Name}}</b>.'
             },
             resolve: {
                 Assignments: function($stateParams, OrderCloudSDK) {

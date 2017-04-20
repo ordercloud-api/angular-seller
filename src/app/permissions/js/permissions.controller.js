@@ -2,9 +2,10 @@ angular.module('orderCloud')
     .controller('PermissionsCtrl', PermissionsController)
 ;
 
-function PermissionsController($state, $exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, OrderCloudSDK) {
+function PermissionsController($scope, $interpolate, $state, $exceptionHandler, $stateParams, toastr, Assignments, AvailableProfiles, OrderCloudSDK) {
     var vm = this;
     vm.pageTitle = $state.current.data.pageTitle;
+    vm.message = $interpolate($state.current.data.message)($scope);
     vm.assignments = Assignments;
     vm.profiles = AvailableProfiles;
     vm.buyerid = $stateParams.buyerid;
