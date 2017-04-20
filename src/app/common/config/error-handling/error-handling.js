@@ -22,7 +22,7 @@ angular.module('orderCloud')
         function handler($delegate, $injector) { //Catch all for unhandled errors
             return function(ex, cause) {
                 //TODO: this was changed to include the below if statement on 2/7/2017 - this change could cause unknown issues
-                if (ex) {
+                if (ex && (!ex.message || (ex.message.status !== 401 && ex.message.status !== 403))) {
                     $delegate(ex, cause);
                     var message = (ex.response && ex.response.body && ex.response.body.Errors && ex.response.body.Errors.length) ? 
                         ex.response.body.Errors[0].Message : 

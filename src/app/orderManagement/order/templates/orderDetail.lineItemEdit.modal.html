@@ -31,7 +31,7 @@
             <label for="lineItemDateNeeded" class="control-label col-sm-3">Date Needed</label>
             <div class="col-sm-9">
                 <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderLineItemEditModal.lineItem.DateNeeded" ng-disabled="!orderLineItemEditModal.product">
-                <input id="lineItemDateNeeded" name="DateNeeded" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderLineItemEditModal.lineItem.DateNeeded" uib-datepicker-popup="MM/dd/yyyy" is-open="dateNeeded.open" ng-click="dateNeeded.open = !dateNeeded.open" ng-disabled="!orderLineItemEditModal.product">
+                <input id="lineItemDateNeeded" ng-disabled="!application.UserIsAuthorized('OrderAdmin')" name="DateNeeded" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderLineItemEditModal.lineItem.DateNeeded" uib-datepicker-popup="MM/dd/yyyy" is-open="dateNeeded.open" ng-click="dateNeeded.open = !dateNeeded.open" ng-disabled="!orderLineItemEditModal.product">
             </div>
         </fieldset>
     </div>

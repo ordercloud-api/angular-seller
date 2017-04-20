@@ -7,13 +7,14 @@ function OrderCloudNavItemsService(ocRoles) {
         Product: _product,
         Catalog: _catalog,
         Buyer: _buyer,
+        BuyerUserGroup: _buyerUserGroup,
         Order: _order,
         Filter: _filterNavItems
     };
 
 
     function _product() {
-        var productNavItems = [{
+        return [{
                 icon: 'fa-cube',
                 state: 'product',
                 name: 'Product',
@@ -54,7 +55,7 @@ function OrderCloudNavItemsService(ocRoles) {
                 state: 'product.pricing',
                 name: 'Pricing',
                 roles: {
-                    Items: ['PriceScheduleRoles', 'ProductRoles', 'BuyerRoles', 'UserGroupRoles'],
+                    Items: ['PriceScheduleRoles', 'ProductAdmin', 'BuyerRoles', 'UserGroupRoles'],
                     Any: false
                 }
             },
@@ -69,12 +70,10 @@ function OrderCloudNavItemsService(ocRoles) {
                 }
             }
         ];
-
-        return _filterNavItems(productNavItems);
     }
 
     function _catalog() {
-        var catalogNavItems = [{
+        return [{
                 icon: 'fa-sitemap',
                 state: 'catalog',
                 name: 'Catalog',
@@ -104,12 +103,10 @@ function OrderCloudNavItemsService(ocRoles) {
                 }
             }
         ];
-
-        return _filterNavItems(catalogNavItems);
     }
 
     function _buyer() {
-        var buyerNavItems = [{
+        return [{
                 icon: 'fa-cog',
                 state: 'buyer',
                 name: 'Settings',
@@ -132,7 +129,7 @@ function OrderCloudNavItemsService(ocRoles) {
                 state: 'buyerProducts',
                 name: 'Pricing',
                 roles: {
-                    Items: ['PriceScheduleRoles', 'ProductRoles'],
+                    Items: ['PriceScheduleRoles', 'ProductAdmin'],
                     Any: false
                 }
             },
@@ -142,7 +139,7 @@ function OrderCloudNavItemsService(ocRoles) {
                 name: 'Categories',
                 activeWhen: ['buyerCatalogs', 'buyerCatalog'],
                 roles: {
-                    Items: ['CatalogRoles', 'CategoryRoles'],
+                    Items: ['CatalogRoles', 'CategoryRoles', 'CatalogAdmin'],
                     Any: false
                 }
             },
@@ -220,12 +217,105 @@ function OrderCloudNavItemsService(ocRoles) {
                 }
             }
         ];
+    }
 
-        return _filterNavItems(buyerNavItems);
+    function _buyerUserGroup() {
+        return [{
+                icon: 'fa-cog',
+                state: 'userGroup',
+                name: 'Settings',
+                roles: {
+                    Items: ['UserGroupRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-lock',
+                state: 'userGroup.permissions',
+                name: 'Permissions',
+                roles: {
+                    Items: ['SetSecurityProfile'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-dollar',
+                state: 'userGroupProducts',
+                name: 'Pricing',
+                roles: {
+                    Items: ['PriceScheduleRoles', 'ProductRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-sitemap',
+                state: 'userGroupCatalogs',
+                name: 'Categories',
+                activeWhen: ['userGroupCatalogs', 'userGroupCatalog'],
+                roles: {
+                    Items: ['CatalogRoles', 'CategoryRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-user',
+                state: 'userGroup.users',
+                name: 'Users',
+                roles: {
+                    Items: ['UserGroupRoles', 'BuyerUserRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-map-marker',
+                state: 'userGroup.addresses',
+                name: 'Addresses',
+                roles: {
+                    Items: ['AddressRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-credit-card',
+                state: 'userGroup.creditCards',
+                name: 'Credit Cards',
+                roles: {
+                    Items: ['CreditCardRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-money',
+                state: 'userGroup.spendingAccounts',
+                name: 'Spending Accounts',
+                roles: {
+                    Items: ['SpendingAccountRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-asterisk',
+                state: 'userGroup.costCenters',
+                name: 'Cost Centers',
+                roles: {
+                    Items: ['CostCenterRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-bullhorn',
+                state: 'userGroup.promotions',
+                name: 'Promotions',
+                roles: {
+                    Items: ['PromotionRoles'],
+                    Any: false
+                }
+            }
+        ];
     }
 
     function _order() {
-        var orderNavItems = [{
+        return [{
                 icon: 'fa-file',
                 state: 'orderDetail',
                 name: 'Details',
@@ -259,8 +349,6 @@ function OrderCloudNavItemsService(ocRoles) {
                 name: 'Approvals'
             }
         ];
-
-        return _filterNavItems(orderNavItems);
     }
 
     function _filterNavItems(navItems) {

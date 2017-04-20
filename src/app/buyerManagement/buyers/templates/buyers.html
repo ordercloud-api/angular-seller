@@ -4,7 +4,7 @@
             Buyer Organizations
         </h3>
         <!--====== CREATE ======-->
-        <div class="l-page-header__btns">
+        <div class="l-page-header__btns" oc-if-roles="BuyerAdmin">
             <button type="button" class="btn btn-primary btn-block" ng-click="buyers.createBuyer()"><i class="fa fa-plus-circle"></i>
                 New Buyer
             </button>
@@ -68,7 +68,7 @@
                         <th>
                             Active
                         </th>
-                        <th></th>
+                        <th oc-if-roles="BuyerAdmin"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -78,7 +78,7 @@
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':buyer.Active}"></i>
                         </td>
-                        <td>
+                        <td oc-if-roles="BuyerAdmin">
                             <button class="btn btn-danger btn-xs" ng-click="buyers.deleteBuyer(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
                         </td>
                     </tr>
