@@ -12,6 +12,7 @@ var source = './src/',
 
 module.exports = {
     moduleName: moduleName,
+    saas: source + 'app/saas/',
     bowerFiles: bowerFiles,
     npmFiles: npmFiles,
     src: source,
@@ -34,10 +35,14 @@ module.exports = {
     ],
     scripts: [
         source + 'app/**/*.js',
+        '!' + source + '**/saas/gulp.config.js',
         '!' + source + '**/*.spec.js',
         '!' + source + '**/*.test.js'
     ],
     appFiles: [
+        build + '**/saas.module.js',
+        build + '**/saas/**/*.js',
+        '!' + build + '**/saas/gulp.config.js',
         build + '**/app.module.js',
         build + '**/common/config/**/routing.js',
         build + '**/common/config/**/*.js',
