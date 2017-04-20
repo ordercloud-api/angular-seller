@@ -3,15 +3,14 @@ angular.module('orderCloud')
     .provider('$ocRoles', OrderCloudRolesProvider)
 ;
 
-function OrderCloudRolesService($window, $ocRoles, OrderCloudSDK) {
+function OrderCloudRolesService($window, $cookies, $ocRoles, OrderCloudSDK, ocAppName) {
     var service = {
         Set: _set,
         Get: _get,
-        Remove: _remove,
         UserIsAuthorized: _userIsAuthorized
     };
 
-    var roles;
+    var cookieName = ocAppName.Watch().replace(/ /g, '_').toLowerCase() + '_roles';
 
     function base64Decode(string) {
         var output = string.replace(/-/g, '+').replace(/_/g, '/');
@@ -45,21 +44,18 @@ function OrderCloudRolesService($window, $ocRoles, OrderCloudSDK) {
         }
 
         var decodedTokenObject = JSON.parse(decodedToken);
-        roles = decodedTokenObject.role;
+        var roles = decodedTokenObject.role;
 
         if (typeof roles == 'string') roles = [roles];
+        $cookies.putObject(cookieName, {Roles: roles});
 
         return roles || [];
     }
 
     //Returns local service variable or obtains roles again from token
     function _get() {
-        return roles || _set(OrderCloudSDK.GetToken());
-    }
-
-    //Removes local service variable
-    function _remove() {
-        roles = null;
+        var cookie = $cookies.getObject(cookieName);
+        return cookie ? cookie.Roles : _set(OrderCloudSDK.GetToken());
     }
 
     //Returns boolean whether user's claimed roles cover a array of roles and/or Role Groups
