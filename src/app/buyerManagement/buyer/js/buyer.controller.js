@@ -51,6 +51,11 @@ function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, t
         function saveBuyer() {
             return OrderCloudSDK.Buyers.Update(SelectedBuyer.ID, vm.settings)
                 .then(function (data) {
+                    if (data.ID != vm.selectedBuyer.ID) $state.go('.', {
+                        buyerid: data.ID
+                    }, {
+                        notify: false
+                    });
                     data.SelectedDefaultCatalog = vm.settings.SelectedDefaultCatalog;
                     vm.selectedBuyer = data;
                     SelectedBuyer = data;
