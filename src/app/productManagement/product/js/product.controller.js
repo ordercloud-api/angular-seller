@@ -58,7 +58,7 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
         ocProductPricing.CreateProductPrice(vm.model, null, null, null, true)
             .then(function (data) {
                 toastr.success('Default price was successfully added to ' + vm.model.Name);
-                $state.go('product.pricing.priceSchedule', {
+                $state.go('product.pricing.priceScheduleDetail', {
                     pricescheduleid: data.SelectedPrice.ID
                 }, {
                     reload: true
