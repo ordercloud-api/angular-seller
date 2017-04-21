@@ -104,7 +104,7 @@ function ProductSpecsController($rootScope, toastr, ocProductSpecs, ProductSpecs
 
 
     function deleteSpecOption(node) {
-        ocProductSpecs.DeleteSpecOption(vm.selectedSpec.Spec.ID, node.ID)
+        ocProductSpecs.DeleteSpecOption(vm.selectedSpec.Spec.ID, node)
             .then(function() {
                 var specOptionIndex = 0;
                 angular.forEach(vm.selectedSpec.Options, function(option, index) {

@@ -209,13 +209,13 @@ function ocProductsSpecsService($q, $uibModal, OrderCloudSDK, ocConfirm) {
         }).result;
     }
 
-    function _deleteSpecOption(specID, specOptionID) {
+    function _deleteSpecOption(specID, specOption) {
         return ocConfirm.Confirm({
-                message:'Are you sure you want to delete <br> <b>' + specOptionID + '</b>?',
+                message:'Are you sure you want to delete spec option <br> <b>' + specOption.Value + '</b>?',
                 confirmText: 'Delete spec option',
                 type: 'delete'})
             .then(function() {
-                return OrderCloudSDK.Specs.DeleteOption(specID, specOptionID);
+                return OrderCloudSDK.Specs.DeleteOption(specID, specOption.ID);
             });
     }
 
