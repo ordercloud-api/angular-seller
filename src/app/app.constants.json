@@ -1,9 +1,9 @@
 {
   "appname": "Angular Seller",
-  "clientid": "FA2E05CB-40DE-4210-AF48-AB7BF02B8F0B",
-  "environment": "staging",
+  "clientid": "XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXX",
+  "environment": "qa",
   "defaultstate": "home",
-  "html5mode": false,
+  "html5mode": true,
   "bootswatchtheme": null,
   "scope": [
     "FullAccess",

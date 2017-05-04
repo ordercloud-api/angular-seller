@@ -1,6 +1,6 @@
-| master | development |
+<!-- | master | development |
 | --- | --- |
-| [![Build Status](https://travis-ci.org/ordercloud-api/angular-admin.svg?branch=master)](https://travis-ci.org/ordercloud-api/angular-admin) | [![Build Status](https://travis-ci.org/ordercloud-api/angular-admin.svg?branch=development)](https://travis-ci.org/ordercloud-api/angular-admin) |
+| [![Build Status](https://travis-ci.org/ordercloud-api/angular-admin.svg?branch=master)](https://travis-ci.org/ordercloud-api/angular-admin) | [![Build Status](https://travis-ci.org/ordercloud-api/angular-admin.svg?branch=development)](https://travis-ci.org/ordercloud-api/angular-admin) | -->
 
 # OrderCloud Angular Seller
 A fully functional, open source starter application built for seller users on the OrderCloud.io platform in Angular 1.X. Ideally solution implementers will fork or clone this repository to maintain their customized admin application through merges and
