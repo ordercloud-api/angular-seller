@@ -28,7 +28,7 @@ then define a route of `/products/:id`, ad infinitum.
 
 This small, yet powerful file host a JSON object of key value pairs to be used
 throughout the application. From this object, the build process will generate
-a file containing AngularJS constants [here](https://github.com/ordercloud-api/angular-seller/blob/development/gulp.config.js#L86), which can then be injected into your
+a file containing AngularJS constants [here](https://github.com/ordercloud-api/angular-seller/blob/master/gulp.config.js#L86), which can then be injected into your
 various AngularJS controllers, factories, providers, etc. Think of it as a base
 configuration or settings file for your application.
 
@@ -45,7 +45,7 @@ Constant | Type | Description
 
 ### Process Environment Variable Overrides
 
-The constants provided above can be overwritten within your hosting providers application settings. For example, within Heroku, you can override these constants using their [Config Variables](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application). This is accomplished in the [`gulp.config.js`](https://github.com/ordercloud-api/angular-seller/blob/development/gulp.config.js#L116-L121) file, which can be customized to include additional application constants.
+The constants provided above can be overwritten within your hosting providers application settings. For example, within Heroku, you can override these constants using their [Config Variables](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application). This is accomplished in the [`gulp.config.js`](https://github.com/ordercloud-api/angular-seller/blob/master/gulp.config.js#L116-L121) file, which can be customized to include additional application constants.
 
 
 ### Connecting to Your Seller Organization
