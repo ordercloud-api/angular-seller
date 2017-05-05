@@ -1,0 +1,47 @@
+.c-price-list {
+  .panel;
+  .panel-default;
+  border-bottom-width:0;
+  overflow:hidden;
+  &__item {
+    box-shadow:none;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    align-items:center;
+    border-bottom:1px solid @panel-default-border;
+    &__info {
+      margin-left:@padding-base-horizontal;
+      flex-grow:1;
+      flex-basis:35%;
+      @media(max-width:@screen-xs-max) {
+        flex-basis:50%;
+      }
+    }
+    &__price {
+      flex:1;
+      font-weight:bold;
+      font-size:1.2em;
+      color:@link-color;
+      padding:@padding-base-vertical @padding-base-horizontal;
+    }
+    &__groups,
+    &__buyers {
+      font-size: 0.9em;
+      flex:1;
+      text-align:center;
+      color:@text-muted;
+      padding:@padding-base-vertical;
+      @media(max-width:@screen-xs-max) {
+        display:none;
+      }
+    }
+    &.active {
+      border-bottom-color:@link-color;
+      color:@link-color;
+      .c-price-list__item__info small {
+        color: @link-color;
+      }
+    }
+  }
+}

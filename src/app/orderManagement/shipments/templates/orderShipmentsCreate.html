@@ -1,0 +1,89 @@
+<form name="orderShipmentsCreate.form" ng-submit="orderShipmentsCreate.submit()" autocomplete="off" novalidate>
+    <div class="row">
+        <div class="col-sm-3">
+            <fieldset class="form-group">
+                <label for="shipmentShipper">Shipper</label>
+                <input id="shipmentShipper" type="text" name="Shipper" class="form-control" ng-model="orderShipmentsCreate.shipment.Shipper" />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="shipmentTrackingNumber">Tracking Number</label>
+                <input id="shipmentTrackingNumber" type="text" name="TrackingNumber" class="form-control" ng-model="orderShipmentsCreate.shipment.TrackingNumber" />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="shipmentCost">Cost</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-dollar"></i>
+                    </span>
+                    <input id="shipmentCost" type="number" name="Cost" min="0" placeholder="0.00" step="0.01" class="form-control" ng-model="orderShipmentsCreate.shipment.Cost" />
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="shipmentDateShipped">Date Shipped</label>
+                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderShipmentsCreate.shipment.DateShipped">
+                <input id="shipmentDateShipped" name="DateShipped" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderShipmentsCreate.shipment.DateShipped" uib-datepicker-popup="MM/dd/yyyy" is-open="dateShipped.open" ng-click="dateShipped.open = !dateShipped.open">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="shipmentDateDelivered">Date Delivered</label>
+                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderShipmentsCreate.shipment.DateDelivered">
+                <input id="shipmentDateDelivered" name="DateDelivered" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderShipmentsCreate.shipment.DateDelivered" uib-datepicker-popup="MM/dd/yyyy" is-open="dateDelivered.open" ng-click="dateDelivered.open = !dateDelivered.open">
+            </fieldset>
+            <fieldset class="form-group">
+                <button type="submit" class="btn btn-primary btn-block" ng-disabled="orderShipmentsCreate.form.$invalid">Save Shipment</button>
+            </fieldset>
+        </div>
+        <div class="col-sm-9">
+            <!--====== LINE ITEM LIST ======-->
+            <div class="panel panel-default table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th>Ship To</th>
+                        <th>Quantity in Shipment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-class="{'active': lineItem.QuantityShipped == lineItem.Quantity}" ng-repeat="lineItem in orderShipmentsCreate.lineItems.Items | ocCachedList:orderShipmentsCreate.selectedLineItemPage">
+                        <th class="text-center">
+                            <input type="checkbox" ng-model="lineItem.Selected" ng-disabled="lineItem.Quantity == lineItem.QuantityShipped" ng-change="orderShipmentsCreate.itemChange(lineItem)" />
+                        </th>
+                        <td>{{lineItem.ID}}</td>
+                        <td>
+                            <span>{{lineItem.Product.Name}}</span>
+                            <small class="text-muted">({{lineItem.Product.ID}})</small>
+                        </td>
+                        <td>
+                            <div ng-bind-html="lineItem.ShippingAddress | address:'full'"></div>
+                        </td>
+                        <td>
+                            <span ng-if="lineItem.QuantityShipped == lineItem.Quantity">Shipped</span>
+                            <div class="input-group input-group-sm" ng-if="lineItem.QuantityShipped < lineItem.Quantity">
+                                <input type="number" class="form-control" ng-model="lineItem.ShipQuantity" ng-change="orderShipmentsCreate.itemChange(lineItem)">
+                                <span class="input-group-addon">of {{lineItem.Quantity}}</span>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--====== LINE ITEM PAGINATION ======-->
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="orderShipmentsCreate.lineItems.Meta.TotalPages > 1"
+                total-items="orderShipmentsCreate.lineItems.Meta.TotalCount"
+                items-per-page="orderShipmentsCreate.lineItems.Meta.PageSize"
+                max-size="5"
+                boundary-links="orderShipmentsCreate.lineItems.Meta.TotalPages > 5"
+                ng-model="orderShipmentsCreate.lineItems.Meta.Page"
+                ng-change="orderShipmentsCreate.pageChanged()">
+            </ul>
+            <button type="button"
+                    class="btn btn-default btn-block btn-lg visible-xs"
+                    ng-show="orderShipmentsCreate.lineItems.Meta.Page < orderShipmentsCreate.lineItems.Meta.TotalPages"
+                    ng-click="orderShipmentsCreate.loadMore()">Load More</button>
+        </div>
+    </div>
+</form>

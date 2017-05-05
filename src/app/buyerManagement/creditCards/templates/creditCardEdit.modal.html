@@ -1,0 +1,37 @@
+<form name="creditCardEditModal.form" class="form-horizontal" ng-submit="creditCardEditModal.submit()" autocomplete="off" novalidate oc-readonly-roles="CreditCardAdmin">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="creditCardEditModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span> Card ending in {{creditCardEditModal.creditCard.PartialAccountNumber}}</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="creditCardID">Credit Card ID</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="creditCardID" name="ID" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" ng-model="creditCardEditModal.creditCard.UpdatedCreditCardID" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" for="creditCardCardholderName">Cardholder Name</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="creditCardCardholderName" name="CardholderName" ng-model="creditCardEditModal.creditCard.CardholderName" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" form="creditCardExpirationMonth">Expiration Month</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="creditCardExpirationMonth" name="ExpirationMonth"
+                        ng-model="creditCardEditModal.creditCard.ExpirationMonth" ng-options="month.string as month.string for month in creditCardEditModal.creditCardInfo.ExpirationMonths" required></select>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label" form="creditCardExpirationYear">Expiration Year</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="creditCardExpirationYear" name="ExpirationYear"
+                        ng-model="creditCardEditModal.creditCard.ExpirationYear" ng-options="year as year for year in creditCardEditModal.creditCardInfo.ExpirationYears" required></select>
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block" cg-busy="creditCardEditModal.loading">Save</button>
+    </div>
+</form>

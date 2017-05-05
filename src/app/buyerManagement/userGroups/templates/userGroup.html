@@ -1,0 +1,55 @@
+<ul class="breadcrumb">
+    <li><a ui-sref="userGroups">User Groups</a></li>
+    <li class="active">{{userGroup.group.Name}}</li>
+</ul>
+<div class="row">
+    <div class="col-sm-4 col-lg-3">
+        <nav class="navmenu navmenu-inverse navmenu-inline" role="navigation">
+            <a href="" class="navmenu-brand">
+                <i class="fa fa-bars pull-right visible-xs" ng-click="userGroup.showNav = !userGroup.showNav"></i>
+                {{userGroup.group.Name}}
+            </a>
+            <ul class="nav navmenu-nav" uib-collapse="!userGroup.showNav && (application.$ocMedia('max-width:767px'))">
+                <li ng-class="{'active':userGroup.isActive(navItem)}" ng-repeat="navItem in userGroup.navigationItems">
+                    <a href="" ui-sref="{{navItem.state}}({search:'', page:'', pageSize:'', searchOn:'', sortBy:'', filters:''})"><i class="fa {{navItem.icon}}"></i> {{navItem.name}}</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <article class="col-sm-8 col-lg-9" ui-view cg-busy="application.stateLoading('userGroup')">
+        <header class="l-page-header">
+            <h3 class="l-page-header__title">User Group Settings</h3>
+        </header>
+        <div class="row">
+            <div class="col-sm-9 col-lg-8">
+                <form name="userGroup.editForm" class="form-horizontal" ng-submit="userGroup.update()" oc-readonly-roles="UserGroupAdmin">
+                    <fieldset class="form-group">
+                        <label for="userGroupID" class="col-sm-4 control-label">User Group ID</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="userGroupID" class="form-control" name="ID" ng-model="userGroup.model.ID" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name">
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="userGroupName" class="col-sm-4 control-label">Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="userGroupName" class="form-control" name="Name" ng-model="userGroup.model.Name" required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="userGroupDescription" class="col-sm-4 control-label">Description</label>
+                        <div class="col-sm-8">
+                            <textarea rows="4" id="userGroupDescription" class="form-control" name="Description" ng-model="userGroup.model.Description" placeholder="(Optional)"></textarea>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary btn-block">Update User Group</button>
+                        </div>
+                    </fieldset>
+                    <hr>
+                    <button type="button" class="btn btn-danger btn-block" ng-click="userGroup.delete()"><i class="fa fa-trash-o"></i> Delete User Group</button>
+                </form>
+            </div>
+        </div>
+    </article>
+</div>

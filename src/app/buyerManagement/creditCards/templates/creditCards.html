@@ -1,0 +1,124 @@
+<article>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">
+            Credit Cards
+        </h3>
+        <!--====== CREATE ======-->
+        <div class="l-page-header__btns" oc-if-roles="CreditCardAdmin">
+            <button type="button" class="btn btn-primary btn-block" ng-click="creditCards.createCreditCard()"><i class="fa fa-plus-circle"></i>
+                New Credit Card
+            </button>
+        </div>
+    </header>
+
+    <!--====== SEARCH ======-->
+    <div ng-if="costCecreditCardsnters.list.Items.length || (!creditCards.list.Items.length && creditCards.searchResults)">
+        <form name="creditCards.searchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input type="search" ng-change="creditCards.search()" ng-model-options="{debounce:1000}" placeholder="Search credit cards..." ng-model="creditCards.parameters.search" class="form-control">
+                    <span ng-if="creditCards.searchResults" class="input-group-btn">
+                        <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="creditCards.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <!--====== LIST ======-->
+    <div cg-busy="creditCards.searchLoading">
+        <div class="no-matches" ng-if="!creditCards.list.Items.length">
+            <b ng-if="creditCards.searchResults">No matches found.</b>
+            <b ng-if="!creditCards.searchResults">This buyer organization does not have any credit cards.</b>
+        </div>
+        <div ng-if="creditCards.list.Items.length">
+            <div class="row">
+                <div class="col-xs-6">
+                    <button ng-if="creditCards.changedAssignments.length" ng-click="creditCards.updateAssignments()" class="btn btn-primary btn-xs">
+                        Update Assignments
+                    </button>
+                </div>
+                <div class="col-xs-6">
+                    <p class="text-right">{{(application.$ocMedia('min-width:768px') ? creditCards.list.Meta.ItemRange[0] : '1') + ' - ' +
+                        creditCards.list.Meta.ItemRange[1] + ' of ' + creditCards.list.Meta.TotalCount + ' results'}}</p>
+                </div>
+            </div>
+            <div class="panel panel-default table-responsive">
+                <table class="table table-striped table-bordered l-address-table" oc-readonly-roles="CreditCardAdmin">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col width="10%">
+                        <col oc-if-roles="CreditCardAdmin">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th class="text-center" ng-click="application.userIsAuthorized(['CreditCardAdmin']) ? creditCards.selectAllItems('billing') : angular.noop()">
+                            Assigned
+                        </th>
+                        <th ng-click="creditCards.updateSort('ID')">
+                            ID
+                            <i class="fa fa-caret-down" ng-show="creditCards.parameters.sortBy == 'ID'"></i>
+                            <i class="fa fa-caret-up" ng-show="creditCards.parameters.sortBy == '!ID'"></i>
+                        </th>
+                        <th ng-click="creditCards.updateSort('CardholderName')">
+                            Cardholder Name
+                            <i class="fa fa-caret-down" ng-show="creditCards.parameters.sortBy == 'CardholderName'"></i>
+                            <i class="fa fa-caret-up" ng-show="creditCards.parameters.sortBy == '!CardholderName'"></i>
+                        </th>
+                        <th>
+                            Details
+                        </th>
+                        <th>
+                            Exp. Date
+                        </th>
+                        <th oc-if-roles="CreditCardAdmin"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="creditCard in creditCards.list.Items">
+                        <td class="text-center">
+                            <input type="checkbox" ng-model="creditCard.Assigned" ng-change="creditCards.selectItem(this, 'assigned')" />
+                        </td>
+                        <td>
+                            <a href="" ng-click="creditCards.editCreditCard(this)">{{creditCard.ID}}</a>
+                        </td>
+                        <td>
+                            {{creditCard.CardholderName}}
+                        </td>
+                        <td>
+                            <span><i class="fa fa-lg {{creditCard.CardType | faCreditCard}}"></i></span>
+                            <span>{{'XXXX-XXXX-XXXX-' + creditCard.PartialAccountNumber}}</span>
+                        </td>
+                        <td>
+                            {{creditCard.ExpirationDate | date:'MM/yyyy'}}
+                        </td>
+                        <td oc-if-roles="CreditCardAdmin">
+                            <button type="button" class="btn btn-danger btn-block btn-xs" ng-click="creditCards.deleteCreditCard(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                boundary-links="creditCards.list.Meta.TotalPages > 5"
+                max-size="5"
+                total-items="creditCards.list.Meta.TotalCount"
+                items-per-page="creditCards.list.Meta.PageSize"
+                ng-model="creditCards.list.Meta.Page"
+                ng-if="creditCards.list.Meta.TotalPages > 1"
+                ng-change="creditCards.pageChanged()">
+            </ul>
+            <button type="button"
+                    class="btn btn-default btn-block btn-lg visible-xs"
+                    ng-show="creditCards.list.Meta.Page < creditCards.list.Meta.TotalPages"
+                    ng-click="creditCards.loadMore()">Load More
+            </button>
+        </div>
+    </div>
+
+</article>

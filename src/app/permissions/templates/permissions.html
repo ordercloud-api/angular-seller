@@ -1,0 +1,16 @@
+<header class="l-page-header">
+    <h3 class="l-page-header__title">
+        {{permissions.pageTitle}}
+    </h3>
+</header>
+<div class="alert alert-info" ng-bind-html="permissions.message"></div>
+<form name="permissions.form" oc-readonly-roles="SetSecurityProfile">
+    <fieldset class="form-group">
+        <div class="checkbox" ng-repeat="profile in permissions.profiles">
+            <label for="{{profile.ID}}">
+                <input type="checkbox" id="{{profile.ID}}" name="{{profile.ID}}" ng-model="profile.selected" ng-change="permissions.updateAssignment(this, userGroup.group.ID)">
+                <b ng-if="profile.selected">{{profile.Name}}</b> <span ng-if="!profile.selected">{{profile.Name}}</span>
+            </label>
+        </div>
+    </fieldset>
+</form>

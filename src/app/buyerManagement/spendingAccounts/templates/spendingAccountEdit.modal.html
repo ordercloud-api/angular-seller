@@ -1,0 +1,53 @@
+<form name="spendingAccountEditModal.form" class="form-horizontal" ng-submit="spendingAccountEditModal.submit()" cg-busy="spendingAccountEditModal.loading" novalidate oc-readonly-roles="SpendingAccountAdmin">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="spendingAccountEditModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span> {{spendingAccountEditModal.spendingAccountName}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="spendingAccountID" class="col-sm-3 control-label">ID</label>
+            <div class="col-sm-9">
+                <input id="spendingAccountID" name="ID" placeholder="(Optional)" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="spendingAccountEditModal.spendingAccount.ID"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="spendingAccountName" class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+                <input id="spendingAccountName" name="Name" type="text" class="form-control" ng-model="spendingAccountEditModal.spendingAccount.Name" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="spendingAccountStartDate" class="col-sm-3 control-label">Start Date</label>
+            <div class="col-sm-9">
+                <input id="spendingAccountStartDate" ng-if="application.isTouchDevice" class="form-control"  type="date" ng-model="spendingAccountEditModal.spendingAccount.StartDate"/>
+                <input id="spendingAccountStartDate" ng-if="!application.isTouchDevice" type="text" ng-click="open1 = !open1" is-open="open1" uib-datepicker-popup="MM/dd/yyyy" class="form-control" ng-model="spendingAccountEditModal.spendingAccount.StartDate">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="spendingAccountEndDate" class="col-sm-3 control-label">End Date</label>
+            <div class="col-sm-9">
+                <input id="spendingAccountEndDate" ng-if="application.isTouchDevice" class="form-control"  type="date" ng-model="spendingAccountEditModal.spendingAccount.EndDate"/>
+                <input id="spendingAccountEndDate" ng-if="!application.isTouchDevice" type="text" ng-click="open2 = !open2" is-open="open2" uib-datepicker-popup="MM/dd/yyyy" class="form-control" ng-model="spendingAccountEditModal.spendingAccount.EndDate">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="spendingAccountBalance" class="col-sm-3 control-label">Balance</label>
+            <div class="col-sm-9">
+                <input id="spendingAccountBalance" name="Balance" type="number" step="any" min="0" class="form-control" ng-model="spendingAccountEditModal.spendingAccount.Balance" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <div class="checkbox">
+                    <label for="spendingAccountAllowAsPaymentMethod">
+                        <input id="spendingAccountAllowAsPaymentMethod" name="AllowAsPaymentMethod" type="checkbox" ng-model="spendingAccountEditModal.spendingAccount.AllowAsPaymentMethod"/>
+                        Allow As Payment Method
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block">Save</button>
+    </div>
+</form>

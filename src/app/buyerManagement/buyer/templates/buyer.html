@@ -1,0 +1,97 @@
+<div class="c-jumbotron">
+    <div class="container container-smooth">
+        <ul class="breadcrumb">
+            <li><a ui-sref="buyers">Buyers</a></li>
+            <li ><a ui-sref="buyer">{{buyer.selectedBuyer.Name}}</a></li>
+        </ul>
+        <div class="l-page-header l-page-header-xs">
+            <div class="l-page-header__img" ng-if="buyer.selectedBuyer.xp && buyer.selectedBuyer.xp.image && buyer.selectedBuyer.xp.image.URL">
+                <figure class="c-logo-display">
+                    <div role="img" ng-style="{'background-image':'url(\'' + buyer.selectedBuyer.xp.image.URL + '\')'}"></div>
+                </figure>
+            </div>
+            <h3 class="l-page-header__title">
+                <small class="text-muted">Buyer Organization</small> <br>
+                {{buyer.selectedBuyer.Name}}
+            </h3>
+        </div>
+        <oc-responsive-tabs nav-items="buyer.navigationItems"></oc-responsive-tabs>
+    </div>
+</div>
+<br>
+<article class="container container-smooth">
+    <div ui-view cg-busy="application.stateLoading('buyer')">
+        <div class="row">
+            <div class="col-sm-7 col-md-6" oc-readonly-roles="BuyerAdmin">
+                <form ng-submit="buyer.updateBuyer()" class="form-horizontal" name="buyer.settingsForm" novalidate autocomplete="off">
+                    <fieldset class="form-group">
+                        <label for="buyerIDInput" class="control-label col-sm-3">Buyer ID</label>
+                        <div class="col-sm-9">
+                            <input id="buyerIDInput" name="buyerIDinput" ng-change="buyer.updateValidity()" type="text" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)"
+                                pattern-err-type="ID_Name" class="form-control" ng-model="buyer.settings.ID" required/>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="buyerNameInput" class="control-label col-sm-3">Name</label>
+                        <div class="col-sm-9">
+                            <input id="buyerNameInput" name="buyerNameinput" type="text" ng-model="buyer.settings.Name" class="form-control" required>
+                        </div>
+                    </fieldset>
+
+                    <!-- Typeahead Result Template -->
+                    <script type="text/ng-template" id="oc-catalog-result.html">
+                        <a href tabindex="-1" ng-attr-title="{{match.label}}">
+                            <span ng-bind-html="'<b>' + (match.model.Name | uibTypeaheadHighlight:query) + '</b>' + '<br/><small>' + (match.model.ID | uibTypeaheadHighlight:query) + '</small>'"></span>
+                        </a>
+                    </script>
+                    <fieldset class="form-group">
+                        <label for="SelectedDefaultCatalog" class="control-label col-sm-3">Default Catalog</label>
+                        <div class="col-sm-9">
+                            <div class="c-typeahead">
+                                <input placeholder="Select a catalog" class="form-control" id="SelectedDefaultCatalog" name="SelectedDefaultCatalog" type="text"
+                                    ng-model="buyer.settings.SelectedDefaultCatalog" required ng-model-options="{debounce:300}"
+                                    typeahead-min-length="0" typeahead-append-to="'.c-typeahead__results'" typeahead-no-results="buyer.noCatalogResults"
+                                    typeahead-loading="buyer.catalogsLoading" typeahead-template-url="oc-catalog-result.html"
+                                    uib-typeahead="catalog as catalog.Name for catalog in buyer.searchCatalogs($viewValue)">
+                                <div class="c-typeahead__results">
+                                    <div class="c-typeahead__results--empty" ng-if="buyer.noCatalogResults">
+                                        <span>No matches found</span>
+                                    </div>
+                                    <div class="c-typeahead__results--loading" ng-if="buyer.catalogsLoading">
+                                        <div ng-include="'common/config/angular-busy/angular-busy.html'"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <label for="orderCloudUpload" class="col-sm-3 control-label">Logo</label>
+                        <div class="col-sm-9">
+                            <oc-file-upload model="buyer.settings" keyname="logo" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="checkbox">
+                                <label for="buyerActiveCheckbox">
+                                    <input id="buyerActiveCheckbox" name="buyerActiveCheckbox" type="checkbox" ng-model="buyer.settings.Active"/>
+                                    Active
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button class="btn btn-block btn-primary" cg-busy="buyer.loading" ng-disabled="buyer.settingsForm.$invalid" type="submit">Save Changes</button>
+                        </div>
+                        <div class="col-sm-offset-3 col-sm-9" oc-if-roles="BuyerAdmin">
+                            <hr>
+                            <button class="btn btn-block btn-danger" type="button" ng-click="buyer.deleteBuyer()"><i class="fa fa-trash-o"></i> Delete Buyer Organization</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</article>

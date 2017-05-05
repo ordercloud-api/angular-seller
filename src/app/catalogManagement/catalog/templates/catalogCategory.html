@@ -1,0 +1,15 @@
+<div>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">
+            {{catalogCategory.category.Name}}
+        </h3>
+        <div class="l-page-header__btns" oc-if-roles="CategoryAdmin">
+            <button type="button" class="btn btn-default" ng-click="catalogCategory.editCategory(catalogCategory.category.ID)"><i class="fa fa-edit"></i> Edit</button>
+            <button type="button" class="btn btn-danger" ng-click="catalogCategory.deleteCategory(catalogCategory.category.ID)"><i class="fa fa-trash"></i> Delete</button>
+        </div>
+    </header>
+    <p ng-bind-html="catalogCategory.category.Description || '<em class=\'text-muted\'>No description</em>'"></p>
+    <hr>
+    <h4>Product Assignments</h4>
+    <div ui-view cg-busy="application.stateLoading('categories.category')"></div>
+</div>

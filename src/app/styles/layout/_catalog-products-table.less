@@ -1,0 +1,27 @@
+.l-catalog-products-table {
+  col:nth-child(1) {
+    width:1%;
+  }
+  @media(max-width:@screen-xs-max) {
+    col {
+      &:nth-child(2) {
+        width:100%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(2),
+      &:nth-child(4) {
+        display:none;
+      }
+      &:nth-child(3) {
+        border-right:none;
+      }
+    }
+  }
+  @media(min-width:@screen-sm-min) {
+    col:nth-child(4) {
+      width:1%;
+    }
+  }
+}

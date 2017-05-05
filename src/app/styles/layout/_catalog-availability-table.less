@@ -1,0 +1,21 @@
+.l-catalog-availability-table {
+  col:nth-child(1) {
+    width:1%;
+  }
+  @media(max-width:@screen-xs-max) {
+    col {
+      &:nth-child(2) {
+        width:100%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(2) {
+        display:none;
+      }
+      &:nth-child(2) {
+        border-left:none;
+      }
+    }
+  }
+}

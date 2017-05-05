@@ -2,7 +2,7 @@ var gulp = require('gulp'),
     config = require('../../gulp.config'),
     del = require('del'),
     rev = require('gulp-rev'),
-    concat = require('gulp-concat'),
+    concatCss = require('gulp-concat-css'),
     filter = require('gulp-filter'),
     less = require('gulp-less'),
     lessImport = require('gulp-less-import'),
@@ -20,10 +20,19 @@ gulp.task('app-css', ['clean:app-css'], function() {
 
     return gulp
         .src([].concat(
-            mainBowerFiles({filter: ['**/*.css', '**/*.less']}),
-            config.components.styles.less,
-            config.components.styles.css,
-            config.styles
+            mainBowerFiles({
+                filter: ['**/*.css', '**/*.less'],
+                overrides: {
+                    'jasny-bootstrap': {
+                        main: [
+                            "./dist/js/jasny-bootstrap.js",
+                            "./less/jasny-bootstrap.less"
+                        ]
+                    },
+                    'bootswatch': config.checkBootswatchTheme()
+                }
+            }),
+            './src/app/styles/main.less'
         ))
         .pipe(lessFilter)
         .pipe(lessImport('app.less'))
@@ -31,8 +40,8 @@ gulp.task('app-css', ['clean:app-css'], function() {
         .pipe(lessFilter.restore)
         .pipe(cssFilter)
         .pipe(autoprefixer(config.autoprefixerSettings))
-        .pipe(csso())
-        .pipe(concat('app.css'))
+        .pipe(concatCss('app.css', {rebaseUrls:false}))
+        .pipe(csso({debug:true}))
         .pipe(rev())
         .pipe(gulp.dest(config.compile + config.appCss));
 });

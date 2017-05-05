@@ -1,0 +1,41 @@
+<form name="catalogCreateModal.form" class="form-horizontal" ng-submit="catalogCreateModal.submit()" novalidate autocomplete="off" oc-readonly-roles="CatalogAdmin"
+    pretty-submit>
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="catalogCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">New Catalog</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label for="catalogID" class="control-label col-sm-3">Catalog ID</label>
+            <div class="col-sm-9">
+                <input id="catalogID" name="ID" type="text" ng-change="catalogCreateModal.updateValidity()" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)"
+                    pattern-err-type="ID_Name" class="form-control" ng-model="catalogCreateModal.catalog.ID" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="catalogName" class="control-label col-sm-3">Catalog Name</label>
+            <div class="col-sm-9">
+                <input id="catalogName" name="Name" type="text" ng-model="catalogCreateModal.catalog.Name" class="form-control" required>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="catalogDescription" class="control-label col-sm-3">Description</label>
+            <div class="col-sm-9">
+                <textarea id="catalogDescription" placeholder="(Optional)" name="Description" ng-model="catalogCreateModal.catalog.Description" class="form-control"></textarea>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <div class="checkbox">
+                    <label for="catalogActiveCheckbox">
+                        <input id="catalogActiveCheckbox" name="Active" type="checkbox" ng-model="catalogCreateModal.catalog.Active"/>
+                        Active
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-block btn-primary" ng-disabled="catalogCreateModal.form.$invalid" cg-busy="catalogCreateModal.loading">Submit</button>
+    </div>
+</form>

@@ -1,0 +1,68 @@
+<form name="approvalRuleEditModal.form" ng-submit="approvalRuleEditModal.submit()" novalidate ng-disabled="approvalRuleEditModal.loading" oc-readonly-roles="ApprovalRuleAdmin">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="approvalRuleEditModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span> {{approvalRuleEditModal.approvalRuleName}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="ID" class="control-label col-sm-3">ID</label>
+                <div class="col-sm-9">
+                    <input id="ID" name="ID" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="approvalRuleEditModal.approvalRule.ID"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label col-sm-3">Name</label>
+                <div class="col-sm-9">
+                    <input id="Name" name="Name" type="text" class="form-control" ng-model="approvalRuleEditModal.approvalRule.Name" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Description" class="control-label col-sm-3">Description</label>
+                <div class="col-sm-9">
+                    <textarea rows="4" id="Description" name="Description" placeholder="(Optional) Describe your approval rule..." type="text" class="form-control" ng-model="approvalRuleEditModal.approvalRule.Description"></textarea>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="RuleExpression">Rule Expression</label>
+            <textarea rows="2" id="RuleExpression" name="RuleExpression" type="text" class="form-control" ng-model="approvalRuleEditModal.approvalRule.RuleExpression" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="ApprovingGroupID">Approving Group</label>
+            <script type="text/ng-template" id="ocTypeahead_usergroup.html">
+                <a href tabindex="-1" ng-attr-title="{{match.label}}">
+                    <span ng-bind-html="'<b>' + (match.model.Name | uibTypeaheadHighlight:query) + '</b>' + '<br/><small>' + (match.model.ID | uibTypeaheadHighlight:query) + '</small>'"></span>
+                </a>
+            </script>
+            <div class="c-typeahead">
+                <input id="ApprovingGroupID"
+                    name="ApprovingGroupID"
+                    type="text"
+                    placeholder="Approving Group ID..."
+                    class="form-control"
+                    uib-typeahead="group.ID as group.Name for group in approvalRuleEditModal.searchGroups($viewValue)"
+                    typeahead-min-length="0"
+                    typeahead-append-to="'.c-typeahead__results'"
+                    typeahead-no-results="approvalRuleEditModal.noCatalogResults"
+                    typeahead-loading="approvalRuleEditModal.catalogsLoading"
+                    typeahead-template-url="ocTypeahead_usergroup.html"
+                    ng-model-options="{debounce:1000}"
+                    ng-model="approvalRuleEditModal.approvalRule.ApprovingGroupID" required/>
+                <div class="c-typeahead__results">
+                    <div class="c-typeahead__results--empty" ng-if="approvalRuleEditModal.noCatalogResults">
+                        <span>No matches found</span>
+                    </div>
+                    <div class="c-typeahead__results--loading" ng-if="approvalRuleEditModal.catalogsLoading">
+                        <div ng-include="'common/config/angular-busy/angular-busy.html'"></div>
+                    </div>
+                </div>
+            </div>
+            <small class="help-block">Enter the ID of the buyer user group that will approve these orders.</small>
+        </div>
+    </div>
+    <div class="modal-footer" >
+        <button type="submit" class="btn btn-block btn-primary" cg-busy="approvalRuleEditModal.loading">Update</button>
+    </div>
+</form>

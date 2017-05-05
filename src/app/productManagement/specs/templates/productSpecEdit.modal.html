@@ -1,0 +1,45 @@
+<form name="productSpecEditModal.form" ng-submit="productSpecEditModal.submit()" class="form-horizontal" autocomplete="off" novalidate cg-busy="productSpecEditModal.loading">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="productSpecEditModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span> {{productSpecEditModal.specName}}</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label for="ID" class="col-sm-3 control-label">ID</label>
+            <div class="col-sm-9">
+                <input id="ID" name="ID" placeholder="(Optional)" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="productSpecEditModal.spec.ID" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="Name" class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+                <input id="Name" name="Name" type="text" class="form-control" ng-model="productSpecEditModal.spec.Name" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="DefaultValue" class="col-sm-3 control-label">Default Value</label>
+            <div class="col-sm-9">
+                <input id="DefaultValue" name="DefaultValue" placeholder="(Optional)" type="text" class="form-control" ng-model="productSpecEditModal.spec.DefaultValue" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div class="col-sm-9 col-sm-offset-3">
+                <div class="checkbox">
+                    <label for="AllowOpenText">
+                        <input id="AllowOpenText" name="AllowOpenText" placeholder="(Optional)" type="checkbox" ng-model="productSpecEditModal.spec.AllowOpenText"/>
+                        Enable Open Text
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label for="Required">
+                        <input id="Required" name="Required" placeholder="(Optional)" type="checkbox" ng-model="productSpecEditModal.spec.Required"/>
+                        Required
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block" ng-disabled="productSpecEditModal.form.$invalid">Save</button>
+    </div>
+</form>

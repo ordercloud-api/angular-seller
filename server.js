@@ -2,9 +2,9 @@
 var config = require('./gulp.config');
 
 var express = require('express'),
-    env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev',
+    env = process.env.NODE_ENV || 'dev',
     app = express(),
-    port = process.env.PORT || 451;
+    port = process.env.PORT || 4051;
 
 switch(env) {
     case 'production':
@@ -16,10 +16,14 @@ switch(env) {
         break;
     default:
         console.log('*** DEV ***');
+        // Host bower_files
+        app.use('/bower_files', express.static(config.root + config.bowerFiles.replace('.', '')));
+        // Host unminfied javascript files
         app.use(express.static(config.root + config.build.replace('.', '')));
+        // Host unchanged html files (look for saas overrides first)
+        app.use(express.static(config.root + config.src.replace('.', '') + 'app/saas/'));
+        // Host unchanged html files
         app.use(express.static(config.root + config.src.replace('.', '') + 'app/'));
-        app.use(express.static(config.root));
-        app.use(express.static(config.root + config.components.dir));
         app.get('/*', function(req, res) {
             res.sendFile(config.root + config.build.replace('.', '') + 'index.html');
         });

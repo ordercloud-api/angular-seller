@@ -1,0 +1,93 @@
+<article>
+    <header class="l-page-header">
+        <h3 class="l-page-header__title">Seller User Groups</h3>
+        <div class="l-page-header__btns" oc-if-roles="AdminUserGroupAdmin">
+            <button type="button" class="btn btn-primary btn-block" ng-click="sellerUserGroups.createGroup()"><i class="fa fa-plus-circle"></i> New Seller User Group</button>
+        </div>
+    </header>
+
+    <!--====== SEARCH/FILTERS ======-->
+    <div ng-if="sellerUserGroups.list.Items.length || (!sellerUserGroups.list.Items.length && sellerUserGroups.searchResults)">
+        <form name="sellerUserGroups.searchForm" pretty-submit>
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input type="search" ng-change="sellerUserGroups.search()" ng-model-options="{debounce:1000}" placeholder="Search seller user groups..." ng-model="sellerUserGroups.parameters.search" class="form-control">
+                    <span ng-if="sellerUserGroups.searchResults" class="input-group-btn">
+                        <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="sellerUserGroups.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear Search</span></button>
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <!--====== LIST ======-->
+    <div cg-busy="sellerUserGroups.searchLoading">
+        <div class="no-matches" ng-if="!sellerUserGroups.list.Items.length">
+            <b ng-if="sellerUserGroups.searchResults">No matches found.</b>
+            <b ng-if="!sellerUserGroups.searchResults">This seller organization does not have any seller user groups.</b>
+        </div>
+        <div ng-if="sellerUserGroups.list.Items.length">
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-6">
+                    <p class="text-right">{{(application.$ocMedia('min-width:768px') ? sellerUserGroups.list.Meta.ItemRange[0] : '1') + ' - ' +
+                        sellerUserGroups.list.Meta.ItemRange[1] + ' of ' + sellerUserGroups.list.Meta.TotalCount + ' results'}}</p>
+                </div>
+            </div>
+            <div class="panel panel-default table-responsive">
+                <table class="table table-striped table-bordered l-usergroup-table">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col oc-if-roles="AdminUserGroupAdmin">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th ng-click="sellerUserGroups.updateSort('ID')">
+                            ID
+                            <i class="fa fa-caret-down" ng-show="sellerUserGroups.parameters.sortBy == 'ID'"></i>
+                            <i class="fa fa-caret-up" ng-show="sellerUserGroups.parameters.sortBy == '!ID'"></i>
+                        </th>
+                        <th ng-click="sellerUserGroups.updateSort('Name')">
+                            Name
+                            <i class="fa fa-caret-down" ng-show="sellerUserGroups.parameters.sortBy == 'Name'"></i>
+                            <i class="fa fa-caret-up" ng-show="sellerUserGroups.parameters.sortBy == '!Name'"></i>
+                        </th>
+                        <th>Description</th>
+                        <th oc-if-roles="AdminUserGroupAdmin"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="sellerUserGroup in sellerUserGroups.list.Items">
+                        <td>
+                            {{sellerUserGroup.ID}}
+                        </td>
+                        <td><a href="" ui-sref="sellerUserGroup({sellerusergroupid:sellerUserGroup.ID})">{{sellerUserGroup.Name}}</a></td>
+                        <td>{{sellerUserGroup.Description}}</td>
+                        <td oc-if-roles="AdminUserGroupAdmin">
+                            <button class="btn btn-danger btn-xs" ng-click="sellerUserGroups.deleteGroup(this)"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="sellerUserGroups.list.Meta.TotalPages > 1"
+                total-items="sellerUserGroups.list.Meta.TotalCount"
+                items-per-page="sellerUserGroups.list.Meta.PageSize"
+                max-size="5"
+                boundary-links="sellerUserGroups.list.Meta.TotalPages > 5"
+                ng-model="sellerUserGroups.list.Meta.Page"
+                ng-change="sellerUserGroups.pageChanged()">
+            </ul>
+            <button type="button"
+                    class="btn btn-default btn-block btn-lg visible-xs"
+                    ng-show="sellerUserGroups.list.Meta.Page < sellerUserGroups.list.Meta.TotalPages"
+                    ng-click="sellerUserGroups.loadMore()">Load More</button>
+        </div>
+    </div>
+</article>

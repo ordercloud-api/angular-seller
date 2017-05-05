@@ -1,0 +1,64 @@
+<header class="c-jumbotron">
+    <div class="container container-smooth">
+        <ul class="breadcrumb">
+            <li><a href="" ui-sref="catalogs" ui-sref-opts="{reload:true}">Catalogs</a></li>
+            <li class="active" ui-sref="catalog">{{catalog.selectedCatalog.Name}}</li>
+        </ul>
+        <div class="l-page-header l-page-header-xs">
+            <h3 class="l-page-header__title">
+                <small class="text-muted">Catalog</small> <br>
+                {{catalog.selectedCatalog.Name}}
+            </h3>
+        </div>
+        <oc-responsive-tabs nav-items="catalog.navigationItems"></oc-responsive-tabs>
+    </div>
+</header>
+<br>
+<article class="container container-smooth">
+    <div ui-view cg-busy="application.stateLoading('catalog')">
+        <div class="row">
+            <div class="col-sm-7">
+                <form class="form-horizontal" name="catalog.editForm" novalidate autocomplete="off" oc-readonly-roles="CatalogAdmin" ng-submit="catalog.updateCatalog()">
+                    <fieldset class="form-group">
+                        <label for="catalogID" class="control-label col-sm-3">Catalog ID</label>
+                        <div class="col-sm-9">
+                            <input id="catalogID" name="ID" ng-change="catalog.updateValidity()" type="text" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)"
+                                pattern-err-type="ID_Name" class="form-control" ng-model="catalog.model.ID" required/>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="catalogName" class="control-label col-sm-3">Name</label>
+                        <div class="col-sm-9">
+                            <input id="catalogName" name="Name" type="text" ng-model="catalog.model.Name" class="form-control" required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="catalogDescription" class="control-label col-sm-3">Description</label>
+                        <div class="col-sm-9">
+                            <textarea id="catalogDescription" placeholder="(Optional)" name="Description" ng-model="catalog.model.Description" class="form-control"></textarea>
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="checkbox">
+                                <label for="catalogActive">
+                                <input id="catalogActive" name="Active" type="checkbox" ng-model="catalog.model.Active"/>
+                                Active
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-9 col-sm-offset-3">
+                            <button type="submit" class="btn btn-primary btn-block" cg-busy="catalog.loading" ng-disabled="catalog.editForm.$invalid">Save Changes</button>
+                        </div>
+                        <div class="col-sm-9 col-sm-offset-3" oc-if-roles="CatalogAdmin">
+                            <hr>
+                            <button type="button" class="btn btn-danger btn-block" ng-click="catalog.deleteCatalog()"><i class="fa fa-trash-o"></i> Delete Catalog</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</article>

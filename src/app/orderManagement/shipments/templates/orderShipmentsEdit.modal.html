@@ -1,0 +1,48 @@
+<form class="form-horizontal" ng-submit="orderShipmentsEdit.submit()" name="orderShipmentsEdit.form" cg-busy="orderShipmentsEdit.loading">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="orderShipmentsEdit.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span> Shipment {{orderShipmentsEdit.shipmentID}}</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label for="shipmentID" class="col-sm-3 control-label">ID</label>
+            <div class="col-sm-9">
+                <input id="shipmentID" name="ID" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="orderShipmentsEdit.shipment.ID"/>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="shipmentTrackingNumber" class="col-sm-3 control-label">Tracking Number</label>
+            <div class="col-sm-9">
+                <input id="shipmentTrackingNumber" name="TrackingNumber" type="text" class="form-control" ng-model="orderShipmentsEdit.shipment.TrackingNumber" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="shipmentCost" class="col-sm-3 control-label">Cost</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-dollar"></i>
+                    </span>
+                    <input id="shipmentCost" name="Cost" type="number" min="0" placeholder="0.00" step="0.01" class="form-control" ng-model="orderShipmentsEdit.shipment.Cost" />
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="shipmentDateShipped" class="control-label col-sm-3">Date Shipped</label>
+            <div class="col-sm-9">
+                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderShipmentsEdit.shipment.DateShipped">
+                <input id="shipmentDateShipped" name="DateShipped" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderShipmentsEdit.shipment.DateShipped" uib-datepicker-popup="MM/dd/yyyy" datepicker-options="{maxDate:orderShipmentsEdit.shipment.DateDelivered}" is-open="dateShipped.open" ng-click="dateShipped.open = !dateShipped.open">
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="shipmentDateDelivered" class="control-label col-sm-3">Date Delivered</label>
+            <div class="col-sm-9">
+                <input ng-if="application.isTouchDevice" type="date" class="form-control" ng-model="orderShipmentsEdit.shipment.DateDelivered">
+                <input id="shipmentDateDelivered" name="DateDelivered" ng-if="!application.isTouchDevice" type="text" class="form-control" ng-model="orderShipmentsEdit.shipment.DateDelivered" uib-datepicker-popup="MM/dd/yyyy" datepicker-options="{minDate:orderShipmentsEdit.shipment.DateShipped}" is-open="dateDelivered.open" ng-click="dateDelivered.open = !dateDelivered.open">
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block">Save</button>
+    </div>
+</form>

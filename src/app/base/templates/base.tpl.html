@@ -1,8 +1,59 @@
-<div ui-view="left"></div>
-<div ui-view="right"></div>
-<snap-content id="BASE" snap-id="'MAIN'" snap-options="base.snapOptions" ng-class="{'desktop-left':base.left, 'desktop-right':base.right}" cg-busy="application.contentLoading">
-    <header id="BASE_TOP" ui-view="top"></header>
-    <main ui-view></main>
-    <footer id="BASE_BOTTOM" ui-view="bottom"></footer>
-</snap-content>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container container-smooth">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ui-sref="home">{{application.name()}}</a>
+        </div>
 
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li ng-class="{active: application.$state.is('products') || application.$state.includes('product')}" oc-if-roles="ProductRoles">
+                    <a ng-click="base.selectNavItem('products')"><i class="fa fa-cube"></i> Products</a>
+                </li>
+                <li ng-class="{active: application.$state.is('catalogs') || application.$state.includes('catalog')}" oc-if-roles="CatalogRoles">
+                    <a ng-click="base.selectNavItem('catalogs')"><i class="fa fa-sitemap"></i> Catalogs</a>
+                </li>
+                <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}" oc-if-roles="{Items:['BuyerRoles', 'CatalogRoles'], Any:false}">
+                    <!--TODO: Add oc-if-roles="CatalogRoles"-->
+                    <a ng-click="base.selectNavItem('buyers')"><i class="fa fa-tags"></i> Buyers</a>
+                </li>
+                <li ng-class="{active: application.$state.is('orders') || application.$state.includes('orderDetail')}" oc-if-roles="{Items:['BuyerRoles', 'OrderRoles'], Any:false}">
+                    <a ng-click="base.selectNavItem('orders')"><i class="fa fa-inbox"></i> Orders</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li uib-dropdown oc-if-roles="{Items: ['SellerUserRoles', 'SellerUserGroupRoles', 'AddressRoles', 'SetSecurityProfile'], Any:true}">
+                    <a uib-dropdown-toggle role="button">Seller <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li ng-class="{active: application.$state.is('sellerUsers')}" oc-if-roles="SellerUserRoles">
+                            <a ng-click="base.selectNavItem('sellerUsers')"><i class="fa fa-user"></i> Users</a>
+                        </li>
+                        <li ng-class="{active: application.$state.is('sellerUserGroups') || application.$state.includes('adminUserGroup')}" oc-if-roles="SellerUserGroupRoles">
+                            <a ng-click="base.selectNavItem('sellerUserGroups')"><i class="fa fa-users"></i> User Groups</a>
+                        </li>
+                        <li ng-class="{active: application.$state.is('sellerAddresses')}" oc-if-roles="AddressRoles">
+                            <a ng-click="base.selectNavItem('sellerAddresses')"><i class="fa fa-map-marker"></i> Addresses</a>
+                        </li>
+                        <li ng-class="{active: application.$state.is('permissions')}" oc-if-roles="SetSecurityProfile">
+                            <a ng-click="base.selectNavItem('permissions')"><i class="fa fa-lock"></i> Permissions</a>
+                        </li>
+                    </ul>
+                </li>
+                <li ng-class="{active: application.$state.is('account')}">
+                    <a ng-click="base.selectNavItem('account')"><i class="fa fa-user-circle-o"></i> <span class="hidden-sm hidden-md hidden-lg">My Account</span></a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+<main ui-view ng-class="{'container container-smooth': base.addContainerClass()}" cg-busy="application.stateLoading('base')"></main>

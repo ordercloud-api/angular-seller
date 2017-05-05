@@ -1,0 +1,51 @@
+<form name="ProductSpecOptionCreateModalForm" ng-submit="productSpecOptionCreate.submit()" class="form-horizontal" autocomplete="off" novalidate cg-busy="productSpecOptionCreate.loading">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="productSpecOptionCreate.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">New Spec Option</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label for="OptionID" class="col-sm-3 control-label">ID</label>
+            <div class="col-sm-9">
+                <input id="OptionID" name="ID" placeholder="(Optional)" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="productSpecOptionCreate.specOption.ID" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="OptionValue" class="col-sm-3 control-label">Value</label>
+            <div class="col-sm-9">
+                <input id="OptionValue" name="Value" type="text" class="form-control" ng-model="productSpecOptionCreate.specOption.Value" required />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="OptionPriceMarkupType" class="col-sm-3 control-label">Markup Type</label>
+            <div class="col-sm-9">
+                <select id="OptionPriceMarkupType" name="PriceMarkupType" class="form-control" ng-model="productSpecOptionCreate.specOption.PriceMarkupType" ng-options="markupType.Value as markupType.Label for markupType in productSpecOptionCreate.markupTypes"></select>
+            </div>
+        </fieldset>
+        <fieldset class="form-group" uib-collapse="productSpecOptionCreate.specOption.PriceMarkupType == 'NoMarkup'">
+            <label for="OptionPriceMarkup" class="col-sm-3 control-label">Markup</label>
+            <div class="col-sm-9">
+                <input id="OptionPriceMarkup" name="PriceMarkup" type="number" class="form-control" ng-model="productSpecOptionCreate.specOption.PriceMarkup" ng-required="productSpecOptionCreate.specOption.PriceMarkupType != 'NoMarkup'"/>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div class="col-sm-9 col-md-offset-3">
+                <div class="checkbox">
+                    <label for="OptionIsOpenText">
+                        <input id="OptionIsOpenText" name="IsOpenText" type="checkbox" ng-model="productSpecOptionCreate.specOption.IsOpenText"/>
+                        Open Text
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label for="OptionDefaultOption">
+                        <input id="OptionDefaultOption" name="DefaultOption" type="checkbox" ng-model="productSpecOptionCreate.specOption.DefaultOption"/>
+                        Default Option
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block" ng-disabled="ProductSpecOptionCreateModalForm.$invalid">Save</button>
+    </div>
+</form>

@@ -1,0 +1,46 @@
+.ui-select-multiple.ui-select-bootstrap {
+  min-height: @input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+  padding: (@padding-base-vertical - 1px) @padding-base-horizontal @padding-base-vertical;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  &.ng-not-empty {
+    padding-bottom:@padding-base-vertical - 2px;
+    input.ui-select-search {
+      width:auto !important;
+    }
+  }
+  input.ui-select-search {
+    margin-bottom:0;
+  }
+}
+
+.ui-select-bootstrap .ui-select-choices-row>span {
+  color:@dropdown-link-color;
+}
+.ui-select-bootstrap .ui-select-choices-row>span:hover {
+  background-color:@dropdown-link-hover-bg;
+  color:@dropdown-link-hover-color;
+}
+
+.ui-select-bootstrap .ui-select-toggle > a.btn {
+  margin-top:0;
+}
+
+.ui-select-bootstrap .ui-select-toggle.btn.btn-default.form-control {
+  color: @input-color !important;
+  background-color: @input-bg !important;
+  border-color: @input-border !important;
+  background-image: none !important;
+  &:hover {
+    border-color:@input-border !important;
+  }
+}
+
+.ui-select-match.btn-default-focus {
+  outline:none;
+  box-shadow:none;
+}
+
+.ui-select-match.btn-default-focus {
+    background-color:transparent;
+}

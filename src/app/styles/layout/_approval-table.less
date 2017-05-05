@@ -1,0 +1,61 @@
+.l-approval-pending-table {
+  @media(max-width:@screen-xs-max) {
+    col {
+      &:nth-child(1) {
+        width:60%;
+      }
+      &:nth-child(2) {
+        width:40%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(3),
+      &:nth-child(4) {
+        display:none;
+      }
+      &:nth-child(1),
+      &:nth-child(2) {
+        border-right:none;
+      }
+    }
+  }
+}
+
+.l-approval-approved-table,
+.l-approval-declined-table {
+  @media(max-width:@screen-xs-max) {
+    col {
+      &:nth-child(1) {
+        width:60%;
+      }
+      &:nth-child(2) {
+        width:40%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(3),
+      &:nth-child(4),
+      &:nth-child(5) {
+        display:none;
+      }
+      &:nth-child(1),
+      &:nth-child(2),
+      &:nth-child(3) {
+        border-right:none;
+      }
+    }
+  }
+  @media(min-width:@screen-sm-min) and (max-width:@screen-md-max) {
+    th,
+    td {
+      &:nth-child(5) {
+        display:none;
+      }
+      &:nth-child(4) {
+        border-right:none;
+      }
+    }
+  }
+}

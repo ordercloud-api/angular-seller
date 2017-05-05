@@ -1,0 +1,47 @@
+<ol class="breadcrumb">
+    <li><a href="" ui-sref="product.catalogs">Available Catalogs</a></li>
+    <li class="active">{{productCategories.selectedCatalog.Name}}</li>
+</ol>
+<div class="l-page-header l-page-header-xs">
+    <h3 class="l-page-header__title">
+        Categories
+    </h3>
+    <div class="l-page-header__btns" oc-if-roles="CategoryAdmin">
+        <button type="button" class="btn btn-primary" ng-click="productCategories.createCategory()">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            New Category
+        </button>
+    </div>
+</div>
+<div ng-if="!productCategories.tree.length" class="no-matches">
+    <b>There are no categories in this catalog. <span oc-if-roles="CategoryAdmin"><a ng-click="productCategories.createCategory()">Create one now.</a></span></b>
+</div>
+<div class="row" cg-busy="productCategories.loading">
+    <div class="col-sm-6">
+        <script type="text/ng-template" id="nodes_renderer.html">
+            <div class="tree-node tree-node-content" cg-busy="node.loading" ng-class="{'inactive-node': !node.Active, 'selected-node': node.ID == productCategories.selectedCategoryID}">
+                <i ng-if="node.children && node.children.length > 0" class="fa" ng-click="toggle(this)" ng-class="{
+                        'fa-folder': !collapsed,
+                        'fa-folder-open': collapsed
+                    }">
+                </i>
+                <p ng-click="productCategories.categorySelected(node.ID)">{{node.Name}}</p>
+                <fieldset class="checkbox">
+                    <label class="control-label">
+                        <input type="checkbox" ng-disabled="productCategories.viewAllCategories || node.Inherited || !application.UserIsAuthorized('CategoryAdmin')" name="{{'AssignCategory' + node.ID}}" ng-model="node.Assigned" ng-change="productCategories.updateAssignment(node)">
+                    </label>
+                </fieldset>
+            </div>
+            <ol ui-tree-nodes ng-model="node.children" uib-collapse="!collapsed">
+                <li ng-repeat="node in node.children" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+            </ol>
+        </script>
+        <section ng-if="productCategories.tree.length">
+            <div ui-tree id="tree-root" data-drag-enabled="false">
+                <ol ui-tree-nodes ng-model="productCategories.tree">
+                    <li ng-repeat="node in productCategories.tree" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+                </ol>
+            </div>
+        </section>
+    </div>
+</div>

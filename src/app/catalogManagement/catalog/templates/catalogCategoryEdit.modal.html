@@ -1,0 +1,45 @@
+<form name="CategoryCreateModalForm" ng-submit="editCategory.submit()" class="form-horizontal" novalidate cg-busy="editCategory.loading">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="editCategory.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="text-muted">Editing: </span> {{editCategory.categoryName}}</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label for="categoryIDInput" class="col-sm-3 control-label">Category ID</label>
+            <div class="col-sm-9">
+                <input id="categoryIDInput" placeholder="(Optional)" type="text" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" class="form-control" ng-model="editCategory.category.ID" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="categoryNameInput" class="col-sm-3 control-label">Category Name</label>
+            <div class="col-sm-9">
+                <input id="categoryNameInput" type="text" class="form-control" ng-model="editCategory.category.Name" required/>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="categoryDescriptionInput" class="col-sm-3 control-label">Description</label>
+            <div class="col-sm-9">
+                <textarea rows="4" id="categoryDescriptionInput" type="text" class="form-control" placeholder="(Optional)" ng-model="editCategory.category.Description"></textarea>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div class="col-sm-9 col-md-offset-3">
+                <div class="checkbox">
+                    <label for="categoryActiveInput">
+                        <input id="categoryActiveInput" type="checkbox" ng-model="editCategory.category.Active"/>
+                        Active
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label class="col-sm-3 control-label">Image</label>
+            <div class="col-sm-9">
+                <oc-file-upload  model="editCategory.category" label="Image:" patch="editCategory.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-block" ng-disabled="CategoryCreateForm.$invalid">Save</button>
+    </div>
+</form>

@@ -1,0 +1,103 @@
+<div ng-if="!productSpecs.specs.Items.length" class="no-matches">
+    This product does not have any specs. <br>
+    <a ng-click="productSpecs.createSpec(product.model.ID)" oc-if-roles="ProductAdmin">Create one now</a>
+</div>
+<div class="row" ng-if="productSpecs.specs.Items.length">
+    <div class="col-sm-5">
+        <div oc-if-roles="ProductAdmin">
+            <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpec(product.model.ID)">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                New Spec
+            </button>
+            <br>
+            <br>
+        </div>
+
+        <script type="text/ng-template" id="specs_renderer.html">
+            <div class="tree-node tree-node-content" ng-class="{'selected-node': node.Spec.ID == productSpecs.selectedSpec.Spec.ID}">
+                <p ng-click="productSpecs.specSelected(node)">{{node.Spec.Name}}</p>
+                <i ui-tree-handle class="fa fa-reorder text-muted"></i>
+            </div>
+        </script>
+        <div ui-tree="productSpecs.specTreeOptions" id="spec-tree-root" data-drag-delay="200">
+            <ol ui-tree-nodes ng-model="productSpecs.specs.Items">
+                <li ng-repeat="node in productSpecs.specs.Items" ui-tree-node ng-include="'specs_renderer.html'"></li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-sm-7">
+        <div ng-if="!productSpecs.selectedSpec" class="well text-center">
+            Select a spec to view details
+        </div>
+        <div ng-if="productSpecs.selectedSpec">
+            <header>
+                <h3>
+                    <div class="pull-right" oc-if-roles="ProductAdmin">
+                        <button type="button" class="btn btn-default" ng-click="productSpecs.editSelectedSpec()"><i class="fa fa-edit"></i> Edit</button>
+                        <button type="button" class="btn btn-danger" ng-click="productSpecs.deleteSelectedSpec()"><i class="fa fa-trash"></i> Delete</button>
+                    </div>
+                    {{productSpecs.selectedSpec.Spec.Name}}
+                    <small>(ID: {{productSpecs.selectedSpec.Spec.ID}})</small>
+                </h3>
+                <b class="text-primary" ng-if="productSpecs.selectedSpec.Spec.Required">
+                    <i class="fa fa-star"></i> Required <br>
+                </b>
+                <b class="text-warning" ng-if="!productSpecs.selectedSpec.Spec.Required">
+                    <i class="fa fa-star-o"></i> Optional <br>
+                </b>
+                <b class="text-primary" ng-if="productSpecs.selectedSpec.Spec.AllowOpenText">
+                    <i class="fa fa-pencil-square"></i> Open Text Enabled <br>
+                </b>
+                <b class="text-warning" ng-if="!productSpecs.selectedSpec.Spec.AllowOpenText">
+                    <i class="fa fa-times"></i> Open Text Disabled <br>
+                </b>
+                <span ng-if="productSpecs.selectedSpec.Spec.DefaultValue">
+                    <b class="text-muted">Default Value:</b> <code>{{productSpecs.selectedSpec.Spec.DefaultValue}}</code>
+                    <br>
+                </span>
+            </header>
+            <div ng-if="!productSpecs.selectedSpec.Options.length">
+                <hr>
+                <div class="no-matches">
+                    There are no options for this spec. <span oc-if-roles="ProductAdmin"><a ng-click="productSpecs.createSpecOption()">Create</a> one now.</span>
+                </div>
+            </div>
+            <div ng-if="productSpecs.selectedSpec.Options.length">
+                <h4 class="page-header">
+                    Options
+                </h4>
+
+                <div oc-if-roles="ProductAdmin">
+                    <button type="button" class="btn btn-primary" ng-click="productSpecs.createSpecOption()">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        New Option
+                    </button>
+                    <br>
+                    <br>
+                </div>
+
+                <script type="text/ng-template" id="spec_options_renderer.html">
+                    <div class="tree-node tree-node-content" cg-busy="node.loading">
+                        <i class="fa fa-trash-o text-danger" ng-click="productSpecs.deleteSpecOption(node)"></i>
+                        <p>
+                            {{node.Value}}
+                            <small ng-if="node.PriceMarkupType != 'NoMarkup'" ng-class="{'text-success':node.PriceMarkup > 0, 'text-warning': node.PriceMarkup < 0}">
+                                {{(node.PriceMarkup > 0 ? '+' : '') + (node.PriceMarkupType == 'Percentage' ? node.PriceMarkup : (node.PriceMarkup | currency))}}<span ng-if="node.PriceMarkupType == 'Percentage'">% / line</span>
+                                <span ng-if="node.PriceMarkupType == 'AmountTotal'">/ line</span>
+                                <span ng-if="node.PriceMarkupType == 'AmountPerQuantity'">/ unit</span>
+                            </small>
+                        </p>
+                        <small ng-if="node.DefaultOption" class="text-primary">DEFAULT OPTION</small>
+                        <i class="fa fa-edit text-primary" ng-click="productSpecs.editSpecOption(node)"></i>
+                        <i ui-tree-handle class="fa fa-reorder text-muted" oc-if-roles="ProductAdmin"></i>
+                    </div>
+                </script>
+                <div ui-tree="productSpecs.specOptionsTreeOptions" id="spec-options-tree-root" data-drag-delay="200">
+                    <ol ui-tree-nodes ng-model="productSpecs.selectedSpec.Options">
+                        <li ng-repeat="node in productSpecs.selectedSpec.Options" ui-tree-node ng-include="'spec_options_renderer.html'"></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

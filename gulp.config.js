@@ -1,6 +1,6 @@
 var source = './src/',
+    moduleName = 'orderCloud',
     assets = 'assets/',
-    components = './../Components/',
     build = './build/',
     bowerFiles = './bower_components/',
     npmFiles = './node_modules',
@@ -10,7 +10,15 @@ var source = './src/',
     gulp_dir = './gulp/',
     fs = require('fs');
 
+try {
+    var saasConfig = require(source + 'app/saas/gulp.config');
+} catch(ex) {
+    var saasConfig = {};
+}
+
 module.exports = {
+    moduleName: moduleName,
+    saas: saasConfig,
     bowerFiles: bowerFiles,
     npmFiles: npmFiles,
     src: source,
@@ -33,24 +41,21 @@ module.exports = {
     ],
     scripts: [
         source + 'app/**/*.js',
+        '!' + source + '**/saas/gulp.config.js',
         '!' + source + '**/*.spec.js',
         '!' + source + '**/*.test.js'
     ],
-    components: {
-        dir: components,
-        scripts: [
-            components + '**/*.js',
-            '!' + components + '**/*.spec.js',
-            '!' + components + '**/*.test.js'
-        ],
-        templates: components + '**/*.html',
-        styles: {
-            less: components + '**/*.less',
-            css: components + '**/*.css'
-        }
-    },
     appFiles: [
-        build + '**/app.js',
+        build + '**/saas.module.js',
+        build + '**/saas/**/*.js',
+        '!' + build + '**/saas/gulp.config.js',
+        build + '**/app.module.js',
+        build + '**/common/config/**/routing.js',
+        build + '**/common/config/**/*.js',
+        build + '**/*s.config.js',
+        build + '**/*.config.js',
+        build + '**/app.run.js',
+        build + '**/app.controller.js',
         build + '**/*.js',
         build + '**/*.css',
         source + '**/*.css'
@@ -62,40 +67,41 @@ module.exports = {
     templateCacheSettings: {
         standalone: false,
         moduleSystem: 'IIFE',
-        module: 'orderCloud'
+        module: moduleName
     },
     ngConstantSettings: {
-        name: 'orderCloud',
+        name: moduleName,
         deps: false,
-        constants: getConstants()
+        constants: saasConfig.getConstants ? saasConfig.getConstants() : getConstants()
     },
     autoprefixerSettings: {
         browsers: ['last 2 versions'],
         cascade: true
     },
     jsCache: 'jsscripts',
-    indentSize: 4
+    indentSize: 4,
+    checkBootswatchTheme: _checkBootswatchTheme
 };
 
 function getConstants() {
     var result = {};
-    var constants = JSON.parse(fs.readFileSync(source + 'app/app.config.json'));
+    var constants = JSON.parse(fs.readFileSync(source + 'app/app.constants.json'));
     var environment = process.env.environment || constants.environment;
     switch (environment) {
         case 'local':
-            result.authurl = 'http://core.four51.com:11629/oauth/token';
+            result.authurl = 'http://core.four51.com:11629';
             result.apiurl = 'http://core.four51.com:9002';
             break;
-        case 'test':
-            result.authurl = 'https://testauth.ordercloud.io/oauth/token';
-            result.apiurl = 'https://testapi.ordercloud.io';
-            break;
         case 'qa':
-            result.authurl = 'https://qaauth.ordercloud.io/oauth/token';
+            result.authurl = 'https://qaauth.ordercloud.io';
             result.apiurl = 'https://qaapi.ordercloud.io';
             break;
+        case 'staging':
+            result.authurl = 'https://stagingauth.ordercloud.io';
+            result.apiurl = 'https://stagingapi.ordercloud.io';
+            break;
         default:
-            result.authurl = 'https://auth.ordercloud.io/oauth/token';
+            result.authurl = 'https://auth.ordercloud.io';
             result.apiurl = 'https://api.ordercloud.io';
             break;
     }
@@ -111,7 +117,23 @@ function getConstants() {
     if (process.env.appname) result.appname = process.env.appname;
     if (process.env.scope) result.scope = process.env.scope;
     if (process.env.ocscope) result.ocscope = process.env.ocscope;
-    if (process.env.buyerid) result.buyerid = process.env.buyerid;
-    if (process.env.catalogid) result.catalogid = process.env.catalogid;
+    if (process.env.html5mode) result.html5mode = process.env.html5mode;
+    if (process.env.bootswatchtheme) result.bootswatchtheme = process.env.bootswatchtheme;
     return result;
+}
+
+function _checkBootswatchTheme() {
+    var bootswatchBower = {};
+    var constants = JSON.parse(fs.readFileSync(source + 'app/app.constants.json'));
+
+    var theme = process.env.bootswatchtheme || constants.bootswatchtheme;
+
+    if (theme) {
+        bootswatchBower.main = [
+            './' + theme + '/bootswatch.less',
+            './' + theme + '/variables.less'
+        ];
+    }
+
+    return bootswatchBower;
 }

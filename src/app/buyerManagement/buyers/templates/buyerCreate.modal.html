@@ -1,0 +1,98 @@
+<form name="buyerCreateModal.form" class="form-horizontal" ng-submit="buyerCreateModal.submit()" novalidate autocomplete="off" oc-readonly-roles="BuyerAdmin">
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="buyerCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">New Buyer Organization</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label for="buyerID" class="control-label col-sm-3">Buyer ID</label>
+            <div class="col-sm-9">
+                <input id="buyerID" name="ID" type="text" ng-change="buyerCreateModal.updateValidity('BuyerID')" placeholder="(Optional)" pattern="([A-Za-z0-9\-\_]+)"
+                    pattern-err-type="ID_Name" class="form-control" ng-model="buyerCreateModal.buyer.ID" />
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="buyerName" class="control-label col-sm-3">Buyer Name</label>
+            <div class="col-sm-9">
+                <input id="buyerName" name="Name" type="text" ng-model="buyerCreateModal.buyer.Name" class="form-control" required>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <div class="checkbox">
+                    <label for="buyerActiveCheckbox">
+                        <input id="buyerActiveCheckbox" name="Active" type="checkbox" ng-model="buyerCreateModal.buyer.Active"/>
+                        Active
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+        <hr>
+        <fieldset class="form-group" oc-if-roles="CatalogAdmin">
+            <label class="control-label col-sm-3">Default Catalog</label>
+            <div class="col-sm-9">
+                <div class="radio">
+                    <label for="CreateNew">
+                        <input type="radio" id="CreateNew" ng-model="buyerCreateModal.buyer.UseExistingCatalog" ng-value="false"> Create New Catalog
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="UseExisting">
+                        <input type="radio" id="UseExisting" ng-model="buyerCreateModal.buyer.UseExistingCatalog" ng-value="true"> Use Existing Catalog
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Typeahead Result Template -->
+        <script type="text/ng-template" id="oc-catalog-result.html">
+            <a href tabindex="-1" ng-attr-title="{{match.label}}">
+                <span ng-bind-html="'<b>' + (match.model.Name | uibTypeaheadHighlight:query) + '</b>' + '<br/><small>' + (match.model.ID | uibTypeaheadHighlight:query) + '</small>'"></span>
+            </a>
+        </script>
+        <fieldset class="form-group" ng-if="buyerCreateModal.buyer.UseExistingCatalog">
+            <label for="SelectedDefaultCatalog" ng-class="{'sr-only':application.UserIsAuthorized('CatalogAdmin'), 'control-label col-sm-3': !application.UserIsAuthorized('CatalogAdmin')}">Default Catalog</label>
+            <div class="col-sm-9" ng-class="{'col-sm-offset-3':application.UserIsAuthorized('CatalogAdmin')}">
+                <div class="c-typeahead">
+                    <input placeholder="Select a catalog" class="form-control" id="SelectedDefaultCatalog" name="SelectedDefaultCatalog" type="text" ng-model="buyerCreateModal.buyer.SelectedDefaultCatalog" required
+                        ng-model-options="{debounce:300}"
+                        typeahead-min-length="0"
+                        typeahead-append-to="'.c-typeahead__results'"
+                        typeahead-no-results="buyerCreateModal.noCatalogResults"
+                        typeahead-loading="buyerCreateModal.catalogsLoading"
+                        typeahead-template-url="oc-catalog-result.html"
+                        uib-typeahead="catalog as catalog.Name for catalog in buyerCreateModal.searchCatalogs($viewValue)">
+                    <div class="c-typeahead__results">
+                        <div class="c-typeahead__results--empty" ng-if="buyerCreateModal.noCatalogResults">
+                            <span>No matches found</span>
+                        </div>
+                        <div class="c-typeahead__results--loading" ng-if="buyerCreateModal.catalogsLoading">
+                            <div ng-include="'common/config/angular-busy/angular-busy.html'"></div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </fieldset>
+        <div ng-if="!buyerCreateModal.buyer.UseExistingCatalog">
+            <fieldset class="form-group">
+                <label for="buyerNewCatalogID" class="control-label col-sm-3">Catalog ID</label>
+                <div class="col-sm-9">
+                    <input placeholder="(Optional)" id="buyerNewCatalogID" ng-change="buyerCreateModal.updateValidity('CatalogID')" pattern="([A-Za-z0-9\-\_]+)"
+                    pattern-err-type="ID_Name" name="NewCatalogID" type="text" ng-model="buyerCreateModal.defaultCatalog.ID"
+                        class="form-control">
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="buyerNewCatalogName" class="control-label col-sm-3">Catalog Name</label>
+                <div class="col-sm-9">
+                    <input id="buyerNewCatalogName" name="NewCatalogName" type="text" ng-model="buyerCreateModal.defaultCatalog.Name"
+                        class="form-control" required>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-block btn-primary" ng-disabled="buyerCreateModal.form.$invalid" cg-busy="buyerCreateModal.loading">Submit</button>
+    </div>
+</form>

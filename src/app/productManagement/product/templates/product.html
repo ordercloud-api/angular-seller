@@ -1,0 +1,94 @@
+<header class="c-jumbotron">
+    <div class="container container-smooth">
+        <ul class="breadcrumb">
+            <li><a href="" ui-sref="products">All Products</a></li>
+            <li class="active">{{product.productName}}</li>
+        </ul>
+        <header class="l-page-header">
+            <h3 class="l-page-header__title">
+                <small class="text-muted">Product</small> <br> {{product.productName}}
+            </h3>
+        </header>
+        <oc-responsive-tabs nav-items="product.navigationItems"></oc-responsive-tabs>
+    </div>
+</header>
+<br>
+<article class="container container-smooth">
+    <div ui-view cg-busy="application.stateLoading('product')">
+        <div class="row">
+            <div class="col-sm-8">
+                <form name="product.form" autocomplete="off" ng-submit="product.updateProduct()" novalidate class="form-horizontal" oc-readonly-roles="ProductAdmin">
+                    <fieldset class="form-group">
+                        <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
+                        <div class="col-sm-9">
+                            <input id="ProductID" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" type="text" class="form-control" ng-model="product.model.ID"
+                                required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="ProductName" class="col-sm-3 control-label">Name</label>
+                        <div class="col-sm-9">
+                            <input id="ProductName" type="text" class="form-control" ng-model="product.model.Name" required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="ProductDescription" class="col-sm-3 control-label">Description</label>
+                        <div class="col-sm-9">
+                            <textarea rows="4" id="ProductDescription" placeholder="(Optional)" class="form-control" ng-model="product.model.Description"></textarea>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="QuantityMultiplier" class="col-sm-3 control-label">Qty Multiplier</label>
+                        <div class="col-sm-9">
+                            <input id="QuantityMultiplier" type="number" class="form-control" min="1" ng-model="product.model.QuantityMultiplier" required>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="DefaultPrice" class="col-sm-3 control-label">Default Price</label>
+                        <div class="col-sm-9">
+                            <p class="form-control-static">
+                                <span ng-if="!product.model.DefaultPriceScheduleID" oc-if-roles="!ProductAdmin && !PriceScheduleAdmin" class="text-muted">No default price</span>
+                                <a ng-if="!product.model.DefaultPriceScheduleID" oc-if-roles="PriceScheduleAdmin" ng-click="product.createDefaultPrice()">Add a default price</a>
+                                <a ng-if="product.model.DefaultPriceScheduleID" oc-if-roles="ProductAdmin" ui-sref=".pricing({pricescheduleid: product.model.DefaultPriceScheduleID})"><b>{{product.model.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</b></a>
+                                <b ng-if="product.model.DefaultPriceScheduleID" oc-if-roles="!ProductAdmin" class="text-primary">{{product.model.DefaultPriceSchedule.PriceBreaks[0].Price | currency}}</b>
+                            </p>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="checkbox" oc-readonly-roles="InventoryAdmin">
+                                <label for="InventoryEnabled">
+                                    <input id="InventoryEnabled" name="InventoryEnabled" type="checkbox" ng-model="product.model.Inventory.Enabled"> Inventory Enabled
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label for="ProductActive">
+                                    <input id="ProductActive" name="ProductActive" type="checkbox" ng-model="product.model.Active"> Active
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group" oc-if-roles="ProductAdmin">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="submit" cg-busy="product.productUpdateLoading" ng-disabled="product.form.$invalid" class="btn btn-primary btn-block">Update Product Info</button>
+                        </div>
+                        <div class="col-sm-offset-3 col-sm-9 hidden-xs">
+                        <hr>
+                            <button type="submit" class="btn btn-danger btn-block" ng-click="product.deleteProduct()">Delete Product</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="col-sm-4" oc-readonly-roles="ProductAdmin">
+                <fieldset class="form-group">
+                    <label>Product Image</label>
+                    <oc-file-upload model="product.model" label="Image:" patch="product.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                </fieldset>
+            </div>
+        </div>
+        <div class="visible-xs" oc-if-roles="ProductAdmin">
+            <hr>
+            <button type="submit" class="btn btn-danger btn-block" ng-click="product.deleteProduct()"><i class="fa fa-trash-o"></i> Delete Product</button>
+        </div>
+    </div>
+</article>
