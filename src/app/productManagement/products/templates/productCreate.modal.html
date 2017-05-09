@@ -114,7 +114,7 @@
                 <label for="ShipWeight" class="col-sm-3 control-label">Ship Weight</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input id="ShipWeight" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipWeight"
+                        <input id="ShipWeight" placeholder="(Optional)" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipWeight"
                         />
                         <span class="input-group-addon">lb(s)</span>
                     </div>
@@ -123,29 +123,35 @@
             <fieldset class="form-group">
                 <label for="ShipHeight" class="col-sm-3 control-label">Ship Height</label>
                 <div class="col-sm-9">
-                    <input id="ShipHeight" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipHeight"
-                    />
+                    <div class="input-group">
+                        <input id="ShipHeight" placeholder="(Optional)" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipHeight"/>
+                        <div class="input-group-addon">in.</div>
+                    </div>
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="ShipWidth" class="col-sm-3 control-label">Ship Width</label>
                 <div class="col-sm-9">
-                    <input id="ShipWidth" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipWidth"
-                    />
+                    <div class="input-group">
+                        <input id="ShipWidth" placeholder="(Optional)" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipWidth"/>
+                        <div class="input-group-addon">in.</div>
+                    </div>
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="ShipLength" class="col-sm-3 control-label">Ship Length</label>
                 <div class="col-sm-9">
-                    <input id="ShipLength" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipLength"
-                    />
+                    <div class="input-group">
+                        <input id="ShipLength" placeholder="(Optional)" type="number" min="0" step="any" class="form-control" ng-model="productCreateModal.product.ShipLength"/>
+                        <div class="input-group-addon">in.</div>
+                    </div>
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="ShipFrom" class="col-sm-3 control-label">Ship From</label>
                 <div class="col-sm-9">
                     <ui-select ng-model="productCreateModal.product.ShipFromAddressID" close-on-select="true" id="ShipFrom">
-                        <ui-select-match placeholder="Search and select seller addresses...">
+                        <ui-select-match placeholder="(Optional) Search and select seller addresses...">
                             <span ng-bind-html="$select.selected | address"></span>
                         </ui-select-match>
                         <ui-select-choices repeat="address.ID as address in (productCreateModal.sellerAddresses.Items | filter: $select.search) track by $index"
@@ -169,7 +175,7 @@
                 <fieldset class="form-group">
                     <label for="InventoryNotificationPoint" class="col-sm-3 control-label">Notification Point</label>
                     <div class="col-sm-9">
-                        <input id="InventoryNotificationPoint" type="number" class="form-control" min="1" ng-model="productCreateModal.product.Inventory.NotificationPoint"
+                        <input id="InventoryNotificationPoint" placeholder="(Optional)" type="number" class="form-control" min="1" ng-model="productCreateModal.product.Inventory.NotificationPoint"
                         />
                         <span class="help-block">Receive a notification when inventory reaches this amount.</span>
                     </div>
@@ -177,7 +183,7 @@
                 <fieldset class="form-group">
                     <label for="AvailableInventory" class="col-sm-3 control-label">Inventory</label>
                     <div class="col-sm-9">
-                        <input id="AvailableInventory" type="number" class="form-control" ng-model="productCreateModal.product.Inventory.QuantityAvailable"
+                        <input id="AvailableInventory" placeholder="(Optional)" type="number" class="form-control" ng-model="productCreateModal.product.Inventory.QuantityAvailable"
                         />
                         <span class="help-block">The amount that is in stock.</span>
                     </div>
