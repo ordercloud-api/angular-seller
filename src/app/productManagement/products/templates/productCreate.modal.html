@@ -200,7 +200,7 @@
             </div>
             <div ng-class="{'col-xs-6':productCreateModal.showPrev}">
                 <button type="button" ng-if="productCreateModal.showNext" class="btn btn-primary btn-block" 
-                ng-disabled="productCreateModal.form[productCreateModal.steps[productCreateModal.currentStep].form].$invalid || (productCreateModal.enableDefaultPricing && !productCreateModal.product.DefaultPriceSchedule.PriceBreaks.length)"
+                ng-disabled="productCreateModal.form[productCreateModal.steps[productCreateModal.currentStep].form].$invalid || (productCreateModal.steps[productCreateModal.currentStep].form == 'pricing' && (productCreateModal.enableDefaultPricing && !productCreateModal.product.DefaultPriceSchedule.PriceBreaks.length))"
                     ng-click="productCreateModal.nextStep()">Next ({{productCreateModal.steps[productCreateModal.currentStep + 1].name}})</button>
                 <button ng-if="!productCreateModal.showNext" type="submit" cg-busy="productCreateModal.productUpdateLoading" ng-disabled="productCreateModal.form.$invalid || (productCreateModal.enableDefaultPricing && !productCreateModal.product.DefaultPriceSchedule.PriceBreaks.length)"
                     class="btn btn-primary btn-block">Save Product</button>
