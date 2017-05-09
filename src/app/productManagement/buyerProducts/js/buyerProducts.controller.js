@@ -92,7 +92,7 @@ function BuyerProductsController($q, $exceptionHandler, $state, $stateParams, $f
                         .catch(function(ex) {
                             $exceptionHandler(ex);
                         });
-                } else {
+                } else if (ex !== 'escape key press') {
                     $exceptionHandler(ex);
                 }
             });
