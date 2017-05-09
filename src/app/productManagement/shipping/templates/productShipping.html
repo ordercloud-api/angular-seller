@@ -40,7 +40,7 @@
             <fieldset class="form-group" oc-if-roles="AddressRoles">
                 <label for="ShipFrom" class="col-sm-3 control-label">Ship From</label>
                 <div class="col-sm-9">
-                    <ui-select ng-model="product.model.ShipFromAddressID" close-on-select="true" id="ShipFrom" ng-disabled="!application.userIsAuthorized(['ProductAdmin'])">
+                    <ui-select ng-model="product.model.ShipFromAddressID" close-on-select="true" id="ShipFrom" ng-disabled="!application.userIsAuthorized(['ProductAdmin'])" ng-if="productShipping.sellerAddresses.Items.length">
                         <ui-select-match placeholder="(Optional) Search and select seller addresses...">
                             <span ng-bind-html="$select.selected | address"></span>
                         </ui-select-match>
@@ -48,6 +48,10 @@
                             <span ng-bind-html="address | address:'full'"></span>
                         </ui-select-choices>
                     </ui-select>
+                    <div class="no-matches" ng-if="!productShipping.sellerAddresses.Items.length">
+                        This organization does not have any seller addresses. 
+                        <span oc-if-roles="AddressAdmin"><br><a ui-sref="sellerAddresses">Create one now</a></span>
+                    </div>
                 </div>
             </fieldset>
             <fieldset class="form-group">
