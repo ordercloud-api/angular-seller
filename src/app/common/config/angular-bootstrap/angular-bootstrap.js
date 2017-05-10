@@ -1,5 +1,5 @@
 angular.module('orderCloud')
-    .config(function(uibDatepickerConfig, uibDatepickerPopupConfig, $uibModalProvider) {
+    .config(function(uibDatepickerConfig, uibDatepickerPopupConfig, $uibModalProvider, $uibTooltipProvider) {
         //Default Datepicker Options
         uibDatepickerConfig.showWeeks = false;
         uibDatepickerPopupConfig.onOpenFocus = false;
@@ -7,5 +7,8 @@ angular.module('orderCloud')
 
         //Default Modal Options
         $uibModalProvider.options.backdrop = 'static';
+
+        //Default Tooltip Options
+        $uibTooltipProvider.options({popupDelay: 800});
     })
 ;

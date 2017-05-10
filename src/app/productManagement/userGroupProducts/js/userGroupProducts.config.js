@@ -9,6 +9,9 @@ function UserGroupProductsConfig($stateProvider) {
             templateUrl: 'productManagement/userGroupProducts/templates/userGroupProducts.html',
             controller: 'UserGroupProductsCtrl',
             controllerAs: 'userGroupProducts',
+            data: {
+                pageTitle: 'User Group Pricing'
+            },
             resolve: {
                 Parameters: function ($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
