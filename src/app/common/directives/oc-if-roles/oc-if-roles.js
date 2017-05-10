@@ -37,7 +37,9 @@ function OrderCloudIfRoles(ocRoles, $ocRoles) {
     function link(scope, element, attr) {
         //Use attr.ocIfRoles to avoid need for isolated scope
         var attrValue = attr.ocIfRoles;
+        var splitAttrs = attrValue.split(' || ');
         var roleGroups = $ocRoles.GetRoleGroups();
+        var splitRoleGroups = _.intersection(roleGroups, splitAttrs);
         var ocIfRolesObj = scope.$eval(attrValue);
         if (typeof ocIfRolesObj == 'object') {
             analyzeRoles(ocIfRolesObj.Items, ocIfRolesObj.Any);
@@ -50,9 +52,17 @@ function OrderCloudIfRoles(ocRoles, $ocRoles) {
                 //single string role
                 analyzeRoles([attrValue]);
             }
-        } else if (attrValue.split(' || ').length > 1) {
-            //pipe delimited string values
-            analyzeRoles(attrValue.split(' || '), true);
+        } else if (splitAttrs.length) {
+            if(splitRoleGroups.length){
+                var analyzeGroupRoles = splitRoleGroups.reduce(function(prev, curr){
+                    var group = roleGroups[curr];
+                    return prev && analyzeRoles(group.Roles, group.Type === 'Any');
+                }, true);
+                return analyzeGroupRoles && analyzeRoles(_.difference(splitAttrs, splitRoleGroups), true)
+            } else {
+                //pipe delimited string values
+                analyzeRoles(splitAttrs, true);
+            }
         } else {
             scope.$watch('ocIfRoles', function ocIfWatchAction(value) {
                 if (angular.isArray(value) && value.length && (typeof value[0] == 'string')) {
