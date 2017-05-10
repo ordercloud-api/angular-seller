@@ -469,7 +469,7 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
             }), 'PriceScheduleID')));
 
         if (!priceScheduleIDs.length || priceScheduleIDs.length === 1 && (priceScheduleIDs[0] === product.DefaultPriceScheduleID || (product.SelectedPrice && product.SelectedPrice.Inherited))) {
-            return _createProductPrice(product, SelectedBuyer, CurrentAssignments, [SelectedUserGroup]);
+            return _createProductPrice(product, SelectedBuyer, CurrentAssignments, SelectedUserGroup);
         } else {
             return $uibModal.open({
                 templateUrl: 'productManagement/pricing/templates/updateProductPrice.modal.html',
@@ -544,7 +544,7 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
 
         function _complete(wasDeleted) {
             wasDeleted ? (SelectPriceData.CurrentAssignments.splice(check.Index, 1)) :
-                (check.Index > -1 ? (SelectPriceData.CurrentAssignments[check.Index] = assignment) : SelectPriceData.CurrentAssignments.push(assignment));
+                (check.Index > -1 && (assignment.UserGroupID === SelectPriceData.CurrentAssignments[check.Index].UserGroupID) ? (SelectPriceData.CurrentAssignments[check.Index] = assignment) : SelectPriceData.CurrentAssignments.push(assignment));
             df.resolve({
                 SelectedPrice: selectedPriceSchedule,
                 UpdatedAssignments: SelectPriceData.CurrentAssignments

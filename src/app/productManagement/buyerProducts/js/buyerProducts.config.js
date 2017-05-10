@@ -9,6 +9,9 @@ function BuyerProductsConfig($stateProvider) {
             templateUrl: 'productManagement/buyerProducts/templates/buyerProducts.html',
             controller: 'BuyerProductsCtrl',
             controllerAs: 'buyerProducts',
+            data: {
+                pageTitle: 'Buyer Pricing'
+            },
             resolve: {
                 Parameters: function ($stateParams, ocParameters) {
                     return ocParameters.Get($stateParams);
