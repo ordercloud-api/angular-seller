@@ -42,7 +42,7 @@ function OrderCloudIfRoles(ocRoles, $ocRoles) {
         var attrValue = attr.ocIfRoles;
         var splitAttrs = attrValue.split(' || ');
         var roleGroups = $ocRoles.GetRoleGroups();
-        var splitRoleGroups = _.intersection(roleGroups, splitAttrs);
+        var splitRoleGroups = _.filter(splitAttrs, function(val) { return roleGroups[val]; })
         var ocIfRolesObj = scope.$eval(attrValue);
         if (typeof ocIfRolesObj == 'object') {
             analyzeRoles(ocIfRolesObj.Items, ocIfRolesObj.Any);
