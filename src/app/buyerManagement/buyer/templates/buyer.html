@@ -23,7 +23,7 @@
     <div ui-view cg-busy="application.stateLoading('buyer')">
         <div class="row">
             <div class="col-sm-7 col-md-6" oc-readonly-roles="BuyerAdmin">
-                <form ng-submit="buyer.updateBuyer()" class="form-horizontal" name="buyer.settingsForm" novalidate autocomplete="off">
+                <form ng-submit="buyer.updateBuyer()" class="form-horizontal" name="buyer.settingsForm" novalidate autocomplete="off" oc-pretty-submit>
                     <fieldset class="form-group">
                         <label for="buyerIDInput" class="control-label col-sm-3">Buyer ID</label>
                         <div class="col-sm-9">

@@ -35,7 +35,7 @@ function OrderCloudPriceBreaksDirective($filter, ocProductPricing, OrderCloudSDK
         scope.addPriceBreak = addPriceBreak;
         scope.deletePriceBreak = deletePriceBreak;
 
-        scope.$watch('priceschedule.RestrictedQuantity', function(n) {
+        scope.$watch('priceschedule.RestrictedQuantity', function (n) {
             if (n && scope.priceschedule.PriceBreaks.length) syncMinMaxValues();
         });
 
@@ -62,7 +62,7 @@ function OrderCloudPriceBreaksDirective($filter, ocProductPricing, OrderCloudSDK
         }
 
         function onEnterKeypress($event) {
-            if ($event.keyCode !== 13) return; 
+            if ($event.keyCode !== 13) return;
             $event.preventDefault();
             if (!scope.newBreakForm.$invalid) addPriceBreak();
         }
@@ -89,6 +89,7 @@ function OrderCloudPriceBreaksDirective($filter, ocProductPricing, OrderCloudSDK
                 scope.priceschedule.PriceBreaks.splice(index, 1);
             }
             ocProductPricing.PriceBreaks.FormatQuantities(scope.priceschedule.PriceBreaks);
+            scope.newBreakForm.Price.$setDirty();
         }
 
         function syncMinMaxValues(which) {

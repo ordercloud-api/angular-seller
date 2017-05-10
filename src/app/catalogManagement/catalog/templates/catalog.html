@@ -18,7 +18,7 @@
     <div ui-view cg-busy="application.stateLoading('catalog')">
         <div class="row">
             <div class="col-sm-7">
-                <form class="form-horizontal" name="catalog.editForm" novalidate autocomplete="off" oc-readonly-roles="CatalogAdmin" ng-submit="catalog.updateCatalog()">
+                <form class="form-horizontal" name="catalog.editForm" novalidate autocomplete="off" oc-readonly-roles="CatalogAdmin" ng-submit="catalog.updateCatalog()" oc-pretty-submit>
                     <fieldset class="form-group">
                         <label for="catalogID" class="control-label col-sm-3">Catalog ID</label>
                         <div class="col-sm-9">
