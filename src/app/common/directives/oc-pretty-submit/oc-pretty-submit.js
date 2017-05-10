@@ -39,7 +39,6 @@ function OrderCloudPrettySubmit() {
             });
 
             function updateForm() {
-                console.log(element[0].elements);
                 if (!submitButton) {
                     //Submit button not immediately available if ng-if is used
                     submitButton = findSubmit(element[0].elements);
