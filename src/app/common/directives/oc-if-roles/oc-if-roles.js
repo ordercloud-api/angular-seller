@@ -22,7 +22,10 @@ angular.module('orderCloud')
  * 4) RoleGroup alias can be configured ahead of time using the ocRolesProvider -- RoleGroups can be configured to compare for ANY or ALL provided roles
  * <div oc-if-roles="MyGroupOfRoles"></div>
  * 
- * 5) Object notation similar to that used in ocNavItems can also be used. This can include multiple Roles and/or RoleGroups
+ * 5)If only one of numerous role group are required, provide a || delimited list of roles as directive attribute's value
+ * <div oc-if-roles="MyFirstGroupRoles || MySecondGroupRoles"
+ * 
+ * 6) Object notation similar to that used in ocNavItems can also be used. This can include multiple Roles and/or RoleGroups
  * <div oc-if-roles="{Items:['BuyerRoles', 'CatalogRoles'], Any:false}"></div>
  */
 
