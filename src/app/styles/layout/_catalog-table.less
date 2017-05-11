@@ -8,10 +8,11 @@
         width:1%;
       }
     }
-    th,
+    tr:first-child > th,
     td {
       &:nth-child(1),
-      &:nth-child(3) {
+      &:nth-child(3),
+      &:nth-child(4) {
         display:none;
       }
       &:nth-child(2) {
@@ -25,10 +26,13 @@
         width:25%;
       }
       &:nth-child(2) {
-        width:75%;
+        width:60%;
       }
-      &:nth-child(3),
-      &:nth-child(4) {
+      &:nth-child(3) {
+        width:15%;
+      }
+      &:nth-child(4),
+      &:nth-child(5) {
         width:1%;
       }
     }

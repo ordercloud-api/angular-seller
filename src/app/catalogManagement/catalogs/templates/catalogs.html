@@ -1,7 +1,8 @@
 <article>
     <header class="l-page-header">
         <h3 class="l-page-header__title">
-            Catalog Management
+            Catalog Management <br>
+            <small class="text-muted">Select a catalog to manage the category hierarchy.</small>
         </h3>
         <!--====== CREATE ======-->
         <div class="l-page-header__btns" oc-if-roles="CatalogAdmin">
@@ -10,6 +11,7 @@
             </button>
         </div>
     </header>
+
 
     <!--====== SEARCH ======-->
     <div ng-if="catalogs.list.Items.length || (!catalogs.list.Items.length && catalogs.searchResults)">
@@ -60,6 +62,11 @@
                             <i class="fa fa-caret-down" ng-show="catalogs.parameters.sortBy == 'Name'"></i>
                             <i class="fa fa-caret-up" ng-show="catalogs.parameters.sortBy == '!Name'"></i>
                         </th>
+                        <th ng-click="catalogs.updateSort('CategoryCount')">
+                            Category Count
+                            <i class="fa fa-caret-down" ng-show="catalogs.parameters.sortBy == 'CategoryCount'"></i>
+                            <i class="fa fa-caret-up" ng-show="catalogs.parameters.sortBy == '!CategoryCount'"></i>
+                        </th>
                         <th>
                             Active
                         </th>
@@ -70,6 +77,7 @@
                     <tr ng-repeat="catalog in catalogs.list.Items">
                         <td>{{catalog.ID}}</td>
                         <td><a href="" ui-sref="catalog({catalogid:catalog.ID})">{{catalog.Name}}</a></td>
+                        <td>{{catalog.CategoryCount}}</td>
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':catalog.Active}"></i>
                         </td>

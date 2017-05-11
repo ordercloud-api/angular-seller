@@ -1,48 +1,49 @@
-<ol class="breadcrumb">
-    <li><a href="" ui-sref="userGroupCatalogs">Available Catalogs</a></li>
-    <li class="active">{{userGroupCatalog.selectedCatalog.Name}}</li>
-</ol>
-<div class="l-page-header l-page-header-xs">
+<div class="l-page-header l-page-header-xs">    
+    <div class="l-page-header__btns">
+        <button class="btn btn-default" type="button" ui-sref="userGroupCatalogs"><i class="fa fa-chevron-left"></i> Catalogs</button>
+    </div>
     <h3 class="l-page-header__title">
-        Category Assignment
+        {{userGroupCatalog.selectedCatalog.Name}} Categories <br>
+        <small class="text-muted">Assign categories to this user group using the checkboxes.</small>
     </h3>
 </div>
 
-<div ng-if="!userGroupCatalog.tree.length" class="no-matches">
-    <b>There are no categories in this catalog. <span oc-if-roles="CategoryAdmin"><a ng-click="userGroupCatalog.createCategory()">Create one now.</a></span></b>
-</div>
 <div class="row" cg-busy="userGroupCatalog.loading">
     <div class="col-sm-6 col-sm-push-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Catalog Settings</h3>
+        <fieldset class="form-group">
+            <div class="checkbox">
+                <label for="ViewAllProducts" class="control-label">
+                    <input id="ViewAllProducts" type="checkbox" disabled ng-model="userGroupCatalog.viewAllProducts"> View All Products
+                </label>
             </div>
-            <div class="panel-body">
-                <div class="alert alert-info">
-                    Catalog settings can only be changed at the <a ui-sref="buyerCatalog({catalogid:userGroupCatalog.selectedCatalog.ID})">buyer level</a>
-                </div>
-                <fieldset class="form-group">
-                    <label for="ViewAllProducts" class="control-label">
-                        <input id="ViewAllProducts" type="checkbox" disabled ng-model="userGroupCatalog.viewAllProducts"> View All Products
-                    </label>
-                </fieldset>
-                <fieldset class="form-group">
-                    <label for="ViewAllCategories" class="control-label">
-                        <input id="ViewAllCategories" type="checkbox" disabled ng-model="userGroupCatalog.viewAllCategories"> View All Categories
-                    </label>
-                </fieldset>
+            <div class="checkbox">
+                <label for="ViewAllCategories" class="control-label">
+                    <input id="ViewAllCategories" type="checkbox" disabled ng-model="userGroupCatalog.viewAllCategories"> View All Categories
+                </label>
             </div>
-        </div>
+            <p class="help-block">
+                These settings can only be changed at the <a ui-sref="buyerCatalog({catalogid:userGroupCatalog.selectedCatalog.ID})">buyer level</a>
+            </p>
+        </fieldset>
     </div>
     <div class="col-sm-6 col-sm-pull-6">
+        <div ng-if="!userGroupCatalog.tree.length" class="no-matches">
+            <b>There are no categories in this catalog. 
+                <span oc-if-roles="CategoryAdmin"> 
+                    <br>
+                    Categories can be added in <a ui-sref="categories({catalogid: userGroupCatalog.selectedCatalog.ID})">catalog management</a>.
+                </span>
+            </b>
+        </div>
         <script type="text/ng-template" id="nodes_renderer.html">
-            <div class="tree-node tree-node-content"  uib-tooltip="Inherited from a buyer level assignment." tooltip-append-to-body="true" tooltip-enable="node.Inherited" cg-busy="node.loading" ng-class="{'inactive-node': !node.Active, 'selected-node': node.ID == userGroupCatalog.selectedCategoryID}">
+            <div class="tree-node tree-node-content"  uib-tooltip="Inherited from a buyer level assignment." tooltip-append-to-body="true" tooltip-enable="node.Inherited" cg-busy="node.loading">
                 <i ng-if="node.children && node.children.length > 0" class="fa" ng-click="toggle(this)" ng-class="{
                         'fa-folder': !collapsed,
                         'fa-folder-open': collapsed
                     }">
                 </i>
-                <p ng-click="userGroupCatalog.categorySelected(node.ID)">{{node.Name}}</p>
+                <p><a ui-sref="categories.category.products({catalogid:buyerCatalog.selectedCatalog.ID, categoryid:node.ID})" uib-tooltip="View Category" tooltip-placement="right" tooltip-popup-delay="1200">{{node.Name}}</a></p>
+                <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':node.Active}"></i>
                 <fieldset class="checkbox">
                     <label class="control-label">
                         <input type="checkbox" ng-disabled="userGroupCatalog.viewAllCategories || node.Inherited" name="{{'AssignCategory' + node.ID}}" ng-model="node.Assigned" ng-change="userGroupCatalog.updateAssignment(node)">

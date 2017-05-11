@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductCategoriesCtrl', ProductCategoriesController)
 ;
 
-function ProductCategoriesController($stateParams, toastr, ocProductCategories, ocCatalog, SelectedCatalog, Tree, SelectedProduct) {
+function ProductCategoriesController($exceptionHandler, $stateParams, toastr, ocProductCategories, ocCatalog, SelectedCatalog, Tree, SelectedProduct) {
     var vm = this;
     vm.selectedCatalog = SelectedCatalog;
     vm.selectedProduct = SelectedProduct;
@@ -29,17 +29,5 @@ function ProductCategoriesController($stateParams, toastr, ocProductCategories, 
                     node.Assigned = true;
                 });
         }
-    };
-
-    vm.createCategory = function() {
-        ocCatalog.CreateCategory(null, $stateParams.catalogid)
-            .then(function(newCategory) {
-                newCategory.Assigned = true;
-                vm.tree.push(newCategory);
-                newCategory.loading = ocProductCategories.Assignments.Save($stateParams.catalogid, newCategory.ID, $stateParams.productid)
-                    .then(function() {
-                        toastr.success(vm.selectedProduct.Name + ' was assigned to ' + newCategory.Name);
-                    });
-            });
     };
 }

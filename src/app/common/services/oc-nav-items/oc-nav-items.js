@@ -134,7 +134,7 @@ function OrderCloudNavItemsService(ocRoles) {
                 }
             },
             {
-                icon: 'fa-sitemap',
+                icon: 'fa-th-large',
                 state: 'buyerCatalogs',
                 name: 'Categories',
                 activeWhen: ['buyerCatalogs', 'buyerCatalog'],
@@ -248,7 +248,7 @@ function OrderCloudNavItemsService(ocRoles) {
                 }
             },
             {
-                icon: 'fa-sitemap',
+                icon: 'fa-th-large',
                 state: 'userGroupCatalogs',
                 name: 'Categories',
                 activeWhen: ['userGroupCatalogs', 'userGroupCatalog'],
