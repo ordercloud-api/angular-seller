@@ -1,7 +1,7 @@
 <form name="createProductPriceModal.form" ng-submit="createProductPriceModal.submit()" autocomplete="off" novalidate oc-pretty-submit>
     <div class="modal-header">
         <button type="button" class="close" ng-click="createProductPriceModal.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <span class="text-muted">{{(createProductPriceModal.buyerName ? 'Pricing for ' : 'Default pricing for ') + (createProductPriceModal.userGroupName || createProductPriceModal.buyerName)}}</span>
+        <span class="text-muted">{{(createProductPriceModal.buyerName ? 'Create pricing for ' : 'Default pricing for ') + (createProductPriceModal.userGroupName || createProductPriceModal.buyerName)}}</span>
         <h4 class="modal-title">Product: <b>{{createProductPriceModal.product.Name}}</b></h4>
     </div>
     <div class="modal-body">
