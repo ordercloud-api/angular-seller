@@ -9,6 +9,8 @@
     "FullAccess",
     "AddressAdmin", 
     "AddressReader", 
+    "AdminAddressAdmin", 
+    "AdminAddressReader", 
     "AdminUserAdmin", 
     "AdminUserReader", 
     "AdminUserGroupAdmin", 

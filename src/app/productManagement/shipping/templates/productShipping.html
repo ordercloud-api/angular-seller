@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset class="form-group" oc-if-roles="AddressRoles">
+            <fieldset class="form-group" oc-if-roles="SellerAddressRoles">
                 <label for="ShipFrom" class="col-sm-3 control-label">Ship From</label>
                 <div class="col-sm-9">
                     <ui-select ng-model="product.model.ShipFromAddressID" close-on-select="true" id="ShipFrom" ng-disabled="!application.userIsAuthorized(['ProductAdmin'])" ng-if="productShipping.sellerAddresses.Items.length">
@@ -50,7 +50,7 @@
                     </ui-select>
                     <div class="no-matches" ng-if="!productShipping.sellerAddresses.Items.length">
                         This organization does not have any seller addresses. 
-                        <span oc-if-roles="AddressAdmin"><br><a ui-sref="sellerAddresses">Create one now</a></span>
+                        <span oc-if-roles="AdminAddressAdmin"><br><a ui-sref="sellerAddresses">Create one now</a></span>
                     </div>
                 </div>
             </fieldset>
