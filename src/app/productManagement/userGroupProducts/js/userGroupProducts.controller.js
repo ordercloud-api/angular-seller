@@ -94,7 +94,7 @@ function UserGroupProductsController($exceptionHandler, $state, $filter, toastr,
                         .catch(function(ex) {
                             $exceptionHandler(ex);
                         });
-                } else {
+                } else if (ex !== 'escape key press') {
                     $exceptionHandler(ex);
                 }
             });
