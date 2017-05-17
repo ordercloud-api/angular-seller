@@ -39,7 +39,7 @@
                         <li ng-class="{active: application.$state.is('sellerUserGroups') || application.$state.includes('adminUserGroup')}" oc-if-roles="SellerUserGroupRoles">
                             <a ng-click="base.selectNavItem('sellerUserGroups')"><i class="fa fa-users"></i> User Groups</a>
                         </li>
-                        <li ng-class="{active: application.$state.is('sellerAddresses')}" oc-if-roles="AddressRoles">
+                        <li ng-class="{active: application.$state.is('sellerAddresses')}" oc-if-roles="SellerAddressRoles">
                             <a ng-click="base.selectNavItem('sellerAddresses')"><i class="fa fa-map-marker"></i> Addresses</a>
                         </li>
                         <li ng-class="{active: application.$state.is('permissions')}" oc-if-roles="SetSecurityProfile">

@@ -9,7 +9,8 @@ function BuyerCreateModalController($uibModalInstance, $exceptionHandler, OrderC
     vm.searchCatalogs = searchCatalogs;
     vm.updateValidity = updateValidity;
     vm.buyer = {
-        UseExistingCatalog: true
+        UseExistingCatalog: true,
+        Active: true
     };
 
     function updateValidity(which) {
