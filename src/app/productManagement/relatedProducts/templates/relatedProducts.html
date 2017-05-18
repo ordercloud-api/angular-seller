@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h4>Related Products  <span class="badge">{{relatedProduct.relatedProducts.Meta.TotalCount || 0}}</span></h4>
+        <div class="row">
+            <div class="col-sm-8 col-md-9">
+                <ui-select multiple ng-model="relatedProduct.selectedProducts" close-on-select="false">
+                    <ui-select-match placeholder="Search and select Products to add...">
+                        {{$item.Name}}
+                        <span ng-bind="$select.selected.Name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="product in (relatedProduct.uiSelectProducts.Items | filter: $select.search) track by $index" refresh="relatedProduct.listAllProducts($select.search)" refresh-delay="300">
+                        <b><span ng-bind="product.Name"></span></b>
+                        <br>
+                        <small>
+                            <b>ID: </b>{{product.ID}}
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-sm-4 col-md-3">
+                <button class="btn btn-primary btn-block" ng-disabled="!relatedProduct.selectedProducts.length" ng-click="relatedProduct.addRelatedProducts(relatedProduct.selectedProducts)"><i class="fa fa-plus-circle"></i> Add Products</button>
+            </div>
+        </div>
+        <hr>
+        <div class="well text-center" ng-if="!relatedProduct.relatedProducts.Items.length">
+            This products does not have any related products assigned to it.
+        </div>
+        <!--====== RELATED PRODUCTS LIST ======-->
+        <div ng-if="relatedProduct.relatedProducts.Items.length">
+            <div class="table-search-results">
+                {{(application.$ocMedia('min-width:768px') ? relatedProduct.relatedProducts.Meta.ItemRange[0] : '1') + ' - ' +  relatedProduct.relatedProducts.Meta.ItemRange[1] + ' of ' + relatedProduct.relatedProducts.Meta.TotalCount + ' results'}}
+            </div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="related in relatedProduct.relatedProducts.Items">
+                    <th scope="row"><a href="" ui-sref="productDetail({productid: related.ID})">{{related.ID}}</a></th>
+                    <td data-title="Name">{{related.Name}}</td>
+                    <td class="text-right">
+                        <button type="button" class="btn btn-xs btn-default btn-danger" uib-tooltip="Remove" tooltip-placement="left" ng-click="relatedProduct.removeRelatedProduct(related)"><i class="fa fa-times"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="text-center" ng-if="relatedProduct.relatedProducts.Meta.TotalPages > 1">
+                <uib-pagination boundary-links="relatedProduct.relatedProducts.Meta.TotalPages > 5"
+                                max-size="5" total-items="relatedProduct.relatedProducts.Meta.TotalCount"
+                                items-per-page="relatedProduct.relatedProducts.Meta.PageSize"
+                                ng-model="relatedProduct.relatedProducts.Meta.Page"
+                                ng-change="relatedProduct.pageChanged()">
+                </uib-pagination>
+            </div>
+        </div>
+    </div>
+</div>
