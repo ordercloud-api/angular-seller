@@ -10,7 +10,8 @@ function LoginConfig($stateProvider) {
             controller: 'LoginCtrl',
             controllerAs: 'login',
             data: {
-                pageTitle: 'Login'
+                pageTitle: 'Login',
+                ignoreToken: true
             }
         })
     ;
