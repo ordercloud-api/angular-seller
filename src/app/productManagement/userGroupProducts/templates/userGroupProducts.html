@@ -1,7 +1,8 @@
 <article>
     <header class="l-page-header">
         <h3 class="l-page-header__title">
-            Available Products
+            Product Pricing <br>
+            <small class="text-muted">User groups inherit buyer organization pricing.</small>
         </h3>
         <!--====== CREATE ======-->
         <div class="l-page-header__btns" oc-if-roles="ProductAdmin">
@@ -13,7 +14,7 @@
 
     <!--====== SEARCH/FILTERS ======-->
     <div ng-if="userGroupProducts.list.Items.length || (!userGroupProducts.list.Items.length && userGroupProducts.searchResults)">
-        <form name="userGroupProducts.searchForm" pretty-submit>
+        <form name="userGroupProducts.searchForm" oc-pretty-submit>
             <fieldset class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon">
@@ -75,11 +76,11 @@
                     <tbody>
                         <tr ng-repeat="product in userGroupProducts.list.Items">
                             <td>{{product.ID}}</td>
-                            <td><a href="" ui-sref="product({productid:product.ID})">{{product.Name}}</a></td>
+                            <td><a href="" ui-sref="product({productid:product.ID})" uib-tooltip="View Product">{{product.Name}}</a></td>
                             <td ng-if="product.SelectedPrice" class="text-center">{{product.SelectedPrice.MinQuantity}}</td>
                             <td ng-if="product.SelectedPrice" class="text-center" ng-class="{'text-muted':!product.SelectedPrice.MaxQuantity}">{{product.SelectedPrice.MaxQuantity || 'N/A'}}</td>
                             <td ng-if="product.SelectedPrice" class="text-right text-primary">
-                                <a ui-sref="product.pricing({productid:product.ID, pricescheduleid:product.SelectedPrice.ID})">
+                                <a ui-sref="product.pricing({productid:product.ID, pricescheduleid:product.SelectedPrice.ID})" uib-tooltip="View Price Info">
                                     <small class="text-info" ng-if="product.DefaultPriceScheduleID == product.SelectedPrice.ID">(Default) </small>
                                     <small class="text-info" ng-if="product.SelectedPrice.Inherited">(Inherited) </small>
                                     <b>

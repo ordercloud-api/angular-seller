@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('ProductCreateModalCtrl', ProductCreateModalController);
 
-function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, toastr, ocProductPricing, ocProducts, OrderCloudSDK) {
+function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, $state, toastr, ocProductPricing, ocProducts, OrderCloudSDK) {
     var vm = this;   
 
     vm.product = {
@@ -67,6 +67,11 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
                 vm.sellerAddresses = data;
             });
     }
+
+    vm.createSellerAddress = function() {
+        $uibModalInstance.dismiss();
+        $state.go('sellerAddresses');
+    };
 
     function submit() {
         var df = $q.defer();

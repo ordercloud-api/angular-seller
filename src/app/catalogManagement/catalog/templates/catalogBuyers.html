@@ -1,13 +1,14 @@
 <article>
     <header class="l-page-header">
         <h3 class="l-page-header__title">
-            Buyer Assignments
+            Buyer Assignments <br>
+            <small class="text-muted">Assign buyers to this catalog using the checkboxes.</small>
         </h3>
     </header>
 
     <!--====== SEARCH ======-->
     <div ng-if="catalogBuyers.list.Items.length || (!catalogBuyers.list.Items.length && catalogBuyers.searchResults)">
-        <form name="catalogBuyers.searchForm" pretty-submit>
+        <form name="catalogBuyers.searchForm" oc-pretty-submit>
             <fieldset class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon">

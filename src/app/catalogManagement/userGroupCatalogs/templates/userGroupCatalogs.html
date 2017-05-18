@@ -1,13 +1,14 @@
 <article>
     <header class="l-page-header">
         <h3 class="l-page-header__title">
-            Available Catalogs
+            Available Catalogs <br>
+            <small class="text-muted">Select a catalog to manage category level assignments.</small>
         </h3>
     </header>
 
     <!--====== SEARCH ======-->
     <div ng-if="userGroupCatalogs.list.Items.length || (!userGroupCatalogs.list.Items.length && userGroupCatalogs.searchResults)">
-        <form name="userGroupCatalogs.searchForm" pretty-submit>
+        <form name="userGroupCatalogs.searchForm" oc-pretty-submit>
             <fieldset class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon">
@@ -56,6 +57,9 @@
                             <i class="fa fa-caret-up" ng-show="userGroupCatalogs.parameters.sortBy == '!Name'"></i>
                         </th>
                         <th rowspan="2">
+                            Category Count
+                        </th>
+                        <th rowspan="2">
                             Active
                         </th>
                         <th colspan="2" class="text-center">View All</th>
@@ -69,6 +73,7 @@
                     <tr ng-repeat="catalog in userGroupCatalogs.list.Items">
                         <td>{{catalog.ID}}</td>
                         <td><a href="" ui-sref="userGroupCatalog({catalogid:catalog.ID})">{{catalog.Name}}</a></td>
+                        <td>{{catalog.CategoryCount}}</td>
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':catalog.Active}"></i>
                         </td>

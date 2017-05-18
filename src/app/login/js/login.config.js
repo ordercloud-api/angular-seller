@@ -5,12 +5,13 @@ angular.module('orderCloud')
 function LoginConfig($stateProvider) {
     $stateProvider
         .state('login', {
-            url: '/login/:token',
+            url: '/login/:verificationCode',
             templateUrl: 'login/templates/login.html',
             controller: 'LoginCtrl',
             controllerAs: 'login',
             data: {
-                pageTitle: 'Login'
+                pageTitle: 'Login',
+                ignoreToken: true
             }
         })
     ;

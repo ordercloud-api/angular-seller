@@ -1,13 +1,14 @@
 <article>
     <header class="l-page-header">
         <h3 class="l-page-header__title">
-            Available Catalogs
+            Available Catalogs <br>
+            <small class="text-muted">Select a catalog to assign this product to some categories.</small>
         </h3>
     </header>
 
     <!--====== SEARCH ======-->
     <div ng-if="productCatalogs.list.Items.length || (!productCatalogs.list.Items.length && productCatalogs.searchResults)">
-        <form name="productCatalogs.searchForm" pretty-submit>
+        <form name="productCatalogs.searchForm" oc-pretty-submit>
             <fieldset class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon">
@@ -55,6 +56,9 @@
                             <i class="fa fa-caret-up" ng-show="productCatalogs.parameters.sortBy == '!Name'"></i>
                         </th>
                         <th>
+                            Category Count
+                        </th>
+                        <th>
                             Active
                         </th>
                     </tr>
@@ -63,6 +67,7 @@
                     <tr ng-repeat="catalog in productCatalogs.list.Items">
                         <td>{{catalog.ID}}</td>
                         <td><a href="" ui-sref="product.categories({catalogid:catalog.ID})">{{catalog.Name}}</a></td>
+                        <td>{{catalog.CategoryCount}}</td>
                         <td class="text-center">
                             <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':catalog.Active}"></i>
                         </td>

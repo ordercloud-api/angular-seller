@@ -1,7 +1,7 @@
-<form name="updateProductPriceModal.form">
+<form name="updateProductPriceModal.form" ng-submit="updateProductPriceModal.submit()" oc-pretty-submit>
     <div class="modal-header">
         <button type="button" class="close" ng-click="updateProductPriceModal.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <span class="text-muted">{{'Pricing for ' + (updateProductPriceModal.userGroupName || updateProductPriceModal.buyerName)}}</span>
+        <span class="text-muted">{{'Edit pricing for ' + (updateProductPriceModal.userGroupName || updateProductPriceModal.buyerName)}}</span>
         <h4 class="modal-title">Product: <b>{{updateProductPriceModal.product.Name}}</b></h4>
     </div>
     <div class="modal-body">
@@ -34,10 +34,10 @@
                 </div>
             </div>
         </div>
-        <button class="btn btn-default btn-block" ng-click="updateProductPriceModal.createNewPrice()"><i class="fa fa-plus-circle"></i> New Price</button>
+        <button type="button" class="btn btn-default btn-block" ng-click="updateProductPriceModal.createNewPrice()"><i class="fa fa-plus-circle"></i> New Price</button>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary btn-block" ng-click="updateProductPriceModal.submit()" ng-disabled="(!updateProductPriceModal.selectedPriceSchedule && !updateProductPriceModal.removePrice) || updateProductPriceModal.selectedPriceSchedule.ID === updateProductPriceModal.product.SelectedPrice.ID"
+        <button type="submit" class="btn btn-primary btn-block" ng-disabled="(!updateProductPriceModal.selectedPriceSchedule && !updateProductPriceModal.removePrice) || updateProductPriceModal.selectedPriceSchedule.ID === updateProductPriceModal.product.SelectedPrice.ID"
             cg-busy="updateProductPriceModal.loading">Save Selection</button>
     </div>
 </form>

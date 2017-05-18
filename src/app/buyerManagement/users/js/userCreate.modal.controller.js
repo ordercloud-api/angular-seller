@@ -4,7 +4,7 @@ angular.module('orderCloud')
 
 function UserCreateModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, SelectedBuyerID) {
     var vm = this;
-    vm.user = {Email: '', Password: '', Active: false};
+    vm.user = {Email: '', Password: '', Active: true};
 
     vm.submit = function() {
         vm.user.TermsAccepted = new Date();

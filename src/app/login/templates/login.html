@@ -3,7 +3,7 @@
     <!--LOGIN FORM-->
     <div ng-switch-when="login">
         <div class="panel panel-default">
-            <form class="panel-body" name="LoginForm" ng-submit="login.submit()" pretty-submit>
+            <form class="panel-body" name="LoginForm" ng-submit="login.submit()" oc-pretty-submit>
                 <h3 class="text-center">Seller Login</h3>
                 <div class="form-group">
                     <label for="Username" class="sr-only">Username</label>
@@ -34,7 +34,7 @@
     <!--FORGOT PASSWORD-->
     <div ng-switch-when="forgot">
         <div class="panel panel-default">
-            <form class="panel-body" name="ForgotPasswordForm" ng-submit="login.forgotPassword()">
+            <form class="panel-body" name="ForgotPasswordForm" ng-submit="login.forgotPassword()" oc-pretty-submit>
                 <h3 class="text-center">Forgot Password</h3>
                 <div class="form-group">
                     <label for="Email" class="sr-only">Email</label>
@@ -51,7 +51,7 @@
     <!--RESET PASSWORD-->
     <div ng-switch-when="reset">
         <div class="panel panel-default">
-            <form class="panel-body" name="ResetPasswordForm" ng-submit="login.resetPassword()" >
+            <form class="panel-body" name="ResetPasswordForm" ng-submit="login.resetPassword()" oc-pretty-submit>
                 <h3 class="text-center">Reset Password</h3>
                 <div class="form-group">
                     <label for="ResetUsername" class="sr-only">Username</label>
@@ -73,7 +73,7 @@
     <!--RESET PASSWORD BY TOKEN-->
     <div ng-switch-when="resetByToken">
         <div class="panel panel-default">
-            <form class="panel-body" name="ResetPasswordForm" ng-submit="login.resetPasswordByToken()" >
+            <form class="panel-body" name="ResetPasswordForm" ng-submit="login.resetPasswordByToken()" oc-pretty-submit>
                 <h3 class="text-center">Reset Password</h3>
                 <div class="alert alert-info">
                     Due to a change in how we store password information, <br>as of <b>May 4th, 2017</b> you must reset your password. <br> You can use the same password as before. 

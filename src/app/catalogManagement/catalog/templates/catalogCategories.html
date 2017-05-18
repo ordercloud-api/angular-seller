@@ -5,7 +5,8 @@
     <div class="col-sm-5">
         <div class="l-page-header l-page-header-xs">
             <h3 class="l-page-header__title">
-                Categories
+                Categories <br>
+                <small class="text-muted">Drag and drop to nest categories.</small>
             </h3>
             <div class="l-page-header__btns" oc-if-roles="CategoryAdmin">
                 <button type="button" class="btn btn-primary" ng-click="catalogCategories.createCategory()">
@@ -15,13 +16,14 @@
             </div>
         </div>
         <script type="text/ng-template" id="nodes_renderer.html">
-            <div class="tree-node tree-node-content" ng-class="{'inactive-node': !node.Active, 'selected-node': node.ID == catalogCategories.selectedCategoryID}">
+            <div class="tree-node tree-node-content" ng-class="{'selected-node': node.ID == catalogCategories.selectedCategoryID}">
                 <i ng-if="node.children && node.children.length > 0" class="fa" ng-click="toggle(this)" ng-class="{
                         'fa-folder': !collapsed,
                         'fa-folder-open': collapsed
                     }">
                 </i>
                 <p ng-click="catalogCategories.categorySelected(node.ID)">{{node.Name}}</p>
+                <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':node.Active}"></i>
                 <i ui-tree-handle class="fa fa-reorder text-muted"></i>
             </div>
             <ol ui-tree-nodes ng-model="node.children" uib-collapse="!collapsed">
@@ -37,8 +39,8 @@
         </section>
     </div>
     <div class="col-sm-7" cg-busy="application.stateLoading('categories')" ui-view>
-        <div ng-if="application.$state.is('categories') && catalogCategories.tree.length" class="well text-center">
-            Select a category to view details
+        <div ng-if="application.$state.is('categories') && catalogCategories.tree.length" class="no-matches">
+            Select a category to view and/or edit it's information.
         </div>
     </div>
 </div>

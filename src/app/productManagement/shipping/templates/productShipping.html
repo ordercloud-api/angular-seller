@@ -1,11 +1,11 @@
 <div class="row">
     <div class="col-sm-8">
-        <form name="productShipping.ProductShippingForm" ng-submit="productShipping.updateProductShipping(product.model)" autocomplete="off" novalidate class="form-horizontal" oc-readonly-roles="ProductAdmin">
+        <form name="productShipping.ProductShippingForm" ng-submit="productShipping.updateProductShipping(product.model)" autocomplete="off" novalidate class="form-horizontal" oc-readonly-roles="ProductAdmin" oc-pretty-submit>
             <fieldset class="form-group">
                 <label for="ShipWeight" class="col-sm-3 control-label">Ship Weight</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input id="ShipWeight" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipWeight" />
+                        <input id="ShipWeight" placeholder="(Optional)" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipWeight" />
                         <span class="input-group-addon">lb(s)</span>
                     </div>
                 </div>
@@ -13,32 +13,45 @@
             <fieldset class="form-group">
                 <label for="ShipHeight" class="col-sm-3 control-label">Ship Height</label>
                 <div class="col-sm-9">
-                    <input id="ShipHeight" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipHeight" />
+                    <div class="input-group">
+                        <input id="ShipHeight" placeholder="(Optional)" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipHeight" />
+                        <div class="input-group-addon">in.</div>
+                    </div>
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="ShipWidth" class="col-sm-3 control-label">Ship Width</label>
                 <div class="col-sm-9">
-                    <input id="ShipWidth" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipWidth" />
+                    <div class="input-group">
+                        <input id="ShipWidth" placeholder="(Optional)" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipWidth" />
+                        <div class="input-group-addon">in.</div>
+                    </div>
                 </div>
             </fieldset>
             <fieldset class="form-group">
-                <label for="ShipLength" class="col-sm-3 control-label">Ship Length</label>
+                <label for="ShipLength" placeholder="(Optional)" class="col-sm-3 control-label">Ship Length</label>
                 <div class="col-sm-9">
-                    <input id="ShipLength" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipLength" />
+                    <div class="input-group">
+                        <input id="ShipLength" type="number" min="0" step="any" class="form-control" ng-model="product.model.ShipLength" />
+                        <div class="input-group-addon">in.</div>
+                    </div>
                 </div>
             </fieldset>
-            <fieldset class="form-group" oc-if-roles="AddressRoles">
+            <fieldset class="form-group" oc-if-roles="SellerAddressRoles">
                 <label for="ShipFrom" class="col-sm-3 control-label">Ship From</label>
                 <div class="col-sm-9">
-                    <ui-select ng-model="product.model.ShipFromAddressID" close-on-select="true" id="ShipFrom" ng-disabled="!application.userIsAuthorized(['ProductAdmin'])">
-                        <ui-select-match placeholder="Search and select seller addresses...">
+                    <ui-select ng-model="product.model.ShipFromAddressID" close-on-select="true" id="ShipFrom" ng-disabled="!application.userIsAuthorized(['ProductAdmin'])" ng-if="productShipping.sellerAddresses.Items.length">
+                        <ui-select-match placeholder="(Optional) Search and select seller addresses...">
                             <span ng-bind-html="$select.selected | address"></span>
                         </ui-select-match>
                         <ui-select-choices repeat="address.ID as address in (productShipping.sellerAddresses.Items | filter: $select.search) track by $index" refresh="productShipping.listAllAdminAddresses($select.search)" refresh-delay="300">
                             <span ng-bind-html="address | address:'full'"></span>
                         </ui-select-choices>
                     </ui-select>
+                    <div class="no-matches" ng-if="!productShipping.sellerAddresses.Items.length">
+                        This organization does not have any seller addresses. 
+                        <span oc-if-roles="AdminAddressAdmin"><br><a ui-sref="sellerAddresses">Create one now</a></span>
+                    </div>
                 </div>
             </fieldset>
             <fieldset class="form-group">

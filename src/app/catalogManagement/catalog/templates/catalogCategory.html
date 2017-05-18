@@ -1,6 +1,7 @@
 <div>
     <header class="l-page-header">
         <h3 class="l-page-header__title">
+            <i class="fa fa-circle" aria-hidden="true" uib-tooltip="{{catalogCategory.category.Active ? 'Active' : 'Inactive'}}" ng-class="{'active':catalogCategory.category.Active}"></i> 
             {{catalogCategory.category.Name}}
         </h3>
         <div class="l-page-header__btns" oc-if-roles="CategoryAdmin">
@@ -8,8 +9,21 @@
             <button type="button" class="btn btn-danger" ng-click="catalogCategory.deleteCategory(catalogCategory.category.ID)"><i class="fa fa-trash"></i> Delete</button>
         </div>
     </header>
-    <p ng-bind-html="catalogCategory.category.Description || '<em class=\'text-muted\'>No description</em>'"></p>
+    <div class="row">
+        <div class="col-sm-4 col-md-3">
+            <div class="no-matches" ng-if="!catalogCategory.category.xp.image.URL">No image provided</div>
+            <figure class="thumbnail" ng-if="catalogCategory.category.xp.image.URL">
+                <img ng-src="{{catalogCategory.category.xp.image.URL}}" alt="Category Image" class="img-responsive">
+            </figure>
+        </div>
+        <div class="col-sm-8 col-md-9">
+            <p ng-bind-html="catalogCategory.category.Description || '<em class=\'text-muted\'>No description</em>'"></p>
+        </div>
+    </div>
     <hr>
-    <h4>Product Assignments</h4>
+    <h4>
+        Product Assignments <br>
+        <small class="text-muted">Assign products to this category using the checkboxes.</small>
+    </h4>
     <div ui-view cg-busy="application.stateLoading('categories.category')"></div>
 </div>

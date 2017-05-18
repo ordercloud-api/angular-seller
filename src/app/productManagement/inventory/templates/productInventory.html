@@ -5,17 +5,19 @@
         </div>
         <form name="productInventory.ProductInventoryForm" 
               ng-submit="productInventory.updateProductInventory(productInventory.product)" 
-              autocomplete="off" novalidate class="form-horizontal" oc-readonly-roles="InventoryAdmin">
+              autocomplete="off" novalidate class="form-horizontal" oc-readonly-roles="InventoryAdmin" oc-pretty-submit>
             <fieldset class="form-group">
                 <label for="InventoryNotificationPoint" class="col-sm-3 control-label">Notification Point</label>
                 <div class="col-sm-9">
-                    <input id="InventoryNotificationPoint" type="number" class="form-control" min="1" ng-model="productInventory.product.Inventory.NotificationPoint" />
+                    <input id="InventoryNotificationPoint" placeholder="(Optional)" type="number" class="form-control" min="1" ng-model="productInventory.product.Inventory.NotificationPoint" />
+                    <span class="help-block">Receive a notification when inventory reaches this amount.</span>
                 </div>
             </fieldset>
             <fieldset class="form-group">
                 <label for="AvailableInventory" class="col-sm-3 control-label">Inventory</label>
                 <div class="col-sm-9">
-                    <input id="AvailableInventory" type="number" class="form-control" ng-model="productInventory.product.Inventory.QuantityAvailable" required />
+                    <input id="AvailableInventory" placeholder="(Optional)" type="number" class="form-control" ng-model="productInventory.product.Inventory.QuantityAvailable" required />
+                    <span class="help-block">The amount that is in stock.</span>
                 </div>
             </fieldset>
             <fieldset class="form-group">

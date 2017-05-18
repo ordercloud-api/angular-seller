@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('UserGroupProductsCtrl', UserGroupProductsController)
 ;
 
-function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams, $uibModal, $filter, toastr, OrderCloudSDK, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, SelectedUserGroup, ProductList, Parameters, MappedProductList, BuyerProductAssignments, UserGroupProductAssignments) {
+function UserGroupProductsController($exceptionHandler, $state, $filter, toastr, OrderCloudSDK, ocParameters, ocProducts, ocProductPricing, SelectedBuyer, SelectedUserGroup, Parameters, MappedProductList, BuyerProductAssignments, UserGroupProductAssignments) {
     var vm = this;
     vm.list = MappedProductList;
     //Set parameters
@@ -74,7 +74,7 @@ function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams
     };
 
     vm.updateProductPrice = function(scope) {
-        ocProductPricing.UpdateProductPrice(scope.product, SelectedBuyer, BuyerProductAssignments.concat(UserGroupProductAssignments), SelectedUserGroup)
+        ocProductPricing.UpdateProductPrice(scope.product, SelectedBuyer, CurrentAssignments, SelectedUserGroup)
             .then(function(data) {
                 var message = scope.product.Name + ' price was ' + (data.SelectedPrice ? 
                     'updated to ' + $filter('currency')(data.SelectedPrice.PriceBreaks[0].Price) : 
@@ -85,7 +85,7 @@ function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams
             })
             .catch(function(ex) {
                 if (ex === 'CREATE') {
-                    ocProductPricing.CreateProductPrice(scope.product, SelectedBuyer, BuyerProductAssignments.concat(UserGroupProductAssignments), SelectedUserGroup)
+                    ocProductPricing.CreateProductPrice(scope.product, SelectedBuyer, CurrentAssignments, SelectedUserGroup)
                         .then(function(data) {
                             toastr.success(scope.product.Name + ' price was updated to ' + $filter('currency')(data.SelectedPrice.PriceBreaks[0].Price) + ' for ' + SelectedUserGroup.Name);
                             CurrentAssignments = data.UpdatedAssignments;
@@ -94,7 +94,7 @@ function UserGroupProductsController($q, $exceptionHandler, $state, $stateParams
                         .catch(function(ex) {
                             $exceptionHandler(ex);
                         });
-                } else {
+                } else if (ex !== 'escape key press') {
                     $exceptionHandler(ex);
                 }
             });
