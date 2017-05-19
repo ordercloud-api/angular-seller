@@ -68,6 +68,15 @@ function OrderCloudNavItemsService(ocRoles) {
                     Items: ['CatalogRoles', 'CategoryRoles'],
                     Any: false
                 }
+            },
+            {
+                icon: 'fa-cubes',
+                state: 'product.relatedProducts',
+                name: 'Related Products',
+                roles: {
+                    Items: ['ProductRoles'],
+                    Any: false
+                }
             }
         ];
     }
