@@ -63,7 +63,10 @@
                 </div>
                 <div class="form-group">
                     <label for="ConfirmPassword" class="sr-only">Confirm Password</label>
-                    <input type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm New Password" ng-model="login.credentials.ConfirmPassword" ng-required="true" />
+                    <input type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm New Password" ng-model="login.credentials.ConfirmPassword"
+                    oc-match-field="login.credentials.NewPassword"
+                    oc-match-field-err-type="ocMatchPassword" 
+                    required/>
                 </div>
                 <button type="submit" id="reset_submit" class="btn btn-primary btn-block" ng-disabled="ResetPasswordForm.$invalid || login.credentials.NewPassword != login.credentials.ConfirmPassword">Submit</button>
             </form>
@@ -84,7 +87,10 @@
                 </div>
                 <div class="form-group">
                     <label for="ConfirmPassword" class="sr-only">Confirm Password</label>
-                    <input type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm New Password" ng-model="login.credentials.ConfirmPassword" ng-required="true" />
+                    <input type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm New Password" ng-model="login.credentials.ConfirmPassword"
+                    oc-match-field="login.credentials.NewPassword"
+                    oc-match-field-err-type="ocMatchPassword"
+                    required />
                 </div>
                 <button type="submit" id="reset_submit" class="btn btn-primary btn-block" ng-disabled="ResetPasswordForm.$invalid || login.credentials.NewPassword != login.credentials.ConfirmPassword">Submit</button>
             </form>
