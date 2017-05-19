@@ -4,7 +4,6 @@ angular.module('orderCloud', [
         'ngMessages',
         'ngResource',
         'ngSanitize',
-        'LocalForageModule',
         'ngTouch',
         'ui.tree',
         'ui.router',

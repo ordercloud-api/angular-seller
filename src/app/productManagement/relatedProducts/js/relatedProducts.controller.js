@@ -14,6 +14,7 @@ function RelatedProductController($q, OrderCloudSDK, toastr, $state, $exceptionH
     vm.addRelatedProducts = addRelatedProducts;
     vm.listAllProducts = listAllProducts;
     vm.pageChanged = pageChanged;
+    vm.loadMore = loadMore;
 
     function removeRelatedProduct(relatedProduct) {
         var list = _.without(vm.product.xp.RelatedProducts, relatedProduct.ID);
@@ -96,6 +97,15 @@ function RelatedProductController($q, OrderCloudSDK, toastr, $state, $exceptionH
     }
 
     function pageChanged() {
-        $state.go('product.relatedProducts', {page:vm.relatedProducts.Meta.Page}, {reload: true});
+        $state.go('product.relatedProducts', {page: vm.relatedProducts.Meta.Page}, {reload: true});
+    }
+
+    function loadMore() {
+        var parameters = angular.extend(Parameters, {page: vm.relatedProducts.Meta.Page + 1, filters: {ID: vm.product.xp.RelatedProducts.join('|')}});
+        return OrderCloudSDK.Products.List(parameters)
+            .then(function(data) {
+                vm.relatedProducts.Items = vm.relatedProducts.Items.concat(data.Items);
+                vm.relatedProducts.Meta = data.Meta;
+            });
     }
 }

@@ -48,15 +48,22 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="text-center" ng-if="relatedProduct.relatedProducts.Meta.TotalPages > 1">
-                <uib-pagination class="pagination-sm pull-right hidden-xs"
-                                boundary-links="relatedProduct.relatedProducts.Meta.TotalPages > 5"
-                                max-size="5" total-items="relatedProduct.relatedProducts.Meta.TotalCount"
-                                items-per-page="relatedProduct.relatedProducts.Meta.PageSize"
-                                ng-model="relatedProduct.relatedProducts.Meta.Page"
-                                ng-change="relatedProduct.pageChanged()">
-                </uib-pagination>
-            </div>
+            <ul uib-pagination
+                class="pagination-sm pull-right hidden-xs"
+                ng-if="relatedProduct.relatedProducts.Meta.TotalPages > 1"
+                total-items="relatedProduct.relatedProducts.Meta.TotalCount"
+                items-per-page="relatedProduct.relatedProducts.Meta.PageSize"
+                max-size="5"
+                boundary-links="relatedProduct.relatedProducts.Meta.TotalPages > 5"
+                ng-model="relatedProduct.relatedProducts.Meta.Page"
+                ng-change="relatedProduct.pageChanged()">
+            </ul>
+            <button type="button"
+                    class="btn btn-default btn-block btn-lg visible-xs"
+                    ng-show="relatedProduct.relatedProducts.Meta.Page < relatedProduct.relatedProducts.Meta.TotalPages"
+                    ng-click="relatedProduct.loadMore()">
+                    Load More
+            </button>
         </div>
     </div>
 </div>
