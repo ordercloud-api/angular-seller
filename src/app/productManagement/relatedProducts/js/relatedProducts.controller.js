@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('RelatedProductCtrl', RelatedProductController)
 ;
 
-function RelatedProductController(OrderCloudSDK, toastr, $state, $exceptionHandler, RelatedProductsList, SelectedProduct, Parameters, ocUtility) {
+function RelatedProductController($q, OrderCloudSDK, toastr, $state, $exceptionHandler, RelatedProductsList, SelectedProduct, Parameters) {
     var vm = this;
     vm.product = angular.copy(SelectedProduct);
     vm.relatedProducts = RelatedProductsList;
@@ -66,18 +66,36 @@ function RelatedProductController(OrderCloudSDK, toastr, $state, $exceptionHandl
     }
 
     function listAllProducts(product) {
+        var page = 1;
         var parameters = {
             pageSize: 100,
-            page: 'page',
+            page: page,
             search: product
         };
-        return ocUtility.ListAll(OrderCloudSDK.Products.List, parameters)
+        return OrderCloudSDK.Products.List(parameters)
             .then(function(data){
                 vm.uiSelectProducts = data;
+                var queue = [];
+                if(data.Meta.TotalPages > data.Meta.Page) {
+                    page = data.Meta.Page;
+                    while (page < data.Meta.TotalPages) {
+                        page += 1;
+                        parameters.page = page;
+                        queue.push(OrderCloudSDK.Products.List(parameters));
+                    }
+                }
+                return $q.all(queue)
+                    .then(function(allProducts) {
+                        _.each(allProducts, function(productArr) {
+                            vm.uiSelectProducts.Items = [].concat(vm.uiSelectProducts.Items, productArr.Items);
+                            vm.uiSelectProducts.Meta = productArr.Meta;
+                        });
+                        return vm.uiSelectProducts;
+                    })
             });
     }
 
     function pageChanged() {
-        $state.go('.', {page:vm.relatedProducts.Meta.Page});
+        $state.go('product.relatedProducts', {page:vm.relatedProducts.Meta.Page}, {reload: true});
     }
 }

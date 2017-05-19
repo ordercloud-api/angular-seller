@@ -49,7 +49,8 @@
                 </tbody>
             </table>
             <div class="text-center" ng-if="relatedProduct.relatedProducts.Meta.TotalPages > 1">
-                <uib-pagination boundary-links="relatedProduct.relatedProducts.Meta.TotalPages > 5"
+                <uib-pagination class="pagination-sm pull-right hidden-xs"
+                                boundary-links="relatedProduct.relatedProducts.Meta.TotalPages > 5"
                                 max-size="5" total-items="relatedProduct.relatedProducts.Meta.TotalCount"
                                 items-per-page="relatedProduct.relatedProducts.Meta.PageSize"
                                 ng-model="relatedProduct.relatedProducts.Meta.Page"

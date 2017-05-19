@@ -18,7 +18,9 @@ function RelatedProductConfig($stateProvider) {
                         var parameters = {
                             filters: {
                                 ID: SelectedProduct.xp.RelatedProducts.join('|')
-                            }
+                            },
+                            pageSize: 15,
+                            page: Parameters.page || 1
                         };
                         return OrderCloudSDK.Products.List(parameters);
                     } else {
