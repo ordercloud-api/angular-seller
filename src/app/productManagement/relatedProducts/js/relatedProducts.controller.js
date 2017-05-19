@@ -65,10 +65,10 @@ function RelatedProductController(OrderCloudSDK, toastr, $state, $exceptionHandl
         }
     }
 
-    //TODO: fix to return all products
     function listAllProducts(product) {
         var parameters = {
             pageSize: 100,
+            page: 'page',
             search: product
         };
         return ocUtility.ListAll(OrderCloudSDK.Products.List, parameters)
