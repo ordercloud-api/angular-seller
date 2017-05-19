@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('LoginCtrl', LoginController);
 
-function LoginController($state, $exceptionHandler, ocRoles, OrderCloudSDK, scope, clientid) {
+function LoginController($state, $exceptionHandler, ocRoles, OrderCloudSDK, scope, clientid, $window) {
     var vm = this;
     vm.credentials = {
         Username: null,
