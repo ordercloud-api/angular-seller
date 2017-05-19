@@ -15,7 +15,7 @@ function LoginController($window, $state, $stateParams, $exceptionHandler, ocRol
     vm.rememberStatus = false;
 
     vm.submit = function () {
-        vm.loading = OrderCloudSDK.Auth.Login(vm.credentials.Username, vm.credentials.Password, clientid, scope)
+        vm.loading = OrderCloudSDK.Auth.Login(vm.credentials.Username, $window.encodeURIComponent(vm.credentials.Password), clientid, scope)
             .then(function (data) {
                 OrderCloudSDK.SetToken(data.access_token);
                 if (vm.rememberStatus && data['refresh_token']) OrderCloudSDK.SetRefreshToken(data['refresh_token']);
