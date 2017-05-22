@@ -7,7 +7,15 @@ function EditCategoryModalController($exceptionHandler, $uibModalInstance, Order
     vm.category = angular.copy(SelectedCategory);
     vm.categoryName = SelectedCategory.Name;
     vm.catalogid = CatalogID;
-    vm.patchImage = patchImage;
+
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        invalidExtensions: null,
+        uploadText: 'Upload an image',
+        onUpdate: patchImage
+    };
 
     function patchImage(imageXP){
         return OrderCloudSDK.Categories.Patch(CatalogID, vm.category.ID, {xp: imageXP});
