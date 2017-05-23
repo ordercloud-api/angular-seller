@@ -8,7 +8,15 @@ function CreateCategoryModalController($exceptionHandler, $uibModalInstance, Ord
     vm.category.ParentID = ParentID;
     vm.category.Active = true;
     vm.catalogid = CatalogID;
-    vm.patchImage = patchImage;
+
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        invalidExtensions: null,
+        uploadText: 'Upload an image',
+        onUpdate: patchImage
+    };
 
     function patchImage(imageXP){
         return OrderCloudSDK.Categories.Patch(CatalogID, vm.category.ID, {xp: imageXP});

@@ -66,6 +66,11 @@
                                     <input id="ProductActive" name="ProductActive" type="checkbox" ng-model="product.model.Active"> Active
                                 </label>
                             </div>
+                            <div class="checkbox">
+                                <label for="ProductFeatured">
+                                    <input id="ProductFeatured" name="ProductFeatured" type="checkbox" ng-model="product.model.xp.Featured"> Featured
+                                </label>
+                            </div>
                         </div>
                     </fieldset>
                     <fieldset class="form-group" oc-if-roles="ProductAdmin">
@@ -82,7 +87,7 @@
             <div class="col-sm-4" oc-readonly-roles="ProductAdmin">
                 <fieldset class="form-group">
                     <label>Product Image</label>
-                    <oc-file-upload model="product.model" label="Image:" patch="product.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                    <oc-file-upload file-upload-object="product.model" file-upload-options="product.fileUploadOptions"></oc-file-upload>
                 </fieldset>
             </div>
         </div>

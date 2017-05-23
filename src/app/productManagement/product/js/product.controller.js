@@ -8,10 +8,18 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     vm.inventoryEnabled = angular.copy(SelectedProduct.Inventory ? SelectedProduct.Inventory.Enabled : false);
     vm.updateProduct = updateProduct;
     vm.deleteProduct = deleteProduct;
-    vm.patchImage = patchImage;
     vm.createDefaultPrice = createDefaultPrice;
     
     vm.navigationItems = ocNavItems.Filter(ocNavItems.Product());
+
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        invalidExtensions: null,
+        uploadText: 'Upload an image',
+        onUpdate: patchImage
+    };
 
     function patchImage(imageXP) {
         return OrderCloudSDK.Products.Patch(vm.model.ID, {
