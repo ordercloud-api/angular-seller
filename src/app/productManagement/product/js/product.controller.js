@@ -22,9 +22,8 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     function updateProduct() {
         var currentPrice = angular.copy(vm.model.DefaultPriceSchedule);
         var partial = _.pick(vm.model, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
-        vm.modelUpdateLoading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)
+        vm.loading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)
             .then(function (data) {
-
                 vm.model = angular.copy(data);
                 if (currentPrice && data.Name !== SelectedProduct.Name) {
                     OrderCloudSDK.PriceSchedules.Patch(currentPrice.ID, {
@@ -39,7 +38,7 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
                 vm.productName = angular.copy(data.Name);
                 vm.inventoryEnabled = angular.copy(data.InventoryEnabled);
                 SelectedProduct = data;
-                vm.InfoForm.$setPristine();
+                vm.form.$setPristine();
                 toastr.success(data.Name + ' was updated');
             });
     }
