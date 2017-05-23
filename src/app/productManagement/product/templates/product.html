@@ -87,7 +87,7 @@
             <div class="col-sm-4" oc-readonly-roles="ProductAdmin">
                 <fieldset class="form-group">
                     <label>Product Image</label>
-                    <oc-file-upload model="product.model" label="Image:" patch="product.patchImage(xp)" keyname="image" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                    <oc-file-upload file-upload-object="product.model" file-upload-options="product.fileUploadOptions"></oc-file-upload>
                 </fieldset>
             </div>
         </div>

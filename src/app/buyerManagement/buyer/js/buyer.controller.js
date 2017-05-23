@@ -14,6 +14,21 @@ function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, t
 
     vm.navigationItems = ocNavItems.Filter(ocNavItems.Buyer());
 
+    vm.fileUploadOptions = {
+        keyname: 'logo',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        invalidExtensions: null,
+        uploadText: 'Upload an image',
+        onUpdate: patchImage
+    };
+
+    function patchImage(imageXP) {
+        return OrderCloudSDK.Buyers.Patch(vm.settings.ID, {
+            xp: imageXP
+        });
+    }
+
     function updateValidity() {
         if (vm.settingsForm.buyerIDinput.$error['UnavailableID']) vm.settingsForm.buyerIDinput.$setValidity('UnavailableID', true);
     }
