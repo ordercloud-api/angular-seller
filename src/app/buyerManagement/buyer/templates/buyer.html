@@ -5,9 +5,9 @@
             <li ><a ui-sref="buyer">{{buyer.selectedBuyer.Name}}</a></li>
         </ul>
         <div class="l-page-header l-page-header-xs">
-            <div class="l-page-header__img" ng-if="buyer.selectedBuyer.xp && buyer.selectedBuyer.xp.image && buyer.selectedBuyer.xp.image.URL">
+            <div class="l-page-header__img" ng-if="buyer.selectedBuyer.xp && buyer.selectedBuyer.xp.logo && buyer.selectedBuyer.xp.logo.URL">
                 <figure class="c-logo-display">
-                    <div role="img" ng-style="{'background-image':'url(\'' + buyer.selectedBuyer.xp.image.URL + '\')'}"></div>
+                    <div role="img" ng-style="{'background-image':'url(\'' + buyer.selectedBuyer.xp.logo.URL + '\')'}"></div>
                 </figure>
             </div>
             <h3 class="l-page-header__title">
