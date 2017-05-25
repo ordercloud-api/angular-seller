@@ -7,8 +7,6 @@ function RelatedProductController($q, OrderCloudSDK, toastr, $state, $exceptionH
     vm.product = angular.copy(SelectedProduct);
     vm.products = ProductsList;
     vm.parameters = Parameters;
-    vm.selectedProducts = [];
-    vm.uiSelectProducts;
 
     vm.updateProduct = updateProduct;
     vm.pageChanged = pageChanged;
