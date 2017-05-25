@@ -7,7 +7,7 @@ function RelatedProductConfig($stateProvider) {
         .state('product.relatedProducts', {
             url: '/related-products?page&pageSize',
             templateUrl: 'productManagement/relatedProducts/templates/relatedProducts.html',
-            controller: 'RelatedProductCtrl',
+            controller: 'RelatedProductsCtrl',
             controllerAs: 'relatedProducts',
             resolve: {
                 Parameters: function($stateParams, ocParameters) {

@@ -1,8 +1,8 @@
 angular.module('orderCloud')
-    .controller('RelatedProductCtrl', RelatedProductController)
+    .controller('RelatedProductsCtrl', RelatedProductsController)
 ;
 
-function RelatedProductController($q, OrderCloudSDK, toastr, $state, $exceptionHandler, ProductsList, SelectedProduct, Parameters) {
+function RelatedProductsController($q, OrderCloudSDK, toastr, $state, $exceptionHandler, ProductsList, SelectedProduct, Parameters) {
     var vm = this;
     vm.product = angular.copy(SelectedProduct);
     vm.products = ProductsList;
