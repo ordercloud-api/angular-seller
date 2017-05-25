@@ -8,10 +8,18 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     vm.inventoryEnabled = angular.copy(SelectedProduct.Inventory ? SelectedProduct.Inventory.Enabled : false);
     vm.updateProduct = updateProduct;
     vm.deleteProduct = deleteProduct;
-    vm.patchImage = patchImage;
     vm.createDefaultPrice = createDefaultPrice;
     
     vm.navigationItems = ocNavItems.Filter(ocNavItems.Product());
+
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        invalidExtensions: null,
+        uploadText: 'Upload an image',
+        onUpdate: patchImage
+    };
 
     function patchImage(imageXP) {
         return OrderCloudSDK.Products.Patch(vm.model.ID, {
@@ -22,9 +30,8 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     function updateProduct() {
         var currentPrice = angular.copy(vm.model.DefaultPriceSchedule);
         var partial = _.pick(vm.model, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
-        vm.modelUpdateLoading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)
+        vm.loading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)
             .then(function (data) {
-
                 vm.model = angular.copy(data);
                 if (currentPrice && data.Name !== SelectedProduct.Name) {
                     OrderCloudSDK.PriceSchedules.Patch(currentPrice.ID, {
@@ -39,7 +46,7 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
                 vm.productName = angular.copy(data.Name);
                 vm.inventoryEnabled = angular.copy(data.InventoryEnabled);
                 SelectedProduct = data;
-                vm.InfoForm.$setPristine();
+                vm.form.$setPristine();
                 toastr.success(data.Name + ' was updated');
             });
     }

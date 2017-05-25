@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('BuyerCtrl', BuyerController)
 ;
 
-function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, toastr, OrderCloudSDK, ocBuyers, ocNavItems, SelectedBuyer) {
+function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuyers, ocNavItems, SelectedBuyer) {
     var vm = this;
     vm.selectedBuyer = SelectedBuyer;
     vm.settings = angular.copy(SelectedBuyer);
@@ -13,6 +13,26 @@ function BuyerController($timeout, $scope, $window, $state, $exceptionHandler, t
     vm.searchCatalogs = searchCatalogs;
 
     vm.navigationItems = ocNavItems.Filter(ocNavItems.Buyer());
+
+    vm.fileUploadOptions = {
+        keyname: 'logo',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff, svg',
+        invalidExtensions: null,
+        uploadText: 'Upload an image',
+        onUpdate: patchImage
+    };
+
+    function patchImage(imageXP) {
+        return OrderCloudSDK.Buyers.Patch(vm.settings.ID, {xp: imageXP})
+            .then(function(data) {
+                data.SelectedDefaultCatalog = vm.settings.SelectedDefaultCatalog;
+                vm.selectedBuyer = data;
+                SelectedBuyer = data;
+                vm.settings = angular.copy(data);
+                toastr.success(data.Name + ' logo was updated');
+            });
+    }
 
     function updateValidity() {
         if (vm.settingsForm.buyerIDinput.$error['UnavailableID']) vm.settingsForm.buyerIDinput.$setValidity('UnavailableID', true);

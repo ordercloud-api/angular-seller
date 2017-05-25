@@ -5,9 +5,9 @@
             <li ><a ui-sref="buyer">{{buyer.selectedBuyer.Name}}</a></li>
         </ul>
         <div class="l-page-header l-page-header-xs">
-            <div class="l-page-header__img" ng-if="buyer.selectedBuyer.xp && buyer.selectedBuyer.xp.image && buyer.selectedBuyer.xp.image.URL">
+            <div class="l-page-header__img" ng-if="buyer.selectedBuyer.xp && buyer.selectedBuyer.xp.logo && buyer.selectedBuyer.xp.logo.URL">
                 <figure class="c-logo-display">
-                    <div role="img" ng-style="{'background-image':'url(\'' + buyer.selectedBuyer.xp.image.URL + '\')'}"></div>
+                    <div role="img" ng-style="{'background-image':'url(\'' + buyer.selectedBuyer.xp.logo.URL + '\')'}"></div>
                 </figure>
             </div>
             <h3 class="l-page-header__title">
@@ -68,7 +68,7 @@
                     <fieldset class="form-group">
                         <label for="orderCloudUpload" class="col-sm-3 control-label">Logo</label>
                         <div class="col-sm-9">
-                            <oc-file-upload model="buyer.settings" keyname="logo" extensions="jpg, png, gif, jpeg, tiff"></oc-file-upload>
+                            <oc-file-upload file-upload-object="buyer.settings" file-upload-options="buyer.fileUploadOptions"></oc-file-upload>
                         </div>
                     </fieldset>
                     <div class="form-group">
