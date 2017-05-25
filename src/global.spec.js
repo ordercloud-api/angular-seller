@@ -12,6 +12,7 @@ var q,
     ocParametersService,
     parametersResolve,
     selectedProduct,
+    productsList,
     dummyPromise,
     mock = _mockData();
 beforeEach(module('orderCloud', function($provide) {
@@ -20,10 +21,11 @@ beforeEach(module('orderCloud', function($provide) {
     });
     $provide.value('Parameters', mock.Parameters);
     $provide.value('SelectedProduct', mock.SelectedProduct);
+    $provide.value('ProductsList', mock.ProductsList);
 }));
 beforeEach(module('ordercloud-angular-sdk'));
 beforeEach(inject(function($q, $rootScope, $compile, $state, $injector, toastr, $uibModal,
-OrderCloudSDK, $exceptionHandler, ocConfirm, ocParameters, Parameters, SelectedProduct) {
+OrderCloudSDK, $exceptionHandler, ocConfirm, ocParameters, Parameters, SelectedProduct, ProductsList) {
     q = $q;
     scope = $rootScope.$new();
     rootScope = $rootScope;
@@ -38,6 +40,7 @@ OrderCloudSDK, $exceptionHandler, ocConfirm, ocParameters, Parameters, SelectedP
     ocParametersService = ocParameters;
     parametersResolve = Parameters;
     selectedProduct = SelectedProduct;
+    productsList = ProductsList;
     var defer = $q.defer();
     defer.resolve('FAKE_RESPONSE');
     dummyPromise = defer.promise;
@@ -99,7 +102,7 @@ function _mockData() {
                 RelatedProducts: ['relProd1', 'relProd2']
             }
         },
-        Products: {
+        ProductList: {
             Items: [
                 {ID: 'testProd1'},
                 {ID: 'testProd2'}
