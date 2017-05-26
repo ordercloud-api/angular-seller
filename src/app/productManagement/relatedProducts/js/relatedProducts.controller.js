@@ -41,11 +41,7 @@ function RelatedProductsController($q, OrderCloudSDK, toastr, $state, $exception
     }
 
     function loadMore() {
-        var parameters = angular.extend(Parameters, {page: vm.products.Meta.Page + 1, filters: {ID: vm.product.xp.RelatedProducts.join('|')}});
-        return OrderCloudSDK.Products.List(parameters)
-            .then(function(data) {
-                vm.products.Items = vm.products.Items.concat(data.Items);
-                vm.products.Meta = data.Meta;
-            });
+        var parameters = angular.extend(Parameters, {page: vm.products.Meta.Page + 1});
+        return OrderCloudSDK.Products.List(parameters);
     }
 }
