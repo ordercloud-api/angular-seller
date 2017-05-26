@@ -1,4 +1,4 @@
-fdescribe('Component: Related Products', function() {
+describe('Component: Related Products', function() {
     describe('State: RelatedProducts', function() {
         var relatedProductsState;
         beforeEach(function() {
