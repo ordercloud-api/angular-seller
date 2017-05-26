@@ -1,4 +1,4 @@
-describe('Component: Related Products', function() {
+fdescribe('Component: Related Products', function() {
     describe('State: RelatedProducts', function() {
         var relatedProductsState;
         beforeEach(function() {
@@ -39,7 +39,7 @@ describe('Component: Related Products', function() {
                 ProductsList: productsList
             });
             spyOn(oc.Products, 'Patch').and.returnValue(dummyPromise);
-            spyOn(oc.Products, 'List').and.returnValue(dummyPromise);
+            spyOn(oc.Products, 'List').and.returnValue();
             spyOn(state, 'go');
         }));
         describe('vm.updateProduct', function() {
