@@ -18,7 +18,8 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
         extensions: 'jpg, png, gif, jpeg, tiff',
         invalidExtensions: null,
         uploadText: 'Upload an image',
-        onUpdate: patchImage
+        onUpdate: patchImage,
+        multiple: false
     };
 
     function patchImage(imageXP) {

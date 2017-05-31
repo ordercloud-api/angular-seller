@@ -14,7 +14,8 @@ function EditCategoryModalController($exceptionHandler, $uibModalInstance, Order
         extensions: 'jpg, png, gif, jpeg, tiff',
         invalidExtensions: null,
         uploadText: 'Upload an image',
-        onUpdate: patchImage
+        onUpdate: patchImage,
+        multiple: false
     };
 
     function patchImage(imageXP){
