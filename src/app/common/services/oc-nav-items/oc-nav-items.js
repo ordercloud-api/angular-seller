@@ -125,6 +125,15 @@ function OrderCloudNavItemsService(ocRoles) {
                 }
             },
             {
+                icon: 'fa-bell',
+                state: 'buyerMessageSenders',
+                name: 'Notifications',
+                roles: {
+                    Items: ['MessageConfigAssignmentAdmin'],
+                    Any: false
+                }
+            },
+            {
                 icon: 'fa-dollar',
                 state: 'buyerProducts',
                 name: 'Pricing',
@@ -235,6 +244,15 @@ function OrderCloudNavItemsService(ocRoles) {
                 name: 'Permissions',
                 roles: {
                     Items: ['SetSecurityProfile'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-bell',
+                state: 'userGroup.messageSenders',
+                name: 'Notifications',
+                roles: {
+                    Items: ['MessageConfigAssignmentAdmin'],
                     Any: false
                 }
             },

@@ -7,7 +7,7 @@ function BaseController(CurrentUser, $state) {
 
     vm.addContainerClass = function() {
         var result = false;
-        var containedStates = ['products', 'catalogs', 'buyers', 'home', 'orders', 'sellerUsers', 'sellerUserGroups', 'sellerUserGroup*', 'sellerAddresses', 'permissions'];
+        var containedStates = ['products', 'sellerMessageSenders', 'catalogs', 'buyers', 'home', 'orders', 'sellerUsers', 'sellerUserGroups', 'sellerUserGroup*', 'sellerAddresses', 'permissions'];
         _.each(containedStates, function (state) {
             if (result === true) return;
             var test = state.split('*');
