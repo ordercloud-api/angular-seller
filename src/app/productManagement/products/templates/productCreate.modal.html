@@ -44,7 +44,7 @@
         <div ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'image'" ng-form="image">
             <fieldset>
                 <label class="sr-only" for="image">Upload a product image</label>
-                <oc-file-upload file-upload-object="productCreateModal.product" file-upload-options="productCreateModal.fileUploadOptions"></oc-file-upload>
+                <oc-file-upload file-upload-model="productCreateModal.product.xp" file-upload-options="productCreateModal.fileUploadOptions"></oc-file-upload>
             </fieldset>
         </div>
         <div ng-show="productCreateModal.steps[productCreateModal.currentStep].form == 'pricing'" ng-form="pricing">

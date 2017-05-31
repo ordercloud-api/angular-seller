@@ -65,7 +65,8 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
         extensions: 'jpg, png, gif, jpeg, tiff',
         invalidExtensions: null,
         uploadText: 'Choose a product image',
-        onUpdate: null
+        onUpdate: null,
+        multiple: false
     };
 
     function listAllAdminAddresses(search) {

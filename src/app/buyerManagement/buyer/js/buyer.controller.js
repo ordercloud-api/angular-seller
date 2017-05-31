@@ -16,11 +16,13 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuy
 
     vm.fileUploadOptions = {
         keyname: 'logo',
+        srcKeyname: 'URL',
         folder: null,
         extensions: 'jpg, png, gif, jpeg, tiff, svg',
         invalidExtensions: null,
         uploadText: 'Upload an image',
-        onUpdate: patchImage
+        onUpdate: patchImage,
+        multiple: false
     };
 
     function patchImage(imageXP) {

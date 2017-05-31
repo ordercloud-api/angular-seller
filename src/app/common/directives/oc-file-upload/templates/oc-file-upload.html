@@ -1,0 +1,26 @@
+<div class="c-file-upload" ng-class="{'has-error': invalidExtension}">
+    <figure class="thumbnail" ng-show="fileUploadModel[fileUploadOptions.keyname || 'image'][fileUploadOptions.srcKeyname || 'URL']">
+        <img class="img-responsive" ng-src="{{fileUploadModel[fileUploadOptions.keyname || 'image'][fileUploadOptions.srcKeyname || 'URL']}}" alt="Product Image">
+    </figure>
+    <div>
+        <div class="input-group">
+            <div class="input-group-btn">
+                <button type="button" 
+                        id="OrderCloudFileUpload"
+                        class="btn btn-default" 
+                        ng-class="{'btn-block':!fileUploadModel[fileUploadOptions.keyname || 'image'][fileUploadOptions.srcKeyname || 'URL']}" 
+                        ng-click="upload()">
+                        {{fileUploadModel[fileUploadOptions.keyname || 'image'][fileUploadOptions.srcKeyname || 'URL']  ? 'Replace file' : (fileUploadOptions.uploadText || 'Browse files')}}
+                </button>
+            </div>
+            <input type="text" class="form-control" ng-model="fileUploadModel[fileUploadOptions.keyname || 'image'][fileUploadOptions.srcKeyname || 'URL']" placeholder="Paste a url..." ng-model-options="{debounce: 1000}" ng-change="urlChange()" ng-disabled="fileUploadModel[fileUploadOptions.keyname || 'image'].Uploaded">
+            <div class="input-group-btn" ng-if="fileUploadModel[fileUploadOptions.keyname || 'image'][fileUploadOptions.srcKeyname || 'URL']">
+                <button type="button" class="btn btn-danger" ng-click="removeFile()">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <input class="ng-hide" name="upload" type="file" id="orderCloudUpload" />
+    <span class="help-block error-msg" ng-show="invalidExtension">Invalid file type, please select another file.</span>
+</div>
