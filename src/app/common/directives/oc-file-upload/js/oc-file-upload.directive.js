@@ -133,7 +133,7 @@ function ordercloudFileUpload($timeout, $uibModal, $ocFiles, OrderCloudSDK, ocFi
                 .then(function(fileData) {
                     if (multiple) {
                         if (!scope.fileUploadModel) scope.fileUploadModel = {};
-                        if (!scope.fileUploadModel[scope.fileUploadOptions.keyname]) scope.fileUploadModel[scope.fileUploadOptions.keyname || 'images'] = {Items};
+                        if (!scope.fileUploadModel[scope.fileUploadOptions.keyname]) scope.fileUploadModel[scope.fileUploadOptions.keyname || 'images'] = {Items: []};
                         scope.fileUploadModel[scope.fileUploadOptions.keyname || 'images'].Items[index][scope.fileUploadOptions.srcKeyname || 'URL'] = fileData.Location;
                         scope.fileUploadModel[scope.fileUploadOptions.keyname || 'images'].Items[index].Uploaded = true;
                     }
