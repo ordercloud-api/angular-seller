@@ -78,8 +78,8 @@
                             <button type="submit" cg-busy="product.productUpdateLoading" ng-disabled="product.form.$invalid" class="btn btn-primary btn-block">Update Product Info</button>
                         </div>
                         <div class="col-sm-offset-3 col-sm-9 hidden-xs">
-                        <hr>
-                            <button type="submit" class="btn btn-danger btn-block" ng-click="product.deleteProduct()">Delete Product</button>
+                            <hr>
+                            <button type="button" class="btn btn-danger btn-block" ng-click="product.deleteProduct()">Delete Product</button>
                         </div>
                     </fieldset>
                 </form>
@@ -93,7 +93,7 @@
         </div>
         <div class="visible-xs" oc-if-roles="ProductAdmin">
             <hr>
-            <button type="submit" class="btn btn-danger btn-block" ng-click="product.deleteProduct()"><i class="fa fa-trash-o"></i> Delete Product</button>
+            <button type="button" class="btn btn-danger btn-block" ng-click="product.deleteProduct()"><i class="fa fa-trash-o"></i> Delete Product</button>
         </div>
     </div>
 </article>

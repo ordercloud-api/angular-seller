@@ -34,7 +34,6 @@ function ProductSpecsController($rootScope, toastr, ocProductSpecs, ProductSpecs
             .then(function(assignment) {
                 vm.specs.Items.push(assignment);
                 vm.selectedSpec = assignment;
-                $rootScope.$broadcast('ProductManagement:SpecCountChanged', 'increment');
             });
     }
 
@@ -60,7 +59,6 @@ function ProductSpecsController($rootScope, toastr, ocProductSpecs, ProductSpecs
                 vm.specs.Items.splice(specIndex, 1);
                 toastr.success('Spec: ' + vm.selectedSpec.Spec.Name + ' was deleted.');
                 vm.selectedSpec = null;
-                $rootScope.$broadcast('ProductManagement:SpecCountChanged', 'decrement');
             });
     }
 
