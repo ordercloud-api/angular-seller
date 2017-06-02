@@ -90,7 +90,7 @@ function OrderCloudRelatedProductsService($q, $log, OrderCloudSDK) {
         var df = $q.defer(),
             queue = [];
 
-        if (!(relatedProductIDs || relatedProductIDs.length))  {
+        if (!relatedProductIDs || (relatedProductIDs && !relatedProductIDs.length))  {
             df.resolve();
         } else {
             OrderCloudSDK.Products.List({filters: {ID:relatedProductIDs.join('|')}})
