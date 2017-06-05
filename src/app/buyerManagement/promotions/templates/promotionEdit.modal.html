@@ -80,15 +80,69 @@
             </div>
         </div>
         <hr>
-        <div class="form-group">
-            <label for="EligibleExpression">Eligible Expression</label>
-            <textarea rows="2" id="EligibleExpression" name="EligibleExpression" type="text" class="form-control" ng-model="promotionEditModal.promotion.EligibleExpression" required></textarea>
+        <div ng-if="promotionEditModal.promotionTemplate">
+            <h4>Eligibility</h4>
+            <div class="form-group" ng-repeat="field in promotionEditModal.promotionTemplate.EligibleFields" ng-if="!promotionEditModal.promotionTemplate.EligibleDisplayText">
+                <label>{{field.Label}}</label>
+                <div ng-class="{'input-group': (field.PrefixIcon || field.SuffixIcon || field.Typeahead == 'Categories')}">
+                    <div class="input-group-btn" ng-if="field.Typeahead == 'Categories'">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{promotionEditModal.selectedCatalog ? promotionEditModal.selectedCatalog.Name : 'Catalog'}} <span class="caret"></span>
+                            </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="catalog in promotionEditModal.promotionTemplate.Catalogs">
+                                <a ng-click="promotionEditModal.selectedCatalog = catalog">{{catalog.Name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="input-group-addon" ng-if="field.PrefixIcon"><i class="fa" ng-class="field.PrefixIcon"></i></span>
+                    <input type="text" class="form-control" ng-if="field.Type == 'text' && !field.Typeahead" ng-model="field.Value" ng-change="promotionEditModal.eligibleFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'text'" />
+                    <input type="text" class="form-control" ng-if="field.Type == 'text' && field.Typeahead" ng-model="field.Value" ng-change="promotionEditModal.eligibleFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'text'"
+                           uib-typeahead="item.ID as item.Name for item in promotionEditModal.typeahead(field.Typeahead, $viewValue)" typeahead-on-select="promotionEditModal.eligibleFieldChange()" />
+                    <input type="number" class="form-control" ng-if="field.Type == 'number'" ng-model="field.Value" ng-change="promotionEditModal.eligibleFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'number'" />
+                    <span class="input-group-addon" ng-if="field.SuffixIcon"><i class="fa" ng-class="field.SuffixIcon"></i></span>
+                </div>
+            </div>
+            <div ng-if="promotionEditModal.promotionTemplate.EligibleDisplayText && !promotionEditModal.promotionTemplate.EligibleFields.length" class="alert alert-info">
+                <p>{{promotionEditModal.promotionTemplate.EligibleDisplayText}}</p>
+            </div>
+            <hr>
+            <h4>Discount</h4>
+            <div class="form-group" ng-repeat="field in promotionEditModal.promotionTemplate.ValueFields" ng-if="!promotionEditModal.promotionTemplate.ValueDisplayText">
+                <label>{{field.Label}}</label>
+                <div ng-class="{'input-group': (field.PrefixIcon || field.SuffixIcon || field.Typeahead == 'Categories')}">
+                    <div class="input-group-btn" ng-if="field.Typeahead == 'Categories'">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{promotionEditModal.selectedCatalog ? promotionEditModal.selectedCatalog.Name : 'Catalog'}} <span class="caret"></span>
+                            </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="catalog in promotionEditModal.promotionTemplate.Catalogs">
+                                <a ng-click="promotionEditModal.selectedCatalog = catalog">{{catalog.Name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="input-group-addon" ng-if="field.PrefixIcon"><i class="fa" ng-class="field.PrefixIcon"></i></span>
+                    <input type="text" class="form-control" ng-if="field.Type == 'text' && !field.Typeahead" ng-model="field.Value" ng-change="promotionEditModal.valueFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'text'" />
+                    <input type="text" class="form-control" ng-if="field.Type == 'text' && field.Typeahead" ng-model="field.Value" ng-change="promotionEditModal.valueFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'text'"
+                           uib-typeahead="item.ID as item.Name for item in promotionEditModal.typeahead(field.Typeahead, $viewValue)" typeahead-on-select="promotionEditModal.valueFieldChange()" />
+                    <input type="number" class="form-control" ng-if="field.Type == 'number'" ng-model="field.Value" ng-change="promotionEditModal.valueFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'number'" />
+                    <span class="input-group-addon" ng-if="field.SuffixIcon"><i class="fa" ng-class="field.SuffixIcon"></i></span>
+                </div>
+            </div>
+            <div ng-if="promotionEditModal.promotionTemplate.ValueDisplayText && !promotionEditModal.promotionTemplate.ValueFields.length" class="alert alert-info">
+                <p>{{promotionEditModal.promotionTemplate.ValueDisplayText}}</p>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="ValueExpression">Value Expression</label>
-            <textarea rows="2" id="ValueExpression" name="ValueExpression" type="text" class="form-control" ng-model="promotionEditModal.promotion.ValueExpression" required></textarea>
+        <div ng-if="!promotionEditModal.promotionTemplate">
+            <div class="form-group">
+                <label for="EligibleExpression">Eligible Expression</label>
+                <textarea rows="2" id="EligibleExpression" name="EligibleExpression" type="text" class="form-control" ng-model="promotionEditModal.promotion.EligibleExpression" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="ValueExpression">Value Expression</label>
+                <textarea rows="2" id="ValueExpression" name="ValueExpression" type="text" class="form-control" ng-model="promotionEditModal.promotion.ValueExpression" required></textarea>
+            </div>
         </div>
-
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-primary btn-block">Save</button>
