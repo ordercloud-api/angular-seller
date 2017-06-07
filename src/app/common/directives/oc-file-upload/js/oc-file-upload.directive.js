@@ -35,7 +35,7 @@ function ordercloudFileUpload($timeout, $uibModal, $ocFiles, OrderCloudSDK, ocFi
         var globalOptions = $ocFiles.GetFileUploadOptions();
         scope.fileUploadOptions = {
             keyname: scope.fileUploadOptions.keyname || globalOptions.keyname || (scope.fileUploadOptions.multiple ? 'images' : 'image'),
-            srcKeyname: scope.fileUploadOptions.srcKeyname || globalOptions.srcKeyname || (scope.fileUploadOptions.multiple ? 'Src' : 'URL'),
+            srcKeyname: scope.fileUploadOptions.srcKeyname || globalOptions.srcKeyname || 'URL',
             folder: scope.fileUploadOptions.folder || globalOptions.folder || null,
             extensions: scope.fileUploadOptions.extensions || globalOptions.extensions || null,
             invalidExtensions: scope.fileUploadOptions.invalidExtensions || globalOptions.invalidExtensions || null,
