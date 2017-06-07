@@ -5,7 +5,7 @@ angular.module('orderCloud')
 function FileUploadModalController($uibModalInstance, ocFilesService, Model, SelectedIndex, FileUploadOptions) {
     var vm = this;
     var multiple = FileUploadOptions.multiple;
-    vm.files = multiple ? angular.copy(Model[FileUploadOptions.keyname].Items) : angular.copy(Model);
+    vm.files = multiple ? angular.copy(Model[FileUploadOptions.keyname][FileUploadOptions.arrayKeyName || 'Items']) : angular.copy(Model);
     vm.selectedIndex = angular.copy(SelectedIndex.toString());
     vm.additionalFields = angular.copy(FileUploadOptions.additionalFields);
 
@@ -31,7 +31,7 @@ function FileUploadModalController($uibModalInstance, ocFilesService, Model, Sel
             vm.files.push(imageObject);
         }
         multiple 
-            ? Model[FileUploadOptions.keyname].Items = vm.files 
+            ? Model[FileUploadOptions.keyname][FileUploadOptions.arrayKeyName || 'Items'] = vm.files 
             : Model[FileUploadOptions.keyname] = vm.files[FileUploadOptions.keyname];
         if (FileUploadOptions.onUpdate) {
             FileUploadOptions.onUpdate(Model)

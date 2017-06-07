@@ -12,6 +12,7 @@ function OrderCloudFilesProvider(scope) {
         uploadText:  null,
         onUpdate:  null,
         multiple: false,
+        arrayKeyName: null,
         addText:  null,
         maxLimit:  null,
         additionalFields:  null,

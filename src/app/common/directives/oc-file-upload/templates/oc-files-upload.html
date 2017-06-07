@@ -1,6 +1,6 @@
 <div class="c-file-upload__multiple">
-    <ol dnd-list="fileUploadModel[fileUploadOptions.keyname || 'images'].Items" dnd-horizontal-list="true">
-        <li ng-repeat="file in fileUploadModel[fileUploadOptions.keyname || 'images'].Items" 
+    <ol dnd-list="fileUploadModel[fileUploadOptions.keyname || 'images'][fileUploadOptions.arrayKeyName]" dnd-horizontal-list="true">
+        <li ng-repeat="file in fileUploadModel[fileUploadOptions.keyname || 'images'][fileUploadOptions.arrayKeyName]" 
                 dnd-draggable="file" dnd-moved="dropped($index)" dnd-dragstart="dragStart()" dnd-effect-allowed="move" dnd-disable-if="!fileUploadOptions.draggable">
             <div class="c-file-upload__container">
                 <div class="c-file-upload__image" ng-style="{backgroundImage: (file[fileUploadOptions.srcKeyname || 'URL'] ? 'url(' + file[fileUploadOptions.srcKeyname || 'URL'] + ')' : 'none')}"></div>
@@ -16,7 +16,7 @@
             </div>
         </li>
     </ol>
-    <button type="button" class="btn btn-default btn-block" ng-click="addImage()" ng-if="!fileUploadOptions.maxLimit || fileUploadModel[fileUploadOptions.keyname || 'images'].Items.length < fileUploadOptions.maxLimit">
+    <button type="button" class="btn btn-default btn-block" ng-click="addImage()" ng-if="!fileUploadOptions.maxLimit || fileUploadModel[fileUploadOptions.keyname || 'images'][fileUploadOptions.arrayKeyName].length < fileUploadOptions.maxLimit">
         <i class="fa fa-plus-circle"></i> {{fileUploadOptions.addText || 'Add a file'}}
     </button>
 </div>
