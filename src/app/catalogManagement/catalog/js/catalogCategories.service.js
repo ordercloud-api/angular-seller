@@ -91,7 +91,8 @@ function OrderCloudCatalogCategoriesSerivce($q, OrderCloudSDK) {
         var assignment = {
             categoryID: categoryID,
             buyerID: buyerID, 
-            userGroupID: userGroupID
+            userGroupID: userGroupID,
+            visible: true
         };
         return OrderCloudSDK.Categories.SaveAssignment(catalogID, assignment);
     }

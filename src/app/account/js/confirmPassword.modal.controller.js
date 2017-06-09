@@ -10,7 +10,7 @@ function ConfirmPasswordModalController($exceptionHandler, $uibModalInstance, Cu
 			Password: vm.password
 		};
 
-		OrderCloudSDK.Auth.Login(checkPasswordCredentials.Username, checkPasswordCredentials.Password, clientid, scope)
+		OrderCloudSDK.Auth.Login(checkPasswordCredentials.Username, $window.encodeURIComponent(checkPasswordCredentials.Password), clientid, scope)
 			.then(function () {
 				var expiresIn = new Date();
 				expiresIn.setMinutes(expiresIn.getMinutes() + 20);

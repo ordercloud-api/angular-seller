@@ -65,6 +65,8 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
     function _assignmentData(assignments) {
         var deferred = $q.defer();
 
+        assignments.Items = _.filter(assignments.Items, function(assignment) { return assignment.PriceScheduleID; });
+
         var psQueue = [];
         var schedules = _.uniq(_.pluck(assignments.Items, 'PriceScheduleID'));
 

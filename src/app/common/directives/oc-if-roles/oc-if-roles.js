@@ -44,16 +44,17 @@ function OrderCloudIfRoles(ocRoles, $ocRoles) {
         var roleGroups = $ocRoles.GetRoleGroups();
         var splitRoleGroups = _.filter(splitAttrs, function(val) { return roleGroups[val]; })
         var ocIfRolesObj = scope.$eval(attrValue);
+
         if (typeof ocIfRolesObj == 'object') {
             analyzeRoles(ocIfRolesObj.Items, ocIfRolesObj.Any);
-        } else if (attrValue && !/[^a-z]/i.test(attrValue)) {
+        } else if (attrValue && !/[^a-z!]/i.test(attrValue)) {
             if (roleGroups[attrValue]) {
                 //single string role group
                 var roleGroup = roleGroups[attrValue];
                 analyzeRoles(roleGroup.Roles, roleGroup.Type === 'Any');
             } else {
                 //single string role
-                analyzeRoles([attrValue]);
+                analyzeRoles([attrValue], true, attrValue.charAt(0) == '!');
             }
         } else if (splitAttrs.length) {
             if(splitRoleGroups.length){
@@ -75,8 +76,8 @@ function OrderCloudIfRoles(ocRoles, $ocRoles) {
             });
         }
 
-        function analyzeRoles(requiredRoles, any) {
-            if (!ocRoles.UserIsAuthorized(requiredRoles, any)) {
+        function analyzeRoles(requiredRoles, any, not) {
+            if (!ocRoles.UserIsAuthorized(requiredRoles, any, not)) {
                 removeElement();
             }
         }

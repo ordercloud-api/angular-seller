@@ -1,0 +1,91 @@
+<header class="l-page-header">
+    <h3 class="l-page-header__title">
+        Related Products
+    </h3>
+</header>
+
+<!--====== SEARCH/FILTERS ======-->
+<div ng-if="relatedProducts.list.Items.length || (!relatedProducts.list.Items.length && relatedProducts.searchResults)">
+    <form name="relatedProducts.searchForm" oc-pretty-submit>
+        <fieldset class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input type="search" ng-change="relatedProducts.search()" ng-model-options="{debounce:1000}" placeholder="Search Products..." ng-model="relatedProducts.parameters.search" class="form-control">
+                <span ng-if="relatedProducts.searchResults" class="input-group-btn">
+                    <button class="btn btn-default" type="button" aria-label="Clear Search" ng-click="relatedProducts.clearSearch()"><i class="fa fa-times"></i> <span class="hidden-xs">Clear</span></button>
+                </span>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<!--====== LIST ======-->
+<div cg-busy="relatedProducts.searchLoading">
+    <div class="no-matches" ng-if="!relatedProducts.list.Items.length">
+        <b ng-if="relatedProducts.searchResults">No matches found.</b>
+        <b ng-if="!relatedProducts.searchResults">This seller organization does not have any other products.</b>
+    </div>
+    <div ng-if="relatedProducts.list.Items.length">
+        <div class="row">
+            <div class="col-xs-6 col-xs-offset-6">
+                <p class="text-right">{{(application.$ocMedia('min-width:768px') ? relatedProducts.list.Meta.ItemRange[0] : '1') + ' - ' +
+                    relatedProducts.list.Meta.ItemRange[1] + ' of ' + relatedProducts.list.Meta.TotalCount + ' results'}}</p>
+            </div>
+        </div>
+
+        <div class="panel panel-default table-responsive">
+            <table class="table table-striped table-bordered l-product-table__related">
+                <colgroup>
+                    <col oc-if-roles="ProductAdmin">
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th oc-if-roles="ProductAdmin"></th>
+                    <th ng-click="relatedProducts.updateSort('ID')">
+                        ID
+                        <i class="fa fa-caret-down" ng-show="relatedProducts.parameters.sortBy == 'ID'"></i>
+                        <i class="fa fa-caret-up" ng-show="relatedProducts.parameters.sortBy == '!ID'"></i>
+                    </th>
+                    <th ng-click="relatedProducts.updateSort('Name')">
+                        Name
+                        <i class="fa fa-caret-down" ng-show="relatedProducts.parameters.sortBy == 'Name'"></i>
+                        <i class="fa fa-caret-up" ng-show="relatedProducts.parameters.sortBy == '!Name'"></i>
+                    </th>
+                    <th>Active</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="product in relatedProducts.list.Items">
+                    <td class="text-center">
+                        <input id="relatedProductCheckbox" name="relatedProductCheckbox" type="checkbox" ng-model="product.Related" ng-change="relatedProducts.toggle(this)"/>
+                    </td>
+                    <td>{{product.ID}}</td>
+                    <td><a href="" ui-sref="product.relatedProducts({productid:product.ID})">{{product.Name}}</a></td>
+                    <td class="text-center">
+                        <i class="fa fa-circle" aria-hidden="true" ng-class="{'active':product.Active}"></i>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <ul uib-pagination
+            class="pagination-sm pull-right hidden-xs"
+            ng-if="relatedProducts.list.Meta.TotalPages > 1"
+            total-items="relatedProducts.list.Meta.TotalCount"
+            items-per-page="relatedProducts.list.Meta.PageSize"
+            max-size="5"
+            boundary-links="relatedProducts.list.Meta.TotalPages > 5"
+            ng-model="relatedProducts.list.Meta.Page"
+            ng-change="relatedProducts.pageChanged()">
+        </ul>
+        <button type="button"
+                class="btn btn-default btn-block btn-lg visible-xs"
+                ng-show="relatedProducts.list.Meta.Page < relatedProducts.list.Meta.TotalPages"
+                ng-click="relatedProducts.loadMore()">Load More</button>
+    </div>
+</div>

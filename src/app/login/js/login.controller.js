@@ -1,21 +1,20 @@
 angular.module('orderCloud')
     .controller('LoginCtrl', LoginController);
 
-function LoginController($window, $state, $stateParams, $exceptionHandler, ocRoles, OrderCloudSDK, scope, clientid) {
+function LoginController($state, $exceptionHandler, ocRoles, OrderCloudSDK, scope, clientid, $window) {
     var vm = this;
-    vm.verificationCode = $stateParams.verificationCode;
     vm.credentials = {
         Username: null,
         Password: null
     };
-    vm.form = vm.verificationCode ? 'reset' : 'login';
+    vm.rememberStatus = false;
+    vm.form = 'login';
     vm.setForm = function (form) {
         vm.form = form;
     };
-    vm.rememberStatus = false;
 
     vm.submit = function () {
-        vm.loading = OrderCloudSDK.Auth.Login(vm.credentials.Username, vm.credentials.Password, clientid, scope)
+        vm.loading = OrderCloudSDK.Auth.Login(vm.credentials.Username, $window.encodeURIComponent(vm.credentials.Password), clientid, scope)
             .then(function (data) {
                 OrderCloudSDK.SetToken(data.access_token);
                 if (vm.rememberStatus && data['refresh_token']) OrderCloudSDK.SetRefreshToken(data['refresh_token']);
@@ -35,11 +34,10 @@ function LoginController($window, $state, $stateParams, $exceptionHandler, ocRol
     vm.forgotPassword = function () {
         vm.loading = OrderCloudSDK.PasswordResets.SendVerificationCode({
                 Email: vm.credentials.Email,
-                ClientID: clientid,
-                URL: encodeURIComponent($window.location.href) + '{0}'
+                ClientID: clientid
             })
             .then(function () {
-                vm.setForm('verificationCodeSuccess');
+                vm.setForm('reset');
                 vm.credentials.Email = null;
             })
             .catch(function (ex) {

@@ -123,3 +123,37 @@
     }
   }
 }
+
+.l-product-table__related {
+  @media(max-width:@screen-xs-max) {
+    col {
+      &:nth-child(2) {
+        width:99%;
+      }
+      &:nth-child(1) {
+        width:1%;
+      }
+    }
+    th,
+    td {
+      &:nth-child(2),
+      &:nth-child(4) {
+        display:none;
+      }
+      &:nth-child(3) {
+        border-right:none; //stops double borders from appearing
+      }
+    }
+  }
+  @media(min-width:@screen-sm-min) {
+    col {
+      &:nth-child(2) {
+        width:25%;
+      }
+      &:nth-child(1),
+      &:nth-child(4) {
+        width:1%;
+      }
+    }
+  }
+}
