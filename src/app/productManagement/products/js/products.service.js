@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .factory('ocProducts', OrderCloudProducts)
 ;
 
-function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloudSDK) {
+function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloudSDK, ocRelatedProducts) {
     var service = {
         Create: _create,
         CreateDefaultPrice: _createDefaultPrice,
@@ -52,7 +52,10 @@ function OrderCloudProducts($q, $uibModal, ocConfirm, OrderCloudSDK) {
                 confirmText: 'Delete product',
                 type: 'delete'})
             .then(function() {
-                return OrderCloudSDK.Products.Delete(product.ID);
+                return OrderCloudSDK.Products.Delete(product.ID)
+                    .then(function() {
+                        return ocRelatedProducts.Sync(product.xp.RelatedProducts, null, product.ID);
+                    });
             });
     }
 

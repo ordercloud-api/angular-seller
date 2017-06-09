@@ -1,17 +1,26 @@
 angular.module('orderCloud')
     .controller('ProductCtrl', ProductController);
 
-function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocNavItems, ocProductPricing, SelectedProduct) {
+function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocNavItems, ocRelatedProducts, ocProductPricing, SelectedProduct) {
     var vm = this;
     vm.model = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
     vm.inventoryEnabled = angular.copy(SelectedProduct.Inventory ? SelectedProduct.Inventory.Enabled : false);
     vm.updateProduct = updateProduct;
     vm.deleteProduct = deleteProduct;
-    vm.patchImage = patchImage;
     vm.createDefaultPrice = createDefaultPrice;
     
     vm.navigationItems = ocNavItems.Filter(ocNavItems.Product());
+
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        invalidExtensions: null,
+        uploadText: 'Upload an image',
+        onUpdate: patchImage,
+        multiple: false
+    };
 
     function patchImage(imageXP) {
         return OrderCloudSDK.Products.Patch(vm.model.ID, {
@@ -22,9 +31,22 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     function updateProduct() {
         var currentPrice = angular.copy(vm.model.DefaultPriceSchedule);
         var partial = _.pick(vm.model, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
-        vm.modelUpdateLoading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)
+        var partialXP = _.pick(vm.model.xp, ['Featured']);
+        partial.xp = partialXP;
+
+        vm.loading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)
             .then(function (data) {
 
+                //Account for changes in ID
+                if (data.ID !== SelectedProduct.ID) {
+                    $state.go('.', {productid: data.ID}, {notify: false});
+
+                    //Sync other products that have this product in xp.RelatedProducts array
+                    //This only makes API calls if the product has related products
+                    ocRelatedProducts.Sync(data.xp.RelatedProducts, data.ID, SelectedProduct.ID);
+                }
+
+                //Update the view model
                 vm.model = angular.copy(data);
                 if (currentPrice && data.Name !== SelectedProduct.Name) {
                     OrderCloudSDK.PriceSchedules.Patch(currentPrice.ID, {
@@ -36,10 +58,12 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
                 } else {
                     vm.model.DefaultPriceSchedule = currentPrice;
                 }
+
+
                 vm.productName = angular.copy(data.Name);
                 vm.inventoryEnabled = angular.copy(data.InventoryEnabled);
                 SelectedProduct = data;
-                vm.InfoForm.$setPristine();
+                vm.form.$setPristine();
                 toastr.success(data.Name + ' was updated');
             });
     }
@@ -65,10 +89,6 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
                 });
             });
     }
-
-    $rootScope.$on('ProductManagement:SpecCountChanged', function (event, action) {
-        vm.model.SpecCount += (action == 'increment') ? 1 : -1;
-    });
 
     $rootScope.$on('OC:DefaultPriceUpdated', function (event, newID) {
         vm.model.DefaultPriceScheduleID = newID;

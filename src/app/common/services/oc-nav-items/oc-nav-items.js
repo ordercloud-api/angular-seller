@@ -68,6 +68,15 @@ function OrderCloudNavItemsService(ocRoles) {
                     Items: ['CatalogRoles', 'CategoryRoles'],
                     Any: false
                 }
+            },
+            {
+                icon: 'fa-cubes',
+                state: 'product.relatedProducts',
+                name: 'Related Products',
+                roles: {
+                    Items: ['ProductRoles'],
+                    Any: false
+                }
             }
         ];
     }
@@ -121,6 +130,15 @@ function OrderCloudNavItemsService(ocRoles) {
                 name: 'Permissions',
                 roles: {
                     Items: ['SetSecurityProfile'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-bell',
+                state: 'buyerMessageSenders',
+                name: 'Notifications',
+                roles: {
+                    Items: ['MessageConfigAssignmentAdmin'],
                     Any: false
                 }
             },
@@ -235,6 +253,15 @@ function OrderCloudNavItemsService(ocRoles) {
                 name: 'Permissions',
                 roles: {
                     Items: ['SetSecurityProfile'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-bell',
+                state: 'userGroup.messageSenders',
+                name: 'Notifications',
+                roles: {
+                    Items: ['MessageConfigAssignmentAdmin'],
                     Any: false
                 }
             },

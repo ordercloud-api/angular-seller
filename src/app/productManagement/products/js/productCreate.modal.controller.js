@@ -59,6 +59,16 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
 
     vm.listAllAdminAddresses = listAllAdminAddresses;
 
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        invalidExtensions: null,
+        uploadText: 'Choose a product image',
+        onUpdate: null,
+        multiple: false
+    };
+
     function listAllAdminAddresses(search) {
         return OrderCloudSDK.AdminAddresses.List({
                 search: search
