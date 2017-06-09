@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductSpecCreateCtrl', ProductSpecCreateController)
 ;
 
-function ProductSpecCreateController($uibModalInstance, toastr, OrderCloudSDK, ProductID) {
+function ProductSpecCreateController($uibModalInstance, $exceptionHandler, toastr, OrderCloudSDK, ProductID) {
     var vm = this;
 
     vm.submit = function() {
@@ -15,6 +15,9 @@ function ProductSpecCreateController($uibModalInstance, toastr, OrderCloudSDK, P
                         toastr.success('Spec: ' + data.Name + ' created');
                         $uibModalInstance.close(assignment);
                     });
+            })
+            .catch(function(ex) {
+                $exceptionHandler(ex);
             });
     };
 
