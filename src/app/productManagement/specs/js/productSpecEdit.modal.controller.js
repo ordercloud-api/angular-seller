@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('ProductSpecEditModalCtrl', ProductSpecEditModalController)
 ;
 
-function ProductSpecEditModalController($uibModalInstance, OrderCloudSDK, SelectedSpec) {
+function ProductSpecEditModalController($uibModalInstance, $exceptionHandler, OrderCloudSDK, SelectedSpec) {
     var vm = this;
     vm.spec = angular.copy(SelectedSpec);
     vm.specName = SelectedSpec.Name;
@@ -12,6 +12,9 @@ function ProductSpecEditModalController($uibModalInstance, OrderCloudSDK, Select
         vm.loading = OrderCloudSDK.Specs.Update(SelectedSpec.ID, vm.spec)
             .then(function(updatedSpec) {
                 $uibModalInstance.close(updatedSpec);
+            })
+            .catch(function(ex) {
+                $exceptionHandler(ex);
             });
     };
 
