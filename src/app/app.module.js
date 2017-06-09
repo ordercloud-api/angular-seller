@@ -16,6 +16,7 @@ angular.module('orderCloud', [
         'hl.sticky',
         'angularPayments',
         'ordercloud-angular-sdk',
-        'dndLists'
+        'dndLists',
+        'textAngular'
     ]
 );
