@@ -1,3 +1,4 @@
+//TODO: We probably don't need this file anymore since we aren't using native ordercloud.io files
 angular.module('orderCloud')
     .factory('ocFileReader', OrderCloudFileReader)
 ;

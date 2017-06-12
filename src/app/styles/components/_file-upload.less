@@ -35,8 +35,10 @@
         bottom:@grid-gutter-width/8;
         border-radius: @border-radius-base;
     }
-    .c-file-upload__container {
+    [draggable='true'] {
         cursor: move;
+    }
+    .c-file-upload__container {
         border: 1px solid @thumbnail-border;
         background-color: @thumbnail-bg;
     }
