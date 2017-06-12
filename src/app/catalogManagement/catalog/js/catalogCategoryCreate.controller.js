@@ -11,12 +11,9 @@ function CreateCategoryModalController($exceptionHandler, $uibModalInstance, Ord
 
     vm.fileUploadOptions = {
         keyname: 'image',
-        folder: null,
         extensions: 'jpg, png, gif, jpeg, tiff',
-        invalidExtensions: null,
         uploadText: 'Upload an image',
-        onUpdate: null,
-        multiple: false
+        replaceText: 'Replace image'
     };
 
     vm.cancel = function(){

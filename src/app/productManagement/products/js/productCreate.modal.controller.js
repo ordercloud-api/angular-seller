@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('ProductCreateModalCtrl', ProductCreateModalController);
 
-function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, $state, toastr, ocProductPricing, ocProducts, OrderCloudSDK) {
+function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, $state, OrderCloudSDK) {
     var vm = this;   
 
     vm.product = {
@@ -11,6 +11,7 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
             MinQuantity: 1,
             OrderType: 'Standard'
         },
+        xp: {},
         Active: true,
         QuantityMultiplier: 1
     };
@@ -61,12 +62,9 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
 
     vm.fileUploadOptions = {
         keyname: 'image',
-        folder: null,
         extensions: 'jpg, png, gif, jpeg, tiff',
-        invalidExtensions: null,
-        uploadText: 'Choose a product image',
-        onUpdate: null,
-        multiple: false
+        uploadText: 'Upload an image',
+        replaceText: 'Replace image'
     };
 
     function listAllAdminAddresses(search) {
