@@ -12,6 +12,13 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     
     vm.navigationItems = ocNavItems.Filter(ocNavItems.Product());
 
+    vm.descriptionToolbar = [
+        ['html', 'bold', 'italics', 'underline', 'strikeThrough'],
+        ['h1', 'h2', 'h3', 'p'],
+        ['ul', 'ol'],
+        ['insertLink', 'insertImage', 'insertVideo']
+    ];
+
     vm.fileUploadOptions = {
         keyname: 'image',
         folder: null,
