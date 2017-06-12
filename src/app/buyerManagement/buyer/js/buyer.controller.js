@@ -16,11 +16,9 @@ function BuyerController($state, $exceptionHandler, toastr, OrderCloudSDK, ocBuy
 
     vm.fileUploadOptions = {
         keyname: 'logo',
-        srcKeyname: 'URL',
-        folder: null,
-        extensions: 'jpg, png, gif, jpeg, tiff, svg',
-        invalidExtensions: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
         uploadText: 'Upload an image',
+        replaceText: 'Replace image',
         onUpdate: patchImage,
         multiple: false
     };

@@ -2,69 +2,85 @@ angular.module('orderCloud')
     .controller('FileUploadModalCtrl', FileUploadModalController)
 ;
 
-function FileUploadModalController($uibModalInstance, ocFilesService, Model, SelectedIndex, FileUploadOptions) {
+function FileUploadModalController($uibModalInstance, ocFiles, FileUploadOptions, CurrentValue) {
     var vm = this;
-    var multiple = FileUploadOptions.multiple;
-    vm.files = multiple ? angular.copy(Model[FileUploadOptions.keyname][FileUploadOptions.arrayKeyName || 'Items']) : angular.copy(Model);
-    vm.selectedIndex = angular.copy(SelectedIndex.toString());
     vm.additionalFields = angular.copy(FileUploadOptions.additionalFields);
+    vm.invalidExtension = false;
+    vm.options = FileUploadOptions;
+    vm.model = angular.copy(CurrentValue);
 
-    vm.fileUploadOptions = {
-        keyname: multiple ? vm.selectedIndex : FileUploadOptions.keyname,
-        srcKeyname: FileUploadOptions.srcKeyname,
-        folder: null,
-        extensions: 'jpg, png, gif, jpeg, tiff, svg',
-        invalidExtensions: null,
-        uploadText: null,
-        multiple: false,
-        modal: true
+    var allowed = parseExtensions(FileUploadOptions.extensions);
+    var notAllowed = parseExtensions(FileUploadOptions.invalidExtensions);
+    function parseExtensions(extensions) {
+        var result = {
+            Extensions: [],
+            Types: []
+        };
+        if (!extensions) return result;
+        var items = _.map(extensions.split(','), function(ext) {
+            return ext.replace(/ /g, '').replace(/\./g, '').toLowerCase();
+        });
+        angular.forEach(items, function(item) {
+            if (item.indexOf('/') > -1) {
+                if (item.indexOf('*') > -1) {
+                    result.Types.push(item.split('/')[0]);
+                }
+                else {
+                    result.Extensions.push(item.split('/')[1]);
+                }
+            }
+            else {
+                result.Extensions.push(item);
+            }
+        });
+        return result;
+    }
+
+    vm.upload = function() {
+        $('#orderCloudUpload').click();
     };
 
-    vm.submit = function() {
-        if (multiple && !vm.files[vm.selectedIndex] || (vm.files[vm.selectedIndex] && !vm.files[vm.selectedIndex][FileUploadOptions.srcKeyname])) {
-            vm.files.splice(vm.selectedIndex, 1);
+    angular.element(document).ready(filInputInit);
+
+    function filInputInit() {
+        $('#orderCloudUpload').bind('change', updateModel);
+    }
+
+    function updateModel(event) {
+        if (event.target.files[0] === null) return;
+        var fileName = event.target.files[0].name, 
+            valid = true, 
+            ext;
+
+        if ((allowed.Extensions.length || allowed.Types.length) && fileName) {
+            ext = fileName.split('.').pop().toLowerCase();
+            valid = (allowed.Extensions.indexOf(ext) !== -1 || allowed.Types.indexOf(event.target.files[0].type.split('/')[0]) > -1);
         }
-        if (vm.selectedIndex == -1) {
-            var imageObject = vm.files[vm.selectedIndex];
-            imageObject.ID = randomID();
-            if (!vm.files || !vm.files.length) vm.files = [];
-            vm.files.push(imageObject);
+        if ((notAllowed.Extensions.length || notAllowed.Types.length) && fileName) {
+            ext = fileName.split('.').pop().toLowerCase();
+            valid = (notAllowed.Extensions.indexOf(ext) === -1 && notAllowed.Types.indexOf(event.target.files[0].type.split('/')[0]) === -1);
         }
-        multiple 
-            ? Model[FileUploadOptions.keyname][FileUploadOptions.arrayKeyName || 'Items'] = vm.files 
-            : Model[FileUploadOptions.keyname] = vm.files[FileUploadOptions.keyname];
-        if (FileUploadOptions.onUpdate) {
-            FileUploadOptions.onUpdate(Model)
-                .then(function() {
-                    $uibModalInstance.close(Model);
+        if (valid) {
+            vm.invalidExtension = false;
+            ocFiles.Upload(event.target.files[0], vm.options.folder) 
+                .then(function(fileData) {
+                    vm.model[vm.options.srcKeyname] = fileData.Location;
+                    vm.model.Uploaded = true;
                 });
         } else {
-            $uibModalInstance.close(Model);
+            vm.invalidExtension = true;
+            var input;
+            event.target.files[0] = null;
+            input = $('#orderCloudUpload').find('input').clone(true);
+            $('#orderCloudUpload').find('input').replaceWith(input);
         }
+    }
+
+    vm.submit = function() {
+        $uibModalInstance.close(vm.model);
     };
 
     vm.cancel = function() {
-        if (vm.selectedIndex == -1 && vm.files[vm.selectedIndex][FileUploadOptions.srcKeyname] && vm.files[vm.selectedIndex].Uploaded) {
-            var split = vm.files[vm.selectedIndex][FileUploadOptions.srcKeyname].split('/');
-            var fileKey = split[split.length - 1];
-            ocFilesService.Delete(fileKey)
-                .then(function() {
-                    $uibModalInstance.dismiss(Model);
-                });
-        }
-        else {
-            $uibModalInstance.dismiss(Model);
-        }
+        $uibModalInstance.dismiss();
     };
-
-    function randomID() {
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        var string_length = 15;
-        var randomstring = '';
-        for (var i = 0; i < string_length; i++) {
-            var rnum = Math.floor(Math.random() * chars.length);
-            randomstring += chars.substring(rnum,rnum + 1);
-        }
-        return randomstring;
-    }
 }

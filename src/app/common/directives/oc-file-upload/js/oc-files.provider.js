@@ -2,19 +2,19 @@ angular.module('orderCloud')
     .provider('$ocFiles', OrderCloudFilesProvider)
 ;
 
-function OrderCloudFilesProvider(scope) {
+function OrderCloudFilesProvider() {
     var fileUploadOptions = {
-        keyname: null,
-        srcKeyname: null,
+        keyname: 'file',
+        srcKeyname: 'URL',
         folder:  null,
         extensions:  null,
         invalidExtensions:  null,
-        uploadText:  null,
+        uploadText:  'Browse files',
+        replaceText: 'Replace file',
         onUpdate:  null,
         multiple: false,
-        arrayKeyName: null,
-        addText:  null,
-        maxLimit:  null,
+        addText:  'Add a file',
+        maxLimit:  10,
         additionalFields:  null,
         draggable: false
     };
@@ -27,8 +27,8 @@ function OrderCloudFilesProvider(scope) {
                  }
              };
         },
-        SetFileUploadOptions: function(fileUploadOptions) {
-             fileUploadOptions = fileUploadOptions;
+        SetFileUploadOptions: function(options) {
+            fileUploadOptions = angular.extend(fileUploadOptions, options);
         }
     };
 

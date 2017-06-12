@@ -2,7 +2,7 @@ angular.module('orderCloud')
     .controller('CatalogCategoriesCtrl', CatalogCategoriesController)
 ;
 
-function CatalogCategoriesController($rootScope, $stateParams, $state, ocCatalog, ocCatalogTree, Tree) {
+function CatalogCategoriesController($rootScope, toastr, $stateParams, $state, ocCatalog, ocCatalogTree, Tree) {
     var vm = this;
     vm.tree = Tree;
     vm.catalogid = $stateParams.catalogid;
