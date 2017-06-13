@@ -5,6 +5,7 @@ angular.module('orderCloud')
 function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr, $state, $exceptionHandler, ocImagesModal) {
     var vm = this;
     vm.model = angular.copy(SelectedProduct);
+    if (!vm.model.xp) vm.model.xp = {};
     vm.defaultImage = vm.model.xp && vm.model.xp.image ? vm.model.xp.image.URL : null;
     vm.additionalImages = vm.model.xp && vm.model.xp.additionalImages && vm.model.xp.additionalImages.length ? vm.model.xp.additionalImages : null;
 
