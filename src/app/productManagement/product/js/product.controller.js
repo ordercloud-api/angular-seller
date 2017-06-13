@@ -21,6 +21,7 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
 
     vm.fileUploadOptions = {
         keyname: 'image',
+        srcKeyname: 'URL',
         extensions: 'jpg, png, gif, jpeg, tiff',
         uploadText: 'Upload an image',
         replaceText: 'Replace image',
