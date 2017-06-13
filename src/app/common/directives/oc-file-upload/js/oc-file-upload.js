@@ -5,8 +5,8 @@ angular.module('orderCloud')
 function ordercloudFileUpload($uibModal, $ocFiles, ocFiles, ocConfirm) {
     var directive = {
         scope: {
-            fileUploadModel: '=',
-            fileUploadOptions: '='
+            fileUploadModel: '<',
+            fileUploadOptions: '<'
         },
         restrict: 'E',
         require: '^?ocPrettySubmit',
