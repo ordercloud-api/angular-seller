@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-sm-8">
         <div class="well text-center" ng-if="!productImages.model.xp || !productImages.model.xp.image || !productImages.model.xp.image.URL">
-            There is no default image uploaded for this product. Select the button below to add an image.
+            There is no default image uploaded for this product.
         </div>
         <div ng-click="productImages.openImageModal($index)">
             <oc-file-upload file-upload-model="productImages.model.xp" file-upload-options="productImages.fileUploadOptions"></oc-file-upload>
