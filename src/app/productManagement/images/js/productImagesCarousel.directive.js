@@ -21,6 +21,7 @@ function ocAdditionalImages() {
             };
 
             $scope.carouselLoading = $timeout(function() {
+                if (!$scope.product.xp.additionalImages) $scope.product.xp.additionalImages = [];
                 var slickMain = $('#ImageMain');
                 slickMain.slick(slickMainOpts);
 
