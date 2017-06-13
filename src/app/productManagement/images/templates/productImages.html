@@ -3,7 +3,7 @@
         Default Image
     </h3>
 </header>
-<div class="row">
+<div class="row" oc-readonly-roles="ProductAdmin">
     <div class="col-sm-8">
         <div class="well text-center" ng-if="!productImages.model.xp || !productImages.model.xp.image || !productImages.model.xp.image.URL">
             There is no default image uploaded for this product.
@@ -12,14 +12,12 @@
             <oc-file-upload file-upload-model="productImages.model.xp" file-upload-options="productImages.fileUploadOptions"></oc-file-upload>
         </div>
     </div>
-    <div class="col-sm-4" oc-readonly-roles="ProductAdmin">
-        <fieldset class="form-group">
-            <div class="checkbox">
-                <label for="ZoomEnabled">
-                    <input id="ZoomEnabled" name="ZoomEnabled" type="checkbox" ng-model="productImages.model.xp.imageZoom" ng-click="productImages.toggleZoom()" ng-disabled="!productImages.model.xp.image.URL"> Image Zoom Enabled
-                </label>
-            </div>
-        </fieldset>        
+    <div class="col-sm-4" oc-readonly-roles="ProductAdmin" ng-if="productImages.model.xp.image.URL">
+        <div class="checkbox">
+            <label for="ZoomEnabled" class="control-label">
+                <input id="ZoomEnabled" name="ZoomEnabled" type="checkbox" ng-model="productImages.model.xp.imageZoom" ng-click="productImages.toggleZoom()"> Image Zoom Enabled
+            </label>
+        </div>
         <span class="text-bold" ng-if="!productImages.model.xp.image.URL">
             Please upload a default image to use this feature.<br>
         </span>
@@ -28,7 +26,7 @@
     </div>
 </div>
 <hr>
-<div class="row" ng-if="productImages.model.xp.image.URL">
+<div class="row" ng-if="productImages.model.xp.image.URL" oc-readonly-roles="ProductAdmin">
     <div class="col-sm-8">
         <oc-additional-images product="productImages.model"></oc-additional-images>
     </div>

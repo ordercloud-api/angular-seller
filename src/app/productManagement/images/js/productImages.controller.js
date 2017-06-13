@@ -8,7 +8,7 @@ function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr, $state,
     vm.defaultImage = vm.model.xp && vm.model.xp.image ? vm.model.xp.image.URL : null;
     vm.additionalImages = vm.model.xp && vm.model.xp.additionalImages && vm.model.xp.additionalImages.length ? vm.model.xp.additionalImages : null;
 
-    if (!vm.defaultImage || !vm.additionalImages) vm.model.xp.imageZoom = false;
+    if (!vm.defaultImage) vm.model.xp.imageZoom = false;
 
     vm.fileUploadOptions = {
         keyname: 'image',
