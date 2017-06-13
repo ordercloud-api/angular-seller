@@ -1,6 +1,6 @@
 <div class="c-file-upload__multiple">
     <ol dnd-list="fileUploadModel[fileUploadOptions.keyname]" dnd-horizontal-list="true">
-        <li id="ImageNav" ng-repeat="file in fileUploadModel[fileUploadOptions.keyname]" 
+        <li ng-repeat="file in fileUploadModel[fileUploadOptions.keyname]" 
                 dnd-draggable="file" dnd-moved="dropped($index)" dnd-dragstart="dragStart()" dnd-effect-allowed="move" dnd-disable-if="!fileUploadOptions.draggable">
             <div class="c-file-upload__container c-product-slider">
                 <div class="c-file-upload__image" ng-style="{'background-image': (file[fileUploadOptions.srcKeyname] ? 'url(' + file[fileUploadOptions.srcKeyname] + ')' : 'none')}"></div>

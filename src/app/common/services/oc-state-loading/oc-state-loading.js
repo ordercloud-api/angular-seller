@@ -7,7 +7,7 @@ angular.module('orderCloud')
         };
 
         function _init() {
-            $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, options) {
+            $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState) {
                 var toParent = toState.parent || toState.name.split('.')[0];
                 var fromParent = fromState.parent || fromState.name.split('.')[0];
                 stateLoading[fromParent === toParent ? toParent : 'base'] = $q.defer();
