@@ -6,7 +6,7 @@ function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr, $state,
     var vm = this;
     vm.model = angular.copy(SelectedProduct);
     vm.defaultImage = vm.model.xp && vm.model.xp.image ? vm.model.xp.image.URL : null;
-    vm.additionalImages = vm.model.xp && vm.model.xp.image && vm.model.xp.image.Items && vm.model.xp.image.Items.length ? vm.model.xp.image.Items : null;
+    vm.additionalImages = vm.model.xp && vm.model.xp.additionalImages && vm.model.xp.additionalImages.length ? vm.model.xp.additionalImages : null;
 
     if (!vm.defaultImage || !vm.additionalImages) vm.model.xp.imageZoom = false;
 
