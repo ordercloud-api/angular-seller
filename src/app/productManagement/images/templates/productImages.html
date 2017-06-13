@@ -1,16 +1,35 @@
+<header class="l-page-header">
+    <h3 class="l-page-header__title">
+        Default Image
+    </h3>
+</header>
 <div class="row">
     <div class="col-sm-8">
-        <oc-product-images product="productImages.model"></oc-product-images>
+        <div class="well text-center" ng-if="!productImages.model.xp || !productImages.model.xp.image || !productImages.model.xp.image.URL">
+            There is no default image uploaded for this product. Select the button below to add an image.
+        </div>
+        <div ng-click="productImages.openImageModal($index)">
+            <oc-file-upload file-upload-model="productImages.model.xp" file-upload-options="productImages.fileUploadOptions"></oc-file-upload>
+        </div>
     </div>
-</div>
-<div class="row">
     <div class="col-sm-4" oc-readonly-roles="ProductAdmin">
         <fieldset class="form-group">
             <div class="checkbox">
                 <label for="ZoomEnabled">
-                    <input id="ZoomEnabled" name="ZoomEnabled" type="checkbox" ng-model="productImages.model.xp.imageZoom" ng-click="productImages.toggleZoom()"> Image Zoom Enabled
+                    <input id="ZoomEnabled" name="ZoomEnabled" type="checkbox" ng-model="productImages.model.xp.imageZoom" ng-click="productImages.toggleZoom()" ng-disabled="!productImages.model.xp.image.URL"> Image Zoom Enabled
                 </label>
             </div>
-        </fieldset>
+        </fieldset>        
+        <span class="text-bold" ng-if="!productImages.model.xp.image.URL">
+            Please upload a default image to use this feature.<br>
+        </span>
+        <span class="text-muted text-small">Image zoom will open a modal with an enlarged version of the selected image when visiting a product's detail view in the Buyer app.
+        </span>
+    </div>
+</div>
+<hr>
+<div class="row" ng-if="productImages.model.xp.image.URL">
+    <div class="col-sm-8">
+        <oc-additional-images product="productImages.model"></oc-additional-images>
     </div>
 </div>
