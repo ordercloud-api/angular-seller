@@ -10,17 +10,6 @@ function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr) {
 
     vm.toggleZoom = toggleZoom;
 
-    vm.fileUploadOptions = {
-        keyname: 'additionalImages',
-        srcKeyname: 'URL',
-        folder: null,
-        extensions: 'jpg, png, gif, jpeg, tiff',
-        invalidExtensions: null,
-        uploadText: 'Upload an image',
-        onUpdate: patchImage,
-        multiple: true
-    };
-
     function toggleZoom() {
         return OrderCloudSDK.Products.Patch(vm.model.ID, {
             xp: {
@@ -36,11 +25,4 @@ function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr) {
             toastr.success(message, 'Success');
         });
     }
-
-    function patchImage(imageXP) {
-        return OrderCloudSDK.Products.Patch(vm.model.ID, {
-            xp: imageXP
-        });
-    }
-
 }
