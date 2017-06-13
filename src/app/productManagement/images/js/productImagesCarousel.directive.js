@@ -1,9 +1,8 @@
 angular.module('orderCloud')
-    .directive('ocProductImages', ocProductImages)
-    .controller('ProductImagesModalCtrl', ProductImagesModalCtrl)
+    .directive('ocAdditionalImages', ocAdditionalImages)
 ;
 
-function ocProductImages() {
+function ocAdditionalImages() {
     return {
         scope: {
             product: '=',
@@ -11,7 +10,7 @@ function ocProductImages() {
         },
         restrict: 'E',
         templateUrl: 'productManagement/images/templates/productImagesCarousel.html',
-        controller: function($scope, $timeout, $uibModal, $exceptionHandler, $state, toastr, OrderCloudSDK) {
+        controller: function($scope, $timeout, $uibModal, $exceptionHandler, $state, toastr, OrderCloudSDK, ocImagesModal) {
 
             var slickMainOpts = {
                 arrows: true,
@@ -34,7 +33,7 @@ function ocProductImages() {
                     onUpdate: patchImage,
                     multiple: true,
                     addText: 'Upload an image',
-                    replaceText: 'Replace'
+                    replaceText: 'Replace',
                 };
             }, 300);
 
@@ -48,44 +47,15 @@ function ocProductImages() {
                     $state.go('product.images', {productid: $scope.product.ID}, {reload: true});
                 })
                 .catch(function(ex) {
-                    exceptionHandler(ex);
+                    $exceptionHandler(ex);
                 })
             }
 
             $scope.openImageModal = function(index) {
                 if($scope.product.xp.imageZoom) {
-                    return $uibModal.open({
-                    animation: true,
-                    backdrop: true,
-                    templateUrl: 'productDetail/templates/productDetail.images.modal.html',
-                    controller: 'ProductImagesModalCtrl',
-                    controllerAs: 'productImagesModal',
-                    size: 'large',
-                    resolve: {
-                        Product: function() {
-                            return $scope.product; 
-                        },
-                        Index: function() {
-                            return index;
-                        }
-                    }}).result;
+                    ocImagesModal.Open($scope.product.xp.additionalImages, index)
                 }
-            }
+            };
         }
-    }
-}
-
-function ProductImagesModalCtrl(Product, Index, $uibModalInstance) {
-    var vm = this;
-    vm.product = Product;
-    vm.index = Index;
-    vm.images = vm.product.xp.additionalImages;
-    vm.interval = null;
-    vm.noWrap = false;
-
-    vm.close = close;
-
-    function close() {
-        $uibModalInstance.dismiss();
-    }
+    };
 }

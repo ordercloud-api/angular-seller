@@ -19,22 +19,6 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
         ['insertLink', 'insertImage', 'insertVideo']
     ];
 
-    vm.fileUploadOptions = {
-        keyname: 'image',
-        srcKeyname: 'URL',
-        extensions: 'jpg, png, gif, jpeg, tiff',
-        uploadText: 'Upload an image',
-        replaceText: 'Replace image',
-        onUpdate: patchImage,
-        multiple: false
-    };
-
-    function patchImage(imageXP) {
-        return OrderCloudSDK.Products.Patch(vm.model.ID, {
-            xp: imageXP
-        });
-    }
-
     function updateProduct() {
         var currentPrice = angular.copy(vm.model.DefaultPriceSchedule);
         var partial = _.pick(vm.model, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
