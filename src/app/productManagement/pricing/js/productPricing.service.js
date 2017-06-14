@@ -209,8 +209,8 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
                         BuyerID: selectedBuyer.ID
                     };
                     var catalogAssignment = {
-                        catalogID: selectedBuyer.DefaultCatalogID,
-                        productID: product.ID
+                        CatalogID: selectedBuyer.DefaultCatalogID,
+                        ProductID: product.ID
                     };
                     var result = {
                         Assignment: assignment,
