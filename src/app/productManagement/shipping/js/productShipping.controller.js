@@ -2,10 +2,13 @@ angular.module('orderCloud')
     .controller('ProductShippingCtrl', ProductShippingController)
 ;
 
-function ProductShippingController(toastr, OrderCloudSDK, ocRoles) {
+function ProductShippingController($state, $timeout, toastr, OrderCloudSDK, SelectedShippingAddress) {
     var vm = this;
     vm.updateProductShipping = updateProductShipping;
-    vm.listAllAdminAddresses = listAllAdminAddresses;
+    vm.listSellerAddresses = listSellerAddresses;
+    vm.selectAddress = selectAddress;
+    vm.searchTerm = SelectedShippingAddress;
+    vm.hideNoResults = hideNoResults;
 
     function updateProductShipping(product) {
         var partial = _.pick(product, ['ShipWeight', 'ShipHeight', 'ShipWidth', 'ShipLength', 'ShipFromAddressID']);
@@ -13,15 +16,24 @@ function ProductShippingController(toastr, OrderCloudSDK, ocRoles) {
             .then(function() {
                 vm.ProductShippingForm.$setPristine();
                 toastr.success(product.Name + ' shipping was updated');
+                $state.go('.', {}, {reload:'product', notify:false});
             });
     }
 
-    function listAllAdminAddresses(search){
-        if (ocRoles.UserIsAuthorized(['AddressAdmin'])) {
-            return OrderCloudSDK.AdminAddresses.List({search: search})
-                .then(function(data){
-                    vm.sellerAddresses = data;
-                });
-        }
+    function listSellerAddresses(search) {
+        return OrderCloudSDK.AdminAddresses.List({search: search})
+            .then(function(data){
+                return data.Items;
+            });
+    }
+
+    function selectAddress(item, model, label, event, productModel) {
+        productModel.ShipFromAddressID = item.ID;
+    }
+
+    function hideNoResults() {
+        $timeout(function() {
+            vm.noResults = false;
+        }, 100);
     }
 }
