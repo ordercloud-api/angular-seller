@@ -40,17 +40,50 @@
             <fieldset class="form-group" oc-if-roles="SellerAddressRoles">
                 <label for="ShipFrom" class="col-sm-3 control-label">Ship From</label>
                 <div class="col-sm-9">
-                    <ui-select ng-model="product.model.ShipFromAddressID" close-on-select="true" id="ShipFrom" ng-disabled="!application.userIsAuthorized(['ProductAdmin'])" ng-if="productShipping.sellerAddresses.Items.length">
-                        <ui-select-match placeholder="(Optional) Search and select seller addresses...">
-                            <span ng-bind-html="$select.selected | address"></span>
-                        </ui-select-match>
-                        <ui-select-choices repeat="address.ID as address in (productShipping.sellerAddresses.Items | filter: $select.search) track by $index" refresh="productShipping.listAllAdminAddresses($select.search)" refresh-delay="300">
-                            <span ng-bind-html="address | address:'full'"></span>
-                        </ui-select-choices>
-                    </ui-select>
-                    <div class="no-matches" ng-if="!productShipping.sellerAddresses.Items.length">
-                        This organization does not have any seller addresses. 
-                        <span oc-if-roles="AdminAddressAdmin"><br><a ui-sref="sellerAddresses">Create one now</a></span>
+                    <div class="c-typeahead">
+                        <script type="text/ng-template" id="addressResultTemplate.html">
+                            <a>
+                                <span ng-bind-html="match.model | address:'full'"></span>
+                            </a>
+                        </script>
+                        <input 
+                            type="search" 
+                            class="form-control"
+                            ng-model="productShipping.searchTerm" 
+                            ng-model-options="{debounce:300}"
+                            uib-typeahead="address as (address | address:'fullOneLine') for address in productShipping.listSellerAddresses($viewValue)"
+                            typeahead-on-select="productShipping.selectAddress($item, $model, $label, $event, product.model)"
+                            typeahead-template-url="addressResultTemplate.html"
+                            typeahead-focus-first="false"
+                            typeahead-wait-ms="300"
+                            typeahead-min-length="0"
+                            typeahead-no-results="productShipping.noResults"
+                            typeahead-loading="productShipping.loading"
+                            typeahead-append-to="'.c-typeahead__results'"
+                            ng-blur="productShipping.hideNoResults()"
+                        />
+                        <div class="c-typeahead__results">
+                            <div class="c-typeahead__results--empty" ng-if="productShipping.searchTerm && productShipping.noResults">
+                                <span>No matches found</span>
+                            </div>
+                            <div class="c-typeahead__results--empty" ng-if="!productShipping.searchTerm && productShipping.noResults">
+                                <span>
+                                    This organization does not have any seller addresses.
+                                    <a oc-if-roles="AdminAddressAdmin" ui-sref="sellerAddresses">Create one now</a>
+                                </span>
+                            </div>
+                            <div class="c-typeahead__results--loading" ng-if="productShipping.searchTerm && productShipping.loading">
+                                <div class="indicator-container">
+                                    <div class="indicator">
+                                        <div class="animation">
+                                            <div class="dot"></div>
+                                            <div class="dot"></div>
+                                            <div class="dot"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </fieldset>
