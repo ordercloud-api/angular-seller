@@ -5,7 +5,7 @@ angular.module('orderCloud')
 function ordercloudFileUpload($uibModal, $ocFiles, ocFiles, ocConfirm) {
     var directive = {
         scope: {
-            fileUploadModel: '=',
+            model: '=fileUploadModel',
             fileUploadOptions: '='
         },
         restrict: 'E',
@@ -24,14 +24,14 @@ function ordercloudFileUpload($uibModal, $ocFiles, ocFiles, ocConfirm) {
         })();
 
         function initModelValue() {
-            if (!scope.fileUploadOptions.multiple) {
-                if (!scope.fileUploadModel[scope.fileUploadOptions.keyname] || scope.fileUploadModel[scope.fileUploadOptions.keyname].constructor !== Object) 
-                    scope.fileUploadModel[scope.fileUploadOptions.keyname] = {};
-            }
-            else {
-                if (!scope.fileUploadModel[scope.fileUploadOptions.keyname] || scope.fileUploadModel[scope.fileUploadOptions.keyname].constructor !== Array) {
-                    scope.fileUploadModel[scope.fileUploadOptions.keyname] = [];
-                }
+            if (scope.fileUploadModel) scope.model = scope.fileUploadModel;
+            scope.model ? scope.fileUploadModel = angular.copy(scope.model) : scope.fileUploadModel = {};
+            var modelKeynameConstructor = scope.fileUploadModel[scope.fileUploadOptions.keyname] ? scope.fileUploadModel[scope.fileUploadOptions.keyname].constructor : undefined;
+
+            if (scope.fileUploadOptions.multiple && modelKeynameConstructor !== Array) {
+                scope.fileUploadModel[scope.fileUploadOptions.keyname] = [];
+            } else if (modelKeynameConstructor !== Object) {
+                scope.fileUploadModel[scope.fileUploadOptions.keyname] = {};
             }
         }
 
