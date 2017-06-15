@@ -34,7 +34,7 @@ function OrderCloudOrdersService($q, $filter, OrderCloudSDK) {
             });
 
         function gatherBuyerCompanies(data) {
-            var buyerIDs = _.uniq(_.pluck(data.Items, 'FromCompanyID'));
+            var buyerIDs = _.uniq(_.map(data.Items, 'FromCompanyID'));
             var options = {
                 page: 1,
                 pageSize: 100,
@@ -43,7 +43,7 @@ function OrderCloudOrdersService($q, $filter, OrderCloudSDK) {
             OrderCloudSDK.Buyers.List(options)
                 .then(function(buyerData) {
                     _.map(data.Items, function(order) {
-                        order.FromCompany = _.findWhere(buyerData.Items, {ID: order.FromCompanyID});
+                        order.FromCompany = _.find(buyerData.Items, {ID: order.FromCompanyID});
                     });
                     deferred.resolve(data);
                 });

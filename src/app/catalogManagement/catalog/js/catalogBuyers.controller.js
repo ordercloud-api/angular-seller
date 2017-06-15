@@ -59,7 +59,7 @@ function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr
     };
 
     function selectedCheck() {
-        vm.allItemsSelected = (_.where(vm.list.Items, {Assigned:true}).length == vm.list.Items.length);
+        vm.allItemsSelected = (_.filter(vm.list.Items, {Assigned:true}).length == vm.list.Items.length);
     }
 
     function changedCheck() {
@@ -77,7 +77,7 @@ function CatalogBuyersController($exceptionHandler, $state, $stateParams, toastr
 
     vm.selectItem = function(scope) {
         if (!scope.buyer.Assigned) vm.allItemsSelected = false;
-        vm.selectedCount = _.where(vm.list.Items, {Assigned:true}).length;
+        vm.selectedCount = _.filter(vm.list.Items, {Assigned:true}).length;
 
         changedCheck();
     };

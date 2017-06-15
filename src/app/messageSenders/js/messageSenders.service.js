@@ -33,7 +33,7 @@ function OrderCloudMessageSendersService(OrderCloudSDK) {
         return OrderCloudSDK.MessageSenders.ListAssignments({level:'company', pageSize:100, commerceRole:'seller'})
                     .then(function(assignments) {
                         return _.map(availableMessageSenders.Items, function(ms) {
-                            ms.selected = _.pluck(assignments.Items, 'MessageSenderID').indexOf(ms.ID) > -1;
+                            ms.selected = _.map(assignments.Items, 'MessageSenderID').indexOf(ms.ID) > -1;
                             return ms;
                         });
                     });
@@ -43,7 +43,7 @@ function OrderCloudMessageSendersService(OrderCloudSDK) {
         return OrderCloudSDK.MessageSenders.ListAssignments({level:'group', pageSize:100, userGroupID:userGroupID, commerceRole:'seller'})
                     .then(function(assignments) {
                         return _.map(availableMessageSenders.Items, function(ms) {
-                            ms.selected = _.pluck(assignments.Items, 'MessageSenderID').indexOf(ms.ID) > -1;
+                            ms.selected = _.map(assignments.Items, 'MessageSenderID').indexOf(ms.ID) > -1;
                             return ms;
                         });
                     });
@@ -53,7 +53,7 @@ function OrderCloudMessageSendersService(OrderCloudSDK) {
         return OrderCloudSDK.MessageSenders.ListAssignments({level:'company', pageSize:100, commerceRole:'buyer', buyerID:buyerID})
                     .then(function(assignments) {
                         return _.map(availableMessageSenders.Items, function(ms) {
-                            ms.selected = _.pluck(assignments.Items, 'MessageSenderID').indexOf(ms.ID) > -1;
+                            ms.selected = _.map(assignments.Items, 'MessageSenderID').indexOf(ms.ID) > -1;
                             return ms;
                         });
                     });
@@ -63,7 +63,7 @@ function OrderCloudMessageSendersService(OrderCloudSDK) {
         return OrderCloudSDK.MessageSenders.ListAssignments({level:'group', pageSize:100, userGroupID:userGroupID, buyerID:buyerID, commerceRole:'buyer'})
                     .then(function(assignments) {
                         return _.map(availableMessageSenders.Items, function(ms) {
-                            ms.selected = _.pluck(assignments.Items, 'MessageSenderID').indexOf(ms.ID) > -1;
+                            ms.selected = _.map(assignments.Items, 'MessageSenderID').indexOf(ms.ID) > -1;
                             return ms;
                         });
                     });

@@ -63,7 +63,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
     };
 
     function selectedCheck() {
-        vm.allItemsSelected = (_.where(vm.list.Items, {Assigned:true}).length == vm.list.Items.length);
+        vm.allItemsSelected = (_.filter(vm.list.Items, {Assigned:true}).length == vm.list.Items.length);
     }
 
     function changedCheck() {
@@ -81,7 +81,7 @@ function SpendingAccountsController($exceptionHandler, $state, $stateParams, toa
 
     vm.selectItem = function(scope) {
         if (!scope.spendingAccount.Assigned) vm.allItemsSelected = false;
-        vm.selectedCount = _.where(vm.list.Items, {Assigned:true}).length;
+        vm.selectedCount = _.filter(vm.list.Items, {Assigned:true}).length;
 
         changedCheck();
     };

@@ -104,7 +104,7 @@ function OrderCloudPromotions($q, $uibModal, $ocPromotions, ocConfirm, OrderClou
     function _compareAssignments(allAssignments, promotionList, userGroupID, buyerID) {
         var changedAssignments = [];
         angular.forEach(promotionList.Items, function(promotion) {
-            var existingAssignment = _.where(allAssignments, {PromotionID:promotion.ID, BuyerID:buyerID})[0];
+            var existingAssignment = _.filter(allAssignments, {PromotionID:promotion.ID, BuyerID:buyerID})[0];
             if (existingAssignment && !promotion.Assigned) {
                 changedAssignments.push({
                     'old': existingAssignment,
@@ -308,7 +308,7 @@ function OrderCloudPromotions($q, $uibModal, $ocPromotions, ocConfirm, OrderClou
         OrderCloudSDK.Products.List(options)
             .then(function(data) {
                 df.resolve(data.Items);
-            })
+            });
 
         return df.promise;
     }

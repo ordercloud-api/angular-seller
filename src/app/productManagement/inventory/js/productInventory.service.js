@@ -12,7 +12,7 @@ function ocProductInventoryService($q, OrderCloudSDK) {
         var inventoryResult;
         var queue = [];
 
-        var productPartial = _.pick(product, ['Inventory']);
+        var productPartial = _.pickBy(product, ['Inventory']);
 
         OrderCloudSDK.Products.Patch(product.ID, productPartial)
             .then(function(updatedProduct) {
