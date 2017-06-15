@@ -24,6 +24,15 @@ function OrderCloudNavItemsService(ocRoles) {
                 }
             },
             {
+                icon: 'fa-picture-o',
+                state: 'product.images',
+                name: 'Images',
+                roles: {
+                    Items: ['ProductRoles'],
+                    Any: false
+                }
+            },
+            {
                 icon: 'fa-edit',
                 state: 'product.specs',
                 name: 'Specs',
