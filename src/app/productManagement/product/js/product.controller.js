@@ -21,8 +21,8 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
 
     function updateProduct() {
         var currentPrice = angular.copy(vm.model.DefaultPriceSchedule);
-        var partial = _.pick(vm.model, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
-        var partialXP = _.pick(vm.model.xp, ['Featured']);
+        var partial = _.pickBy(vm.model, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
+        var partialXP = _.pickBy(vm.model.xp, ['Featured']);
         partial.xp = partialXP;
 
         vm.loading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)

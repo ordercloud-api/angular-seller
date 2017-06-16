@@ -8,7 +8,7 @@ function OrderShipmentsCreateItemsController($q, $uibModalInstance, $exceptionHa
     vm.lineItems = ShipmentLineItems;
     vm.shipment = Shipment;
     vm.selectedLineItemPage = ShipmentLineItems.Meta.Page;
-    var existingShipmentsLineItemIDs = _.pluck(Shipment.Items, 'LineItemID');
+    var existingShipmentsLineItemIDs = _.map(Shipment.Items, 'LineItemID');
     angular.forEach(vm.lineItems.Items, function(item) {
         item.MetaPage = vm.lineItems.Meta.Page;
         item.ExistingShipmentItem = existingShipmentsLineItemIDs.indexOf(item.ID) > -1;
@@ -91,7 +91,7 @@ function OrderShipmentsCreateItemsController($q, $uibModalInstance, $exceptionHa
         vm.loading = $q.all(queue)
             .then(function(results) {
                 angular.forEach(results, function(shipmentItem) {
-                    shipmentItem.LineItem = _.findWhere(vm.lineItems.Items, {ID: shipmentItem.LineItemID});
+                    shipmentItem.LineItem = _.find(vm.lineItems.Items, {ID: shipmentItem.LineItemID});
                 });
                 $uibModalInstance.close(results);
             }, function(ex) {

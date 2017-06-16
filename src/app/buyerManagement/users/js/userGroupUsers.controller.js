@@ -62,7 +62,7 @@ function UserGroupUsersController($exceptionHandler, $filter, $state, $statePara
     };
 
     function selectedCheck() {
-        vm.allItemsSelected = (_.where(vm.list.Items, {Assigned:true}).length == vm.list.Items.length);
+        vm.allItemsSelected = (_.filter(vm.list.Items, {Assigned:true}).length == vm.list.Items.length);
     }
 
     function changedCheck() {

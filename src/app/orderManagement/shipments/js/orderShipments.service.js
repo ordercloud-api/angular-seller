@@ -50,7 +50,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloudSDK
         }
 
         function getLineItems(data) {
-            var lineItemIDs = _.uniq(_.flatten(_.map(data.Items, function(shipment) { return _.pluck(shipment.Items, 'LineItemID');})));
+            var lineItemIDs = _.uniq(_.flatten(_.map(data.Items, function(shipment) { return _.map(shipment.Items, 'LineItemID');})));
             var options = {
                 page: 1,
                 pageSize: 100,
@@ -60,7 +60,7 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloudSDK
                 .then(function(lineItemData) {
                     angular.forEach(data.Items, function(shipment) {
                         angular.forEach(shipment.Items, function(shipmentItem) {
-                            shipmentItem.LineItem = _.findWhere(lineItemData.Items, {ID: shipmentItem.LineItemID});
+                            shipmentItem.LineItem = _.find(lineItemData.Items, {ID: shipmentItem.LineItemID});
                         });
                     });
 
@@ -112,8 +112,8 @@ function OrderCloudOrderShipmentsService($q, $uibModal, ocConfirm, OrderCloudSDK
         if (shipmentCopy.DateShipped && (typeof shipmentCopy.DateShipped.getDate == 'function')) shipmentCopy.DateShipped = shipmentCopy.DateShipped.toISOString();
         if (shipmentCopy.DateDelivered && (typeof shipmentCopy.DateDelivered.getDate == 'function')) shipmentCopy.DateDelivered = shipmentCopy.DateDelivered.toISOString();
 
-        var toAddressID = _.findWhere(lineItems, {Selected: true}).ShippingAddressID;
-        var toAddress = _.findWhere(lineItems, {Selected: true}).ShippingAddressID;
+        var toAddressID = _.find(lineItems, {Selected: true}).ShippingAddressID;
+        var toAddress = _.find(lineItems, {Selected: true}).ShippingAddressID;
 
         var shipmentModel = {
             buyerID: buyerID,

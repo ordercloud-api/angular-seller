@@ -19,7 +19,7 @@ function OrderCloudPrettySubmit() {
             //Mobile Submit
             var el = document.createElement('div');
             el.setAttribute('ongesturestart', 'return;'); // or try "ontouchstart"
-            var isTouch = (typeof el.ongesturestart === "function");
+            var isTouch = (typeof el.ongesturestart === 'function');
 
             if (isTouch) {
                 $(element).attr('action', '.');
@@ -52,7 +52,7 @@ function OrderCloudPrettySubmit() {
                 if (!submitButton) {
                     //Submit button not immediately available if ng-if is used
                     submitButton = findSubmit(element[0].elements);
-                    if (!submitButton) return
+                    if (!submitButton) return;
                 }
 
                 if (dirty && valid) {
@@ -64,7 +64,7 @@ function OrderCloudPrettySubmit() {
             }
 
             function findSubmit(elements) {
-                return _.findWhere(elements, {nodeName: 'BUTTON', type: 'submit'})
+                return _.find(elements, {nodeName: 'BUTTON', type: 'submit'});
             }
         }
     };

@@ -12,7 +12,7 @@ function OrderCloudCatalogTreeService($q, OrderCloudSDK) {
         var tree = [];
         var deferred = $q.defer();
 
-        var query = _.where(categoryArray, {
+        var query = _.filter(categoryArray, {
             ParentID: null
         });
         angular.forEach(query, function(node) {
@@ -20,7 +20,7 @@ function OrderCloudCatalogTreeService($q, OrderCloudSDK) {
         });
 
         function getnode(node) {
-            var children = _.where(categoryArray, {
+            var children = _.filter(categoryArray, {
                 ParentID: node.ID
             });
             if (children.length > 0) {

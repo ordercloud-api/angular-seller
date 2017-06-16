@@ -6,7 +6,8 @@ var gulp = require('gulp'),
     inject = require('gulp-inject'),
     wrapper = require('gulp-wrapper'),
     beautify = require('gulp-beautify'),
-    ngAnnotate = require('gulp-ng-annotate');
+    ngAnnotate = require('gulp-ng-annotate'),
+    babel = require('gulp-babel');
 
 gulp.task('clean:scripts', function() {
     return del([
@@ -23,6 +24,7 @@ gulp.task('scripts', ['clean:scripts'], function() {
         .pipe(cache(config.jsCache))
         .pipe(ngAnnotate())
         .pipe(wrapper(config.wrapper))
+        .pipe(babel({presets: 'es2015'}))
         .pipe(beautify({indentSize: config.indentSize}))
         .pipe(gulp.dest(config.build + 'app/'));
 });
@@ -35,6 +37,7 @@ gulp.task('rebuild-scripts', function() {
         .pipe(cache('jsscripts'))
         .pipe(ngAnnotate())
         .pipe(wrapper(config.wrapper))
+        .pipe(babel({presets: 'es2015'}))
         .pipe(beautify({indentSize: config.indentSize}))
         .pipe(gulp.dest(config.build + 'app/'));
 });

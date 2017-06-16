@@ -46,9 +46,9 @@ function PromotionCreateModalController($uibModalInstance, $ocPromotions, OrderC
     vm.showSave = false;
     vm.initialized = true;
 
-    vm.typeIndex = _.findIndex(vm.steps, function(step) { return step.form == 'type'});
-    vm.preconfiguredIndex = _.findIndex(vm.steps, function(step) { return step.form == 'preconfigured'});
-    vm.customIndex = _.findIndex(vm.steps, function(step) { return step.form == 'custom'});
+    vm.typeIndex = _.findIndex(vm.steps, function(step) { return step.form == 'type';});
+    vm.preconfiguredIndex = _.findIndex(vm.steps, function(step) { return step.form == 'preconfigured';});
+    vm.customIndex = _.findIndex(vm.steps, function(step) { return step.form == 'custom';});
 
     vm.nextStep = function () {
         vm.currentStep++;
@@ -79,14 +79,14 @@ function PromotionCreateModalController($uibModalInstance, $ocPromotions, OrderC
         if (vm.selectedPromotionTemplate.ValueDisplayText && (!vm.selectedPromotionTemplate.ValueFields || !vm.selectedPromotionTemplate.ValueFields.length))
             vm.promotion.ValueExpression = vm.selectedPromotionTemplate.ValueExpression;
 
-        if ((vm.selectedPromotionTemplate.EligibleFields && _.findWhere(vm.selectedPromotionTemplate.EligibleFields, {Typeahead: 'Categories'})) || (vm.selectedPromotionTemplate.ValueFields && _.findWhere(vm.selectedPromotionTemplate.ValueFields, {Typeahead: 'Categories'}))) {
+        if ((vm.selectedPromotionTemplate.EligibleFields && _.find(vm.selectedPromotionTemplate.EligibleFields, {Typeahead: 'Categories'})) || (vm.selectedPromotionTemplate.ValueFields && _.find(vm.selectedPromotionTemplate.ValueFields, {Typeahead: 'Categories'}))) {
             OrderCloudSDK.Catalogs.List({page: 1, pageSize: 100})
                 .then(function(data) {
                     vm.selectedPromotionTemplate.Catalogs = data.Items;
                 });
         }
 
-        vm.currentStep = vm.preconfiguredIndex
+        vm.currentStep = vm.preconfiguredIndex;
         vm.showSave = true;
     };
 
@@ -99,7 +99,7 @@ function PromotionCreateModalController($uibModalInstance, $ocPromotions, OrderC
         vm.selectedPromotionTemplate = null;
         vm.promotion.EligibleExpression = null;
         vm.promotion.ValueExpression = null;
-        vm.currentStep = vm.customIndex
+        vm.currentStep = vm.customIndex;
         vm.showSave = true;
     };
 

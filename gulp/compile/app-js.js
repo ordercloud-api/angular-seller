@@ -10,7 +10,8 @@ var gulp = require('gulp'),
     htmlmin = require('gulp-htmlmin'),
     uglify = require('gulp-uglify'),
     fileSort = require('gulp-angular-filesort'),
-    wrapper = require('gulp-wrapper');
+    wrapper = require('gulp-wrapper'),
+    babel = require('gulp-babel');
 
 gulp.task('clean:app-js', function() {
     return del(config.compile + 'js/app*.js');
@@ -35,6 +36,7 @@ gulp.task('app-js', ['clean:app-js'], function() {
         .pipe(templateCache(config.templateCacheSettings))
         .pipe(htmlFilter.restore)
         .pipe(jsFilter)
+        .pipe(babel({presets: 'es2015'}))
         .pipe(fileSort())
         .pipe(wrapper(config.wrapper))
         .pipe(ngAnnotate())
@@ -44,5 +46,5 @@ gulp.task('app-js', ['clean:app-js'], function() {
         .pipe(concat('app.controller.js'))
         .pipe(rev())
         .pipe(uglify({mangle:false})) //turning off mangle to fix the compile error
-        .pipe(gulp.dest(config.compile + 'js/'))
+        .pipe(gulp.dest(config.compile + 'js/'));
 });

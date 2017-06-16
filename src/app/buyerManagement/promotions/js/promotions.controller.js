@@ -63,7 +63,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
     };
 
     function selectedCheck() {
-        vm.allItemsSelected = (_.where(vm.list.Items, {Assigned:true}).length == vm.list.Items.length);
+        vm.allItemsSelected = (_.filter(vm.list.Items, {Assigned:true}).length == vm.list.Items.length);
     }
 
     function changedCheck() {
@@ -81,7 +81,7 @@ function PromotionsController($exceptionHandler, $state, $stateParams, toastr, O
 
     vm.selectItem = function(scope) {
         if (!scope.promotion.Assigned) vm.allItemsSelected = false;
-        vm.selectedCount = _.where(vm.list.Items, {Assigned:true}).length;
+        vm.selectedCount = _.filter(vm.list.Items, {Assigned:true}).length;
 
         changedCheck();
     };

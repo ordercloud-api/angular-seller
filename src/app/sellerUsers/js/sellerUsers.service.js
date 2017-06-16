@@ -92,7 +92,7 @@ function OrderCloudSellerUsers($q, $uibModal, ocConfirm, OrderCloudSDK) {
     function _compareAssignments(allAssignments, userList, userGroupID) {
         var changedAssignments = [];
         angular.forEach(userList.Items, function(user) {
-            var existingAssignment = _.where(allAssignments, {UserID:user.ID})[0];
+            var existingAssignment = _.filter(allAssignments, {UserID:user.ID})[0];
             if (existingAssignment && !user.Assigned) {
                 changedAssignments.push({
                     'old': existingAssignment,

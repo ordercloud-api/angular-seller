@@ -168,7 +168,7 @@ function OrderShipmentsEditController($uibModalInstance, OrderCloudSDK, OrderShi
     };
 
     vm.submit = function() {
-        var partial = _.pick(vm.shipment, ['ID', 'BuyerID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered', 'ShippingAddress']);
+        var partial = _.pickBy(vm.shipment, ['ID', 'BuyerID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered', 'ShippingAddress']);
         if (partial.DateShipped) partial.DateShipped = new Date(partial.DateShipped);
         if (partial.DateDelivered) partial.DateDelivered = new Date(partial.DateDelivered);
         var shipmentPartial = {
@@ -184,7 +184,7 @@ function OrderShipmentsEditController($uibModalInstance, OrderCloudSDK, OrderShi
         toAddressID ? (shipmentPartial.toAddressID = toAddressID) : (shipmentPartial.toAddress = toAddress);
         vm.loading = OrderCloudSDK.Shipments.Patch(OrderShipment.ID, shipmentPartial)
             .then(function(data) {
-                var result = _.pick(data, ['ID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered']);
+                var result = _.pickBy(data, ['ID', 'TrackingNumber', 'Cost', 'DateShipped', 'DateDelivered']);
                 result.OriginalShipmentID = OrderShipment.ID;
                 $uibModalInstance.close(result);
             })

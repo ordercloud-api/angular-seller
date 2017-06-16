@@ -28,7 +28,7 @@
                         || orderDetail.order.DateCreated) | date:'medium'}} <br>
                         <b>Status: </b> {{orderDetail.order.Status | humanize}} <br>
                         <b>Buyer Company: </b> {{orderDetail.order.FromCompany.Name}} <br>
-                        <b>Created By: </b> {{orderDetail.order.FromUserFirstName + ' ' + orderDetail.order.FromUserLastName}}
+                        <b>Created By: </b> {{orderDetail.order.FromUser.FirstName + ' ' + orderDetail.order.FromUser.LastName}}
                         <br>
                         <div ng-if="orderDetail.order.Comments">
                             <b>Comments: </b> {{orderDetail.order.Comments}}
