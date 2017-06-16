@@ -5,22 +5,19 @@ angular.module('orderCloud')
 function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr, $state, $exceptionHandler, ocImagesModal) {
     var vm = this;
     vm.model = angular.copy(SelectedProduct);
-    if (!vm.model.xp) vm.model.xp = {};
-    vm.defaultImage = vm.model.xp && vm.model.xp.image ? vm.model.xp.image.URL : null;
-    vm.additionalImages = vm.model.xp && vm.model.xp.additionalImages && vm.model.xp.additionalImages.length ? vm.model.xp.additionalImages : null;
-
     if (!vm.defaultImage) vm.model.xp.imageZoom = false;
 
     vm.fileUploadOptions = {
-        keyname: 'image',
+        keyname: 'additionalImages',
         srcKeyname: 'URL',
         folder: null,
         extensions: 'jpg, png, gif, jpeg, tiff',
         invalidExtensions: null,
         onUpdate: patchImage,
-        multiple: false,
+        multiple: true,
+        draggable: true,
         addText: 'Upload an image',
-        replaceText: 'Replace',
+        replaceText: 'Replace'
     };
 
     vm.openImageModal = openImageModal;
@@ -28,7 +25,7 @@ function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr, $state,
     
     function openImageModal(index) {
         if(vm.model.xp.imageZoom) {
-            ocImagesModal.Open(vm.model.xp.image, index)
+            ocImagesModal.Open(vm.model.xp.image, index);
         }
     }
 
@@ -54,10 +51,10 @@ function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr, $state,
         })
         .then(function() {
             toastr.success('Images successfully updated', 'Success');
-            $state.go('product.images', {productid: vm.model.ID}, {reload: true});
+            $state.go('.', {}, {reload: 'product', notify:false});
         })
         .catch(function(ex) {
             $exceptionHandler(ex);
-        })
+        });
     }
 }
