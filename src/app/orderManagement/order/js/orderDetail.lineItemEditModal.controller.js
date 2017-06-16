@@ -14,7 +14,7 @@ function OrderLineItemEditModalController($exceptionHandler, $uibModalInstance, 
     };
 
     vm.submit = function() {
-        var partial = _.pickBy(vm.lineItem, ['ID', 'Quantity', 'UnitPrice', 'DateNeeded']);
+        var partial = _.pick(vm.lineItem, ['ID', 'Quantity', 'UnitPrice', 'DateNeeded']);
         if (partial.DateNeeded) partial.DateNeeded = new Date(partial.DateNeeded);
         vm.loading = OrderCloudSDK.LineItems.Patch('incoming', OrderID, LineItem.ID, partial)
             .then(function(data) {
