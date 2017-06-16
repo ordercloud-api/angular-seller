@@ -13,7 +13,7 @@ function AccountController($exceptionHandler, CurrentUser, ocAccount, OrderCloud
 	vm.updateProfile = function () {
 		ocAccount.ConfirmPassword(vm.currentUser)
 			.then(function () {
-				vm.profileUpdateLoading = OrderCloudSDK.Me.Patch(_.pickBy(vm.profile, ['FirstName', 'LastName', 'Email', 'Phone']))
+				vm.profileUpdateLoading = OrderCloudSDK.Me.Patch(_.pick(vm.profile, ['FirstName', 'LastName', 'Email', 'Phone']))
 					.then(function (updatedUser) {
 						vm.profile = angular.copy(updatedUser);
 						vm.currentUser = updatedUser;
@@ -26,7 +26,7 @@ function AccountController($exceptionHandler, CurrentUser, ocAccount, OrderCloud
 	vm.updateUsername = function () {
 		ocAccount.ConfirmPassword(vm.currentUser)
 			.then(function () {
-				vm.profileUpdateLoading = OrderCloudSDK.Me.Patch(_.pickBy(vm.profile, 'Username'))
+				vm.profileUpdateLoading = OrderCloudSDK.Me.Patch(_.pick(vm.profile, 'Username'))
 					.then(function (updatedUser) {
 						vm.profile = angular.copy(updatedUser);
 						vm.currentUser = updatedUser;

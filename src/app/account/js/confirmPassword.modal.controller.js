@@ -1,7 +1,7 @@
 angular.module('orderCloud')
 	.controller('ConfirmPasswordModalCtrl', ConfirmPasswordModalController);
 
-function ConfirmPasswordModalController($exceptionHandler, $uibModalInstance, CurrentUser, $cookies, OrderCloudSDK, appname, clientid, scope) {
+function ConfirmPasswordModalController($exceptionHandler, $window, $uibModalInstance, CurrentUser, $cookies, OrderCloudSDK, appname, clientid, scope) {
 	var vm = this;
 
 	vm.submit = function () {
