@@ -98,7 +98,7 @@ function OrderCloudSpendingAccounts($q, $uibModal, ocConfirm, OrderCloudSDK) {
     function _compareAssignments(allAssignments, spendingAccountList, userGroupID) {
         var changedAssignments = [];
         angular.forEach(spendingAccountList.Items, function(spendingAccount) {
-            var existingAssignment = _.where(allAssignments, {SpendingAccountID:spendingAccount.ID})[0];
+            var existingAssignment = _.filter(allAssignments, {SpendingAccountID:spendingAccount.ID})[0];
             if (existingAssignment && !spendingAccount.Assigned) {
                 changedAssignments.push({
                     'old': existingAssignment,

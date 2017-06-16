@@ -50,7 +50,7 @@ function ProductSpecOptionEditController($uibModalInstance, OrderCloudSDK, Produ
     ];
 
     vm.submit = function() {
-        var partial = _.pick(vm.specOption, ['ID', 'Value', 'IsOpenText', 'PriceMarkupType', 'PriceMarkup']);
+        var partial = _.pickBy(vm.specOption, ['ID', 'Value', 'IsOpenText', 'PriceMarkupType', 'PriceMarkup']);
         vm.loading = OrderCloudSDK.Specs.PatchOption(SpecID, SpecOption.ID, partial)
             .then(function(data) {
                 if (vm.specOption.DefaultOption && (vm.specOption.DefaultOption != SpecOption.DefaultOption)) {

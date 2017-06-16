@@ -34,7 +34,7 @@ function ocAdditionalImages() {
                     onUpdate: patchImage,
                     multiple: true,
                     addText: 'Upload an image',
-                    replaceText: 'Replace',
+                    replaceText: 'Replace'
                 };
             }, 300);
 
@@ -49,12 +49,12 @@ function ocAdditionalImages() {
                 })
                 .catch(function(ex) {
                     $exceptionHandler(ex);
-                })
+                });
             }
 
             $scope.openImageModal = function(index) {
                 if($scope.product.xp.imageZoom) {
-                    ocImagesModal.Open($scope.product.xp.additionalImages, index)
+                    ocImagesModal.Open($scope.product.xp.additionalImages, index);
                 }
             };
         }

@@ -99,7 +99,7 @@ function OrderCloudCreditCards($q, $uibModal, ocConfirm, OrderCloudSDK, ocAuthNe
     function _compareAssignments(allAssignments, creditCardList, userGroupID) {
         var changedAssignments = [];
         angular.forEach(creditCardList.Items, function(creditCard) {
-            var existingAssignment = _.where(allAssignments, {CreditCardID: creditCard.ID})[0];
+            var existingAssignment = _.filter(allAssignments, {CreditCardID: creditCard.ID})[0];
             if (existingAssignment && !creditCard.Assigned) {
                 changedAssignments.push({
                     'old': existingAssignment,

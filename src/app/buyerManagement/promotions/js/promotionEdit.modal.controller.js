@@ -8,7 +8,7 @@ function PromotionEditModalController($uibModalInstance, OrderCloudSDK, ocPromot
     vm.promotionName = SelectedPromotion.Name ? SelectedPromotion.Name : SelectedPromotion.Code;
 
     vm.promotionTemplate = ocPromotions.MapTemplate(vm.promotion);
-    if (vm.promotionTemplate && (vm.promotionTemplate.EligibleFields && _.findWhere(vm.promotionTemplate.EligibleFields, {Typeahead: 'Categories'})) || (vm.promotionTemplate.ValueFields && _.findWhere(vm.promotionTemplate.ValueFields, {Typeahead: 'Categories'}))) {
+    if (vm.promotionTemplate && (vm.promotionTemplate.EligibleFields && _.find(vm.promotionTemplate.EligibleFields, {Typeahead: 'Categories'})) || (vm.promotionTemplate.ValueFields && _.find(vm.promotionTemplate.ValueFields, {Typeahead: 'Categories'}))) {
         OrderCloudSDK.Catalogs.List({page: 1, pageSize: 100})
             .then(function(data) {
                 vm.promotionTemplate.Catalogs = data.Items;

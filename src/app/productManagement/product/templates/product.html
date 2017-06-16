@@ -22,7 +22,7 @@
                         <label for="ProductID" class="col-sm-3 control-label">Product ID</label>
                         <div class="col-sm-9">
                             <input id="ProductID" pattern="([A-Za-z0-9\-\_]+)" pattern-err-type="ID_Name" type="text" class="form-control" ng-model="product.model.ID"
-                                required>
+                                   required>
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
@@ -83,6 +83,9 @@
                         </div>
                     </fieldset>
                 </form>
+            </div>
+            <div class="col-sm-4">
+                <oc-file-upload file-upload-model="product.model.xp" file-upload-options="product.fileUploadOptions"></oc-file-upload>
             </div>
         </div>
         <div class="visible-xs" oc-if-roles="ProductAdmin">

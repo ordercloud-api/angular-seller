@@ -27,7 +27,7 @@ function OrderCloudApprovalsService($q, OrderCloudSDK, ocRoles) {
             });
 
         function getApprovingUserGroups(data) {
-            var userGroupIDs = _.pluck(data.Items, 'ApprovingGroupID');
+            var userGroupIDs = _.map(data.Items, 'ApprovingGroupID');
             var options = {
                 page: 1,
                 pageSize: 100,
@@ -36,7 +36,7 @@ function OrderCloudApprovalsService($q, OrderCloudSDK, ocRoles) {
             OrderCloudSDK.UserGroups.List(buyerID, options)
                 .then(function(userGroupData) {
                     angular.forEach(data.Items, function(approval) {
-                        approval.ApprovingUserGroup = _.findWhere(userGroupData.Items, {ID: approval.ApprovingGroupID});
+                        approval.ApprovingUserGroup = _.find(userGroupData.Items, {ID: approval.ApprovingGroupID});
                     });
                     getApprovalRules(data);
                 })
@@ -46,7 +46,7 @@ function OrderCloudApprovalsService($q, OrderCloudSDK, ocRoles) {
         }
 
         function getApprovalRules(data) {
-            var approvalRuleIDs = _.pluck(data.Items, 'ApprovalRuleID');
+            var approvalRuleIDs = _.map(data.Items, 'ApprovalRuleID');
             var options = {
                 page: 1,
                 pageSize: 100,
@@ -55,7 +55,7 @@ function OrderCloudApprovalsService($q, OrderCloudSDK, ocRoles) {
             OrderCloudSDK.ApprovalRules.List(buyerID, options)
                 .then(function(approvalRuleData) {
                     angular.forEach(data.Items, function(approval) {
-                        approval.ApprovalRule = _.findWhere(approvalRuleData.Items, {ID: approval.ApprovalRuleID});
+                        approval.ApprovalRule = _.find(approvalRuleData.Items, {ID: approval.ApprovalRuleID});
                     });
                     deferred.resolve(data);
                 })

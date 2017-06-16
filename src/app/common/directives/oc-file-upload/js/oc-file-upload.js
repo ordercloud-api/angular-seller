@@ -5,18 +5,19 @@ angular.module('orderCloud')
 function ordercloudFileUpload($uibModal, $ocFiles, ocFiles, ocConfirm) {
     var directive = {
         scope: {
-            model: '=fileUploadModel',
-            fileUploadOptions: '='
+            model: '<fileUploadModel',
+            fileUploadOptions: '<'
         },
         restrict: 'E',
         require: '^?ocPrettySubmit',
-        template: '<div ng-include="getTemplate()"></div>',
+        template: '<div ng-include="fileUploadTemplate"></div>',
         replace: true,
         link: link
     };
 
     function link(scope, element, attrs, formCtrl) {
         if (!ocFiles.Enabled()) return;
+        scope.fileUploadTemplate = scope.fileUploadOptions.multiple ? 'common/directives/oc-file-upload/templates/oc-files-upload.html' : 'common/directives/oc-file-upload/templates/oc-file-upload.html';
         (function mergeOptions() {
             var globalOptions = $ocFiles.GetFileUploadOptions();
             scope.fileUploadOptions = angular.extend(globalOptions, scope.fileUploadOptions || {});
@@ -30,14 +31,10 @@ function ordercloudFileUpload($uibModal, $ocFiles, ocFiles, ocConfirm) {
 
             if (scope.fileUploadOptions.multiple && modelKeynameConstructor !== Array) {
                 scope.fileUploadModel[scope.fileUploadOptions.keyname] = [];
-            } else if (modelKeynameConstructor !== Object) {
+            } else if (!scope.fileUploadOptions.multiple && modelKeynameConstructor !== Object) {
                 scope.fileUploadModel[scope.fileUploadOptions.keyname] = {};
             }
         }
-
-        scope.getTemplate = function() {
-            return scope.fileUploadOptions.multiple ? 'common/directives/oc-file-upload/templates/oc-files-upload.html' : 'common/directives/oc-file-upload/templates/oc-file-upload.html';
-        };
 
         scope.openModal = function(index) {
             $uibModal.open({

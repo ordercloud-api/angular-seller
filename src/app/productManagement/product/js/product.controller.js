@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('ProductCtrl', ProductController);
 
-function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocNavItems, ocRelatedProducts, ocProductPricing, SelectedProduct) {
+function ProductController($exceptionHandler, $rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocNavItems, ocRelatedProducts, ocProductPricing, SelectedProduct) {
     var vm = this;
     vm.model = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
@@ -12,6 +12,31 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     
     vm.navigationItems = ocNavItems.Filter(ocNavItems.Product());
 
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        srcKeyname: 'URL',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        invalidExtensions: null,
+        onUpdate: patchImage,
+        multiple: false,
+        addText: 'Upload an image',
+        replaceText: 'Replace'
+    };
+
+    function patchImage(imageXP) {
+        return OrderCloudSDK.Products.Patch(vm.model.ID, {
+            xp: imageXP
+        })
+        .then(function() {
+            toastr.success('Images successfully updated', 'Success');
+            $state.go('.', {}, {reload: 'product', notify:false});
+        })
+        .catch(function(ex) {
+            $exceptionHandler(ex);
+        });
+    }
+
     vm.descriptionToolbar = [
         ['html', 'bold', 'italics', 'underline', 'strikeThrough'],
         ['h1', 'h2', 'h3', 'p'],
@@ -21,8 +46,8 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
 
     function updateProduct() {
         var currentPrice = angular.copy(vm.model.DefaultPriceSchedule);
-        var partial = _.pick(vm.model, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
-        var partialXP = _.pick(vm.model.xp, ['Featured']);
+        var partial = _.pickBy(vm.model, ['ID', 'Name', 'Description', 'QuantityMultiplier', 'Inventory', 'Active']);
+        var partialXP = _.pickBy(vm.model.xp, ['Featured']);
         partial.xp = partialXP;
 
         vm.loading = OrderCloudSDK.Products.Patch(SelectedProduct.ID, partial)

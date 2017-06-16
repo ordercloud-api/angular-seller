@@ -39,7 +39,7 @@ function UserGroupCatalogConfig($stateProvider) {
                 Tree: function(CategoryList, ocCatalogTree, ocCatalogCategories, CatalogAssignment, BuyerCategoryAssignments, UserGroupCategoryAssignments) {
                     var buyerMappedData = ocCatalogCategories.Assignments.Map(CategoryList, CatalogAssignment.ViewAllCategories ? true : BuyerCategoryAssignments, true);
                     var userGroupMappedData = CatalogAssignment.ViewAllCategories ? {} : ocCatalogCategories.Assignments.Map(CategoryList, UserGroupCategoryAssignments);
-                    var assignedBuyerCategoryIDs = _.pluck(buyerMappedData, 'ID');
+                    var assignedBuyerCategoryIDs = _.map(buyerMappedData, 'ID');
 
                     angular.forEach(userGroupMappedData, function(category) {
                         var index = _.findIndex(buyerMappedData, function(cat) {

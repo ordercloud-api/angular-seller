@@ -78,7 +78,7 @@ function OrderCloudCatalogCategoriesSerivce($q, OrderCloudSDK) {
                 category.Assigned = true;
             });
         } else if (currentAssignments) {
-            var categoryIDs = _.pluck(currentAssignments, 'CategoryID');
+            var categoryIDs = _.map(currentAssignments, 'CategoryID');
             _.map(copiedList, function(category) {
                 category.Assigned = categoryIDs.indexOf(category.ID) > -1;
                 if (category.Assigned && markInherited) category.Inherited = true;

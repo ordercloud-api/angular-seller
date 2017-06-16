@@ -22,7 +22,7 @@ function PermissionsConfig($stateProvider) {
                     return OrderCloudSDK.SecurityProfiles.List({pageSize:100})
                         .then(function(data) {
                             return _.map(data.Items, function(sp) {
-                                sp.selected = _.pluck(Assignments.Items, 'SecurityProfileID').indexOf(sp.ID) > -1;
+                                sp.selected = _.map(Assignments.Items, 'SecurityProfileID').indexOf(sp.ID) > -1;
                                 return sp;
                             });
                         });
@@ -46,7 +46,7 @@ function PermissionsConfig($stateProvider) {
                     return OrderCloudSDK.SecurityProfiles.List({pageSize:100})
                         .then(function(data) {
                             return _.map(data.Items, function(sp) {
-                                sp.selected = _.pluck((Assignments.Items), 'SecurityProfileID').indexOf(sp.ID) > -1;
+                                sp.selected = _.map((Assignments.Items), 'SecurityProfileID').indexOf(sp.ID) > -1;
                                 return sp;
                             });
                         });
@@ -71,7 +71,7 @@ function PermissionsConfig($stateProvider) {
                     return OrderCloudSDK.SecurityProfiles.List({pageSize:100})
                         .then(function(data) {
                             return _.map(data.Items, function(sp) {
-                                sp.selected = _.pluck(Assignments.Items, 'SecurityProfileID').indexOf(sp.ID) > -1;
+                                sp.selected = _.map(Assignments.Items, 'SecurityProfileID').indexOf(sp.ID) > -1;
                                 return sp;
                             });
                         });
@@ -95,7 +95,7 @@ function PermissionsConfig($stateProvider) {
                     return OrderCloudSDK.SecurityProfiles.List({pageSize:100})
                         .then(function(data) {
                             return _.map(data.Items, function(sp) {
-                                sp.selected = _.pluck(Assignments.Items, 'SecurityProfileID').indexOf(sp.ID) > -1;
+                                sp.selected = _.map(Assignments.Items, 'SecurityProfileID').indexOf(sp.ID) > -1;
                                 return sp;
                             });
                         });
