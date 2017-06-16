@@ -44,7 +44,7 @@ function OrderController($stateParams, toastr, OrderCloudSDK, ocOrderDetailServi
                 vm.lineItems.Items[itemIndex] = data;
                 OrderCloudSDK.Orders.Get('incoming', $stateParams.orderid)
                     .then(function(orderData) {
-                        vm.order = angular.extend(vm.order, _.pickBy(orderData, ['Subtotal', 'TaxCost', 'ShippingCost', 'Total']));
+                        vm.order = angular.extend(vm.order, _.pick(orderData, ['Subtotal', 'TaxCost', 'ShippingCost', 'Total']));
                         toastr.success('Line item updated.');
                     });
             });

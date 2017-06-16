@@ -11,7 +11,7 @@ function ProductShippingController($state, $timeout, toastr, OrderCloudSDK, Sele
     vm.hideNoResults = hideNoResults;
 
     function updateProductShipping(product) {
-        var partial = _.pickBy(product, ['ShipWeight', 'ShipHeight', 'ShipWidth', 'ShipLength', 'ShipFromAddressID']);
+        var partial = _.pick(product, ['ShipWeight', 'ShipHeight', 'ShipWidth', 'ShipLength', 'ShipFromAddressID']);
         vm.productUpdateLoading = OrderCloudSDK.Products.Patch(product.ID, partial)
             .then(function() {
                 vm.ProductShippingForm.$setPristine();
