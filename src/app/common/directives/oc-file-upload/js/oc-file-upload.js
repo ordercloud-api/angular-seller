@@ -51,7 +51,9 @@ function ordercloudFileUpload($uibModal, $ocFiles, ocFiles, ocConfirm) {
                 }
             }).result.then(function(data) {
                 if (scope.fileUploadOptions.multiple) {
-                    index > -1 ? (scope.fileUploadModel[index] = data) : scope.fileUploadModel[scope.fileUploadOptions.keyname].push(data);
+                    index > -1 
+                        ? (scope.fileUploadModel[index] = data) 
+                        : scope.fileUploadModel[scope.fileUploadOptions.keyname] ? scope.fileUploadModel[scope.fileUploadOptions.keyname].push(data) : scope.fileUploadModel[scope.fileUploadOptions.keyname] = [data];
                 } else {
                     scope.fileUploadModel[scope.fileUploadOptions.keyname] = data;
                 }
