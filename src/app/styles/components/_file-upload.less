@@ -1,0 +1,60 @@
+.c-file-upload {
+    .thumbnail > img {
+        max-height:300px;
+    }
+}
+
+.c-file-upload__multiple {
+    > ol {
+        display:flex;
+        flex-flow:row wrap;
+        list-style:none;
+        padding:0;
+        margin:0 -@grid-gutter-width/8;
+        > li {
+            flex-basis:90px;
+            position:relative;
+            height:90px;
+            margin-bottom: @grid-gutter-width/8;
+            &.dndDraggingSource {
+                display: none;
+            }
+            &.dndPlaceholder:after {
+                background-color:@brand-info;
+                content:' ';
+                opacity:0.5;
+            }
+        }
+    }
+    .dndPlaceholder:after,
+    .c-file-upload__container {
+        position:absolute;
+        left:@grid-gutter-width/8;
+        right:@grid-gutter-width/8;
+        top:@grid-gutter-width/8;
+        bottom:@grid-gutter-width/8;
+        border-radius: @border-radius-base;
+    }
+    [draggable='true'] {
+        cursor: move;
+    }
+    .c-file-upload__container {
+        border: 1px solid @thumbnail-border;
+        background-color: @thumbnail-bg;
+    }
+    .c-file-upload__actions {
+        position:absolute;
+        left:-@thumbnail-padding;
+        top:-@thumbnail-padding;
+    }
+    .c-file-upload__image {
+        position:absolute;
+        left:@thumbnail-padding;
+        right:@thumbnail-padding;
+        top:@thumbnail-padding;
+        bottom:@thumbnail-padding;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}

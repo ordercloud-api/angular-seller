@@ -5,9 +5,17 @@ angular.module('orderCloud')
 function EditCategoryModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, SelectedCategory, CatalogID){
     var vm = this;
     vm.category = angular.copy(SelectedCategory);
+    if (!vm.category.xp) vm.category.xp = {};
     vm.categoryName = SelectedCategory.Name;
     vm.catalogid = CatalogID;
-    vm.patchImage = patchImage;
+
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        uploadText: 'Upload an image',
+        replaceText: 'Replace image',
+        onUpdate: patchImage
+    };
 
     function patchImage(imageXP){
         return OrderCloudSDK.Categories.Patch(CatalogID, vm.category.ID, {xp: imageXP});
@@ -24,9 +32,6 @@ function EditCategoryModalController($exceptionHandler, $uibModalInstance, Order
         vm.loading = OrderCloudSDK.Categories.Update(vm.catalogid, SelectedCategory.ID, vm.category)
             .then(function(category) {
                 $uibModalInstance.close(category);
-
-                //TODO: replace state reload with something less resource intensive
-                //$state.go('catalogManagement', {buyerID: vm.catalogid, activeTab: 2}, {reload:true});
             })
             .catch(function(ex) {
                 $exceptionHandler(ex);

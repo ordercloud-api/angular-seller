@@ -1,0 +1,22 @@
+<div class="c-file-upload__multiple">
+    <ol dnd-list="fileUploadModel[fileUploadOptions.keyname]" dnd-horizontal-list="true">
+        <li ng-repeat="file in fileUploadModel[fileUploadOptions.keyname]" 
+                dnd-draggable="file" dnd-moved="dropped($index)" dnd-dragstart="dragStart()" dnd-effect-allowed="move" dnd-disable-if="!fileUploadOptions.draggable">
+            <div class="c-file-upload__container">
+                <div class="c-file-upload__image" ng-style="{backgroundImage: (file[fileUploadOptions.srcKeyname] ? 'url(' + file[fileUploadOptions.srcKeyname] + ')' : 'none')}"></div>
+                <div class="c-file-upload__actions">
+                    <button type="button" class="btn btn-fab btn-xs btn-danger" ng-click="removeFile($index)" ng-if="file[fileUploadOptions.srcKeyname]">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <br>
+                    <button type="button" class="btn btn-fab btn-xs btn-info" ng-click="openModal($index)">
+                        <i class="fa fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </li>
+    </ol>
+    <button type="button" class="btn btn-default btn-block" ng-click="addImage()" ng-if="!fileUploadOptions.maxLimit || fileUploadModel[fileUploadOptions.keyname].length < fileUploadOptions.maxLimit">
+        <i class="fa fa-plus-circle"></i> {{fileUploadOptions.addText}}
+    </button>
+</div>

@@ -1,0 +1,16 @@
+<header class="l-page-header">
+    <h3 class="l-page-header__title">
+        {{messageSenders.pageTitle}}
+    </h3>
+</header>
+<div class="alert alert-info" ng-bind-html="messageSenders.message"></div>
+<form name="messageSenders.form" oc-readonly-roles="MessageConfigAssignmentAdmin">
+    <fieldset class="form-group">
+        <div class="checkbox" ng-repeat="messageSender in messageSenders.list">
+            <label for="{{messageSender.ID}}">
+                <input type="checkbox" id="{{messageSender.ID}}" name="{{messageSender.ID}}" ng-model="messageSender.selected" ng-change="messageSenders.updateAssignment(this, userGroup.group.ID)">
+                <span ng-class="{'text-primary':messageSender.selected}" ng-bind-html="messageSender.Name"></span>
+            </label>
+        </div>
+    </fieldset>
+</form>

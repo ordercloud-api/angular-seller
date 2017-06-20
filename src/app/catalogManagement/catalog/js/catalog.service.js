@@ -117,7 +117,7 @@ function OrderCloudCatalog($q, $uibModal, OrderCloudSDK, ocConfirm) {
     function _compareProductAssignments(allAssignments, productList, categoryID) {
         var changedAssignments = [];
         angular.forEach(productList.Items, function(product) {
-            var existingAssignment = _.where(allAssignments, {ProductID: product.ID})[0];
+            var existingAssignment = _.filter(allAssignments, {ProductID: product.ID})[0];
             if (existingAssignment && !product.Assigned) {
                 changedAssignments.push({
                     'old': existingAssignment,
@@ -223,7 +223,7 @@ function OrderCloudCatalog($q, $uibModal, OrderCloudSDK, ocConfirm) {
             OrderCloudSDK.Categories.ListAssignments(catalogid, options)
                 .then(function(assignmentList){
                     //get list of userGroupIDs. Remove any null values (from buyerID assignments);
-                    var userGroupIDs =  _.compact(_.pluck(assignmentList.Items, 'UserGroupID'));
+                    var userGroupIDs =  _.compact(_.map(assignmentList.Items, 'UserGroupID'));
                     resolve.Meta = assignmentList.Meta;
                     resolve.Items = assignmentList.Items;
                     if(!userGroupIDs.length) {
@@ -265,7 +265,7 @@ function OrderCloudCatalog($q, $uibModal, OrderCloudSDK, ocConfirm) {
     function _compareAvailabilityAssignments(allAssignments, userGroupList, categoryID, buyerID) {
         var changedAssignments = [];
         angular.forEach(userGroupList.Items, function(userGroup) {
-            var existingAssignment = _.where(allAssignments, {UserGroupID: userGroup.ID})[0];
+            var existingAssignment = _.filter(allAssignments, {UserGroupID: userGroup.ID})[0];
             if (existingAssignment && !userGroup.Assigned) {
                 changedAssignments.push({
                     'old': existingAssignment,
@@ -424,7 +424,7 @@ function OrderCloudCatalog($q, $uibModal, OrderCloudSDK, ocConfirm) {
     function _compareAssignments(allAssignments, buyerList, catalogID) {
         var changedAssignments = [];
         angular.forEach(buyerList.Items, function(buyer) {
-            var existingAssignment = _.where(allAssignments, {BuyerID:buyer.ID})[0];
+            var existingAssignment = _.filter(allAssignments, {BuyerID:buyer.ID})[0];
             if (existingAssignment && !buyer.Assigned) {
                 changedAssignments.push({
                     'old': existingAssignment,

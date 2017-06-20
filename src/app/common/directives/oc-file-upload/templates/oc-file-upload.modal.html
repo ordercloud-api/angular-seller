@@ -1,0 +1,51 @@
+<form name="fileUploadModal.form" class="form-horizontal" ng-submit="fileUploadModal.submit()" novalidate>
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="fileUploadModal.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{{fileUploadModal.options.uploadText}}</h4>
+    </div>
+    <div class="modal-body" cg-busy="fileUploadModal.loading">
+        
+        <div class="form-group">
+            <label for="OrderCloudFileUpload" ng-class="{'sr-only': !fileUploadModal.additionalFields.length, 'control-label col-sm-3': fileUploadModal.additionalFields.length}">
+                File
+            </label>
+            <div ng-class="{'col-sm-9': fileUploadModal.additionalFields.length, 'col-sm-8 col-sm-offset-2':!fileUploadModal.additionalFields.length}">
+                <div class="c-file-upload" ng-class="{'has-error': fileUploadModal.invalidExtension}">
+                    <figure class="thumbnail" ng-if="fileUploadModal.model[fileUploadModal.options.srcKeyname]">
+                        <img class="img-responsive" ng-src="{{fileUploadModal.model[fileUploadModal.options.srcKeyname]}}" alt="Product Image">
+                    </figure>
+                    <div>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" 
+                                        id="OrderCloudFileUpload"
+                                        class="btn btn-default"
+                                        ng-click="fileUploadModal.upload()">
+                                        {{fileUploadModal.model[fileUploadModal.options.srcKeyname] ? fileUploadModal.options.replaceText : 'Browse files'}}
+                                </button>
+                            </div>
+                            <input type="url" class="form-control" ng-model="fileUploadModal.model[fileUploadModal.options.srcKeyname]" ng-change="fileUploadModal.validateUrl(fileUploadModal.model)" placeholder="Paste a url..." ng-model-options="{debounce: 1000}" ng-change="urlChange()" ng-disabled="fileUploadModal.model.Uploaded">
+                        </div>
+                    </div>
+                    <input class="ng-hide" name="upload" type="file" id="orderCloudUpload" />
+                    <span class="help-block error-msg" ng-show="fileUploadModal.invalidExtension">Invalid file type, please select another file.</span>
+                </div>
+            </div>
+        </div>
+        <div ng-if="fileUploadModal.additionalFields.length" class="form-group" ng-repeat="field in fileUploadModal.additionalFields">
+            <label class="control-label col-sm-3" ng-if="field.type != 'checkbox'">{{field.label}}</label>
+            <div class="col-sm-9" ng-class="{'col-sm-offset-3': field.type == 'checkbox'}">
+                <input type="text" class="form-control" ng-if="field.type == 'text'" ng-model="fileUploadModal.model[field.keyname]" ng-required="field.required" />
+                <input type="number" class="form-control" ng-if="field.type == 'number'" ng-model="fileUploadModal[field.keyname]" ng-required="field.required" />
+                <textarea class="form-control" ng-if="field.type == 'textarea'" rows="{{field.rows || 3}}" ng-model="fileUploadModal[field.keyname]" ng-required="ield.required"></textarea>
+                <div class="checkbox" ng-if="field.type == 'checkbox'">
+                    <label><input type="checkbox" ng-model="fileUploadModal[field.keyname]" ng-required="field.required">{{field.label}}</label>
+                </div>
+                <select class="form-control" ng-if="field.type == 'select'" ng-model="fileUploadModal[field.keyname]" ng-required="field.required" ng-options="option.value as option.label for option in field.options"></select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-block btn-primary" ng-disabled="fileUploadModal.form.$invalid || !fileUploadModal.model[fileUploadModal.options.srcKeyname]">Save</button>
+    </div>
+</form>

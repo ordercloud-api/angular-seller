@@ -1,0 +1,25 @@
+<header class="l-page-header">
+    <h3 class="l-page-header__title">
+        Additional Product Images
+    </h3>
+</header>
+<div class="row" oc-readonly-roles="ProductAdmin">
+    <div class="col-sm-8">
+        <div class="no-matches" ng-if="!productImages.model.xp || !productImages.model.xp.additionalImages || !productImages.model.xp.additionalImages.length">
+            There are no additional images uploaded for this product.
+        </div>
+        <oc-file-upload file-upload-model="productImages.model.xp" file-upload-options="productImages.fileUploadOptions"></oc-file-upload>
+    </div>
+    <div class="col-sm-4" oc-readonly-roles="ProductAdmin">
+        <div class="checkbox">
+            <label for="ZoomEnabled" class="control-label">
+                <input id="ZoomEnabled" name="ZoomEnabled" type="checkbox" ng-model="productImages.model.xp.imageZoom" ng-click="productImages.toggleZoom()"> Image Zoom Enabled
+            </label>
+        </div>
+        <span class="text-bold" ng-if="!productImages.model.xp.image.URL">
+            Please upload a default image to use this feature.<br>
+        </span>
+        <span class="text-muted text-small">Image zoom will open a modal with an enlarged version of the selected image when visiting a product's detail view in the Buyer app.
+        </span>
+    </div>
+</div>

@@ -62,14 +62,14 @@ function OrderCloudRolesService($window, $cookies, $ocRoles, OrderCloudSDK, ocAp
     //Role Groups use the group's Type setting. Individual roles use the any parameter when combined
     //Ex: ocRoles.UserIsAuthorized(['CategoryReader', 'CatalogReader', 'RoleGroupA'], true);
         //Evaluates whether user is authorized for RoleGroupA's configuration AND has either CategoryReader or CatalogReader
-    function _userIsAuthorized(roleItems, any) {
+    function _userIsAuthorized(roleItems, any, not) {
         var userRoles = _get();
         
         if (!userRoles) return;
-        if (userRoles.indexOf('FullAccess') > -1) return true;
+        if (userRoles.indexOf('FullAccess') > -1 && !not) return true;
 
         function analyzeRoles(roles, hasAny) {
-            if (hasAny) {
+            if (hasAny || not) {
                 return _.intersection(roles, userRoles).length > 0;
             } else {
                 return _.difference(roles, userRoles).length === 0;

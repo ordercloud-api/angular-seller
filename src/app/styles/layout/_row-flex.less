@@ -1,0 +1,14 @@
+.row-flex {
+    // add flex display to the product list
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    > div {
+        // flex each item in the list so that we do not get float layout issues
+        display: flex;
+        flex-direction: column;
+        > div {
+            height:100%;
+        }
+    }
+}

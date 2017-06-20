@@ -4,15 +4,17 @@ angular.module('orderCloud')
 
 function CreateCategoryModalController($exceptionHandler, $uibModalInstance, OrderCloudSDK, ParentID, CatalogID){
     var vm = this;
-    vm.category = {};
+    vm.category = {xp:{}};
     vm.category.ParentID = ParentID;
     vm.category.Active = true;
     vm.catalogid = CatalogID;
-    vm.patchImage = patchImage;
 
-    function patchImage(imageXP){
-        return OrderCloudSDK.Categories.Patch(CatalogID, vm.category.ID, {xp: imageXP});
-    }
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        uploadText: 'Upload an image',
+        replaceText: 'Replace image'
+    };
 
     vm.cancel = function(){
         $uibModalInstance.dismiss();

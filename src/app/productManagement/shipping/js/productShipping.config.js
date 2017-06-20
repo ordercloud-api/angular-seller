@@ -11,6 +11,15 @@ function ProductShippingConfig($stateProvider) {
             controllerAs: 'productShipping',
             data: {
                 pageTitle: 'Product Shipping'
+            },
+            resolve: {
+                SelectedShippingAddress: function(OrderCloudSDK, SelectedProduct) {
+                    if (SelectedProduct.ShipFromAddressID) {
+                        return OrderCloudSDK.AdminAddresses.Get(SelectedProduct.ShipFromAddressID);
+                    } else {
+                        return null;
+                    }
+                }
             }
         })
     ;

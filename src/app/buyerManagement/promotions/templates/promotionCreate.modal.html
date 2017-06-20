@@ -1,10 +1,10 @@
 <form name="promotionCreateModal.form" ng-submit="promotionCreateModal.submit()" cg-busy="promotionCreateModal.loading" novalidate oc-pretty-submit>
     <div class="modal-header">
         <button type="button" class="close" aria-label="Close" ng-click="promotionCreateModal.cancel()"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">New Promotion</h4>
+        <h4 class="modal-title">{{promotionCreateModal.currentStep ? promotionCreateModal.promotion.Name : 'Create New Promotion'}} <span class="text-muted">- {{promotionCreateModal.steps[promotionCreateModal.currentStep].name}}</span></h4>
     </div>
     <div class="modal-body">
-        <div class="form-horizontal">
+        <div class="form-horizontal" ng-show="promotionCreateModal.steps[promotionCreateModal.currentStep].form == 'info'" ng-form="info">
             <div class="form-group">
                 <label for="promotionID" class="col-sm-3 control-label">ID</label>
                 <div class="col-sm-9">
@@ -14,7 +14,7 @@
             <div class="form-group">
                 <label for="promotionName" class="col-sm-3 control-label">Name</label>
                 <div class="col-sm-9">
-                    <input id="promotionName" name="Name" type="text" placeholder="(Optional)" class="form-control" ng-model="promotionCreateModal.promotion.Name"/>
+                    <input id="promotionName" name="Name" type="text" class="form-control" ng-model="promotionCreateModal.promotion.Name" required/>
                 </div>
             </div>
             <div class="form-group">
@@ -29,7 +29,8 @@
                     <textarea rows="2" id="promotionFinePrint" name="FinePrint" placeholder="(Optional)" type="text" class="form-control" ng-model="promotionCreateModal.promotion.FinePrint"></textarea>
                 </div>
             </div>
-            <hr>
+        </div>
+        <div class="form-horizontal" ng-show="promotionCreateModal.steps[promotionCreateModal.currentStep].form == 'redemption'" ng-form="redemption">
             <div class="form-group">
                 <label for="promotionCode" class="col-sm-3 control-label">Code</label>
                 <div class="col-sm-9">
@@ -68,29 +69,112 @@
                 <label for="promotionStartDate" class="col-sm-3 control-label">Start Date</label>
                 <div class="col-sm-9">
                     <input id="promotionStartDate" ng-if="application.isTouchDevice" class="form-control"  type="date" ng-model="promotionCreateModal.promotion.StartDate"/>
-                    <input id="promotionStartDate" ng-if="!application.isTouchDevice" type="text" ng-click="open1 = !open1" is-open="open1" uib-datepicker-popup="MM/dd/yyyy" class="form-control" ng-model="promotionCreateModal.promotion.StartDate">
+                    <input id="promotionStartDate" ng-if="!application.isTouchDevice" type="text" placeholder="(Optional)" ng-click="open1 = !open1" is-open="open1" uib-datepicker-popup="MM/dd/yyyy" class="form-control" ng-model="promotionCreateModal.promotion.StartDate">
                 </div>
             </div>
             <div class="form-group">
                 <label for="promotionExpirationDate" class="col-sm-3 control-label">Expiration Date</label>
                 <div class="col-sm-9">
                     <input id="promotionExpirationDate" ng-if="application.isTouchDevice" class="form-control"  type="date" ng-model="promotionCreateModal.promotion.ExpirationDate"/>
-                    <input id="promotionExpirationDate" ng-if="!application.isTouchDevice" type="text" ng-click="open2 = !open2" is-open="open2" uib-datepicker-popup="MM/dd/yyyy" class="form-control" ng-model="promotionCreateModal.promotion.ExpirationDate">
+                    <input id="promotionExpirationDate" ng-if="!application.isTouchDevice" type="text" placeholder="(Optional)" ng-click="open2 = !open2" is-open="open2" uib-datepicker-popup="MM/dd/yyyy" class="form-control" ng-model="promotionCreateModal.promotion.ExpirationDate">
                 </div>
             </div>
         </div>
-        <hr>
-        <div class="form-group">
-            <label for="EligibleExpression">Eligible Expression</label>
-            <textarea rows="2" id="EligibleExpression" name="EligibleExpression" type="text" class="form-control" ng-model="promotionCreateModal.promotion.EligibleExpression" required></textarea>
+        <div ng-show="promotionCreateModal.steps[promotionCreateModal.currentStep].form == 'type'" ng-form="type">
+            <div class="row row-flex">
+                <div class="col-sm-6" ng-repeat="promotionTemplate in promotionCreateModal.promotionTemplates" ng-click="promotionCreateModal.selectPromotionTemplate(promotionTemplate)">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{{promotionTemplate.Name}}</div>
+                        <div class="panel-body">
+                            {{promotionTemplate.Description}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-default btn-block" type="button" ng-click="promotionCreateModal.customPromotion()">
+                Create Custom Promotion
+            </button>
         </div>
-        <div class="form-group">
-            <label for="ValueExpression">Value Expression</label>
-            <textarea rows="2" id="ValueExpression" name="ValueExpression" type="text" class="form-control" ng-model="promotionCreateModal.promotion.ValueExpression" required></textarea>
+        <div ng-show="promotionCreateModal.steps[promotionCreateModal.currentStep].form == 'preconfigured'" ng-form="preconfigured">
+            <h4>Eligibility</h4>
+            <div class="form-group" ng-repeat="field in promotionCreateModal.selectedPromotionTemplate.EligibleFields" ng-if="!promotionCreateModal.selectedPromotionTemplate.EligibleDisplayText">
+                <label>{{field.Label}}</label>
+                <div ng-class="{'input-group': (field.PrefixIcon || field.SuffixIcon || field.Typeahead == 'Categories')}">
+                    <div class="input-group-btn" ng-if="field.Typeahead == 'Categories'">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{promotionCreateModal.selectedCatalog ? promotionCreateModal.selectedCatalog.Name : 'Catalog'}} <span class="caret"></span>
+                            </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="catalog in promotionCreateModal.selectedPromotionTemplate.Catalogs">
+                                <a ng-click="promotionCreateModal.selectedCatalog = catalog">{{catalog.Name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="input-group-addon" ng-if="field.PrefixIcon"><i class="fa" ng-class="field.PrefixIcon"></i></span>
+                    <input type="text" class="form-control" ng-if="field.Type == 'text' && !field.Typeahead" ng-model="field.Value" ng-change="promotionCreateModal.eligibleFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'text'" />
+                    <input type="text" class="form-control" ng-if="field.Type == 'text' && field.Typeahead" ng-model="field.Value" ng-change="promotionCreateModal.eligibleFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'text'"
+                           uib-typeahead="item.ID as item.Name for item in promotionCreateModal.typeahead(field.Typeahead, $viewValue)" typeahead-on-select="promotionCreateModal.eligibleFieldChange()" />
+                    <input type="number" class="form-control" ng-if="field.Type == 'number'" ng-model="field.Value" ng-change="promotionCreateModal.eligibleFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'number'" />
+                    <span class="input-group-addon" ng-if="field.SuffixIcon"><i class="fa" ng-class="field.SuffixIcon"></i></span>
+                </div>
+            </div>
+            <div ng-if="promotionCreateModal.selectedPromotionTemplate.EligibleDisplayText && !promotionCreateModal.selectedPromotionTemplate.EligibleFields.length" class="alert alert-info">
+                <p>{{promotionCreateModal.selectedPromotionTemplate.EligibleDisplayText}}</p>
+            </div>
+            <hr>
+            <h4>Discount</h4>
+            <div class="form-group" ng-repeat="field in promotionCreateModal.selectedPromotionTemplate.ValueFields" ng-if="!promotionCreateModal.selectedPromotionTemplate.ValueDisplayText">
+                <label>{{field.Label}}</label>
+                <div ng-class="{'input-group': (field.PrefixIcon || field.SuffixIcon || field.Typeahead == 'Categories')}">
+                    <div class="input-group-btn" ng-if="field.Typeahead == 'Categories'">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{promotionCreateModal.selectedCatalog ? promotionCreateModal.selectedCatalog.Name : 'Catalog'}} <span class="caret"></span>
+                            </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="catalog in promotionCreateModal.selectedPromotionTemplate.Catalogs">
+                                <a ng-click="promotionCreateModal.selectedCatalog = catalog">{{catalog.Name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="input-group-addon" ng-if="field.PrefixIcon"><i class="fa" ng-class="field.PrefixIcon"></i></span>
+                    <input type="text" class="form-control" ng-if="field.Type == 'text' && !field.Typeahead" ng-model="field.Value" ng-change="promotionCreateModal.valueFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'text'" />
+                    <input type="text" class="form-control" ng-if="field.Type == 'text' && field.Typeahead" ng-model="field.Value" ng-change="promotionCreateModal.valueFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'text'"
+                           uib-typeahead="item.ID as item.Name for item in promotionCreateModal.typeahead(field.Typeahead, $viewValue)" typeahead-on-select="promotionCreateModal.valueFieldChange()" />
+                    <input type="number" class="form-control" ng-if="field.Type == 'number'" ng-model="field.Value" ng-change="promotionCreateModal.valueFieldChange()" ng-model-options="{debounce: 250}" ng-required="field.Type == 'number'" />
+                    <span class="input-group-addon" ng-if="field.SuffixIcon"><i class="fa" ng-class="field.SuffixIcon"></i></span>
+                </div>
+            </div>
+            <div ng-if="promotionCreateModal.selectedPromotionTemplate.ValueDisplayText && !promotionCreateModal.selectedPromotionTemplate.ValueFields.length" class="alert alert-info">
+                <p>{{promotionCreateModal.selectedPromotionTemplate.ValueDisplayText}}</p>
+            </div>
         </div>
-
+        <div class="form-horizontal" ng-show="promotionCreateModal.steps[promotionCreateModal.currentStep].form == 'custom'" ng-form="custom">
+            <div class="form-group">
+                <label for="EligibleExpression" class="col-sm-3 control-label">Eligible Expression</label>
+                <div class="col-sm-9">
+                    <textarea rows="2" id="EligibleExpression" name="EligibleExpression" type="text" class="form-control" ng-model="promotionCreateModal.promotion.EligibleExpression" ng-required="promotionCreateModal.steps[promotionCreateModal.currentStep].form == 'custom'"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ValueExpression" class="col-sm-3 control-label">Value Expression</label>
+                <div class="col-sm-9">
+                    <textarea rows="2" id="ValueExpression" name="ValueExpression" type="text" class="form-control" ng-model="promotionCreateModal.promotion.ValueExpression" ng-required="promotionCreateModal.steps[promotionCreateModal.currentStep].form == 'custom'"></textarea>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary btn-block" ng-disabled="promotionCreateModal.form.$invalid">Save</button>
+        <div ng-class="{row:promotionCreateModal.showPrev}">
+            <div class="col-xs-6" ng-if="promotionCreateModal.showPrev">
+                <button type="button" class="btn btn-default btn-block" ng-click="promotionCreateModal.prevStep()">Back ({{(promotionCreateModal.currentStep == promotionCreateModal.customIndex && promotionCreateModal.promotionTemplates.length) ? promotionCreateModal.steps[promotionCreateModal.typeIndex].name : promotionCreateModal.steps[promotionCreateModal.currentStep - 1].name}})</button>
+            </div>
+            <div ng-class="{'col-xs-6':promotionCreateModal.showPrev}">
+                <button type="button" ng-if="promotionCreateModal.showNext && promotionCreateModal.steps[promotionCreateModal.currentStep].next" class="btn btn-primary btn-block" 
+                ng-disabled="promotionCreateModal.form[promotionCreateModal.steps[promotionCreateModal.currentStep].form].$invalid"
+                    ng-click="promotionCreateModal.nextStep()">Next ({{promotionCreateModal.steps[promotionCreateModal.currentStep + 1].name}})</button>
+                <button ng-if="promotionCreateModal.showSave" type="submit" ng-disabled="promotionCreateModal.form.$invalid"
+                    class="btn btn-primary btn-block">Save Promotion</button>
+            </div>
+        </div>
     </div>
 </form>

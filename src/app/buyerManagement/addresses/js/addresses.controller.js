@@ -73,8 +73,8 @@ function AddressesController($exceptionHandler, $state, $stateParams, $ocMedia, 
     };
 
     function selectedCheck() {
-        vm.allShippingSelected = (_.where(vm.list.Items, {shipping:true}).length == vm.list.Items.length);
-        vm.allBillingSelected = (_.where(vm.list.Items, {billing:true}).length == vm.list.Items.length);
+        vm.allShippingSelected = (_.filter(vm.list.Items, {shipping:true}).length == vm.list.Items.length);
+        vm.allBillingSelected = (_.filter(vm.list.Items, {billing:true}).length == vm.list.Items.length);
     }
 
     function changedCheck() {

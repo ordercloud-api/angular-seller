@@ -119,6 +119,10 @@ function getConstants() {
     if (process.env.ocscope) result.ocscope = process.env.ocscope;
     if (process.env.html5mode) result.html5mode = process.env.html5mode;
     if (process.env.bootswatchtheme) result.bootswatchtheme = process.env.bootswatchtheme;
+    if (process.env.awsaccesskeyid) result.awsaccesskeyid = process.env.awsaccesskeyid;
+    if (process.env.awssecretaccesskey) result.awssecretaccesskey = process.env.awssecretaccesskey;
+    if (process.env.awsregion) result.awsregion = process.env.awsregion;
+    if (process.env.awsbucket) result.awsbucket = process.env.awsbucket;
     return result;
 }
 

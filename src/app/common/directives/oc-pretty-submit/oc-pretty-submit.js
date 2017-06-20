@@ -6,11 +6,20 @@ function OrderCloudPrettySubmit() {
     return {
         restrict: 'A',
         require: '^form',
+        controller: function($scope) { 
+            $scope.setDirty = function() {
+                if ($scope.formCtrl && $scope.formCtrl.$setDirty) {
+                    $scope.formCtrl.$setDirty(true);
+                }
+            };
+
+            return $scope;
+        },
         link: function(scope, element, attrs, formCtrl) {
             //Mobile Submit
             var el = document.createElement('div');
             el.setAttribute('ongesturestart', 'return;'); // or try "ontouchstart"
-            var isTouch = (typeof el.ongesturestart === "function");
+            var isTouch = (typeof el.ongesturestart === 'function');
 
             if (isTouch) {
                 $(element).attr('action', '.');
@@ -28,6 +37,7 @@ function OrderCloudPrettySubmit() {
 
             var submitButton = findSubmit(element[0].elements);
             
+            scope.formCtrl = formCtrl;
             scope.$watch(function() { return formCtrl.$valid; }, function(formValid) {
                 valid = formValid;
                 updateForm();
@@ -42,7 +52,7 @@ function OrderCloudPrettySubmit() {
                 if (!submitButton) {
                     //Submit button not immediately available if ng-if is used
                     submitButton = findSubmit(element[0].elements);
-                    if (!submitButton) return
+                    if (!submitButton) return;
                 }
 
                 if (dirty && valid) {
@@ -54,7 +64,7 @@ function OrderCloudPrettySubmit() {
             }
 
             function findSubmit(elements) {
-                return _.findWhere(elements, {nodeName: 'BUTTON', type: 'submit'})
+                return _.find(elements, {nodeName: 'BUTTON', type: 'submit'});
             }
         }
     };

@@ -98,7 +98,7 @@ function OrderCloudCostCenters($q, $uibModal, ocConfirm, OrderCloudSDK) {
     function _compareAssignments(allAssignments, costCenterList, userGroupID) {
         var changedAssignments = [];
         angular.forEach(costCenterList.Items, function(costCenter) {
-            var existingAssignment = _.where(allAssignments, {CostCenterID:costCenter.ID})[0];
+            var existingAssignment = _.filter(allAssignments, {CostCenterID:costCenter.ID})[0];
             if (existingAssignment && !costCenter.Assigned) {
                 changedAssignments.push({
                     'old': existingAssignment,

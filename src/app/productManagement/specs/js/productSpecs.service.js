@@ -38,7 +38,7 @@ function ocProductsSpecsService($q, $uibModal, OrderCloudSDK, ocConfirm) {
             var options = {
                 page: 1,
                 pageSize: 100,
-                filters: {ID: _.pluck(data.Items, 'SpecID').join('|')}
+                filters: {ID: _.map(data.Items, 'SpecID').join('|')}
             };
             OrderCloudSDK.Specs.List(options)
                 .then(function(details) {
@@ -49,7 +49,7 @@ function ocProductsSpecsService($q, $uibModal, OrderCloudSDK, ocConfirm) {
         function getSpecOptions(data, details) {
             var optionQueue = [];
             angular.forEach(data.Items, function(specAssignment) {
-                specAssignment.Spec = _.where(details.Items, {ID: specAssignment.SpecID})[0];
+                specAssignment.Spec = _.filter(details.Items, {ID: specAssignment.SpecID})[0];
                 if (specAssignment.Spec && specAssignment.Spec.OptionCount) {
                     optionQueue.push((function() {
                         var d = $q.defer();

@@ -41,7 +41,7 @@ function OrderCloudPriceBreaksDirective($filter, ocProductPricing, OrderCloudSDK
 
         function PriceBreakQuantityValidator(modelValue, viewValue) {
             var value = modelValue || viewValue;
-            return !_.findWhere(scope.priceschedule.PriceBreaks, {
+            return !_.find(scope.priceschedule.PriceBreaks, {
                 Quantity: value
             });
         }

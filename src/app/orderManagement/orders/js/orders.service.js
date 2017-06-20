@@ -25,7 +25,7 @@ function OrderCloudOrdersService($q, $filter, OrderCloudSDK) {
         }
 
         //TODO: uncomment & replace line below when ! operator is fixed in API EX-1166
-        if (!parameters.filters.status) parameters.filters.status = 'Open|AwaitingApproval|Completed|Declined|Cancelled';
+        if (!parameters.filters.status) parameters.filters.status = 'Open|AwaitingApproval|Completed|Declined|Canceled';
         //angular.extend(parameters.filters, {status: '!Unsubmitted'});
 
         OrderCloudSDK.Orders.List('incoming', parameters)
@@ -34,7 +34,7 @@ function OrderCloudOrdersService($q, $filter, OrderCloudSDK) {
             });
 
         function gatherBuyerCompanies(data) {
-            var buyerIDs = _.uniq(_.pluck(data.Items, 'FromCompanyID'));
+            var buyerIDs = _.uniq(_.map(data.Items, 'FromCompanyID'));
             var options = {
                 page: 1,
                 pageSize: 100,
@@ -43,7 +43,7 @@ function OrderCloudOrdersService($q, $filter, OrderCloudSDK) {
             OrderCloudSDK.Buyers.List(options)
                 .then(function(buyerData) {
                     _.map(data.Items, function(order) {
-                        order.FromCompany = _.findWhere(buyerData.Items, {ID: order.FromCompanyID});
+                        order.FromCompany = _.find(buyerData.Items, {ID: order.FromCompanyID});
                     });
                     deferred.resolve(data);
                 });

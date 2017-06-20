@@ -100,7 +100,7 @@ function OrderCloudAddresses($q, $uibModal, ocConfirm, OrderCloudSDK) {
     function _compareAssignments(allAssignments, addressList, userGroupID) {
         var changedAssignments = [];
         angular.forEach(addressList.Items, function(address) {
-            var existingAssignment = _.where(allAssignments, {AddressID:address.ID})[0];
+            var existingAssignment = _.filter(allAssignments, {AddressID:address.ID})[0];
             if (existingAssignment && (existingAssignment.IsShipping != address.shipping ||  existingAssignment.IsBilling != address.billing)) {
                 changedAssignments.push({
                     'old': existingAssignment,

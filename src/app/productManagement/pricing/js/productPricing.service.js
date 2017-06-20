@@ -50,12 +50,12 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
                                 assignments.Items = [].concat(assignments.Items, result.Items);
                                 assignments.Meta = result.Meta;
                             });
-                            assignments.buyerlist = _.uniq(_.pluck(assignments.Items, 'BuyerID'));
+                            assignments.buyerlist = _.uniq(_.map(assignments.Items, 'BuyerID'));
 
                             deferred.resolve(assignments);
                         });
                 } else {
-                    assignments.buyerlist = _.uniq(_.pluck(assignments.Items, 'BuyerID'));
+                    assignments.buyerlist = _.uniq(_.map(assignments.Items, 'BuyerID'));
                     deferred.resolve(assignments);
                 }
             });
@@ -65,8 +65,10 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
     function _assignmentData(assignments) {
         var deferred = $q.defer();
 
+        assignments.Items = _.filter(assignments.Items, function(assignment) { return assignment.PriceScheduleID; });
+
         var psQueue = [];
-        var schedules = _.uniq(_.pluck(assignments.Items, 'PriceScheduleID'));
+        var schedules = _.uniq(_.map(assignments.Items, 'PriceScheduleID'));
 
         angular.forEach(schedules, function (id) {
             psQueue.push(OrderCloudSDK.PriceSchedules.Get(id));
@@ -74,7 +76,7 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
         $q.all(psQueue)
             .then(function (results) {
                 angular.forEach(results, function (ps) {
-                    angular.forEach(_.where(assignments.Items, {
+                    angular.forEach(_.filter(assignments.Items, {
                         PriceScheduleID: ps.ID
                     }), function (p) {
                         p.PriceSchedule = ps;
@@ -119,7 +121,7 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
             Buyers: []
         };
 
-        var buyerChunks = chunks(_.uniq(data.Buyers.concat(_.uniq(_.pluck(data.UserGroups, 'BuyerID')))));
+        var buyerChunks = chunks(_.uniq(data.Buyers.concat(_.uniq(_.map(data.UserGroups, 'BuyerID')))));
         var userGroupGroups = _.groupBy(data.UserGroups, 'BuyerID');
         var userGroupChunks = [];
         angular.forEach(userGroupGroups, function (group) {
@@ -146,11 +148,11 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
                 var options = {
                     page: 1,
                     pageSize: 100,
-                    filters: {ID: _.pluck(chunk, 'UserGroupID').join('|')}
+                    filters: {ID: _.map(chunk, 'UserGroupID').join('|')}
                 };
                 OrderCloudSDK.UserGroups.List(buyerID, options)
                     .then(function (data) {
-                        angular.forEach(_.where(result.Buyers, {
+                        angular.forEach(_.filter(result.Buyers, {
                             ID: buyerID
                         }), function (buyer) {
                             if (!buyer.UserGroups) buyer.UserGroups = [];
@@ -207,8 +209,8 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
                         BuyerID: selectedBuyer.ID
                     };
                     var catalogAssignment = {
-                        catalogID: selectedBuyer.DefaultCatalogID,
-                        productID: product.ID
+                        CatalogID: selectedBuyer.DefaultCatalogID,
+                        ProductID: product.ID
                     };
                     var result = {
                         Assignment: assignment,
@@ -270,7 +272,7 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
     }
 
     function _setMinMax(priceSchedule) {
-        var quantities = _.pluck(priceSchedule.PriceBreaks, 'Quantity');
+        var quantities = _.map(priceSchedule.PriceBreaks, 'Quantity');
         priceSchedule.MinQuantity = _.min(quantities);
         if (priceSchedule.RestrictedQuantity) {
             priceSchedule.MaxQuantity = _.max(quantities);
@@ -353,11 +355,11 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
     function _getProductListPriceSchedules(productList, BuyerProductAssignments, UserGroupProductAssignments) {
         var df = $q.defer();
         if (!UserGroupProductAssignments) UserGroupProductAssignments = [];
-        var priceScheduleIDs = _.uniq(_.pluck(BuyerProductAssignments.concat(UserGroupProductAssignments), 'PriceScheduleID'));
-        var defaultPriceScheduleIDs = _.pluck(_.filter(productList.Items, function (product) {
+        var priceScheduleIDs = _.uniq(_.map(BuyerProductAssignments.concat(UserGroupProductAssignments), 'PriceScheduleID'));
+        var defaultPriceScheduleIDs = _.map(_.filter(productList.Items, function (product) {
             return product.DefaultPriceScheduleID !== null;
         }), 'DefaultPriceScheduleID');
-        var allIDs = _.unique(defaultPriceScheduleIDs.concat(priceScheduleIDs));
+        var allIDs = _.uniq(defaultPriceScheduleIDs.concat(priceScheduleIDs));
         if (!allIDs.length) {
             df.resolve([]);
         } else {
@@ -401,26 +403,26 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
     function _mapAssignments(buyerID, userGroupID, productList, priceList, BuyerProductAssignments, UserGroupProductAssignments) {
         if (!UserGroupProductAssignments) UserGroupProductAssignments = [];
         _.each(productList.Items, function (product) {
-            var assignedBuyerPrice = _.findWhere(BuyerProductAssignments, {
+            var assignedBuyerPrice = _.find(BuyerProductAssignments, {
                 ProductID: product.ID,
                 BuyerID: buyerID,
                 UserGroupID: null
             });
-            var assignedUserGroupPrice = _.findWhere(UserGroupProductAssignments, {
+            var assignedUserGroupPrice = _.find(UserGroupProductAssignments, {
                 ProductID: product.ID,
                 UserGroupID: userGroupID
             });
             if (assignedUserGroupPrice) {
-                product.SelectedPrice = _.findWhere(priceList, {
+                product.SelectedPrice = _.find(priceList, {
                     ID: assignedUserGroupPrice.PriceScheduleID
                 });
             } else if (assignedBuyerPrice) {
-                product.SelectedPrice = _.findWhere(priceList, {
+                product.SelectedPrice = _.find(priceList, {
                     ID: assignedBuyerPrice.PriceScheduleID
                 });
                 product.SelectedPrice.Inherited = userGroupID !== null;
             } else if (product.DefaultPriceScheduleID) {
-                product.SelectedPrice = _.findWhere(priceList, {
+                product.SelectedPrice = _.find(priceList, {
                     ID: product.DefaultPriceScheduleID
                 });
             } else {
@@ -463,8 +465,8 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
     }
 
     function _updateProductPrice(product, SelectedBuyer, CurrentAssignments, SelectedUserGroup) {
-        var priceScheduleIDs = _.unique((product.DefaultPriceScheduleID ? [product.DefaultPriceScheduleID] : [])
-            .concat(_.pluck(_.filter(CurrentAssignments, {
+        var priceScheduleIDs = _.uniq((product.DefaultPriceScheduleID ? [product.DefaultPriceScheduleID] : [])
+            .concat(_.map(_.filter(CurrentAssignments, {
                 ProductID: product.ID
             }), 'PriceScheduleID')));
 
@@ -493,7 +495,7 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
                                 if (SelectedUserGroup) {
                                     //Find if price schedule would be inherited
                                     angular.forEach(data.Items, function (priceSchedule) {
-                                        var buyerAssignment = _.findWhere(CurrentAssignments, {
+                                        var buyerAssignment = _.find(CurrentAssignments, {
                                             ProductID: product.ID,
                                             PriceScheduleID: priceSchedule.ID,
                                             BuyerID: SelectedBuyer.ID,
@@ -554,7 +556,7 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
         function select() {
             if (SelectPriceData.Product.DefaultPriceScheduleID === selectedPriceSchedule.ID) {
                 //Default Price Selected
-                var defaultPriceSchedule = _.findWhere(availablePriceSchedules, {
+                var defaultPriceSchedule = _.find(availablePriceSchedules, {
                     ID: SelectPriceData.Product.DefaultPriceScheduleID
                 });
 
@@ -669,7 +671,7 @@ function ocProductPricingService($q, $uibModal, OrderCloudSDK, ocConfirm) {
         function _complete() {
             SelectPriceData.CurrentAssignments.splice(check.Index, 1);
             df.resolve({
-                SelectedPrice: _.findWhere(availablePriceSchedules, {
+                SelectedPrice: _.find(availablePriceSchedules, {
                     Inherited: true
                 }),
                 UpdatedAssignments: SelectPriceData.CurrentAssignments

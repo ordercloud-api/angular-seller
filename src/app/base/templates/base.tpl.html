@@ -45,6 +45,9 @@
                         <li ng-class="{active: application.$state.is('permissions')}" oc-if-roles="SetSecurityProfile">
                             <a ng-click="base.selectNavItem('permissions')"><i class="fa fa-lock"></i> Permissions</a>
                         </li>
+                        <li ui-sref-active="active" oc-if-roles="MessageConfigAssignmentAdmin">
+                            <a href="" ui-sref="sellerMessageSenders"><i class="fa fa-bell"></i> Notifications</a>
+                        </li>
                     </ul>
                 </li>
                 <li ng-class="{active: application.$state.is('account')}">
