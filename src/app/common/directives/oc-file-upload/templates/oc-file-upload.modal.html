@@ -35,13 +35,13 @@
         <div ng-if="fileUploadModal.additionalFields.length" class="form-group" ng-repeat="field in fileUploadModal.additionalFields">
             <label class="control-label col-sm-3" ng-if="field.type != 'checkbox'">{{field.label}}</label>
             <div class="col-sm-9" ng-class="{'col-sm-offset-3': field.type == 'checkbox'}">
-                <input type="text" class="form-control" ng-if="field.type == 'text'" ng-model="fileUploadModal.files[fileUploadModal.selectedIndex][field.keyname]" ng-required="field.required" />
-                <input type="number" class="form-control" ng-if="field.type == 'number'" ng-model="fileUploadModal.files[fileUploadModal.selectedIndex][field.keyname]" ng-required="field.required" />
-                <textarea class="form-control" ng-if="field.type == 'textarea'" rows="{{field.rows || 3}}" ng-model="fileUploadModal.files[fileUploadModal.selectedIndex][field.keyname]" ng-required="ield.required"></textarea>
+                <input type="text" class="form-control" ng-if="field.type == 'text'" ng-model="fileUploadModal.model[field.keyname]" ng-required="field.required" />
+                <input type="number" class="form-control" ng-if="field.type == 'number'" ng-model="fileUploadModal[field.keyname]" ng-required="field.required" />
+                <textarea class="form-control" ng-if="field.type == 'textarea'" rows="{{field.rows || 3}}" ng-model="fileUploadModal[field.keyname]" ng-required="ield.required"></textarea>
                 <div class="checkbox" ng-if="field.type == 'checkbox'">
-                    <label><input type="checkbox" ng-model="fileUploadModal.files[fileUploadModal.selectedIndex][field.keyname]" ng-required="field.required">{{field.label}}</label>
+                    <label><input type="checkbox" ng-model="fileUploadModal[field.keyname]" ng-required="field.required">{{field.label}}</label>
                 </div>
-                <select class="form-control" ng-if="field.type == 'select'" ng-model="fileUploadModal.files[fileUploadModal.selectedIndex][field.keyname]" ng-required="field.required" ng-options="option.value as option.label for option in field.options"></select>
+                <select class="form-control" ng-if="field.type == 'select'" ng-model="fileUploadModal[field.keyname]" ng-required="field.required" ng-options="option.value as option.label for option in field.options"></select>
             </div>
         </div>
     </div>
