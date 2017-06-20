@@ -6,7 +6,7 @@ function ordercloudFileUpload($uibModal, $ocFiles, ocFiles, ocConfirm) {
     var directive = {
         scope: {
             model: '<fileUploadModel',
-            fileUploadOptions: '<'
+            options: '<fileUploadOptions'
         },
         restrict: 'E',
         require: '^?ocPrettySubmit',
@@ -17,10 +17,10 @@ function ordercloudFileUpload($uibModal, $ocFiles, ocFiles, ocConfirm) {
 
     function link(scope, element, attrs, formCtrl) {
         if (!ocFiles.Enabled()) return;
-        scope.fileUploadTemplate = scope.fileUploadOptions.multiple ? 'common/directives/oc-file-upload/templates/oc-files-upload.html' : 'common/directives/oc-file-upload/templates/oc-file-upload.html';
         (function mergeOptions() {
             var globalOptions = $ocFiles.GetFileUploadOptions();
-            scope.fileUploadOptions = angular.extend(globalOptions, scope.fileUploadOptions || {});
+            scope.fileUploadOptions = scope.options ?  _.merge({}, globalOptions, scope.options) : globalOptions;
+            scope.fileUploadTemplate = scope.fileUploadOptions.multiple ? 'common/directives/oc-file-upload/templates/oc-files-upload.html' : 'common/directives/oc-file-upload/templates/oc-file-upload.html';
             initModelValue();
         })();
 
