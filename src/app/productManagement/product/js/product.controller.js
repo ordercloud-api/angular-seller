@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .controller('ProductCtrl', ProductController);
 
-function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocNavItems, ocRelatedProducts, ocProductPricing, SelectedProduct) {
+function ProductController($exceptionHandler, $rootScope, $state, toastr, OrderCloudSDK, ocProducts, ocNavItems, ocRelatedProducts, ocProductPricing, SelectedProduct) {
     var vm = this;
     vm.model = angular.copy(SelectedProduct);
     vm.productName = angular.copy(SelectedProduct.Name);
@@ -11,6 +11,31 @@ function ProductController($rootScope, $state, toastr, OrderCloudSDK, ocProducts
     vm.createDefaultPrice = createDefaultPrice;
     
     vm.navigationItems = ocNavItems.Filter(ocNavItems.Product());
+
+    vm.fileUploadOptions = {
+        keyname: 'image',
+        srcKeyname: 'URL',
+        folder: null,
+        extensions: 'jpg, png, gif, jpeg, tiff',
+        invalidExtensions: null,
+        onUpdate: patchImage,
+        multiple: false,
+        addText: 'Upload an image',
+        replaceText: 'Replace'
+    };
+
+    function patchImage(imageXP) {
+        return OrderCloudSDK.Products.Patch(vm.model.ID, {
+            xp: imageXP
+        })
+        .then(function() {
+            toastr.success('Images successfully updated', 'Success');
+            $state.go('.', {}, {reload: 'product', notify:false});
+        })
+        .catch(function(ex) {
+            $exceptionHandler(ex);
+        });
+    }
 
     vm.descriptionToolbar = [
         ['html', 'bold', 'italics', 'underline', 'strikeThrough'],
