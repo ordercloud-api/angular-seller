@@ -15,43 +15,19 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li ng-class="{active: application.$state.is('products') || application.$state.includes('product')}" oc-if-roles="ProductRoles">
-                    <a ng-click="base.selectNavItem('products')"><i class="fa fa-cube"></i> Products</a>
-                </li>
-                <li ng-class="{active: application.$state.is('catalogs') || application.$state.includes('catalog')}" oc-if-roles="CatalogRoles">
-                    <a ng-click="base.selectNavItem('catalogs')"><i class="fa fa-sitemap"></i> Catalogs</a>
-                </li>
-                <li ng-class="{active: application.$state.is('buyers') || application.$state.includes('buyer')}" oc-if-roles="{Items:['BuyerRoles', 'CatalogRoles'], Any:false}">
-                    <!--TODO: Add oc-if-roles="CatalogRoles"-->
-                    <a ng-click="base.selectNavItem('buyers')"><i class="fa fa-tags"></i> Buyers</a>
-                </li>
-                <li ng-class="{active: application.$state.is('orders') || application.$state.includes('orderDetail')}" oc-if-roles="{Items:['BuyerRoles', 'OrderRoles'], Any:false}">
-                    <a ng-click="base.selectNavItem('orders')"><i class="fa fa-inbox"></i> Orders</a>
+                <li ng-class="{active: base.isActive(navItem.activeWhen)}" ng-repeat="navItem in base.navItemsLeft">
+                    <a ng-click="base.selectNavItem(navItem.state)"><i class="fa {{navItem.icon}}"></i> {{navItem.name}}</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li uib-dropdown oc-if-roles="{Items: ['SellerUserRoles', 'SellerUserGroupRoles', 'AddressRoles', 'SetSecurityProfile'], Any:true}">
-                    <a uib-dropdown-toggle role="button">Seller <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li ng-class="{active: application.$state.is('sellerUsers')}" oc-if-roles="SellerUserRoles">
-                            <a ng-click="base.selectNavItem('sellerUsers')"><i class="fa fa-user"></i> Users</a>
-                        </li>
-                        <li ng-class="{active: application.$state.is('sellerUserGroups') || application.$state.includes('adminUserGroup')}" oc-if-roles="SellerUserGroupRoles">
-                            <a ng-click="base.selectNavItem('sellerUserGroups')"><i class="fa fa-users"></i> User Groups</a>
-                        </li>
-                        <li ng-class="{active: application.$state.is('sellerAddresses')}" oc-if-roles="SellerAddressRoles">
-                            <a ng-click="base.selectNavItem('sellerAddresses')"><i class="fa fa-map-marker"></i> Addresses</a>
-                        </li>
-                        <li ng-class="{active: application.$state.is('permissions')}" oc-if-roles="SetSecurityProfile">
-                            <a ng-click="base.selectNavItem('permissions')"><i class="fa fa-lock"></i> Permissions</a>
-                        </li>
-                        <li ui-sref-active="active" oc-if-roles="MessageConfigAssignmentAdmin">
-                            <a href="" ui-sref="sellerMessageSenders"><i class="fa fa-bell"></i> Notifications</a>
+                <li uib-dropdown ng-class="{active: base.isActive(navItem.activeWhen)}" ng-repeat="navItem in base.navItemsRight">
+                    <a ng-if="!navItem.dropdown || (navItem.dropdown && !navItem.dropdown.length)" ng-click="base.selectNavItem(navItem.state)"><i class="fa {{navItem.icon}}"></i> {{navItem.name}}</a>
+                    <a ng-if="navItem.dropdown && navItem.dropdown.length" uib-dropdown-toggle role="button">{{navItem.name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" ng-if="navItem.dropdown && navItem.dropdown.length">
+                        <li ng-class="{active: base.isActive(ddItem.activeWhen)}" ng-repeat="ddItem in navItem.dropdown">
+                            <a ng-click="base.selectNavItem(ddItem.state)"><i class="fa {{ddItem.icon}}"></i> {{ddItem.name}}</a>
                         </li>
                     </ul>
-                </li>
-                <li ng-class="{active: application.$state.is('account')}">
-                    <a ng-click="base.selectNavItem('account')"><i class="fa fa-user-circle-o"></i> <span class="hidden-sm hidden-md hidden-lg">My Account</span></a>
                 </li>
             </ul>
         </div>
