@@ -64,8 +64,13 @@ function ProductCreateModalController($q, $exceptionHandler, $uibModalInstance, 
         keyname: 'image',
         extensions: 'jpg, png, gif, jpeg, tiff',
         uploadText: 'Upload an image',
-        replaceText: 'Replace image'
+        replaceText: 'Replace image',
+        onUpdate: saveImage
     };
+
+    function saveImage(imageXP) {
+        angular.extend(vm.product.xp, imageXP);
+    }
 
     function listAllAdminAddresses(search) {
         return OrderCloudSDK.AdminAddresses.List({

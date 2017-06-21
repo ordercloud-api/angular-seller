@@ -22,6 +22,7 @@ function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr, $state,
 
     vm.openImageModal = openImageModal;
     vm.toggleZoom = toggleZoom;
+    vm.patchImage = patchImage;
     
     function openImageModal(index) {
         if(vm.model.xp.imageZoom) {
