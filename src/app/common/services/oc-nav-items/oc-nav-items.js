@@ -4,6 +4,8 @@ angular.module('orderCloud')
 
 function OrderCloudNavItemsService(ocRoles) {
     var service = {
+        TopNavRight: _topNavRight,
+        TopNavLeft: _topNavLeft,
         Product: _product,
         Catalog: _catalog,
         Buyer: _buyer,
@@ -11,6 +13,117 @@ function OrderCloudNavItemsService(ocRoles) {
         Order: _order,
         Filter: _filterNavItems
     };
+
+    function _topNavLeft() {
+        return [{
+                icon: 'fa-cube',
+                state: 'products',
+                name: 'Products',
+                activeWhen: ['products', 'product'],
+                roles: {
+                    Items: ['ProductRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-sitemap',
+                state: 'catalogs',
+                name: 'Catalogs',
+                activeWhen: ['catalogs', 'catalog'],
+                roles: {
+                    Items: ['CatalogRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-tags',
+                state: 'buyers',
+                name: 'Buyers',
+                activeWhen: ['buyers', 'buyer'],
+                roles: {
+                    Items: ['CatalogRoles', 'BuyerRoles'],
+                    Any: false
+                }
+            },
+            {
+                icon: 'fa-inbox',
+                state: 'orders',
+                name: 'Orders',
+                activeWhen: ['orders', 'orderDetail'],
+                roles: {
+                    Items: ['BuyerRoles', 'OrderRoles'],
+                    Any: false
+                }
+            }];
+    }
+
+    
+    function _topNavRight() {
+        return [{
+                name: 'Seller',
+                activeWhen: ['sellerUsers', 'sellerUserGroups', 'sellerUserGroup', 'sellerAddresses', 'permissions', 'sellerMessageSenders'],
+                roles: {
+                    Items: ['SellerUserRoles', 'SellerUserGroupRoles', 'AddressRoles', 'SetSecurityProfile', 'MessageConfigAssignmentAdmin'],
+                    Any: false
+                },
+                dropdown: [{
+                    icon: 'fa-user',
+                    state: 'sellerUsers',
+                    name: 'Users',
+                    activeWhen: ['sellerUsers'],
+                    roles: {
+                        Items: ['SellerUserRoles'],
+                        Any: false
+                    }
+                },
+                {
+                    icon: 'fa-users',
+                    state: 'sellerUserGroups',
+                    name: 'User Groups',
+                    activeWhen: ['sellerUserGroups', 'sellerUserGroup'],
+                    roles: {
+                        Items: ['SellerUserGroupRoles'],
+                        Any: false
+                    }
+                },
+                {
+                    icon: 'fa-map-marker',
+                    state: 'sellerAddresses',
+                    name: 'Addresses',
+                    activeWhen: ['sellerAddresses'],
+                    roles: {
+                        Items: ['SellerAddressRoles'],
+                        Any: false
+                    }
+                },
+                {
+                    icon: 'fa-lock',
+                    state: 'permissions',
+                    name: 'Permissions',
+                    activeWhen: ['permissions'],
+                    roles: {
+                        Items: ['SetSecurityProfile'],
+                        Any: false
+                    }
+                },
+                {
+                    icon: 'fa-bell',
+                    state: 'sellerMessageSenders',
+                    name: 'Notifications',
+                    activeWhen: ['sellerMessageSenders'],
+                    roles: {
+                        Items: ['MessageConfigAssignmentAdmin'],
+                        Any: false
+                    }
+                }]
+            },
+            {
+                icon: 'fa-user-circle-o',
+                state: 'account',
+                name: 'Account',
+                activeWhen: ['account']
+            }];
+    }
 
 
     function _product() {
@@ -390,6 +503,11 @@ function OrderCloudNavItemsService(ocRoles) {
     function _filterNavItems(navItems) {
         return _.filter(navItems, function (navItem) {
             if (!navItem.roles) return true;
+            if (navItem.dropdown && navItem.dropdown.length) {
+                navItem.dropdown = _.filter(navItem.dropdown, function(ni) {
+                    return ocRoles.UserIsAuthorized(ni.roles.Items, ni.roles.any);
+                });
+            }
             return ocRoles.UserIsAuthorized(navItem.roles.Items, navItem.roles.any);
         });
     }
