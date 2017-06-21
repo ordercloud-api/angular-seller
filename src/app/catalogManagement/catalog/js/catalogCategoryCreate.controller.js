@@ -13,8 +13,13 @@ function CreateCategoryModalController($exceptionHandler, $uibModalInstance, Ord
         keyname: 'image',
         extensions: 'jpg, png, gif, jpeg, tiff',
         uploadText: 'Upload an image',
-        replaceText: 'Replace image'
+        replaceText: 'Replace image',
+        onUpdate: saveImage
     };
+
+    function saveImage(imageXP) {
+        angular.extend(vm.category.xp, imageXP);
+    }
 
     vm.cancel = function(){
         $uibModalInstance.dismiss();
