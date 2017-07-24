@@ -16,7 +16,7 @@ function ordercloudFileUpload($uibModal, $ocFiles, ocFiles, ocConfirm) {
     };
 
     function link(scope, element, attrs, formCtrl) {
-        if (!ocFiles.Enabled()) { return console.error('File Upload not enabled - AWS not configured correctly');}
+        if (!ocFiles.Enabled()) { return console.warn('File Upload not enabled - AWS not configured correctly');}
         (function mergeOptions() {
             var globalOptions = $ocFiles.GetFileUploadOptions();
             scope.fileUploadOptions = scope.options ?  _.merge({}, globalOptions, scope.options) : globalOptions;
