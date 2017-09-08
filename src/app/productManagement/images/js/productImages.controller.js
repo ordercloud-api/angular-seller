@@ -5,6 +5,7 @@ angular.module('orderCloud')
 function ProductImagesController(OrderCloudSDK, SelectedProduct, toastr, $state, $exceptionHandler, ocImagesModal) {
     var vm = this;
     vm.model = angular.copy(SelectedProduct);
+    vm.defaultImage = vm.model.xp.image.URL;
     if (!vm.defaultImage) vm.model.xp.imageZoom = false;
 
     vm.fileUploadOptions = {
