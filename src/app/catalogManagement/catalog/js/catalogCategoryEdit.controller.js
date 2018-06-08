@@ -14,11 +14,11 @@ function EditCategoryModalController($exceptionHandler, $uibModalInstance, Order
         extensions: 'jpg, png, gif, jpeg, tiff',
         uploadText: 'Upload an image',
         replaceText: 'Replace image',
-        onUpdate: patchImage
+        onUpdate: updateImage
     };
 
-    function patchImage(imageXP){
-        return OrderCloudSDK.Categories.Patch(CatalogID, vm.category.ID, {xp: imageXP});
+    function updateImage(imageXP){
+        angular.extend(vm.category.xp, imageXP);
     }
 
     vm.cancel = function(){
@@ -37,4 +37,5 @@ function EditCategoryModalController($exceptionHandler, $uibModalInstance, Order
                 $exceptionHandler(ex);
             });
     };
+
 }

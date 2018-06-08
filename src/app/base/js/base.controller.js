@@ -1,9 +1,19 @@
 angular.module('orderCloud')
     .controller('BaseCtrl', BaseController);
 
-function BaseController(CurrentUser, $state) {
+function BaseController(CurrentUser, $state, ocNavItems) {
     var vm = this;
     vm.currentUser = CurrentUser;
+    vm.navItemsLeft = ocNavItems.Filter(ocNavItems.TopNavLeft());
+    vm.navItemsRight = ocNavItems.Filter(ocNavItems.TopNavRight());
+
+    vm.isActive = function(activeWhen) {
+        var result = false;
+        angular.forEach(activeWhen, function(stateName) {
+            if ($state.includes(stateName)) result = true;
+        });
+        return result;
+    };
 
     vm.addContainerClass = function() {
         var result = false;
